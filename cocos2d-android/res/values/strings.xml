@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Cocos2D</string>
+    <string name="activity_box2dtest">Box2D Test</string>
+    <string name="activity_easeactionstest">Ease Actions Test</string>
+    <string name="activity_particletest">Particle Test</string>
+    <string name="activity_motionstreaktest">Motion Streak Test</string>
+    <string name="activity_menutest">Menu Test</string>
+    <string name="activity_atlastest">Atlas Test</string>
+    <string name="activity_atlasspritetest">Atlas Sprite Test</string>
+    <string name="activity_jbox2dtest">JBox2D Test</string>    
+    <string name="activity_clickandmovetest">Click And Move Test</string>
+    <string name="activity_cocosnodetest">Cocos Node Test</string>
+    <string name="activity_drawprimitivestest">Draw Primitives Test</string>
+    <string name="activity_scenetest">Scene Test</string>
+    <string name="activity_spritestest">Sprites Test</string>
+    <string name="activity_transitionstest">Transitions Test</string>
+    <string name="activity_rotateworldtest">Rotate World Test</string>
+    <string name="activity_parallaxtest">Parallax Test</string>
+</resources>
