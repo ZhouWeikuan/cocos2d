@@ -1,0 +1,354 @@
+cocos2d for iPhone authors
+--------------------------
+
+Lead Developer:
+	Ricardo Quesada (http://www.sapusmedia.com)
+
+Developers:
+	Valentin Milea
+	Steve Oldmeadow (http://www.smoco.com/)
+
+cocos2d logos by Michael Heald (http://www.fullyillustrated.com)
+
+Special thanks to: Lucio Torre, Alejandro Cura, Daniel Moisset & Rayentray Tappa.
+
+cocos2d for iPhone wouldn't be possible without the help of the community who is
+constantly adding new features, sending patches, opening issues:
+	   http://www.cocos2d-iphone.org/forum
+
+People/companies who were/are contributing code to cocos2d for iPhone (alphabetically ordered):
+
+	* Alejandro Cura (http://www.vortech.com.ar/):
+		author of AccelViewPortDemo
+	* Alex Winston:
+		author of ParticleSnow
+		patches for CocosNode
+	* Alia Mc.Cutcheon:
+		scale & rotate order fixed in CocosNode.m
+		category is cocosLive is UTF8'ized
+		added sanity in scheduler
+		TileMapAtlas supports fullpath
+	* Andy Fitter:
+		patches for Texture2D
+	* Andreas Löw (thesk):
+		FileUtils doesn't convert full paths
+	* Anton Zemlyanov:
+		patches for MenuItemToggle that supports selectedIndex
+	* arya.irani:
+		CCCallFunc supports class methods (patch)
+	* asad.rehman:
+		Menu doesn't receive touches when it is invisible (patch)
+	* Aymeric Bard:
+		Repeat action works OK
+	* Barney Mattox:
+		templates use rfc1034identifier patch.
+		XCode doxygen script runs with spaces in subdirectories.	
+	* Brian Hammond:
+		patches for Demos
+	* Bryan/Acceleroto (http://www.acceleroto.com):
+		patch for CocosDenshion
+	* chere.loque:
+		Fixed memory leak in CCGridBase when initializing the texture
+	* CJ Hanson (myBuddyCJ, wiseganesha, CJeazy):
+		RenderTexture generates UIImages patch
+		correct channel in SimpleAudioEngine patch
+		Added Ease Elastic actions
+		oapcity + color works with premultiplied textures. patch.
+		Director: fixed startup flicker
+	* cjlesh:
+		RotateTo action rotates to shortest angle patch
+	* Clinth Harris:
+		patches for Doc generator script
+	* Codemattic:
+		patches for CocosNode
+		patches for MenuItemFont
+	* Corey.B.Painter:
+		Speed action calls other#stop patch
+	* craigching:
+		Correct type for objects in TMX maps. patch
+	* DaemonCollector:
+		patch for TMX per-tile properties
+	* Daniele Benegiamo:
+		Prevent possible memory corruption with particles when autoRemove is On. patch.
+	* David Whatley ( http://criticalthoughtgames.com/ )
+		Scheduler supports the repeat parameter. patch.
+		Author of perFrameUpdate in Scheduler
+		Scheduler supports scaleTime per node
+		ActionManager supports scaleTime per node
+		Author of tests for: Scheduler:repeat, Scheduler:perFrameUpdate, Scheduler:scaleTime
+	* Dominique Bongard:
+		patches for CocosDenshion
+		Scheduler fires Timer the 1st time with dt=0
+		Prevent crash with BitmapFontAtlas patch
+		Template: uses removeUnusedTextures patch
+	* Donald Alan Morrison:
+		actions uses FLT_EPSILON macro. patch.
+	* effervens:
+		patches for Director
+	* Ernesto Corvi & On-Core (http://www.on-core.com/):
+		author of TGA RLE support
+		patches for TextureMgr
+		patches for Sprite
+		author of Effects and EffectsDemo
+		Added Support classes: Grabber, Grid, GridAction
+		Added Basic Effects: StopGrid, ReuseGrid
+		Added Grid Effects: Waves3D, FlipX3D, FlipY3D, Lens3D, Ripple3D, Liquid,
+			Shaky3D, Waves, Twirl
+		Added Tiled Grid Effects: ShakyTiles3D, ShatteredTiles3D, ShuffleTiles,
+			FadeOutTRTiles, FadeOutBLTiles, FadeOutUpTiles, FadeOutDownTiles,
+			TurnOffTiles, WavesTiles3D, JumpTiles3D, SplitRows, SplitCols
+		Added Composite actions: AccelAmplitude, AccelDeccelAmplitude, DeccelAmplitude
+	* Favo Yang:
+		patch for unschedule timer in CocosNode
+	* Fraggle:
+		Fix to make Sequence actions works with 1st action
+	* Florin Dumitrescu (http://www.crystal-works.net/):
+		added "update score" in cocosLive
+		author of the sound engine: PASoundListener, PASoundMgr, PASoundSource
+	* Fradj Johann:
+		patches for CocosNode
+		patches for Layer
+		patches for MultiplexLayer
+	* Graham Perks:
+		Atlas works with GL_CULL_FACE
+		FastDirector doesn't leak autorelease pool patch
+	* hamm.hans:
+		Author of CrossFadeTransition
+	* Hans Larsen:
+		Possibility to create empty menus
+		Fixed CLang compiling warnings
+	* InsertWittyName (http://www.didev-studios.com/):
+		Texture2D allocs the right memory (patch)
+	* Ishaq Malik:
+		patches for CocosNode
+	* Joao Caxaria:
+		author of SimpleAudioEngine
+	* Jacob Eiting:
+		patches for Primitives
+	* Jason Booth (slipster216) (http://www.stuffedturkeyapps.com/):
+		author of the EaseAction actions
+		author of EaseAction demos
+		author of StreakDemo, MotionStreak and Ribbon
+		patch for ScaleTo/By action to support X and Y.
+		added endSize to ParticleSystem
+		added WorldSpace coordinates to ParticleSystem
+		author of RenderTexture class
+		author of RenderTexture sample
+		author of Joystick
+		author of ProximityManager
+		mentor of merging Sprite with AtlasSprite, and Zwoptex supports and improvements
+		added support for global NSBundle
+	* Jason Cecil:
+		Fixed memory leak in Director#FPSLabel
+		patches for CocosDenshion
+		CocosNode: parent set to nil after onExit patch
+		BitmapFontAtlas supports sub-directories patch
+	* Joe Vennix:
+		patches for CocosNode
+	* Jon Kean:
+		PointParticle asserts if size > 64
+		Fixed memory leaks when initialization of some nodes failed
+		Added removeFromParent method in CCNode
+	* jkrippy:
+		patch for menu align. takes scale into account
+	* johnnyflash71:
+		TMX suports 1 tileset per layer patch
+	* jszatmary:
+		QuadParticleSystem works with NPOT textures. patch.
+		Menu items are not consumed is items are not enabled
+	* jtbowden
+		RotateTo uses min distance patch
+	* kasatani:
+		AtlasSprite index 0 is not overwritten
+	* kermidt.zed:
+		patches for absolutePosition in CocosNode
+		patches for Labels in Texture2D
+	* Keith Peters:
+		author of Bezier drawing primitives
+	* Lam Pham (http://www.fancyratstudios.com/)
+		Author of CCProgressTimer node
+		Author of CCProgressTo and CCProgressFromTo actions
+		Author of CCRadialCCWTransition and CCRadialCWTransition transitions
+		Added several functions to CGPointExtension like: clampf, ccpClamp, ccpFromSize,
+			ccpCompOp, ccpLerp, ccpFuzzyEqual, ccpCompMult, ccpAngleSigned, ccpAngle,
+			ccpRotateByAngle, ccpLineIntersect
+	* Leonardo Kasperavičius (http://www.instantgames.com.br/):
+		original author of QuadParticleSystem class
+		Author of the original Bezier action
+	* lukeman:
+		patches for MenuItem
+	* Maarten Billemont (lhunath) (http://www.lhunath.com/myst/):
+		author of ParticleRain
+		added suport for particles' source
+		"Particles are updated on update, not draw" patch
+		fixed memory leaks in Sprite
+		fixed possible crashes in Sprite, Particles
+		optimizations in the whole code (using floats, not doubles)
+		removed useless GL commands in director
+		fixed Menu aligments
+		Treat warnings as errors patch
+		Action's elapsed is property patch
+		MenuItemFont label can be changed
+		Menu can be aligned in Columns and Rows
+		MenuItem supports LabelAtlas
+		Added RGB protocol in CocosNode, Atlas, Texture
+		Particle reset system works as expected
+		CocosNode: fixed "already scheduled exception" bug
+		Director: added converToUI method
+		Added support for FontLabel
+		Author of FontTest
+		PointParticleSystem doesn't draw if there are no particles patch
+		Actions: cleaner way to start/stop actions patches
+		author of CCPropertyAction
+	* magicyu (crmagicxxx):
+		CocosLive client supports ranking request patch
+	* manucorporat (manu.valladolid) (http://manucorporat.blogspot.com/):
+		added isPaused property to Director
+		patches for the setColor API for the RGBA protocol
+		MenuItemLabel: color is saved when item is disabled
+		Update status in CocosDenshion patch
+		Added CocosNode#boundingBox method
+		Added debuging draw method to AtlasSpriteManager 
+		ColorLayer supports blend protocol patch
+		performance improvement on particles
+		TextureAtlas uses VBO instead of vertex array list patch
+		Director: FPSLabel uses RGBA4444 texture (patch)
+		Node: Added cached GL matrix (patch)
+	* marcu.catalin:
+		Menu items are not consumed is items are not visible
+	* Mark Cooke:
+		Added TintTo action
+	* mark at abitofthought:
+		author of the single threaded Fast Director
+	* master@hpi.cc:
+		updated patch for TMX per-tile properties.
+		Added Test for TMX per-tile properties
+	* Math Sephton:
+		patches for Demos
+		patches for License
+	* Matt Oswald:
+		fix to set depthbuffer size on Director
+		TextureAtlas supports Texture2D objects
+		author of the original AtlasSprite and AtlasSpriteManager
+	* Matthias Hoechsmann:
+		author of tools/mkatlas.pl script
+	* Michal Szymerski:
+		Added support for AtlasSprite as MenuItems
+		author of CCFollow action
+	* Michael Thornton:
+		TMXTileMap supports any kind of child. patch.
+	* mike AT finklyinteractive:
+		fixed leak in ActionManager
+	* Mitch:
+		patches for Menu
+		author of MenuItemToggle
+	* mlmcgoogan:
+		SpriteFrameCache sets instance to nil when it is purged (patch)
+	* morten795 (http://aptocore.com):
+		Device and Simulator behaves identically with premultiplied images. patch.
+	* Musical Geometry:
+		Improved SpriteSheet doxygen documentation (patch)
+	* nash8114:
+		Sprite#isFrameDisplayed works ok with offsets. patch.
+		GLES-DebugDraw#drawCircle draws non-solid circles. patch.
+	* Neophit:
+		Added support for object and objectgroup in TMXTiledMaps
+		TMXTiledMaps: objects supports offsets. patch.
+	* Nerezus:
+		Fixed compile error when keyboard registry is enabled
+	* palter AT clozure.com
+		Texture fails gracefully if PVR image can't be loaded (patch)
+	* psionic81:
+		ActionManager doesn't purge running actions patch
+	* rac5372:
+		compiler warning in MenuItem
+	* ratman:
+		patch for TileMapAtlas: it works with 255 tiles
+		patch for TextureMgr: supports directory within image names
+		patch: Added support for tsx tilesets in TMX tiled maps
+	* Robert J Payne (http://www.zwopple.com/)
+		Author of Zwoptex editor, support
+		Added support for left,right,top,bottom trim in CCSpriteFrameCache (patch).
+	* Rolandas Razma (gamebit):
+		added support for auto-remove-on-finish in particles
+		TMX maps support visibility and opacity patch
+		TMX maps possibility to access the layers patch
+		Actions: Animate copy originalFrame patch
+		Director: fixed startup flicker
+	* Rolando Abarca (funkaster) (http://rolando.cl/):
+		XCode only displays the libz dependency just once
+		added userData property in CocosNode
+		migrated all cocos2d code and all test to using the CC namespace
+	* samkass:
+		install_template.sh suports custom directory. patch.
+		install-template can be installed in user directory. patch.
+	* Scott Iisystems:
+		TextureAtlas signed math error patch
+		BezierBy#reverse patch
+	* Serge Kolgan:
+		patches for CocosNode
+	* sflory:
+		new way to added CGImageRef to TextureMgr
+		added unicode support in BitmapFontAtlas
+	* Sindesso Pty Ltd & David Durbin (http://www.sindesso.com/):
+		author of PageTurn3D action
+		author of PageTurn3DTransition
+	* slypete:
+		patch for FastDirector to run in the main thread
+	* SmallMike (http://www.smallrocksoftware.com/)
+		author of DisplayLink Director
+	* spoon.reloaded:
+		JumpBy/To uses parabolic function patch
+	* Steve Israelson:
+		patches for Scheduler
+		pactches for Actions
+		patches for Transitions
+	* Stanislav Skuratov (trump-card):
+		Author of ParticleView, the particle editor
+	* Steve Oldmeadow (http://www.smoco.com/):
+		patches for Texture2D
+		Author and maintainer of CocosDenshion Sound Engine
+		Integrated Box2d physics engine
+		Created Box2d + cocos2d demo example
+	* Stuart Carnie (http://www.manomio.com/):
+		Sprite with nil textures supports opacity & color. patch.
+		Added file templates: CCNode, CCLayer, CCSprite
+		Added git/github improvements: README.mkdown, and .gitingnore files
+		Added support for Blocks using PLBlocks:
+			Actions: Added CCCallBlock and CCCallBlockN
+			MenuItems: supports the "block" parameter
+			Tests: added Actions and Menu tests
+		Added ProfilingTimer: Director and Particles supports it when enabled
+	* TheArsenik:
+		added BezierTo action
+	* thoechsm:
+		update the VBO buffer with only the needed particles
+	* Thomas Visser:
+		MenuItem#rect works with anchorPoint
+	* Valentin Milea:
+		clean up CocosNode, added better comments to CocosNode
+		Set transformAnchor point in Sprite
+		Actions can have tags
+		Fixed memory leak in MenuItemFont
+		local to world coordinates (rotation,scale&position) functions
+		removed unused scale ivar in CocosNode
+		Layer conforms to TouchDelegate protocol
+		Ability to remove nil objects
+		ccArray: a fast alternative to NSMutableArray
+		improved Scheduler timer performance
+		improved CocosNode runAction/stopAction
+		fixed possible memory leak when running actions
+		AtlasSpriteManager#removeChild fixes
+		CocosNode#runAction doesn't run an already running action
+		Added improvements, fixes and documentation in CGPointExtension
+		Author of the TouchDispatcher/TouchHandler: handle each touch independently
+		CocosNode actions: patches that makes the actions run MUCH faster
+		Author of the transformations caches. world2local, local2world runs faster.
+		fixes for Repeat action. It doesn't skip integer values
+		CocosNode#children is an explicit property
+	* yarrington:
+		patches for Director
+
+
+Do you have a homepage? Please, send me the URL. I'll add it next to your name. Thanks.
+Is someone missing ? Please, send an email to ricardoquesada@gmail.com . Thanks.
