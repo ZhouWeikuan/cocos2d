@@ -126,8 +126,8 @@ public class MenuTest extends Activity {
 
 
             // Font Item
-            MenuItem item4 = MenuItemFont.item("I toggle enable items", this, "menuCallbackEnable");
-
+            toggleItem = MenuItemLabel.item("I toggle enable items", this, "menuCallbackEnable");
+            MenuItem item4 = toggleItem;
             // Label Item (BitmapFontAtlas)
 //            BitmapFontAtlas label = new BitmapFontAtlas("configuration", "bitmapFontTest3.fnt");
 //            MenuItemLabel item5 = new MenuItemLabel(label, this, "menuCallbackConfig");
@@ -170,12 +170,18 @@ public class MenuTest extends Activity {
         }
 
         MenuItem disabledItem;
+        MenuItemLabel toggleItem;
 
         public void menuCallbackDisabled() {
         }
 
         public void menuCallbackEnable() {
             disabledItem.setIsEnabled(!disabledItem.isEnabled());
+            if (disabledItem.isEnabled()) {
+            	toggleItem.getLabel().setString("I toggle disable items");
+            } else {
+            	toggleItem.getLabel().setString("I toggle enable items");
+            }
         }
 
         public void menuCallback() {

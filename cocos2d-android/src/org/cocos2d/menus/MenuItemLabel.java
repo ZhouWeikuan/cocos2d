@@ -5,6 +5,7 @@ import javax.microedition.khronos.opengles.GL10;
 import org.cocos2d.actions.base.Action;
 import org.cocos2d.actions.interval.ScaleTo;
 import org.cocos2d.nodes.CocosNode;
+import org.cocos2d.nodes.Label;
 import org.cocos2d.types.CCColor3B;
 
 public class MenuItemLabel extends MenuItem implements CocosNode.CocosNodeRGBA {
@@ -14,6 +15,11 @@ public class MenuItemLabel extends MenuItem implements CocosNode.CocosNodeRGBA {
 
     public static MenuItemLabel item(CocosNodeLabel label, CocosNode target, String selector) {
         return new MenuItemLabel(label, target, selector);
+    }
+    
+    public static MenuItemLabel item(String text, CocosNode target, String selector) {
+    	Label lbl = Label.label(text, "DroidSansMono", 30);
+        return new MenuItemLabel(lbl, target, selector);
     }
 
     protected MenuItemLabel(CocosNodeLabel label, CocosNode target, String selector) {

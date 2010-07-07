@@ -579,7 +579,7 @@ public class CCAffineTransform /*implements Cloneable, Serializable*/ {
      * @param my the distance to translate in the y direction.
      * @return the new AffineTransformation.
      */
-    public static CCAffineTransform getTranslateInstance(double mx, double my) {
+    public static CCAffineTransform makeTranslation(double mx, double my) {
         CCAffineTransform t = new CCAffineTransform();
         t.setToTranslation(mx, my);
         return t;
@@ -654,7 +654,7 @@ public class CCAffineTransform /*implements Cloneable, Serializable*/ {
      * @param my the distance to translate in the y direction.
      */
     public void translate(double mx, double my) {
-        concatenate(CCAffineTransform.getTranslateInstance(mx, my));
+        concatenate(CCAffineTransform.makeTranslation(mx, my));
     }
 
     /**

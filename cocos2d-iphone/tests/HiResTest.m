@@ -13,6 +13,7 @@
 static int sceneIdx=-1;
 static NSString *transitions[] = {	
 			@"Test1",
+			@"Test2",
 };
 
 enum {
@@ -145,10 +146,48 @@ Class restartAction()
 		CCSprite *sprite = [CCSprite spriteWithFile:@"grossini.png"];
 		[self addChild:sprite];
 		
-		[sprite setPosition:ccp(size.width/2, size.width/2)];
+		[sprite setPosition:ccp(size.width/2, size.height/2)];
 	}	
 	return self;
 }
+
+-(NSString *) title
+{
+	return @"Standard image";
+}
+	
+@end
+
+#pragma mark -
+#pragma mark Example Test2
+
+
+@implementation Test2
+
+-(id) init
+{
+	if( (self=[super init]) ) {
+		
+		CGSize size = [[CCDirector sharedDirector] winSize];
+		
+		CCSprite *sprite = [CCSprite spriteWithFile:@"bugs/picture.png"];
+		[self addChild:sprite];
+		
+		[sprite setPosition:ccp(size.width/2, size.height/2)];
+	}	
+	return self;
+}
+
+-(NSString*) title
+{
+	return @"@2x images";
+}
+
+-(NSString *) subtitle
+{
+	return @"Issue #910";
+}
+
 
 @end
 
@@ -222,6 +261,21 @@ Class restartAction()
 -(void) applicationDidBecomeActive:(UIApplication *)application
 {
 	[[CCDirector sharedDirector] resume];
+}
+
+-(void) applicationDidEnterBackground:(UIApplication*)application
+{
+	[[CCDirector sharedDirector] stopAnimation];
+}
+
+-(void) applicationWillEnterForeground:(UIApplication*)application
+{
+	[[CCDirector sharedDirector] startAnimation];
+}
+
+- (void)applicationWillTerminate:(UIApplication *)application
+{	
+	[[CCDirector sharedDirector] end];
 }
 
 // purge memory
