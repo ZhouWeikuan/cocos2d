@@ -1,7 +1,7 @@
 package org.cocos2d.menus;
 
 import org.cocos2d.nodes.CocosNode;
-import org.cocos2d.types.CCColor3B;
+import org.cocos2d.types.ccColor3B;
 
 import javax.microedition.khronos.opengles.GL10;
 
@@ -62,13 +62,13 @@ public class MenuItemSprite extends MenuItem implements CocosNode.CocosNodeRGBA 
         ((CocosNodeRGBA) disabledImage_).setOpacity(opacity);
     }
 
-    public void setColor(CCColor3B color) {
+    public void setColor(ccColor3B color) {
         ((CocosNodeRGBA) normalImage_).setColor(color);
         ((CocosNodeRGBA) selectedImage_).setColor(color);
         ((CocosNodeRGBA) disabledImage_).setColor(color);
     }
 
-    public CCColor3B getColor() {
+    public ccColor3B getColor() {
         return ((CocosNodeRGBA) normalImage_).getColor();
     }
 

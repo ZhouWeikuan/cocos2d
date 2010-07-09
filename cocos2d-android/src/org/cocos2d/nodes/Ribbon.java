@@ -1,6 +1,6 @@
 package org.cocos2d.nodes;
 
-import org.cocos2d.opengl.Texture2D;
+import org.cocos2d.opengl.CCTexture2D;
 import org.cocos2d.types.*;
 
 import javax.microedition.khronos.opengles.GL10;
@@ -69,7 +69,7 @@ public class Ribbon extends CocosNode {
             finished = false;
         }
 
-        public void draw(GL10 gl, float curTime, float fadeTime, CCColor4B color) {
+        public void draw(GL10 gl, float curTime, float fadeTime, ccColor4B color) {
             int r = color.r;
             int g = color.g;
             int b = color.b;
@@ -142,21 +142,21 @@ public class Ribbon extends CocosNode {
     boolean mPastFirstPoint;
 
     // Texture used
-    Texture2D texture_;
+    CCTexture2D texture_;
 
     // texture lenght
     float textureLength_;
 
     // RGBA protocol
-    CCColor4B color_;
+    ccColor4B color_;
 
     // blend func
-    CCBlendFunc blendFunc_;
+    ccBlendFunc blendFunc_;
 
     /**
      * creates the ribbon
      */
-    public Ribbon(float w, String path, float l, CCColor4B color, float fade) {
+    public Ribbon(float w, String path, float l, ccColor4B color, float fade) {
 
         mSegments = new ArrayList<RibbonSegment>();
         dSegments = new ArrayList<RibbonSegment>();
@@ -181,7 +181,7 @@ public class Ribbon extends CocosNode {
          if you are using premultiplied alpha images,
          but 99% you might want to use this blending function regarding of the texture
          */
-        blendFunc_ = new CCBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
+        blendFunc_ = new ccBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
 
         texture_ = TextureManager.sharedTextureManager().addImage(path);
 
@@ -331,7 +331,7 @@ public class Ribbon extends CocosNode {
             gl.glBindTexture(GL10.GL_TEXTURE_2D, texture_.name());
 
             boolean newBlend = false;
-            if (blendFunc_.src != CCMacros.CC_BLEND_SRC || blendFunc_.dst != CCMacros.CC_BLEND_DST) {
+            if (blendFunc_.src != ccMacros.CC_BLEND_SRC || blendFunc_.dst != ccMacros.CC_BLEND_DST) {
                 newBlend = true;
                 gl.glBlendFunc(blendFunc_.src, blendFunc_.dst);
             }
@@ -340,7 +340,7 @@ public class Ribbon extends CocosNode {
                 seg.draw(gl, mCurTime, mFadeTime, color_);
 
             if (newBlend)
-                gl.glBlendFunc(CCMacros.CC_BLEND_SRC, CCMacros.CC_BLEND_DST);
+                gl.glBlendFunc(ccMacros.CC_BLEND_SRC, ccMacros.CC_BLEND_DST);
 
             gl.glDisable(GL10.GL_TEXTURE_2D);
             gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
@@ -349,23 +349,23 @@ public class Ribbon extends CocosNode {
         }
     }
 
-    public CCBlendFunc blendFunc() {
+    public ccBlendFunc blendFunc() {
         return blendFunc_;
     }
 
-    public void setBlendFunc(CCBlendFunc blendFunc) {
+    public void setBlendFunc(ccBlendFunc blendFunc) {
         blendFunc_ = blendFunc;
     }
 
 
     // CocosNodeTexture protocol
 
-    public void setTexture(Texture2D texture) {
+    public void setTexture(CCTexture2D texture) {
         setContentSize(texture.getWidth(), texture.getHeight());
         /* XXX Don't update blending function in Ribbons */
     }
 
-    public Texture2D texture() {
+    public CCTexture2D texture() {
         return texture_;
     }
 

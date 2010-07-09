@@ -13,9 +13,9 @@ import org.cocos2d.menus.Menu;
 import org.cocos2d.menus.MenuItemImage;
 import org.cocos2d.nodes.*;
 import org.cocos2d.opengl.CCGLSurfaceView;
-import org.cocos2d.opengl.Texture2D;
+import org.cocos2d.opengl.CCTexture2D;
 import org.cocos2d.types.*;
-import org.cocos2d.events.TouchDispatcher;
+import org.cocos2d.events.CCTouchDispatcher;
 
 public class AtlasSpriteTest extends Activity {
     // private static final String LOG_TAG = AtlasSpriteTest.class.getSimpleName();
@@ -190,7 +190,7 @@ public class AtlasSpriteTest extends Activity {
         private void addNewSprite(CCPoint pos) {
             AtlasSpriteManager mgr = (AtlasSpriteManager) getChild(kTagSpriteManager);
 
-            float rnd = CCMacros.CCRANDOM_0_1() * 1400.0f / 100.0f;
+            float rnd = ccMacros.CCRANDOM_0_1() * 1400.0f / 100.0f;
             int idx = (int) rnd;
             int x = (idx % 5) * 85;
             int y = (idx / 5) * 121;
@@ -201,7 +201,7 @@ public class AtlasSpriteTest extends Activity {
             sprite.setPosition(pos.x, pos.y);
 
             IntervalAction action;
-            float r = CCMacros.CCRANDOM_0_1();
+            float r = ccMacros.CCRANDOM_0_1();
 
             if (r < 0.33)
                 action = ScaleBy.action(3, 2);
@@ -221,7 +221,7 @@ public class AtlasSpriteTest extends Activity {
 
             addNewSprite(location);
 
-            return TouchDispatcher.kEventHandled;
+            return CCTouchDispatcher.kEventHandled;
         }
 
         @Override
@@ -234,13 +234,13 @@ public class AtlasSpriteTest extends Activity {
 
         public Atlas2() {
 
-            Texture2D.saveTexParameters();
-            Texture2D.setAliasTexParameters();
+            CCTexture2D.saveTexParameters();
+            CCTexture2D.setAliasTexParameters();
 
             AtlasSpriteManager mgr = new AtlasSpriteManager("grossini_dance_atlas.png", 50);
             addChild(mgr, 0, kTagSpriteManager);
 
-            Texture2D.restoreTexParameters();
+            CCTexture2D.restoreTexParameters();
 
             AtlasSprite sprite1 = AtlasSprite.sprite(CCRect.make(0, 0, 85, 121), mgr);
             AtlasSprite sprite2 = AtlasSprite.sprite(CCRect.make(0, 0, 85, 121), mgr);
@@ -389,7 +389,7 @@ public class AtlasSpriteTest extends Activity {
             mgr.addChild(sprite, -1, kTagSprite1);
             sprite.setPosition(s.width / 2, s.height / 2 - 20);
             sprite.setScaleX(6);
-            sprite.setColor(new CCColor3B(255, 0, 0));
+            sprite.setColor(new ccColor3B(255, 0, 0));
 
             schedule("reorderSprite", 1);
         }

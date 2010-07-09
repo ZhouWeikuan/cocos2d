@@ -2,7 +2,7 @@ package org.cocos2d.transitions;
 
 import org.cocos2d.nodes.Director;
 import org.cocos2d.nodes.Scene;
-import org.cocos2d.events.TouchDispatcher;
+import org.cocos2d.events.CCTouchDispatcher;
 
 import javax.microedition.khronos.opengles.GL10;
 
@@ -57,7 +57,7 @@ public class TransitionScene extends Scene {
         }
 
         // disable events while transition
-        TouchDispatcher.sharedDispatcher().setDispatchEvents(false);
+        CCTouchDispatcher.sharedDispatcher().setDispatchEvents(false);
         sceneOrder();
 
     }
@@ -102,7 +102,7 @@ public class TransitionScene extends Scene {
         Director.sharedDirector().replaceScene(inScene);
 
         // enable events after transition
-        TouchDispatcher.sharedDispatcher().setDispatchEvents(true);
+        CCTouchDispatcher.sharedDispatcher().setDispatchEvents(true);
 
         // issue #267
         outScene.setVisible(true);

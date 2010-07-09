@@ -1,11 +1,11 @@
 package org.cocos2d.particlesystem;
 
 import org.cocos2d.nodes.CocosNode;
-import org.cocos2d.opengl.Texture2D;
-import org.cocos2d.types.CCColorF;
-import static org.cocos2d.types.CCMacros.*;
+import org.cocos2d.opengl.CCTexture2D;
+import org.cocos2d.types.ccColor4F;
+import static org.cocos2d.types.ccMacros.*;
 import org.cocos2d.types.CCPoint;
-import org.cocos2d.types.CCPointSprite;
+import org.cocos2d.types.ccPointSprite;
 
 import javax.microedition.khronos.opengles.GL10;
 import static javax.microedition.khronos.opengles.GL10.*;
@@ -22,8 +22,8 @@ public abstract class ParticleSystem extends CocosNode {
         CCPoint dir = new CCPoint();
         float radialAccel;
         float tangentialAccel;
-        CCColorF color = new CCColorF();
-        CCColorF deltaColor = new CCColorF();
+        ccColor4F color = new ccColor4F();
+        ccColor4F deltaColor = new ccColor4F();
         float size;
         float life;
     }
@@ -83,16 +83,16 @@ public abstract class ParticleSystem extends CocosNode {
     protected float lifeVar;
 
     // Start color of the particles
-    protected CCColorF startColor = new CCColorF();
+    protected ccColor4F startColor = new ccColor4F();
 
     // Start color variance
-    protected CCColorF startColorVar = new CCColorF();
+    protected ccColor4F startColorVar = new ccColor4F();
 
     // End color of the particles
-    protected CCColorF endColor = new CCColorF();
+    protected ccColor4F endColor = new ccColor4F();
 
     // End color variance
-    protected CCColorF endColorVar = new CCColorF();
+    protected ccColor4F endColorVar = new ccColor4F();
 
     // Array of particles
     protected Particle particles[];
@@ -113,10 +113,10 @@ public abstract class ParticleSystem extends CocosNode {
     protected float emitCounter;
 
     // Texture of the particles
-    protected Texture2D texture;
+    protected CCTexture2D texture;
 
     // Array of (x,y,size,color)
-    CCPointSprite vertices[];
+    ccPointSprite vertices[];
 
     // Array of colors
     //CCColorF	colors[];
@@ -258,11 +258,11 @@ public abstract class ParticleSystem extends CocosNode {
      * texture used to render the particles
      */
 
-    public Texture2D getTexture() {
+    public CCTexture2D getTexture() {
         return texture;
     }
 
-    public void setTexture(Texture2D tex) {
+    public void setTexture(CCTexture2D tex) {
         this.texture = tex;
     }
 
@@ -277,12 +277,12 @@ public abstract class ParticleSystem extends CocosNode {
         totalParticles = numberOfParticles;
 
         particles = new Particle[totalParticles];
-        vertices = new CCPointSprite[totalParticles];
+        vertices = new ccPointSprite[totalParticles];
 
 
         for (int i = 0; i < totalParticles; i++) {
             particles[i] = new Particle();
-            vertices[i]  = new CCPointSprite();
+            vertices[i]  = new ccPointSprite();
         }
 
         // default, active
@@ -351,13 +351,13 @@ public abstract class ParticleSystem extends CocosNode {
         particle.life = life + lifeVar * CCRANDOM_MINUS1_1();
 
         // Color
-        CCColorF start = new CCColorF();
+        ccColor4F start = new ccColor4F();
         start.r = startColor.r + startColorVar.r * CCRANDOM_MINUS1_1();
         start.g = startColor.g + startColorVar.g * CCRANDOM_MINUS1_1();
         start.b = startColor.b + startColorVar.b * CCRANDOM_MINUS1_1();
         start.a = startColor.a + startColorVar.a * CCRANDOM_MINUS1_1();
 
-        CCColorF end = new CCColorF();
+        ccColor4F end = new ccColor4F();
         end.r = endColor.r + endColorVar.r * CCRANDOM_MINUS1_1();
         end.g = endColor.g + endColorVar.g * CCRANDOM_MINUS1_1();
         end.b = endColor.b + endColorVar.b * CCRANDOM_MINUS1_1();
@@ -443,7 +443,7 @@ public abstract class ParticleSystem extends CocosNode {
 
                 // TODO: Remove when glPointSizePointerOES is fixed
                 vertices[particleIdx].size = p.size;
-                vertices[particleIdx].colors = new CCColorF(p.color);
+                vertices[particleIdx].colors = new ccColor4F(p.color);
 
                 // update particle counter
                 particleIdx++;

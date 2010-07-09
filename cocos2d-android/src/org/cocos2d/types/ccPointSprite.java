@@ -1,8 +1,8 @@
 package org.cocos2d.types;
 
-public class CCPointSprite {
+public class ccPointSprite {
     public float x;
     public float y;
     public float size;
-    public CCColorF colors = new CCColorF();
+    public ccColor4F colors = new ccColor4F();
 }

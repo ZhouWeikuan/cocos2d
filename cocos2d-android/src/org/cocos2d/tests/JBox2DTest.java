@@ -1,6 +1,6 @@
 package org.cocos2d.tests;
 
-import org.cocos2d.events.TouchDispatcher;
+import org.cocos2d.events.CCTouchDispatcher;
 import org.cocos2d.layers.Layer;
 import org.cocos2d.nodes.AtlasSprite;
 import org.cocos2d.nodes.AtlasSpriteManager;
@@ -9,8 +9,8 @@ import org.cocos2d.nodes.Label;
 import org.cocos2d.nodes.Scene;
 import org.cocos2d.nodes.TextureManager;
 import org.cocos2d.opengl.CCGLSurfaceView;
-import org.cocos2d.types.CCColor3B;
-import org.cocos2d.types.CCMacros;
+import org.cocos2d.types.ccColor3B;
+import org.cocos2d.types.ccMacros;
 import org.cocos2d.types.CCPoint;
 import org.cocos2d.types.CCRect;
 import org.cocos2d.types.CCSize;
@@ -160,7 +160,7 @@ public class JBox2DTest extends Activity {
             
             Label label = Label.label("Tap screen", "DroidSans", 32);
             label.setPosition(s.width / 2f, s.height - 50f);
-            label.setColor(new CCColor3B(0, 0, 255));
+            label.setColor(new ccColor3B(0, 0, 255));
             addChild(label);
         }
 
@@ -185,8 +185,8 @@ public class JBox2DTest extends Activity {
 
         	// We have a 64x64 sprite sheet with 4 different 32x32 images.  The following code is
         	// just randomly picking one of the images
-        	int idx = (CCMacros.CCRANDOM_0_1() > 0.5f ? 0:1);
-        	int idy = (CCMacros.CCRANDOM_0_1() > 0.5f ? 0:1);
+        	int idx = (ccMacros.CCRANDOM_0_1() > 0.5f ? 0:1);
+        	int idy = (ccMacros.CCRANDOM_0_1() > 0.5f ? 0:1);
             AtlasSprite sprite = AtlasSprite.sprite(CCRect.make(idx * 32f, idy * 32f, 32f, 32f), mgr);
             mgr.addChild(sprite);
 
@@ -233,7 +233,7 @@ public class JBox2DTest extends Activity {
         			// Synchronize the AtlasSprite position and rotation with the corresponding body
         			AtlasSprite sprite = (AtlasSprite)userData;
         			sprite.setPosition(b.getPosition().x * PTM_RATIO, b.getPosition().y * PTM_RATIO);
-        			sprite.setRotation(-1.0f * CCMacros.CC_RADIANS_TO_DEGREES(b.getAngle()));
+        			sprite.setRotation(-1.0f * ccMacros.CC_RADIANS_TO_DEGREES(b.getAngle()));
         		}	
         	}
         }
@@ -244,7 +244,7 @@ public class JBox2DTest extends Activity {
 
             addNewSpriteWithCoords(location);
  
-            return TouchDispatcher.kEventHandled;
+            return CCTouchDispatcher.kEventHandled;
         }
 
 		@Override

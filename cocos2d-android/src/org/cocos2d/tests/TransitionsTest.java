@@ -11,7 +11,7 @@ import org.cocos2d.menus.MenuItemImage;
 import org.cocos2d.nodes.*;
 import org.cocos2d.opengl.CCGLSurfaceView;
 import org.cocos2d.transitions.*;
-import org.cocos2d.types.CCColor3B;
+import org.cocos2d.types.ccColor3B;
 import org.cocos2d.types.CCSize;
 
 import java.lang.reflect.Constructor;
@@ -86,7 +86,7 @@ public class TransitionsTest extends Activity {
 
     static class FadeWhiteTransition extends FadeTransition {
         public FadeWhiteTransition(float t, Scene s) {
-            super(t, s, new CCColor3B(255, 255, 255));
+            super(t, s, new ccColor3B(255, 255, 255));
         }
     }
 

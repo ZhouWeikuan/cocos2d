@@ -1,9 +1,9 @@
 package org.cocos2d.actions.camera;
 
 import org.cocos2d.actions.interval.IntervalAction;
-import org.cocos2d.opengl.Camera;
 import org.cocos2d.nodes.CocosNode;
-import org.cocos2d.types.CCMacros;
+import org.cocos2d.opengl.Camera;
+import org.cocos2d.types.ccMacros;
 
 public class OrbitCamera extends CameraAction {
     private float radius;
@@ -32,8 +32,8 @@ public class OrbitCamera extends CameraAction {
         angleX = x;
         deltaAngleX = dx;
 
-        radDeltaZ = CCMacros.CC_DEGREES_TO_RADIANS(dz);
-        radDeltaX = CCMacros.CC_DEGREES_TO_RADIANS(dx);
+        radDeltaZ = ccMacros.CC_DEGREES_TO_RADIANS(dz);
+        radDeltaX = ccMacros.CC_DEGREES_TO_RADIANS(dx);
     }
 
     public IntervalAction copy() {
@@ -50,12 +50,12 @@ public class OrbitCamera extends CameraAction {
         if (Float.isNaN(radius))
             radius = r[0];
         if (Float.isNaN(angleZ))
-            angleZ = CCMacros.CC_RADIANS_TO_DEGREES(zenith[0]);
+            angleZ = ccMacros.CC_RADIANS_TO_DEGREES(zenith[0]);
         if (Float.isNaN(angleX))
-            angleX = CCMacros.CC_RADIANS_TO_DEGREES(azimuth[0]);
+            angleX = ccMacros.CC_RADIANS_TO_DEGREES(azimuth[0]);
 
-        radZ = CCMacros.CC_DEGREES_TO_RADIANS(angleZ);
-        radX = CCMacros.CC_DEGREES_TO_RADIANS(angleX);
+        radZ = ccMacros.CC_DEGREES_TO_RADIANS(angleZ);
+        radX = ccMacros.CC_DEGREES_TO_RADIANS(angleX);
     }
 
     @Override

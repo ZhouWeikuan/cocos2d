@@ -16,7 +16,7 @@ import org.cocos2d.layers.MultiplexLayer;
 import org.cocos2d.menus.*;
 import org.cocos2d.nodes.*;
 import org.cocos2d.opengl.CCGLSurfaceView;
-import org.cocos2d.types.CCColor3B;
+import org.cocos2d.types.ccColor3B;
 import org.cocos2d.types.CCPoint;
 import org.cocos2d.types.CCRect;
 import org.cocos2d.types.CCSize;
@@ -121,8 +121,8 @@ public class MenuTest extends Activity {
             // Label Item (LabelAtlas)
             LabelAtlas labelAtlas = LabelAtlas.label("0123456789", "fps_images.png", 16, 24, '.');
             MenuItemLabel item3 = MenuItemLabel.item(labelAtlas, this, "menuCallbackDisabled");
-            item3.setDisabledColor(new CCColor3B(32, 32, 64));
-            item3.setColor(new CCColor3B(200, 200, 255));
+            item3.setDisabledColor(new ccColor3B(32, 32, 64));
+            item3.setColor(new ccColor3B(200, 200, 255));
 
 
             // Font Item

@@ -1,9 +1,9 @@
 package org.cocos2d.nodes;
 
-import org.cocos2d.opengl.Texture2D;
-import org.cocos2d.types.CCBlendFunc;
-import org.cocos2d.types.CCColor3B;
-import org.cocos2d.types.CCMacros;
+import org.cocos2d.opengl.CCTexture2D;
+import org.cocos2d.types.ccBlendFunc;
+import org.cocos2d.types.ccColor3B;
+import org.cocos2d.types.ccMacros;
 import org.cocos2d.types.CCPoint;
 
 import javax.microedition.khronos.opengles.GL10;
@@ -15,23 +15,23 @@ public class TextureNode extends CocosNode implements CocosNode.CocosNodeRGBA, C
     /**
      * The texture that is rendered
      */
-    private Texture2D texture_;
+    private CCTexture2D texture_;
 
     // blend func
-    private CCBlendFunc blendFunc_;
+    private ccBlendFunc blendFunc_;
 
     // texture RGBA
     private int opacity_;
-    private CCColor3B color_;
+    private ccColor3B color_;
 
     boolean opacityModifyRGB_;
 
 
-    public Texture2D getTexture() {
+    public CCTexture2D getTexture() {
         return texture_;
     }
 
-    public void setTexture(Texture2D texture) {
+    public void setTexture(CCTexture2D texture) {
         texture_ = texture;
         setContentSize(texture.getWidth(), texture.getHeight());
 //        if( ! texture.hasPremultipliedAlpha() ) {
@@ -53,21 +53,21 @@ public class TextureNode extends CocosNode implements CocosNode.CocosNodeRGBA, C
         opacity_ = opacity;
     }
 
-    public void setColor(CCColor3B color) {
+    public void setColor(ccColor3B color) {
         color_.r = color.r;
         color_.g = color.g;
         color_.b = color.b;
     }
 
-    public CCColor3B getColor() {
-        return new CCColor3B(color_.r, color_.g, color_.b);
+    public ccColor3B getColor() {
+        return new ccColor3B(color_.r, color_.g, color_.b);
     }
 
     public TextureNode() {
         opacity_ = 255;
-        color_ = new CCColor3B(255, 255, 255);
+        color_ = new ccColor3B(255, 255, 255);
         setAnchorPoint(0.5f, 0.5f);
-        blendFunc_ = new CCBlendFunc(CCMacros.CC_BLEND_SRC, CCMacros.CC_BLEND_DST);
+        blendFunc_ = new ccBlendFunc(ccMacros.CC_BLEND_SRC, ccMacros.CC_BLEND_DST);
 
     }
 
@@ -81,7 +81,7 @@ public class TextureNode extends CocosNode implements CocosNode.CocosNodeRGBA, C
         gl.glColor4f(color_.r / 255f, color_.g / 255f, color_.b / 255f, opacity_ / 255f);
 
         boolean newBlend = false;
-        if (blendFunc_.src != CCMacros.CC_BLEND_SRC || blendFunc_.dst != CCMacros.CC_BLEND_DST) {
+        if (blendFunc_.src != ccMacros.CC_BLEND_SRC || blendFunc_.dst != ccMacros.CC_BLEND_DST) {
             newBlend = true;
             gl.glBlendFunc(blendFunc_.src, blendFunc_.dst);
         }
@@ -90,7 +90,7 @@ public class TextureNode extends CocosNode implements CocosNode.CocosNodeRGBA, C
             texture_.drawAtPoint(gl, CCPoint.zero());
 
         if (newBlend)
-            gl.glBlendFunc(CCMacros.CC_BLEND_SRC, CCMacros.CC_BLEND_DST);
+            gl.glBlendFunc(ccMacros.CC_BLEND_SRC, ccMacros.CC_BLEND_DST);
 
         // is this chepear than saving/restoring color state ?
         gl.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);

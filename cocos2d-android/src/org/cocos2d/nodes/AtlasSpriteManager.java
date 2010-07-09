@@ -1,10 +1,10 @@
 package org.cocos2d.nodes;
 
-import org.cocos2d.opengl.Texture2D;
+import org.cocos2d.opengl.CCTexture2D;
 import org.cocos2d.opengl.TextureAtlas;
 import org.cocos2d.opengl.Primitives;
-import org.cocos2d.types.CCMacros;
-import org.cocos2d.types.CCBlendFunc;
+import org.cocos2d.types.ccMacros;
+import org.cocos2d.types.ccBlendFunc;
 import org.cocos2d.types.CCRect;
 import org.cocos2d.types.CCPoint;
 
@@ -25,18 +25,18 @@ public class AtlasSpriteManager extends CocosNode {
         return textureAtlas_;
     }
 
-    private CCBlendFunc blendFunc_;
+    private ccBlendFunc blendFunc_;
 
     /*
     * init with Texture2D
     */
-    public AtlasSpriteManager(Texture2D tex) {
+    public AtlasSpriteManager(CCTexture2D tex) {
         this(tex, defaultCapacity);
     }
 
-    public AtlasSpriteManager(Texture2D tex, int capacity) {
+    public AtlasSpriteManager(CCTexture2D tex, int capacity) {
 
-        blendFunc_ = new CCBlendFunc(CCMacros.CC_BLEND_SRC, CCMacros.CC_BLEND_DST);
+        blendFunc_ = new ccBlendFunc(ccMacros.CC_BLEND_SRC, ccMacros.CC_BLEND_DST);
 
         textureAtlas_ = new TextureAtlas(tex, capacity);
 
@@ -55,7 +55,7 @@ public class AtlasSpriteManager extends CocosNode {
 
     public AtlasSpriteManager(String fileImage, int capacity) {
 
-        blendFunc_ = new CCBlendFunc(CCMacros.CC_BLEND_SRC, CCMacros.CC_BLEND_DST);
+        blendFunc_ = new ccBlendFunc(ccMacros.CC_BLEND_SRC, ccMacros.CC_BLEND_DST);
 
         textureAtlas_ = new TextureAtlas(fileImage, capacity);
 
@@ -244,7 +244,7 @@ public class AtlasSpriteManager extends CocosNode {
             gl.glEnable(GL10.GL_TEXTURE_2D);
 
             boolean newBlend = false;
-            if( blendFunc_.src != CCMacros.CC_BLEND_SRC || blendFunc_.dst != CCMacros.CC_BLEND_DST ) {
+            if( blendFunc_.src != ccMacros.CC_BLEND_SRC || blendFunc_.dst != ccMacros.CC_BLEND_DST ) {
                 newBlend = true;
                 gl.glBlendFunc( blendFunc_.src, blendFunc_.dst );
             }
@@ -252,7 +252,7 @@ public class AtlasSpriteManager extends CocosNode {
             textureAtlas_.drawQuads(gl);
 
             if( newBlend )
-                gl.glBlendFunc(CCMacros.CC_BLEND_SRC, CCMacros.CC_BLEND_DST);
+                gl.glBlendFunc(ccMacros.CC_BLEND_SRC, ccMacros.CC_BLEND_DST);
 
             gl.glDisable(GL10.GL_TEXTURE_2D);
 

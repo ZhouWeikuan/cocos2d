@@ -49,15 +49,15 @@ public class AtlasSprite extends CocosNode implements CocosNode.CocosNodeSize, C
 
     // texture coords
     // stored as floats in the range [0..1]
-    private CCQuad2 texCoords_ = new CCQuad2();
+    private ccQuad2 texCoords_ = new ccQuad2();
 
     // vertex coordinates
     // stored as pixel locations
-    private CCQuad3 vertexCoords_ = new CCQuad3();
+    private ccQuad3 vertexCoords_ = new ccQuad3();
 
     // opacity and RGB protocol
     private int opacity_;
-    private CCColor3B color_;
+    private ccColor3B color_;
     
     private boolean dirty_;
 
@@ -97,7 +97,7 @@ public class AtlasSprite extends CocosNode implements CocosNode.CocosNodeSize, C
 
         // RGB and opacity
         opacity_ = (byte) 255;
-        color_ = new CCColor3B(255, 255, 255);
+        color_ = new ccColor3B(255, 255, 255);
 
         animations = null;        // lazy alloc
 
@@ -141,12 +141,18 @@ public class AtlasSprite extends CocosNode implements CocosNode.CocosNodeSize, C
         float top = rect_.origin.y / atlasHeight;
         float bottom = (rect_.origin.y + rect_.size.height) / atlasHeight;
 
-        if( flipX_)
-            CCMacros.CC_SWAP(left,right);
-        if( flipY_)
-            CCMacros.CC_SWAP(top,bottom);
+        if( flipX_) {
+        	float tmp = left;
+        	left = right;
+        	right = tmp;
+        }
+        if( flipY_) {
+        	float tmp = top;
+        	top = bottom;
+        	bottom = tmp;
+        }
 
-        CCQuad2 newCoords = new CCQuad2(
+        ccQuad2 newCoords = new ccQuad2(
                 left, bottom,
                 right, bottom,
                 left, top,
@@ -156,7 +162,7 @@ public class AtlasSprite extends CocosNode implements CocosNode.CocosNodeSize, C
     }
 
     public void updateColor() {
-        CCColor4B colorQuad = new CCColor4B(color_.r, color_.g, color_.b, opacity_);
+        ccColor4B colorQuad = new ccColor4B(color_.r, color_.g, color_.b, opacity_);
         textureAtlas_.updateColor(colorQuad, atlasIndex_);
         dirty_ = false;
     }
@@ -166,7 +172,7 @@ public class AtlasSprite extends CocosNode implements CocosNode.CocosNodeSize, C
 
         // if not visible_ then everything is 0
         if (!visible_) {
-            CCQuad3 newVertices = new CCQuad3(
+            ccQuad3 newVertices = new ccQuad3(
                     0, 0, 0,
                     0, 0, 0,
                     0, 0, 0,
@@ -185,7 +191,7 @@ public class AtlasSprite extends CocosNode implements CocosNode.CocosNodeSize, C
             float x = getPositionX();
             float y = getPositionY();
 
-            float r = -CCMacros.CC_DEGREES_TO_RADIANS(getRotation());
+            float r = -ccMacros.CC_DEGREES_TO_RADIANS(getRotation());
             float cr = (float)Math.cos(r);
             float sr = (float)Math.sin(r);
             float ax = x1 * cr - y1 * sr + x;
@@ -197,7 +203,7 @@ public class AtlasSprite extends CocosNode implements CocosNode.CocosNodeSize, C
             float dx = x1 * cr - y2 * sr + x;
             float dy = x1 * sr + y2 * cr + y;
 
-            CCQuad3 newVertices = new CCQuad3(
+            ccQuad3 newVertices = new ccQuad3(
                     (int) ax, (int) ay, 0,
                     (int) bx, (int) by, 0,
                     (int) dx, (int) dy, 0,
@@ -216,7 +222,7 @@ public class AtlasSprite extends CocosNode implements CocosNode.CocosNodeSize, C
             float x2 = (x1 + rect_.size.width * getScaleX());
             float y2 = (y1 + rect_.size.height * getScaleY());
 
-            CCQuad3 newVertices = new CCQuad3(
+            ccQuad3 newVertices = new ccQuad3(
                     (int) x1, (int) y1, 0,
                     (int) x2, (int) y1, 0,
                     (int) x1, (int) y2, 0,
@@ -235,7 +241,7 @@ public class AtlasSprite extends CocosNode implements CocosNode.CocosNodeSize, C
             float x2 = (x1 + rect_.size.width);
             float y2 = (y1 + rect_.size.height);
 
-            CCQuad3 newVertices = new CCQuad3(
+            ccQuad3 newVertices = new ccQuad3(
                     (int) x1, (int) y1, 0,
                     (int) x2, (int) y1, 0,
                     (int) x1, (int) y2, 0,
@@ -351,15 +357,15 @@ public class AtlasSprite extends CocosNode implements CocosNode.CocosNodeSize, C
         return opacity_;
     }
 
-    public void setColor(CCColor3B color) {
+    public void setColor(ccColor3B color) {
         color_.r = color.r;
         color_.g = color.g;
         color_.b = color.b;
         dirty_ = true;
     }
 
-    public CCColor3B getColor() {
-        return new CCColor3B(color_.r, color_.g, color_.b);
+    public ccColor3B getColor() {
+        return new ccColor3B(color_.r, color_.g, color_.b);
     }
 
     // TODO Remove cast

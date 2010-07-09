@@ -1,7 +1,7 @@
 package org.cocos2d.menus;
 
 import org.cocos2d.nodes.CocosNode;
-import org.cocos2d.types.CCColor3B;
+import org.cocos2d.types.ccColor3B;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -10,7 +10,7 @@ public class MenuItemToggle extends MenuItem {
     private int selectedIndex_;
     private ArrayList<MenuItem> subItems_;
     private byte opacity_;
-    CCColor3B color_;
+    ccColor3B color_;
 
     public static MenuItemToggle item(CocosNode target, String selector, MenuItem... items) {
         return new MenuItemToggle(target, selector, items);
@@ -88,7 +88,7 @@ public class MenuItemToggle extends MenuItem {
             ((CocosNodeRGBA) item).setOpacity(opacity);
     }
 
-    public void setColor(CCColor3B color) {
+    public void setColor(ccColor3B color) {
         color_ = color;
         for (MenuItem item : subItems_)
             ((CocosNodeRGBA) item).setColor(color);

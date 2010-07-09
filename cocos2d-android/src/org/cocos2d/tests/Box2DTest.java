@@ -4,7 +4,7 @@ import org.cocos2d.layers.Layer;
 import org.cocos2d.opengl.CCGLSurfaceView;
 import org.cocos2d.nodes.*;
 import org.cocos2d.types.*;
-import org.cocos2d.events.TouchDispatcher;
+import org.cocos2d.events.CCTouchDispatcher;
 import org.cocos2d.box2d.GLESDebugDraw;
 import org.jbox2d.common.Vec2;
 
@@ -175,7 +175,7 @@ public class Box2DTest extends Activity {
 
             Label label = Label.label("Tap screen", "DroidSans", 32);
             addChild(label, 0);
-            label.setColor(new CCColor3B(0,0,255));
+            label.setColor(new ccColor3B(0,0,255));
             label.setPosition( screenSize.width/2, screenSize.height-50);
 
             schedule("tick");
@@ -196,8 +196,8 @@ public class Box2DTest extends Activity {
 
             //We have a 64x64 sprite sheet with 4 different 32x32 images.  The following code is
             //just randomly picking one of the images
-            int idx = (CCMacros.CCRANDOM_0_1() > .5 ? 0:1);
-            int idy = (CCMacros.CCRANDOM_0_1() > .5 ? 0:1);
+            int idx = (ccMacros.CCRANDOM_0_1() > .5 ? 0:1);
+            int idy = (ccMacros.CCRANDOM_0_1() > .5 ? 0:1);
             AtlasSprite sprite = AtlasSprite.sprite(CCRect.make(32 * idx,32 * idy,32,32), mgr);
             mgr.addChild(sprite);
 
@@ -243,7 +243,7 @@ public class Box2DTest extends Activity {
                     //synchronize the AtlasSprites position and rotation with the corresponding body
                     AtlasSprite myActor = (AtlasSprite)b.getUserData();
                     myActor.setPosition( b.getPosition().x * PTM_RATIO, b.getPosition().y * PTM_RATIO);
-                    myActor.setRotation(-1 * CCMacros.CC_RADIANS_TO_DEGREES(b.getAngle()));
+                    myActor.setRotation(-1 * ccMacros.CC_RADIANS_TO_DEGREES(b.getAngle()));
                 }
             }
         }
@@ -256,7 +256,7 @@ public class Box2DTest extends Activity {
             location = Director.sharedDirector().convertCoordinate(location.x, location.y);
 
             addNewSprite(location.x, location.y);
-            return TouchDispatcher.kEventHandled;
+            return CCTouchDispatcher.kEventHandled;
         }
 
 		@Override

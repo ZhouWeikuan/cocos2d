@@ -8,14 +8,14 @@ import android.view.WindowManager;
 import android.util.Log;
 import org.cocos2d.actions.ActionManager;
 import org.cocos2d.actions.Scheduler;
-import org.cocos2d.opengl.Texture2D;
+import org.cocos2d.opengl.CCTexture2D;
 import org.cocos2d.opengl.GLU;
 import org.cocos2d.opengl.Camera;
 import org.cocos2d.types.CCPoint;
 import org.cocos2d.types.CCRect;
 import org.cocos2d.types.CCSize;
 import org.cocos2d.utils.CCFormatter;
-import org.cocos2d.events.TouchDispatcher;
+import org.cocos2d.events.CCTouchDispatcher;
 import org.cocos2d.transitions.TransitionScene;
 
 import javax.microedition.khronos.egl.EGL10;
@@ -211,7 +211,7 @@ public class Director implements GLSurfaceView.Renderer {
 
         gl.glShadeModel(GL_FLAT);
 //
-//        setTexture2D(gl, true);
+//        setCCTexture2D(gl, true);
 
         // set other opengl default values
         gl.glClearColor(0.0f, 0.0f, 0.0f, 1f);
@@ -555,7 +555,7 @@ public class Director implements GLSurfaceView.Renderer {
 //            {
 //                [openGLView_ setUserInteractionEnabled:YES];
 
-        TouchDispatcher.sharedDispatcher().setDispatchEvents(true);
+        CCTouchDispatcher.sharedDispatcher().setDispatchEvents(true);
 
 //            }
 //            else
@@ -695,7 +695,7 @@ public class Director implements GLSurfaceView.Renderer {
         runningScene_ = null;
         nextScene = null;
 
-        TouchDispatcher.sharedDispatcher().removeAllDelegates();
+        CCTouchDispatcher.sharedDispatcher().removeAllDelegates();
 
         scenesStack_.clear();
 
@@ -791,7 +791,7 @@ public class Director implements GLSurfaceView.Renderer {
             gl.glDisable(GL_DEPTH_TEST);
     }
 
-    public void setTexture2D(GL10 gl, boolean on) {
+    public void setCCTexture2D(GL10 gl, boolean on) {
         if (on)
             gl.glEnable(GL_TEXTURE_2D);
         else
@@ -846,7 +846,7 @@ public class Director implements GLSurfaceView.Renderer {
                 accumDt = 0;
             }
 
-            Texture2D texture = new Texture2D(new CCFormatter().format("%.2f", frameRate), "DroidSans", 24);
+            CCTexture2D texture = new CCTexture2D(new CCFormatter().format("%.2f", frameRate), "DroidSans", 24);
             gl.glEnable(GL_TEXTURE_2D);
             gl.glEnableClientState(GL_VERTEX_ARRAY);
             gl.glEnableClientState(GL_TEXTURE_COORD_ARRAY);

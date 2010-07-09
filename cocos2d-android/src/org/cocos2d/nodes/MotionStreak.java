@@ -1,8 +1,8 @@
 package org.cocos2d.nodes;
 
-import org.cocos2d.opengl.Texture2D;
-import org.cocos2d.types.CCBlendFunc;
-import org.cocos2d.types.CCColor4B;
+import org.cocos2d.opengl.CCTexture2D;
+import org.cocos2d.types.ccBlendFunc;
+import org.cocos2d.types.ccColor4B;
 import org.cocos2d.types.CCPoint;
 
 /**
@@ -18,7 +18,7 @@ import org.cocos2d.types.CCPoint;
  * MotionStreak, by default, will use the GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA blending function.
  * This blending function might not be the correct one for certain textures.
  * But you can change it by using:
- * [obj setBlendFunc: (ccBlendfunc) {new_src_blend_func, new_dst_blend_func}];
+ * [obj setBlendFunc: (ccBlendFunc) {new_src_blend_func, new_dst_blend_func}];
  *
  * @since v0.8.1
  */
@@ -39,7 +39,7 @@ public class MotionStreak extends CocosNode /*implements CocosNodeTexture*/ {
     /**
      * creates the a MotionStreak. The image will be loaded using the TextureMgr.
      */
-    public MotionStreak(float fade, float seg, String path, float width, float length, CCColor4B color) {
+    public MotionStreak(float fade, float seg, String path, float width, float length, ccColor4B color) {
         mSegThreshold = seg;
         mWidth = width;
         mLastLocation = CCPoint.make(0, 0);
@@ -66,19 +66,19 @@ public class MotionStreak extends CocosNode /*implements CocosNodeTexture*/ {
 
     // CocosNodeTexture protocol
 
-    public void setTexture(Texture2D texture) {
+    public void setTexture(CCTexture2D texture) {
         ribbon_.setTexture(texture);
     }
 
-    public Texture2D texture() {
+    public CCTexture2D texture() {
         return ribbon_.texture();
     }
 
-    public CCBlendFunc blendFunc() {
+    public ccBlendFunc blendFunc() {
         return ribbon_.blendFunc();
     }
 
-    public void setBlendFunc(CCBlendFunc blendFunc) {
+    public void setBlendFunc(ccBlendFunc blendFunc) {
         ribbon_.setBlendFunc(blendFunc);
     }
 

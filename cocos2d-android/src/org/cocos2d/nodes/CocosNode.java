@@ -7,7 +7,7 @@ import org.cocos2d.actions.ActionManager;
 import org.cocos2d.actions.Scheduler;
 import org.cocos2d.actions.base.Action;
 import org.cocos2d.grid.GridBase;
-import org.cocos2d.opengl.Texture2D;
+import org.cocos2d.opengl.CCTexture2D;
 import org.cocos2d.opengl.Camera;
 import org.cocos2d.types.*;
 
@@ -604,7 +604,7 @@ public class CocosNode {
             }
 
             transform_.translate((int) position_.x, (int) position_.y);
-            transform_.rotate(-CCMacros.CC_DEGREES_TO_RADIANS(rotation_));
+            transform_.rotate(-ccMacros.CC_DEGREES_TO_RADIANS(rotation_));
             transform_.scale(scaleX_, scaleY_);
 
             transform_.translate(-(int) transformAnchor_.x, -(int) transformAnchor_.y);
@@ -680,9 +680,9 @@ public class CocosNode {
 
     public interface CocosNodeRGBA {
 
-        public void setColor(CCColor3B color);
+        public void setColor(ccColor3B color);
 
-        public CCColor3B getColor();
+        public ccColor3B getColor();
 
         public int getOpacity();
 
@@ -690,7 +690,7 @@ public class CocosNode {
     }
 
     /**
-     * CocosNodes that uses a Texture2D to render the images.
+     * CocosNodes that uses a CCTexture2D to render the images.
      * The texture can have a blending function.
      * If the texture has alpha premultiplied the default blending function is:
      * src=GL_ONE dst= GL_ONE_MINUS_SRC_ALPHA
@@ -704,12 +704,12 @@ public class CocosNode {
         /**
          * returns the used texture
          */
-        public Texture2D getTexture();
+        public CCTexture2D getTexture();
 
         /**
          * sets a new texture. it will be retained
          */
-        public void setTexture(Texture2D texture);
+        public void setTexture(CCTexture2D texture);
         /** set the source blending function for the texture */
 //        public void setBlendFunc(CCBlendFunc blendFunc);
         /** returns the blending function used for the texture */

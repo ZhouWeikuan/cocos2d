@@ -7,13 +7,13 @@ import android.view.Display;
 import android.view.MotionEvent;
 import android.view.WindowManager;
 import org.cocos2d.nodes.Director;
-import org.cocos2d.events.TouchDispatcher;
+import org.cocos2d.events.CCTouchDispatcher;
 
 public class CCGLSurfaceView extends GLSurfaceView {
 
     // private static final String LOG_TAG = CCGLSurfaceView.class.getSimpleName();
     private Director mRenderer;
-    private TouchDispatcher mDispatcher;
+    private CCTouchDispatcher mDispatcher;
 
     public Display frame;
 
@@ -33,7 +33,7 @@ public class CCGLSurfaceView extends GLSurfaceView {
         mRenderer = Director.sharedDirector();
         Director.me = (Activity) context;
 
-        mDispatcher = TouchDispatcher.sharedDispatcher();
+        mDispatcher = CCTouchDispatcher.sharedDispatcher();
 
         setRenderer(mRenderer);
 

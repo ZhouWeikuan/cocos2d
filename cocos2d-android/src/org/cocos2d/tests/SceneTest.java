@@ -19,8 +19,8 @@ import org.cocos2d.opengl.CCGLSurfaceView;
 import org.cocos2d.transitions.FlipXTransition;
 import org.cocos2d.transitions.SlideInTTransition;
 import org.cocos2d.transitions.TransitionScene;
-import org.cocos2d.types.CCColor4B;
-import org.cocos2d.events.TouchDispatcher;
+import org.cocos2d.types.ccColor4B;
+import org.cocos2d.events.CCTouchDispatcher;
 
 
 public class SceneTest extends Activity {
@@ -106,7 +106,7 @@ public class SceneTest extends Activity {
 
     static class Layer3 extends ColorLayer {
         public Layer3() {
-            super(new CCColor4B(0, 0, 255, 255));
+            super(new ccColor4B(0, 0, 255, 255));
 
             isTouchEnabled_ = true;
 
@@ -120,7 +120,7 @@ public class SceneTest extends Activity {
         @Override
         public boolean ccTouchesEnded(MotionEvent event) {
             Director.sharedDirector().popScene();
-            return TouchDispatcher.kEventHandled;
+            return CCTouchDispatcher.kEventHandled;
         }
     }
 

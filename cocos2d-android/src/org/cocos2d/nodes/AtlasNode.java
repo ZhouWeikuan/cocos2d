@@ -1,10 +1,10 @@
 package org.cocos2d.nodes;
 
-import org.cocos2d.opengl.Texture2D;
+import org.cocos2d.opengl.CCTexture2D;
 import org.cocos2d.opengl.TextureAtlas;
-import org.cocos2d.types.CCBlendFunc;
-import org.cocos2d.types.CCColor3B;
-import org.cocos2d.types.CCMacros;
+import org.cocos2d.types.ccBlendFunc;
+import org.cocos2d.types.ccColor3B;
+import org.cocos2d.types.ccMacros;
 
 import javax.microedition.khronos.opengles.GL10;
 
@@ -39,11 +39,11 @@ public abstract class AtlasNode extends CocosNode implements CocosNode.CocosNode
     protected int itemHeight;
 
     // blend function
-    CCBlendFunc blendFunc_;
+    ccBlendFunc blendFunc_;
 
     // texture RGBA
     int opacity_;
-    CCColor3B color_;
+    ccColor3B color_;
     boolean opacityModifyRGB_;
 
     protected AtlasNode(String tile, int w, int h, int c) {
@@ -52,10 +52,10 @@ public abstract class AtlasNode extends CocosNode implements CocosNode.CocosNode
         itemHeight = h;
 
         opacity_ = (byte) 255;
-        color_ = new CCColor3B((byte) 255, (byte) 255, (byte) 255);
+        color_ = new ccColor3B((byte) 255, (byte) 255, (byte) 255);
         opacityModifyRGB_ = false;
 
-        blendFunc_ = new CCBlendFunc(CCMacros.CC_BLEND_SRC, CCMacros.CC_BLEND_DST);
+        blendFunc_ = new ccBlendFunc(ccMacros.CC_BLEND_SRC, ccMacros.CC_BLEND_DST);
         textureAtlas_ = new TextureAtlas(tile, c);
 
         calculateMaxItems();
@@ -85,7 +85,7 @@ public abstract class AtlasNode extends CocosNode implements CocosNode.CocosNode
         gl.glColor4f(color_.r / 255f, color_.g / 255f, color_.b / 255f, opacity_ / 255f);
 
         boolean newBlend = false;
-        if (blendFunc_.src != CCMacros.CC_BLEND_SRC || blendFunc_.dst != CCMacros.CC_BLEND_DST) {
+        if (blendFunc_.src != ccMacros.CC_BLEND_SRC || blendFunc_.dst != ccMacros.CC_BLEND_DST) {
             newBlend = true;
             gl.glBlendFunc(blendFunc_.src, blendFunc_.dst);
         }
@@ -93,7 +93,7 @@ public abstract class AtlasNode extends CocosNode implements CocosNode.CocosNode
         textureAtlas_.drawQuads(gl);
 
         if (newBlend)
-            gl.glBlendFunc(CCMacros.CC_BLEND_SRC, CCMacros.CC_BLEND_DST);
+            gl.glBlendFunc(ccMacros.CC_BLEND_SRC, ccMacros.CC_BLEND_DST);
 
         // is this chepear than saving/restoring color state ?
         gl.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
@@ -113,14 +113,14 @@ public abstract class AtlasNode extends CocosNode implements CocosNode.CocosNode
     }
 
 
-    public void setColor(CCColor3B color) {
+    public void setColor(ccColor3B color) {
         color_.r = color.r;
         color_.g = color.g;
         color_.b = color.b;
     }
 
-    public CCColor3B getColor() {
-        return new CCColor3B(color_.r, color_.g, color_.b);
+    public ccColor3B getColor() {
+        return new ccColor3B(color_.r, color_.g, color_.b);
     }
 
 
@@ -129,13 +129,13 @@ public abstract class AtlasNode extends CocosNode implements CocosNode.CocosNode
     public void updateBlendFunc() {
     }
 
-    public void setTexture(Texture2D texture) {
+    public void setTexture(CCTexture2D texture) {
         textureAtlas_.setTexture(texture);
         updateBlendFunc();
 //        updateOpacityModifyRGB();
     }
 
-    public Texture2D getTexture() {
+    public CCTexture2D getTexture() {
         return textureAtlas_.getTexture();
     }
 }

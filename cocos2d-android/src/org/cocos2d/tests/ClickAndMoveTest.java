@@ -13,10 +13,10 @@ import org.cocos2d.layers.ColorLayer;
 import org.cocos2d.layers.Layer;
 import org.cocos2d.nodes.*;
 import org.cocos2d.opengl.CCGLSurfaceView;
-import org.cocos2d.types.CCColor4B;
-import org.cocos2d.types.CCMacros;
+import org.cocos2d.types.ccColor4B;
+import org.cocos2d.types.ccMacros;
 import org.cocos2d.types.CCPoint;
-import org.cocos2d.events.TouchDispatcher;
+import org.cocos2d.events.CCTouchDispatcher;
 
 public class ClickAndMoveTest extends Activity {
     // private static final String LOG_TAG = ClickAndMoveTest.class.getSimpleName();
@@ -99,7 +99,7 @@ public class ClickAndMoveTest extends Activity {
 
             Sprite sprite = Sprite.sprite("grossini.png");
 
-            Layer layer = ColorLayer.node(new CCColor4B(255, 255, 0, 255));
+            Layer layer = ColorLayer.node(new ccColor4B(255, 255, 0, 255));
             addChild(layer, -1);
 
             addChild(sprite, 0, kTagSprite);
@@ -119,7 +119,7 @@ public class ClickAndMoveTest extends Activity {
             s.runAction(MoveTo.action(1.0f, convertedLocation.x, convertedLocation.y));
             float o = convertedLocation.x - s.getPositionX();
             float a = convertedLocation.y - s.getPositionY();
-            float at = CCMacros.CC_RADIANS_TO_DEGREES((float) Math.atan(o / a));
+            float at = ccMacros.CC_RADIANS_TO_DEGREES((float) Math.atan(o / a));
 
             if (a < 0) {
                 if (o < 0)
@@ -130,7 +130,7 @@ public class ClickAndMoveTest extends Activity {
 
             s.runAction(RotateTo.action(1, at));
 
-            return TouchDispatcher.kEventHandled;
+            return CCTouchDispatcher.kEventHandled;
         }
 
     }

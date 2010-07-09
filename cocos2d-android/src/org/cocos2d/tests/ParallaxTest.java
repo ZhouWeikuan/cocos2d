@@ -14,7 +14,7 @@ import org.cocos2d.nodes.*;
 import org.cocos2d.opengl.CCGLSurfaceView;
 import org.cocos2d.opengl.TextureAtlas;
 import org.cocos2d.types.*;
-import org.cocos2d.events.TouchDispatcher;
+import org.cocos2d.events.CCTouchDispatcher;
 
 public class ParallaxTest extends Activity {
     // private static final String LOG_TAG = AtlasSpriteTest.class.getSimpleName();
@@ -275,7 +275,7 @@ public class ParallaxTest extends Activity {
         public void registerWithTouchDispatcher()
         {
             System.out.println("ParallaxTest: registerWithTouchDispatcher");
-            TouchDispatcher.sharedDispatcher().addDelegate(this, 0);
+            CCTouchDispatcher.sharedDispatcher().addDelegate(this, 0);
         }
 
 
@@ -283,19 +283,19 @@ public class ParallaxTest extends Activity {
         public boolean ccTouchesBegan(MotionEvent event)
         {
             previousLocation = CCPoint.make(event.getX(), event.getY());
-            return TouchDispatcher.kEventHandled;
+            return CCTouchDispatcher.kEventHandled;
         }
 
         @Override
         public boolean ccTouchesEnded(MotionEvent event)
         {
-            return TouchDispatcher.kEventHandled;
+            return CCTouchDispatcher.kEventHandled;
         }
 
         @Override
         public boolean ccTouchesCancelled(MotionEvent event)
         {
-            return TouchDispatcher.kEventIgnored;
+            return CCTouchDispatcher.kEventIgnored;
         }
 
         @Override
@@ -316,7 +316,7 @@ public class ParallaxTest extends Activity {
 
             previousLocation = touchLocation;
             
-            return TouchDispatcher.kEventHandled;
+            return CCTouchDispatcher.kEventHandled;
         }
 
 

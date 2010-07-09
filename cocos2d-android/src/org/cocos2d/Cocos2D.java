@@ -29,6 +29,8 @@ import java.text.Collator;
 import java.util.*;
 
 public class Cocos2D extends ListActivity {
+    public static final String cocos2dVersion = "cocos2d v0.99.4-rc3";
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

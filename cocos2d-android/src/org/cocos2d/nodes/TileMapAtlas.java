@@ -90,7 +90,7 @@ public class TileMapAtlas extends AtlasNode {
      * returns a tile from position x,y.
      * For the moment only channel R is used
      */
-    public CCRGBB tile(CCGridSize pos) {
+    public CCRGBB tile(ccGridSize pos) {
         assert tgaInfo != null : "tgaInfo must not be null";
         assert pos.x < tgaInfo.width : "Invalid position.x";
         assert pos.y < tgaInfo.height : "Invalid position.y";
@@ -106,7 +106,7 @@ public class TileMapAtlas extends AtlasNode {
      * sets a tile at position x,y.
      * For the moment only channel R is used
      */
-    public void setTile(CCRGBB tile, CCGridSize pos) {
+    public void setTile(CCRGBB tile, ccGridSize pos) {
         assert tgaInfo != null : "tgaInfo must not be null";
         assert posToAtlasIndex != null : "posToAtlasIndex must not be nil";
         assert pos.x < tgaInfo.width : "Invalid position.x";
@@ -131,9 +131,9 @@ public class TileMapAtlas extends AtlasNode {
         }
     }
 
-    private void updateAtlas(CCGridSize pos, CCRGBB value, int idx) {
-        CCQuad2 texCoord = new CCQuad2();
-        CCQuad3 vertex = new CCQuad3();
+    private void updateAtlas(ccGridSize pos, CCRGBB value, int idx) {
+        ccQuad2 texCoord = new ccQuad2();
+        ccQuad3 vertex = new ccQuad3();
         int x = pos.x;
         int y = pos.y;
         float row = (value.r % itemsPerRow) * texStepX;
@@ -178,7 +178,7 @@ public class TileMapAtlas extends AtlasNode {
                             tgaInfo.imageData[x + 2 + y * tgaInfo.width]);
 
                     if (value.r != 0) {
-                        updateAtlas(CCGridSize.ccg(x, y), value, total);
+                        updateAtlas(ccGridSize.ccg(x, y), value, total);
 
                         String key = new CCFormatter().format("%d,%d", x, y);
                         posToAtlasIndex.put(key, total);

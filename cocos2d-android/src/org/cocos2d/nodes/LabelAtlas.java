@@ -1,7 +1,7 @@
 package org.cocos2d.nodes;
 
-import org.cocos2d.types.CCQuad2;
-import org.cocos2d.types.CCQuad3;
+import org.cocos2d.types.ccQuad2;
+import org.cocos2d.types.ccQuad3;
 
 import javax.microedition.khronos.opengles.GL10;
 
@@ -29,8 +29,8 @@ public class LabelAtlas extends AtlasNode implements CocosNode.CocosNodeLabel, C
     public void updateAtlasValues() {
         int n = string.length();
 
-        CCQuad2 texCoord = new CCQuad2();
-        CCQuad3 vertex = new CCQuad3();
+        ccQuad2 texCoord = new ccQuad2();
+        ccQuad3 vertex = new ccQuad3();
 
         String s = string;
 

@@ -1,6 +1,6 @@
 package org.cocos2d.nodes;
 
-import org.cocos2d.opengl.Texture2D;
+import org.cocos2d.opengl.CCTexture2D;
 import org.cocos2d.types.CCSize;
 
 public class Label extends TextureNode implements CocosNode.CocosNodeLabel, CocosNode.CocosNodeSize {
@@ -39,9 +39,9 @@ public class Label extends TextureNode implements CocosNode.CocosNodeLabel, Coco
 
     public void setString(String string) {
         if (CCSize.equalToSize(_dimensions, CCSize.zero())) {
-            setTexture(new Texture2D(string, _fontName, _fontSize));
+            setTexture(new CCTexture2D(string, _fontName, _fontSize));
         } else
-            setTexture(new Texture2D(string, _dimensions, _alignment, _fontName, _fontSize));
+            setTexture(new CCTexture2D(string, _dimensions, _alignment, _fontName, _fontSize));
     }
 
 }

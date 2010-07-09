@@ -10,7 +10,7 @@ import org.cocos2d.layers.ColorLayer;
 import org.cocos2d.layers.Layer;
 import org.cocos2d.nodes.*;
 import org.cocos2d.opengl.CCGLSurfaceView;
-import org.cocos2d.types.CCColor4B;
+import org.cocos2d.types.ccColor4B;
 import org.cocos2d.types.CCSize;
 
 public class RotateWorldTest extends Activity {
@@ -80,10 +80,10 @@ public class RotateWorldTest extends Activity {
             x = size.width;
             y = size.height;
 
-            CocosNode blue = ColorLayer.node(new CCColor4B(0, 0, 255, 255));
-            CocosNode red = ColorLayer.node(new CCColor4B(255, 0, 0, 255));
-            CocosNode green = ColorLayer.node(new CCColor4B(0, 255, 0, 255));
-            CocosNode white = ColorLayer.node(new CCColor4B(255, 255, 255, 255));
+            CocosNode blue = ColorLayer.node(new ccColor4B(0, 0, 255, 255));
+            CocosNode red = ColorLayer.node(new ccColor4B(255, 0, 0, 255));
+            CocosNode green = ColorLayer.node(new ccColor4B(0, 255, 0, 255));
+            CocosNode white = ColorLayer.node(new ccColor4B(255, 255, 255, 255));
 
             blue.scale(0.5f);
             blue.setPosition(-x / 4, -y / 4);

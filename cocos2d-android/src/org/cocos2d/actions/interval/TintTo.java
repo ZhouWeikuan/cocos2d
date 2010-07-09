@@ -1,7 +1,7 @@
 package org.cocos2d.actions.interval;
 
 import org.cocos2d.nodes.CocosNode;
-import org.cocos2d.types.CCColor3B;
+import org.cocos2d.types.ccColor3B;
 
 //
 // TintTo
@@ -33,7 +33,7 @@ public class TintTo extends IntervalAction {
 
         CocosNode.CocosNodeRGBA tn = (CocosNode.CocosNodeRGBA) target;
 
-        CCColor3B c = tn.getColor();
+        ccColor3B c = tn.getColor();
         fromR = c.r;
         fromG = c.g;
         fromB = c.b;
@@ -42,7 +42,7 @@ public class TintTo extends IntervalAction {
     @Override
     public void update(float t) {
         ((CocosNode.CocosNodeRGBA) target).setColor(
-                new CCColor3B((int) (fromR + (toR - fromR) * t),
+                new ccColor3B((int) (fromR + (toR - fromR) * t),
                         (int) (fromG + (toG - fromG) * t),
                         (int) (fromB + (toB - fromB) * t)));
     }

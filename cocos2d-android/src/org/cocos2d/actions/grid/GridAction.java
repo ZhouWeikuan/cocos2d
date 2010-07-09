@@ -4,13 +4,13 @@ import org.cocos2d.actions.interval.IntervalAction;
 import org.cocos2d.actions.interval.ReverseTime;
 import org.cocos2d.grid.GridBase;
 import org.cocos2d.nodes.CocosNode;
-import org.cocos2d.types.CCGridSize;
+import org.cocos2d.types.ccGridSize;
 
 public abstract class GridAction extends IntervalAction {
-    CCGridSize gridSize;
+    ccGridSize gridSize;
 
 
-    protected GridAction(CCGridSize gSize, float d) {
+    protected GridAction(ccGridSize gSize, float d) {
         super(d);
         gridSize = gSize;
     }

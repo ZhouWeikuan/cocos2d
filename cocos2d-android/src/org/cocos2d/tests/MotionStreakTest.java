@@ -16,7 +16,7 @@ import org.cocos2d.menus.Menu;
 import org.cocos2d.menus.MenuItemImage;
 import org.cocos2d.nodes.*;
 import org.cocos2d.opengl.CCGLSurfaceView;
-import org.cocos2d.types.CCColor4B;
+import org.cocos2d.types.ccColor4B;
 import org.cocos2d.types.CCPoint;
 import org.cocos2d.types.CCSize;
 
@@ -186,7 +186,7 @@ public class MotionStreakTest extends Activity {
             target.setPosition(100, 0);
 
             // create the streak object and add it to the scene
-            streak = new MotionStreak(2, 3, "streak.png", 32, 32, new CCColor4B(0, 255, 0, 255));
+            streak = new MotionStreak(2, 3, "streak.png", 32, 32, new ccColor4B(0, 255, 0, 255));
             addChild(streak);
             // schedule an update on each frame so we can syncronize the streak with the target
             schedule("onUpdate");

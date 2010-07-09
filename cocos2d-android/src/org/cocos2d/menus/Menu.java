@@ -6,8 +6,8 @@ import org.cocos2d.nodes.Director;
 import org.cocos2d.types.CCPoint;
 import org.cocos2d.types.CCRect;
 import org.cocos2d.types.CCSize;
-import org.cocos2d.types.CCMacros;
-import org.cocos2d.events.TouchDispatcher;
+import org.cocos2d.types.ccMacros;
+import org.cocos2d.events.CCTouchDispatcher;
 
 import java.util.ArrayList;
 
@@ -34,7 +34,7 @@ public class Menu extends Layer {
 
     @Override
     protected void registerWithTouchDispatcher() {
-        TouchDispatcher.sharedDispatcher().addDelegate(this, CCMacros.INT_MIN+1);
+        CCTouchDispatcher.sharedDispatcher().addDelegate(this, ccMacros.INT_MIN+1);
     }
 
     
@@ -82,17 +82,17 @@ public class Menu extends Layer {
     public boolean ccTouchesBegan(MotionEvent event) {
 
         if (state != MenuState.kMenuStateWaiting)
-            return TouchDispatcher.kEventIgnored;
+            return CCTouchDispatcher.kEventIgnored;
 
         selectedItem = itemForTouch(event);
 
         if (selectedItem != null) {
             selectedItem.selected();
             state = MenuState.kMenuStateTrackingTouch;
-            return TouchDispatcher.kEventHandled;
+            return CCTouchDispatcher.kEventHandled;
         }
 
-        return TouchDispatcher.kEventIgnored;
+        return CCTouchDispatcher.kEventIgnored;
     }
 
     @Override
@@ -104,10 +104,10 @@ public class Menu extends Layer {
             }
 
             state = MenuState.kMenuStateWaiting;
-            return TouchDispatcher.kEventHandled;
+            return CCTouchDispatcher.kEventHandled;
         }
 
-        return TouchDispatcher.kEventIgnored;
+        return CCTouchDispatcher.kEventIgnored;
     }
 
     @Override
@@ -118,10 +118,10 @@ public class Menu extends Layer {
             }
 
             state = MenuState.kMenuStateWaiting;
-            return TouchDispatcher.kEventHandled;
+            return CCTouchDispatcher.kEventHandled;
         }
 
-        return TouchDispatcher.kEventIgnored;
+        return CCTouchDispatcher.kEventIgnored;
     }
 
     @Override
@@ -138,10 +138,10 @@ public class Menu extends Layer {
                     selectedItem.selected();
                 }
             }
-            return TouchDispatcher.kEventHandled;
+            return CCTouchDispatcher.kEventHandled;
         }
 
-        return TouchDispatcher.kEventIgnored;
+        return CCTouchDispatcher.kEventIgnored;
     }
 
 

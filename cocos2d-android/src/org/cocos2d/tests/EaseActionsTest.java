@@ -36,8 +36,8 @@ import org.cocos2d.nodes.Scene;
 import org.cocos2d.nodes.Sprite;
 import org.cocos2d.nodes.TextureManager;
 import org.cocos2d.opengl.CCGLSurfaceView;
-import org.cocos2d.opengl.Texture2D;
-import org.cocos2d.types.CCMacros;
+import org.cocos2d.opengl.CCTexture2D;
+import org.cocos2d.types.ccMacros;
 import org.cocos2d.types.CCSize;
 
 import android.app.Activity;
@@ -161,8 +161,8 @@ public class EaseActionsTest extends Activity {
         public SpriteDemo() {
 
             // Example:
-            // You can create a sprite using a Texture2D
-            Texture2D tex = TextureManager.createTextureFromFilePath("grossini.png");
+            // You can create a sprite using a CCTexture2D
+            CCTexture2D tex = TextureManager.createTextureFromFilePath("grossini.png");
             grossini = Sprite.sprite(tex);
 
             // Example:
@@ -622,9 +622,9 @@ public class EaseActionsTest extends Activity {
             Speed action2 = (Speed)tamara.getAction(kTagAction1);
             Speed action3 = (Speed)kathia.getAction(kTagAction1);
         
-            action1.setSpeed(CCMacros.CCRANDOM_0_1() * 2);
-            action2.setSpeed(CCMacros.CCRANDOM_0_1() * 2);
-            action3.setSpeed(CCMacros.CCRANDOM_0_1() * 2);
+            action1.setSpeed(ccMacros.CCRANDOM_0_1() * 2);
+            action2.setSpeed(ccMacros.CCRANDOM_0_1() * 2);
+            action3.setSpeed(ccMacros.CCRANDOM_0_1() * 2);
         
         }
         

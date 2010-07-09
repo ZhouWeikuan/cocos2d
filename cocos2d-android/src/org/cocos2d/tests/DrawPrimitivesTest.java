@@ -13,7 +13,7 @@ import org.cocos2d.nodes.Scene;
 import org.cocos2d.nodes.TextureManager;
 import org.cocos2d.opengl.CCGLSurfaceView;
 import org.cocos2d.opengl.Primitives;
-import org.cocos2d.types.CCMacros;
+import org.cocos2d.types.ccMacros;
 import org.cocos2d.types.CCPoint;
 import org.cocos2d.types.CCSize;
 
@@ -231,7 +231,7 @@ public class DrawPrimitivesTest extends Activity {
             // draw a green circle with 50 segments with line to center
             gl.glLineWidth(2);
             gl.glColor4f(0.0f, 1.0f, 1.0f, 1.0f);
-            Primitives.drawCircle(gl, s.width / 2, s.height / 2, 50, CCMacros.CC_DEGREES_TO_RADIANS(90), 50, true);
+            Primitives.drawCircle(gl, s.width / 2, s.height / 2, 50, ccMacros.CC_DEGREES_TO_RADIANS(90), 50, true);
 
             // open yellow poly
             gl.glColor4f(1.0f, 1.0f, 0.0f, 1.0f);

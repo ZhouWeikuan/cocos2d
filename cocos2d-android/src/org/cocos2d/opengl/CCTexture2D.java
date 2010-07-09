@@ -17,8 +17,8 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
-public class Texture2D {
-    private static final String LOG_TAG = Texture2D.class.getSimpleName();
+public class CCTexture2D {
+    private static final String LOG_TAG = CCTexture2D.class.getSimpleName();
 
     public static final int kMaxTextureSize = 1024;
 
@@ -90,7 +90,7 @@ public class Texture2D {
     private CCTexParams _texParams;
 
 
-    public Texture2D(Bitmap image) {
+    public CCTexture2D(Bitmap image) {
 
         boolean sizeToFit = false;
 
@@ -132,7 +132,7 @@ public class Texture2D {
         init(image, imageSize);
     }
 
-    public Texture2D(Bitmap image, CCSize imageSize) {
+    public CCTexture2D(Bitmap image, CCSize imageSize) {
         Bitmap.Config config = Bitmap.Config.ARGB_8888;
         Bitmap bitmap = Bitmap.createBitmap((int) imageSize.width, (int) imageSize.height, config);
         Canvas canvas = new Canvas(bitmap);
@@ -165,7 +165,7 @@ public class Texture2D {
 //        mIndices = isb.asShortBuffer();
     }
 
-    public Texture2D(String text, String fontname, float fontSize) {
+    public CCTexture2D(String text, String fontname, float fontSize) {
 
         this(text, calculateTextSize(text, fontname, fontSize), Label.TextAlignment.CENTER, fontname, fontSize);
     }
@@ -184,7 +184,7 @@ public class Texture2D {
         return CCSize.make(measuredTextWidth, ascent + descent);
     }
 
-    public Texture2D(String text, CCSize dimensions, Label.TextAlignment alignment, String fontname, float fontSize) {
+    public CCTexture2D(String text, CCSize dimensions, Label.TextAlignment alignment, String fontname, float fontSize) {
         Typeface typeface = Typeface.create(fontname, Typeface.NORMAL);
 
         Paint textPaint = new Paint();

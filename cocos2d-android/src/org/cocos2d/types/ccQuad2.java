@@ -1,7 +1,7 @@
 package org.cocos2d.types;
 
 //!	A 2D Quad. 8 floats
-public class CCQuad2 {
+public class ccQuad2 {
 
     public static final int size = 4 * 2;
 
@@ -10,7 +10,7 @@ public class CCQuad2 {
     public float bl_x, bl_y;
     public float br_x, br_y;
 
-    public CCQuad2(float a, float b, float c, float d, float e, float f, float g, float h) {
+    public ccQuad2(float a, float b, float c, float d, float e, float f, float g, float h) {
         tl_x = a;
         tl_y = b;
         tr_x = c;
@@ -21,11 +21,11 @@ public class CCQuad2 {
         br_y = h;
     }
 
-    public CCQuad2() {
+    public ccQuad2() {
         this(new float[]{0, 0, 0, 0, 0, 0, 0, 0});
     }
 
-    public CCQuad2(float[] f) {
+    public ccQuad2(float[] f) {
         this(f[0], f[1],
                 f[2], f[3],
                 f[4], f[5],
@@ -33,7 +33,7 @@ public class CCQuad2 {
         );
     }
 
-    public float[] ccQuad2() {
+    public float[] toFloatArray() {
         return new float[]{tl_x, tl_y,
                 tr_x, tr_y,
                 bl_x, bl_y,

@@ -20,7 +20,7 @@ import org.cocos2d.particlesystem.ParticleExplosion;
 import org.cocos2d.particlesystem.ParticleFire;
 import org.cocos2d.particlesystem.ParticleFireworks;
 import org.cocos2d.particlesystem.ParticleSystem;
-import org.cocos2d.types.CCColor4B;
+import org.cocos2d.types.ccColor4B;
 import org.cocos2d.types.CCSize;
 import org.cocos2d.utils.CCFormatter;
 
@@ -138,7 +138,7 @@ public class ParticleTest extends Activity {
 
 
         public ParticleDemo() {
-            super(new CCColor4B(127,127,127,255));
+            super(new ccColor4B(127,127,127,255));
 
             CCSize s = Director.sharedDirector().winSize();
 

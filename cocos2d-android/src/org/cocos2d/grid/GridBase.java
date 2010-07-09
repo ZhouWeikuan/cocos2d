@@ -5,9 +5,9 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import org.cocos2d.opengl.Camera;
 import org.cocos2d.nodes.Director;
-import org.cocos2d.opengl.Texture2D;
+import org.cocos2d.opengl.CCTexture2D;
 import org.cocos2d.opengl.GLU;
-import org.cocos2d.types.CCGridSize;
+import org.cocos2d.types.ccGridSize;
 import org.cocos2d.types.CCPoint;
 import org.cocos2d.types.CCSize;
 import org.cocos2d.utils.CCFormatter;
@@ -18,8 +18,8 @@ public abstract class GridBase {
 
     protected boolean active;
     protected int reuseGrid;
-    protected CCGridSize gridSize;
-    protected Texture2D texture;
+    protected ccGridSize gridSize;
+    protected CCTexture2D texture;
     protected CCPoint step;
 
     public static final int kTextureSize = 512;
@@ -44,7 +44,7 @@ public abstract class GridBase {
         return gridSize.y;
     }
 
-    public GridBase(CCGridSize gSize) {
+    public GridBase(ccGridSize gSize) {
         active = false;
         reuseGrid = 0;
         gridSize = gSize;
@@ -57,7 +57,7 @@ public abstract class GridBase {
             Canvas canvas = new Canvas(bitmap);
             canvas.drawBitmap(bitmap, 0, 0, new Paint());
 
-            texture = new Texture2D(bitmap, win);
+            texture = new CCTexture2D(bitmap, win);
         }
 
         step = CCPoint.make(0, 0);

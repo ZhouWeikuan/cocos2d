@@ -1,7 +1,7 @@
 package org.cocos2d.nodes;
 
 import android.graphics.Bitmap;
-import org.cocos2d.opengl.Texture2D;
+import org.cocos2d.opengl.CCTexture2D;
 
 import java.util.HashMap;
 
@@ -18,11 +18,11 @@ public class Sprite extends TextureNode implements CocosNode.CocosNodeFrames {
         return new Sprite(TextureManager.sharedTextureManager().addImage(image));
     }
 
-    public static Sprite sprite(Texture2D tex) {
+    public static Sprite sprite(CCTexture2D tex) {
         return new Sprite(tex);
     }
 
-    protected Sprite(Texture2D tex) {
+    protected Sprite(CCTexture2D tex) {
         setTexture(tex);
 
         animations = null; // lazy alloc
@@ -33,7 +33,7 @@ public class Sprite extends TextureNode implements CocosNode.CocosNodeFrames {
     }
 
     public void setDisplayFrame(Object frame) {
-        setTexture((Texture2D) frame);
+        setTexture((CCTexture2D) frame);
     }
 
     public void setDisplayFrame(String animationName, int frameIndex) {
@@ -41,12 +41,12 @@ public class Sprite extends TextureNode implements CocosNode.CocosNodeFrames {
             initAnimationDictionary();
 
         CocosAnimation anim = animations.get(animationName);
-        Texture2D frame = (Texture2D) anim.frames().get(frameIndex);
+        CCTexture2D frame = (CCTexture2D) anim.frames().get(frameIndex);
         setDisplayFrame(frame);
     }
 
     public boolean isFrameDisplayed(Object frame) {
-        return getTexture() == (Texture2D) frame;
+        return getTexture() == (CCTexture2D) frame;
     }
 
     public Object displayFrame() {

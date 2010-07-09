@@ -6,12 +6,12 @@ import org.cocos2d.actions.base.Action;
 import org.cocos2d.actions.interval.ScaleTo;
 import org.cocos2d.nodes.CocosNode;
 import org.cocos2d.nodes.Label;
-import org.cocos2d.types.CCColor3B;
+import org.cocos2d.types.ccColor3B;
 
 public class MenuItemLabel extends MenuItem implements CocosNode.CocosNodeRGBA {
     private CocosNodeLabel label_;
-    private CCColor3B colorBackup;
-    private CCColor3B disabledColor_;
+    private ccColor3B colorBackup;
+    private ccColor3B disabledColor_;
 
     public static MenuItemLabel item(CocosNodeLabel label, CocosNode target, String selector) {
         return new MenuItemLabel(label, target, selector);
@@ -25,8 +25,8 @@ public class MenuItemLabel extends MenuItem implements CocosNode.CocosNodeRGBA {
     protected MenuItemLabel(CocosNodeLabel label, CocosNode target, String selector) {
         super(target, selector);
         setLabel(label);
-        colorBackup = new CCColor3B(255, 255, 255);
-        disabledColor_ = new CCColor3B(126, 126, 126);
+        colorBackup = new ccColor3B(255, 255, 255);
+        disabledColor_ = new ccColor3B(126, 126, 126);
     }
 
     public void setOpacity(int opacity) {
@@ -37,19 +37,19 @@ public class MenuItemLabel extends MenuItem implements CocosNode.CocosNodeRGBA {
         return ((CocosNodeRGBA) label_).getOpacity();
     }
 
-    public void setColor(CCColor3B color) {
+    public void setColor(ccColor3B color) {
         ((CocosNodeRGBA) label_).setColor(color);
     }
 
-    public CCColor3B getColor() {
+    public ccColor3B getColor() {
         return ((CocosNodeRGBA) label_).getColor();
     }
 
-    public CCColor3B getDisabledColor() {
-        return new CCColor3B(disabledColor_.r, disabledColor_.g, disabledColor_.b);
+    public ccColor3B getDisabledColor() {
+        return new ccColor3B(disabledColor_.r, disabledColor_.g, disabledColor_.b);
     }
 
-    public void setDisabledColor(CCColor3B color) {
+    public void setDisabledColor(ccColor3B color) {
         disabledColor_.r = color.r;
         disabledColor_.g = color.g;
         disabledColor_.b = color.b;

@@ -14,7 +14,7 @@ import org.cocos2d.menus.Menu;
 import org.cocos2d.menus.MenuItemImage;
 import org.cocos2d.nodes.*;
 import org.cocos2d.opengl.CCGLSurfaceView;
-import org.cocos2d.opengl.Texture2D;
+import org.cocos2d.opengl.CCTexture2D;
 import org.cocos2d.opengl.TextureAtlas;
 import org.cocos2d.types.*;
 import org.cocos2d.utils.CCFormatter;
@@ -181,16 +181,16 @@ public class AtlasTest extends Activity {
         public Atlas1() {
             textureAtlas = new TextureAtlas("atlastest.png", 3);
 
-            CCQuad2 texCoords[] = new CCQuad2[]{
-                    new CCQuad2(0.0f, 0.2f, 0.5f, 0.2f, 0.0f, 0.0f, 0.5f, 0.0f),
-                    new CCQuad2(0.2f, 0.6f, 0.6f, 0.6f, 0.2f, 0.2f, 0.6f, 0.2f),
-                    new CCQuad2(0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f),
+            ccQuad2 texCoords[] = new ccQuad2[]{
+                    new ccQuad2(0.0f, 0.2f, 0.5f, 0.2f, 0.0f, 0.0f, 0.5f, 0.0f),
+                    new ccQuad2(0.2f, 0.6f, 0.6f, 0.6f, 0.2f, 0.2f, 0.6f, 0.2f),
+                    new ccQuad2(0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f),
             };
 
-            CCQuad3 vertices[] = new CCQuad3[]{
-                    new CCQuad3(40, 40, 0, 120, 80, 0, 40, 160, 0, 160, 160, 0),
-                    new CCQuad3(240, 80, 0, 480, 80, 0, 180, 120, 0, 420, 120, 0),
-                    new CCQuad3(240, 140, 0, 360, 200, 0, 240, 250, 0, 360, 310, 0),
+            ccQuad3 vertices[] = new ccQuad3[]{
+                    new ccQuad3(40, 40, 0, 120, 80, 0, 40, 160, 0, 160, 160, 0),
+                    new ccQuad3(240, 80, 0, 480, 80, 0, 180, 120, 0, 420, 120, 0),
+                    new ccQuad3(240, 140, 0, 360, 200, 0, 240, 250, 0, 360, 310, 0),
             };
 
             for (int i = 0; i < 3; i++) {
@@ -255,12 +255,12 @@ public class AtlasTest extends Activity {
 
             // TODO: This needs to be done when binding
             // Create an aliased Atlas
-            Texture2D.saveTexParameters();
-            Texture2D.setAliasTexParameters();
+            CCTexture2D.saveTexParameters();
+            CCTexture2D.setAliasTexParameters();
 
             TileMapAtlas tilemap = TileMapAtlas.tilemap("tiles.png", "levelmap.tga", 16, 16);
 
-            Texture2D.restoreTexParameters();
+            CCTexture2D.restoreTexParameters();
 
             addChild(tilemap, 0, kTagTileMap);
 
@@ -291,12 +291,12 @@ public class AtlasTest extends Activity {
             Log.i(LOG_TAG, "Atlas4 starts");
 
             // Create an Aliased Atlas
-            Texture2D.saveTexParameters();
-            Texture2D.setAliasTexParameters();
+            CCTexture2D.saveTexParameters();
+            CCTexture2D.setAliasTexParameters();
 
             TileMapAtlas tilemap = TileMapAtlas.tilemap("tiles.png", "levelmap.tga", 16, 16);
 
-            Texture2D.restoreTexParameters();
+            CCTexture2D.restoreTexParameters();
 
             // If you are not going to use the Map, you can free it now
             // tilemap.releaseMap();
@@ -331,13 +331,13 @@ public class AtlasTest extends Activity {
 //            		}
 //            	}
 
-            CCRGBB c = tilemap.tile(CCGridSize.ccg(13, 21));
+            CCRGBB c = tilemap.tile(ccGridSize.ccg(13, 21));
             c.r++;
             c.r %= 50;
             if (c.r == 0)
                 c.r = 1;
 
-            tilemap.setTile(c, CCGridSize.ccg(13, 21));
+            tilemap.setTile(c, ccGridSize.ccg(13, 21));
 
         }
 

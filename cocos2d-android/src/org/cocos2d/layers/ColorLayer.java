@@ -2,9 +2,9 @@ package org.cocos2d.layers;
 
 import org.cocos2d.nodes.CocosNode;
 import org.cocos2d.nodes.Director;
-import org.cocos2d.types.CCColor3B;
-import org.cocos2d.types.CCColor4B;
-import org.cocos2d.types.CCMacros;
+import org.cocos2d.types.ccColor3B;
+import org.cocos2d.types.ccColor4B;
+import org.cocos2d.types.ccMacros;
 
 import javax.microedition.khronos.opengles.GL10;
 import java.nio.ByteBuffer;
@@ -12,32 +12,32 @@ import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
 public class ColorLayer extends Layer implements CocosNode.CocosNodeRGBA, CocosNode.CocosNodeSize {
-    protected CCColor3B color_;
+    protected ccColor3B color_;
     protected int opacity_;
 
     private FloatBuffer squareVertices_;
     private ByteBuffer squareColors_;
 
-    public static ColorLayer node(CCColor4B color) {
+    public static ColorLayer node(ccColor4B color) {
         return new ColorLayer(color, Director.sharedDirector().winSize().width, Director.sharedDirector().winSize().height);
     }
 
-    public static ColorLayer node(CCColor4B color, float w, float h) {
+    public static ColorLayer node(ccColor4B color, float w, float h) {
         return new ColorLayer(color, w, h);
     }
 
-    protected ColorLayer(CCColor4B color) {
+    protected ColorLayer(ccColor4B color) {
         this(color, Director.sharedDirector().winSize().width, Director.sharedDirector().winSize().height);
     }
 
-    protected ColorLayer(CCColor4B color, float w, float h) {
+    protected ColorLayer(ccColor4B color, float w, float h) {
         ByteBuffer vbb = ByteBuffer.allocateDirect(4 * 2 * 4);
         vbb.order(ByteOrder.nativeOrder());
         squareVertices_ = vbb.asFloatBuffer();
 
         squareColors_ = ByteBuffer.allocateDirect(4 * 4);
 
-        color_ = new CCColor3B(color.r, color.g, color.b);
+        color_ = new ccColor3B(color.r, color.g, color.b);
         opacity_ = color.a;
 
         for (int i = 0; i < (4 * 2); i++) {
@@ -88,7 +88,7 @@ public class ColorLayer extends Layer implements CocosNode.CocosNodeRGBA, CocosN
         gl.glDrawArrays(GL10.GL_TRIANGLE_STRIP, 0, 4);
 
         if (opacity_ != 255)
-            gl.glBlendFunc(CCMacros.CC_BLEND_SRC, CCMacros.CC_BLEND_DST);
+            gl.glBlendFunc(ccMacros.CC_BLEND_SRC, ccMacros.CC_BLEND_DST);
 
         // Clear the vertex and color arrays
         gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
@@ -97,12 +97,12 @@ public class ColorLayer extends Layer implements CocosNode.CocosNodeRGBA, CocosN
     }
 
 
-    public CCColor3B getColor() {
-        return new CCColor3B(color_.r, color_.g, color_.b);
+    public ccColor3B getColor() {
+        return new ccColor3B(color_.r, color_.g, color_.b);
     }
 
     // Color Protocol
-    public void setColor(CCColor3B color) {
+    public void setColor(ccColor3B color) {
         color_.r = color.r;
         color_.g = color.g;
         color_.b = color.b;

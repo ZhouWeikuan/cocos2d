@@ -1,9 +1,9 @@
 package org.cocos2d.layers;
 
-import org.cocos2d.events.TouchDelegate;
-import org.cocos2d.events.TouchDispatcher;
+import org.cocos2d.events.CCTouchDispatcher;
 import org.cocos2d.nodes.CocosNode;
 import org.cocos2d.nodes.Director;
+import org.cocos2d.protocols.CCTouchDelegateProtocol;
 import org.cocos2d.types.CCSize;
 
 import android.content.Context;
@@ -14,7 +14,7 @@ import android.hardware.SensorManager;
 import android.util.Log;
 import android.view.MotionEvent;
 
-public class Layer extends CocosNode implements TouchDelegate, SensorEventListener {
+public class Layer extends CocosNode implements CCTouchDelegateProtocol, SensorEventListener {
 	
     // used to control registration of Touch events
     protected boolean isTouchEnabled_;
@@ -39,7 +39,7 @@ public class Layer extends CocosNode implements TouchDelegate, SensorEventListen
                 if( enabled )
                     registerWithTouchDispatcher();
                 else
-                    TouchDispatcher.sharedDispatcher().removeDelegate(this);
+                    CCTouchDispatcher.sharedDispatcher().removeDelegate(this);
             }
         }
     }
@@ -88,7 +88,7 @@ public class Layer extends CocosNode implements TouchDelegate, SensorEventListen
     }
 
     protected void registerWithTouchDispatcher() {
-        TouchDispatcher.sharedDispatcher().addDelegate(this, 0);
+        CCTouchDispatcher.sharedDispatcher().addDelegate(this, 0);
     }
     
     protected void registerWithAccelerometer()
@@ -127,7 +127,7 @@ public class Layer extends CocosNode implements TouchDelegate, SensorEventListen
     public void onExit() {
 
         if (isTouchEnabled_)
-            TouchDispatcher.sharedDispatcher().removeDelegate(this);
+            CCTouchDispatcher.sharedDispatcher().removeDelegate(this);
 
         if( isAccelerometerEnabled_ )
         	unregisterWithAccelerometer();
@@ -136,19 +136,19 @@ public class Layer extends CocosNode implements TouchDelegate, SensorEventListen
     }
 
     public boolean ccTouchesBegan(MotionEvent event) {
-        return TouchDispatcher.kEventHandled;  // TODO Auto-generated method stub
+        return CCTouchDispatcher.kEventHandled;  // TODO Auto-generated method stub
     }
 
     public boolean ccTouchesMoved(MotionEvent event) {
-        return TouchDispatcher.kEventIgnored;  // TODO Auto-generated method stub
+        return CCTouchDispatcher.kEventIgnored;  // TODO Auto-generated method stub
     }
 
     public boolean ccTouchesEnded(MotionEvent event) {
-        return TouchDispatcher.kEventIgnored;  // TODO Auto-generated method stub
+        return CCTouchDispatcher.kEventIgnored;  // TODO Auto-generated method stub
     }
 
     public boolean ccTouchesCancelled(MotionEvent event) {
-        return TouchDispatcher.kEventIgnored;  // TODO Auto-generated method stub
+        return CCTouchDispatcher.kEventIgnored;  // TODO Auto-generated method stub
     }
 
     public void ccAccelerometerChanged(float accelX, float accelY, float accelZ) {

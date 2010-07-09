@@ -1,8 +1,8 @@
 package org.cocos2d.grid;
 
-import org.cocos2d.types.CCGridSize;
+import org.cocos2d.types.ccGridSize;
 import org.cocos2d.types.CCPoint;
-import org.cocos2d.types.CCQuad3;
+import org.cocos2d.types.ccQuad3;
 import org.cocos2d.types.CCVertex3D;
 
 import javax.microedition.khronos.opengles.GL10;
@@ -17,7 +17,7 @@ public class Grid3D extends GridBase {
     FloatBuffer originalVertices;
     ShortBuffer indices;
 
-    public Grid3D(CCGridSize gSize) {
+    public Grid3D(ccGridSize gSize) {
         super(gSize);
         calculateVertexPoints();
     }
@@ -42,11 +42,11 @@ public class Grid3D extends GridBase {
 
         int x, y, i;
 
-        ByteBuffer vfb = ByteBuffer.allocateDirect(CCQuad3.size * (getGridWidth() + 1) * (getGridHeight() + 1) * 4);
+        ByteBuffer vfb = ByteBuffer.allocateDirect(ccQuad3.size * (getGridWidth() + 1) * (getGridHeight() + 1) * 4);
         vfb.order(ByteOrder.nativeOrder());
         vertices = vfb.asFloatBuffer();
 
-        ByteBuffer ofb = ByteBuffer.allocateDirect(CCQuad3.size * (getGridWidth() + 1) * (getGridHeight() + 1) * 4);
+        ByteBuffer ofb = ByteBuffer.allocateDirect(ccQuad3.size * (getGridWidth() + 1) * (getGridHeight() + 1) * 4);
         ofb.order(ByteOrder.nativeOrder());
         originalVertices = ofb.asFloatBuffer();
 
@@ -117,21 +117,21 @@ public class Grid3D extends GridBase {
         originalVertices.position(0);
     }
 
-    public CCVertex3D vertex(CCGridSize pos) {
+    public CCVertex3D vertex(ccGridSize pos) {
         int index = (pos.x * (getGridHeight() + 1) + pos.y) * 3;
         CCVertex3D vert = new CCVertex3D(vertices.get(index + 0), vertices.get(index + 1), vertices.get(index + 2));
 
         return vert;
     }
 
-    public CCVertex3D originalVertex(CCGridSize pos) {
+    public CCVertex3D originalVertex(ccGridSize pos) {
         int index = (pos.x * (getGridHeight() + 1) + pos.y) * 3;
         CCVertex3D vert = new CCVertex3D(originalVertices.get(index + 0), originalVertices.get(index + 1), originalVertices.get(index + 2));
 
         return vert;
     }
 
-    public void setVertex(CCGridSize pos, CCVertex3D vertex) {
+    public void setVertex(ccGridSize pos, CCVertex3D vertex) {
         int index = (pos.x * (getGridHeight() + 1) + pos.y) * 3;
         vertices.put(index + 0, vertex.x);
         vertices.put(index + 1, vertex.y);

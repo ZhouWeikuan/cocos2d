@@ -1,8 +1,8 @@
 package org.cocos2d.grid;
 
-import org.cocos2d.types.CCGridSize;
-import org.cocos2d.types.CCQuad2;
-import org.cocos2d.types.CCQuad3;
+import org.cocos2d.types.ccGridSize;
+import org.cocos2d.types.ccQuad2;
+import org.cocos2d.types.ccQuad3;
 
 import javax.microedition.khronos.opengles.GL10;
 import java.nio.ByteBuffer;
@@ -16,7 +16,7 @@ public abstract class TiledGrid3D extends GridBase {
     FloatBuffer originalVertices;
     ShortBuffer indices;
 
-    public TiledGrid3D(CCGridSize gSize) {
+    public TiledGrid3D(ccGridSize gSize) {
         super(gSize);
         calculateVertexPoints();
 
@@ -42,15 +42,15 @@ public abstract class TiledGrid3D extends GridBase {
 
         int numQuads = gridSize.x * gridSize.y;
 
-        ByteBuffer vfb = ByteBuffer.allocateDirect(CCQuad3.size * numQuads * 4);
+        ByteBuffer vfb = ByteBuffer.allocateDirect(ccQuad3.size * numQuads * 4);
         vfb.order(ByteOrder.nativeOrder());
         vertices = vfb.asFloatBuffer();
 
-        ByteBuffer ofb = ByteBuffer.allocateDirect(CCQuad3.size * numQuads * 4);
+        ByteBuffer ofb = ByteBuffer.allocateDirect(ccQuad3.size * numQuads * 4);
         ofb.order(ByteOrder.nativeOrder());
         originalVertices = ofb.asFloatBuffer();
 
-        ByteBuffer tfb = ByteBuffer.allocateDirect(CCQuad2.size * numQuads * 4);
+        ByteBuffer tfb = ByteBuffer.allocateDirect(ccQuad2.size * numQuads * 4);
         tfb.order(ByteOrder.nativeOrder());
         texCoordinates = tfb.asFloatBuffer();
 
@@ -105,35 +105,35 @@ public abstract class TiledGrid3D extends GridBase {
         originalVertices.position(0);
     }
 
-    public void setTile(CCGridSize pos, CCQuad3 coords) {
-        int idx = (gridSize.y * pos.x + pos.y) * CCQuad3.size;
-        float[] vertArray = coords.ccQuad3();
-        for (int i = 0; i < CCQuad3.size; i++) {
+    public void setTile(ccGridSize pos, ccQuad3 coords) {
+        int idx = (gridSize.y * pos.x + pos.y) * ccQuad3.size;
+        float[] vertArray = coords.toFloatArray();
+        for (int i = 0; i < ccQuad3.size; i++) {
             vertices.put(idx + i, vertArray[i]);
         }
         vertices.position(0);
     }
 
-    public CCQuad3 originalTile(CCGridSize pos) {
-        int idx = (gridSize.y * pos.x + pos.y) * CCQuad3.size;
+    public ccQuad3 originalTile(ccGridSize pos) {
+        int idx = (gridSize.y * pos.x + pos.y) * ccQuad3.size;
 
-        float[] vertArray = new float[CCQuad3.size];
-        for (int i = 0; i < CCQuad3.size; i++) {
+        float[] vertArray = new float[ccQuad3.size];
+        for (int i = 0; i < ccQuad3.size; i++) {
             vertArray[i] = originalVertices.get(idx + i);
         }
 
-        return new CCQuad3(vertArray);
+        return new ccQuad3(vertArray);
     }
 
-    public CCQuad3 tile(CCGridSize pos) {
-        int idx = (gridSize.y * pos.x + pos.y) * CCQuad3.size;
+    public ccQuad3 tile(ccGridSize pos) {
+        int idx = (gridSize.y * pos.x + pos.y) * ccQuad3.size;
 
-        float[] vertArray = new float[CCQuad3.size];
-        for (int i = 0; i < CCQuad3.size; i++) {
+        float[] vertArray = new float[ccQuad3.size];
+        for (int i = 0; i < ccQuad3.size; i++) {
             vertArray[i] = vertices.get(idx + i);
         }
 
-        return new CCQuad3(vertArray);
+        return new ccQuad3(vertArray);
     }
 
     public void reuse() {
