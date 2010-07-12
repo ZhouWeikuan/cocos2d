@@ -1,6 +1,6 @@
 package org.cocos2d.actions.interval;
 
-import org.cocos2d.nodes.CocosNode;
+import org.cocos2d.nodes.CCNode;
 
 //
 // MoveBy
@@ -24,7 +24,7 @@ public class MoveBy extends MoveTo {
     }
 
     @Override
-    public void start(CocosNode aTarget) {
+    public void start(CCNode aTarget) {
         float savedX = deltaX;
         float savedY = deltaY;
         super.start(aTarget);

@@ -7,7 +7,8 @@ import org.cocos2d.actions.interval.MoveTo;
 import org.cocos2d.actions.interval.Sequence;
 import org.cocos2d.nodes.Director;
 import org.cocos2d.nodes.Scene;
-import org.cocos2d.types.CCSize;
+import org.cocos2d.types.CGPoint;
+import org.cocos2d.types.CGSize;
 
 /**
  * MoveInL Transition.
@@ -51,7 +52,7 @@ public class MoveInLTransition extends TransitionScene {
      * initializes the scenes
      */
     protected void initScenes() {
-        CCSize s = Director.sharedDirector().winSize();
-        inScene.setPosition(-s.width, 0);
+        CGSize s = Director.sharedDirector().winSize();
+        inScene.setPosition(CGPoint.make(-s.width, 0));
     }
 }

@@ -19,7 +19,7 @@ import javax.microedition.khronos.opengles.GL10;
  * - color (setRGB:::)
  * - contentSize
  */
-public abstract class AtlasNode extends CocosNode implements CocosNode.CocosNodeRGBA, CocosNode.CocosNodeTexture {
+public abstract class AtlasNode extends CCNode implements CCNode.CocosNodeRGBA, CCNode.CocosNodeTexture {
 
     /// texture atlas
     protected TextureAtlas textureAtlas_;

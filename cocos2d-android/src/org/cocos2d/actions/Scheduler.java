@@ -3,6 +3,8 @@ package org.cocos2d.actions;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 
+import org.cocos2d.nodes.CCNode;
+
 public class Scheduler {
     ArrayList<Timer> scheduledMethods;
     ArrayList<Timer> methodsToRemove;
@@ -145,6 +147,42 @@ public class Scheduler {
         }
 
     }
+
+	public void schedule(String selector, CCNode ccNode, float interval,
+			boolean b) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void unschedule(String selector, CCNode ccNode) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void unscheduleAllSelectors(CCNode ccNode) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void resume(CCNode ccNode) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void pause(CCNode ccNode) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void scheduleUpdate(CCNode ccNode, int priority, boolean isRunning) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void scheduleUpdate(CCNode ccNode) {
+		// TODO Auto-generated method stub
+		
+	}
 
 }
 

@@ -7,7 +7,8 @@ import org.cocos2d.actions.interval.ScaleTo;
 import org.cocos2d.actions.interval.Sequence;
 import org.cocos2d.nodes.Director;
 import org.cocos2d.nodes.Scene;
-import org.cocos2d.types.CCSize;
+import org.cocos2d.types.CGPoint;
+import org.cocos2d.types.CGSize;
 
 /**
  * Shrink the outgoing scene while grow the incoming scene
@@ -27,11 +28,11 @@ public class ShrinkGrowTransition extends TransitionScene {
 
         // CCSize s = Director.sharedDirector().winSize();
 
-        inScene.scale(0.001f);
-        outScene.scale(1.0f);
+        inScene.setScale(0.001f);
+        outScene.setScale(1.0f);
 
-        inScene.setAnchorPoint(2/3.0f,0.5f);
-        outScene.setAnchorPoint(1/3.0f,0.5f);	
+        inScene.setAnchorPoint(CGPoint.make(2/3.0f,0.5f));
+        outScene.setAnchorPoint(CGPoint.make(1/3.0f,0.5f));	
 
 
         IntervalAction scaleOut = ScaleTo.action(duration, 0.01f);

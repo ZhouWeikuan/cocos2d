@@ -1,6 +1,6 @@
 package org.cocos2d.actions.interval;
 
-import org.cocos2d.nodes.CocosNode;
+import org.cocos2d.nodes.CCNode;
 
 //
 // FadeIn
@@ -18,7 +18,7 @@ public class FadeIn extends IntervalAction {
 
     @Override
     public void update(float t) {
-        ((CocosNode.CocosNodeRGBA) target).setOpacity((byte) (255.0f * t));
+        ((CCNode.CocosNodeRGBA) target).setOpacity((byte) (255.0f * t));
     }
 
     @Override

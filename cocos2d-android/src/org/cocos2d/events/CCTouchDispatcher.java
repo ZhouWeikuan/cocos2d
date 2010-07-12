@@ -24,14 +24,23 @@ import org.cocos2d.protocols.CCTouchDelegateProtocol;
  * TODO: FIXME: CCStandardTouchDelegateProtocol, CCTargetedTouchDelegateProtocol is not fully ported
  */
 public class CCTouchDispatcher {
-    class ccTouchSelectorFlag {
-    	public static final int ccTouchSelectorNoneBit = 1 << 0;
-        public static final int ccTouchSelectorBeganBit = 1 << 0;
-        public static final int ccTouchSelectorMovedBit = 1 << 1;
-        public static final int ccTouchSelectorEndedBit = 1 << 2;
-        public static final int ccTouchSelectorCancelledBit = 1 << 3;
-        public static final int ccTouchSelectorAllBits = ( ccTouchSelectorBeganBit 
-                | ccTouchSelectorMovedBit | ccTouchSelectorEndedBit | ccTouchSelectorCancelledBit);
+    public enum ccTouchSelectorFlag {
+    	ccTouchSelectorNoneBit (1 << 0),
+        ccTouchSelectorBeganBit (1 << 0),
+        ccTouchSelectorMovedBit (1 << 1),
+        ccTouchSelectorEndedBit (1 << 2),
+        ccTouchSelectorCancelledBit (1 << 3),
+        ccTouchSelectorAllBits ( ccTouchSelectorBeganBit.flag | ccTouchSelectorMovedBit.flag 
+                                    | ccTouchSelectorEndedBit.flag | ccTouchSelectorCancelledBit.flag);
+    	ccTouchSelectorFlag(int val) {
+    		this.flag = val;
+    	}
+    	
+    	public int getFlag() {
+    		return flag;
+    	}
+    	
+    	private final int flag;
     }
 
     class ccTouchHandlerHelperData {

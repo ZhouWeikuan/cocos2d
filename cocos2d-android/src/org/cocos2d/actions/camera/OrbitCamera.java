@@ -1,7 +1,7 @@
 package org.cocos2d.actions.camera;
 
 import org.cocos2d.actions.interval.IntervalAction;
-import org.cocos2d.nodes.CocosNode;
+import org.cocos2d.nodes.CCNode;
 import org.cocos2d.opengl.Camera;
 import org.cocos2d.types.ccMacros;
 
@@ -42,7 +42,7 @@ public class OrbitCamera extends CameraAction {
 
 
     @Override
-    public void start(CocosNode aTarget) {
+    public void start(CCNode aTarget) {
         super.start(aTarget);
         float[] r = new float[1], zenith = new float[1], azimuth = new float[1];
 

@@ -129,10 +129,10 @@ public class AtlasSpriteTest extends Activity {
         public static final int kTagSprite8 = 8;
 
         public AtlasSpriteDemo() {
-            CCSize s = Director.sharedDirector().winSize();
+            CGSize s = Director.sharedDirector().winSize();
 
-            Label label = Label.label(title(), "DroidSans", 18);
-            label.setPosition(s.width / 2, s.height - 30);
+            CCLabel label = CCLabel.makeLabel(title(), "DroidSans", 18);
+            label.setPosition(CGPoint.make(s.width / 2, s.height - 30));
             addChild(label);
 
             MenuItemImage item1 = MenuItemImage.item("b1.png", "b2.png", this, "backCallback");
@@ -140,10 +140,10 @@ public class AtlasSpriteTest extends Activity {
             MenuItemImage item3 = MenuItemImage.item("f1.png", "f2.png", this, "nextCallback");
 
             Menu menu = Menu.menu(item1, item2, item3);
-            menu.setPosition(0, 0);
-            item1.setPosition(s.width / 2 - 100, 30);
-            item2.setPosition(s.width / 2, 30);
-            item3.setPosition(s.width / 2 + 100, 30);
+            menu.setPosition(CGPoint.zero());
+            item1.setPosition(CGPoint.make(s.width / 2 - 100, 30));
+            item2.setPosition(CGPoint.make(s.width / 2, 30));
+            item3.setPosition(CGPoint.make(s.width / 2 + 100, 30));
             addChild(menu, 1);
         }
 
@@ -176,18 +176,18 @@ public class AtlasSpriteTest extends Activity {
 
             float x, y;
 
-            CCSize s = Director.sharedDirector().winSize();
+            CGSize s = Director.sharedDirector().winSize();
             x = s.width;
             y = s.height;
 
             AtlasSpriteManager mgr = new AtlasSpriteManager("grossini_dance_atlas.png", 50);
             addChild(mgr, 0, kTagSpriteManager);
 
-            addNewSprite(CCPoint.ccp(x / 2, y / 2));
+            addNewSprite(CGPoint.ccp(x / 2, y / 2));
 
         }
 
-        private void addNewSprite(CCPoint pos) {
+        private void addNewSprite(CGPoint pos) {
             AtlasSpriteManager mgr = (AtlasSpriteManager) getChild(kTagSpriteManager);
 
             float rnd = ccMacros.CCRANDOM_0_1() * 1400.0f / 100.0f;
@@ -195,10 +195,10 @@ public class AtlasSpriteTest extends Activity {
             int x = (idx % 5) * 85;
             int y = (idx / 5) * 121;
 
-            AtlasSprite sprite = AtlasSprite.sprite(CCRect.make(x, y, 85, 121), mgr);
+            AtlasSprite sprite = AtlasSprite.sprite(CGRect.make(x, y, 85, 121), mgr);
             mgr.addChild(sprite);
 
-            sprite.setPosition(pos.x, pos.y);
+            sprite.setPosition(pos);
 
             IntervalAction action;
             float r = ccMacros.CCRANDOM_0_1();
@@ -217,7 +217,7 @@ public class AtlasSpriteTest extends Activity {
 
         @Override
         public boolean ccTouchesBegan(MotionEvent event) {
-            CCPoint location = Director.sharedDirector().convertCoordinate(event.getX(), event.getY());
+            CGPoint location = Director.sharedDirector().convertCoordinate(event.getX(), event.getY());
 
             addNewSprite(location);
 
@@ -242,33 +242,33 @@ public class AtlasSpriteTest extends Activity {
 
             CCTexture2D.restoreTexParameters();
 
-            AtlasSprite sprite1 = AtlasSprite.sprite(CCRect.make(0, 0, 85, 121), mgr);
-            AtlasSprite sprite2 = AtlasSprite.sprite(CCRect.make(0, 0, 85, 121), mgr);
-            AtlasSprite sprite3 = AtlasSprite.sprite(CCRect.make(0, 0, 85, 121), mgr);
+            AtlasSprite sprite1 = AtlasSprite.sprite(CGRect.make(0, 0, 85, 121), mgr);
+            AtlasSprite sprite2 = AtlasSprite.sprite(CGRect.make(0, 0, 85, 121), mgr);
+            AtlasSprite sprite3 = AtlasSprite.sprite(CGRect.make(0, 0, 85, 121), mgr);
 
             AtlasAnimation animation = new AtlasAnimation("dance", 0.2f);
             for (int i = 0; i < 14; i++) {
                 int x = i % 5;
                 int y = i / 5;
-                animation.addFrame(CCRect.make(x * 85, y * 121, 85, 121));
+                animation.addFrame(CGRect.make(x * 85, y * 121, 85, 121));
             }
 
             mgr.addChild(sprite1);
             mgr.addChild(sprite2);
             mgr.addChild(sprite3);
 
-            CCSize s = Director.sharedDirector().winSize();
-            sprite1.setPosition(s.width / 2, s.height / 2);
-            sprite2.setPosition(s.width / 2 - 100, s.height / 2);
-            sprite3.setPosition(s.width / 2 + 100, s.height / 2);
+            CGSize s = Director.sharedDirector().winSize();
+            sprite1.setPosition(CGPoint.make(s.width / 2, s.height / 2));
+            sprite2.setPosition(CGPoint.make(s.width / 2 - 100, s.height / 2));
+            sprite3.setPosition(CGPoint.make(s.width / 2 + 100, s.height / 2));
 
             IntervalAction action1 = Animate.action(animation);
             IntervalAction action2 = action1.copy();
             IntervalAction action3 = action1.copy();
 
-            sprite1.scale(0.5f);
-            sprite2.scale(1.0f);
-            sprite3.scale(1.5f);
+            sprite1.setScale(0.5f);
+            sprite2.setScale(1.0f);
+            sprite3.setScale(1.5f);
 
             sprite1.runAction(action1);
             sprite2.runAction(action2);
@@ -290,24 +290,24 @@ public class AtlasSpriteTest extends Activity {
             AtlasSpriteManager mgr = new AtlasSpriteManager("grossini_dance_atlas.png", 1);
             addChild(mgr, 0, kTagSpriteManager);
 
-            AtlasSprite sprite1 = AtlasSprite.sprite(CCRect.make(85 * 0, 121 * 1, 85, 121), mgr);
-            AtlasSprite sprite2 = AtlasSprite.sprite(CCRect.make(85 * 1, 121 * 1, 85, 121), mgr);
-            AtlasSprite sprite3 = AtlasSprite.sprite(CCRect.make(85 * 2, 121 * 1, 85, 121), mgr);
-            AtlasSprite sprite4 = AtlasSprite.sprite(CCRect.make(85 * 3, 121 * 1, 85, 121), mgr);
-            AtlasSprite sprite5 = AtlasSprite.sprite(CCRect.make(85 * 0, 121 * 1, 85, 121), mgr);
-            AtlasSprite sprite6 = AtlasSprite.sprite(CCRect.make(85 * 1, 121 * 1, 85, 121), mgr);
-            AtlasSprite sprite7 = AtlasSprite.sprite(CCRect.make(85 * 2, 121 * 1, 85, 121), mgr);
-            AtlasSprite sprite8 = AtlasSprite.sprite(CCRect.make(85 * 3, 121 * 1, 85, 121), mgr);
+            AtlasSprite sprite1 = AtlasSprite.sprite(CGRect.make(85 * 0, 121 * 1, 85, 121), mgr);
+            AtlasSprite sprite2 = AtlasSprite.sprite(CGRect.make(85 * 1, 121 * 1, 85, 121), mgr);
+            AtlasSprite sprite3 = AtlasSprite.sprite(CGRect.make(85 * 2, 121 * 1, 85, 121), mgr);
+            AtlasSprite sprite4 = AtlasSprite.sprite(CGRect.make(85 * 3, 121 * 1, 85, 121), mgr);
+            AtlasSprite sprite5 = AtlasSprite.sprite(CGRect.make(85 * 0, 121 * 1, 85, 121), mgr);
+            AtlasSprite sprite6 = AtlasSprite.sprite(CGRect.make(85 * 1, 121 * 1, 85, 121), mgr);
+            AtlasSprite sprite7 = AtlasSprite.sprite(CGRect.make(85 * 2, 121 * 1, 85, 121), mgr);
+            AtlasSprite sprite8 = AtlasSprite.sprite(CGRect.make(85 * 3, 121 * 1, 85, 121), mgr);
 
-            CCSize s = Director.sharedDirector().winSize();
-            sprite1.setPosition((s.width / 5) * 1, (s.height / 3) * 1);
-            sprite2.setPosition((s.width / 5) * 2, (s.height / 3) * 1);
-            sprite3.setPosition((s.width / 5) * 3, (s.height / 3) * 1);
-            sprite4.setPosition((s.width / 5) * 4, (s.height / 3) * 1);
-            sprite5.setPosition((s.width / 5) * 1, (s.height / 3) * 2);
-            sprite6.setPosition((s.width / 5) * 2, (s.height / 3) * 2);
-            sprite7.setPosition((s.width / 5) * 3, (s.height / 3) * 2);
-            sprite8.setPosition((s.width / 5) * 4, (s.height / 3) * 2);
+            CGSize s = Director.sharedDirector().winSize();
+            sprite1.setPosition(CGPoint.make((s.width / 5) * 1, (s.height / 3) * 1));
+            sprite2.setPosition(CGPoint.make((s.width / 5) * 2, (s.height / 3) * 1));
+            sprite3.setPosition(CGPoint.make((s.width / 5) * 3, (s.height / 3) * 1));
+            sprite4.setPosition(CGPoint.make((s.width / 5) * 4, (s.height / 3) * 1));
+            sprite5.setPosition(CGPoint.make((s.width / 5) * 1, (s.height / 3) * 2));
+            sprite6.setPosition(CGPoint.make((s.width / 5) * 2, (s.height / 3) * 2));
+            sprite7.setPosition(CGPoint.make((s.width / 5) * 3, (s.height / 3) * 2));
+            sprite8.setPosition(CGPoint.make((s.width / 5) * 4, (s.height / 3) * 2));
 
             IntervalAction action = FadeIn.action(2);
             IntervalAction action_back = action.reverse();
@@ -347,8 +347,8 @@ public class AtlasSpriteTest extends Activity {
         // this function test if remove and add works as expected:
         //  color array and vertex array should be reindexed
         public void removeAndAddSprite(float dt) {
-            CocosNode mgr = getChild(kTagSpriteManager);
-            CocosNode sprite = mgr.getChild(kTagSprite5);
+            CCNode mgr = getChild(kTagSpriteManager);
+            CCNode sprite = mgr.getChild(kTagSprite5);
 
             mgr.removeChild(sprite, false);
             mgr.addChild(sprite, 0, kTagSprite5);
@@ -371,23 +371,23 @@ public class AtlasSpriteTest extends Activity {
             AtlasSpriteManager mgr = new AtlasSpriteManager("grossini_dance_atlas.png", 1);
             addChild(mgr, 0, kTagSpriteManager);
 
-            CCSize s = Director.sharedDirector().winSize();
+            CGSize s = Director.sharedDirector().winSize();
 
             for (int i = 0; i < 5; i++) {
-                AtlasSprite sprite = AtlasSprite.sprite(CCRect.make(85 * 0, 121 * 1, 85, 121), mgr);
-                sprite.setPosition(50 + i * 40, s.height / 2);
+                AtlasSprite sprite = AtlasSprite.sprite(CGRect.make(85 * 0, 121 * 1, 85, 121), mgr);
+                sprite.setPosition(CGPoint.make(50 + i * 40, s.height / 2));
                 mgr.addChild(sprite, i);
             }
 
             for (int i = 5; i < 10; i++) {
-                AtlasSprite sprite = AtlasSprite.sprite(CCRect.make(85 * 1, 121 * 0, 85, 121), mgr);
-                sprite.setPosition(50 + i * 40, s.height / 2);
+                AtlasSprite sprite = AtlasSprite.sprite(CGRect.make(85 * 1, 121 * 0, 85, 121), mgr);
+                sprite.setPosition(CGPoint.make(50 + i * 40, s.height / 2));
                 mgr.addChild(sprite, 14 - i);
             }
 
-            AtlasSprite sprite = AtlasSprite.sprite(CCRect.make(85 * 3, 121 * 0, 85, 121), mgr);
+            AtlasSprite sprite = AtlasSprite.sprite(CGRect.make(85 * 3, 121 * 0, 85, 121), mgr);
             mgr.addChild(sprite, -1, kTagSprite1);
-            sprite.setPosition(s.width / 2, s.height / 2 - 20);
+            sprite.setPosition(CGPoint.make(s.width / 2, s.height / 2 - 20));
             sprite.setScaleX(6);
             sprite.setColor(new ccColor3B(255, 0, 0));
 
@@ -395,8 +395,8 @@ public class AtlasSpriteTest extends Activity {
         }
 
         public void reorderSprite(float dt) {
-            CocosNode mgr = getChild(kTagSpriteManager);
-            CocosNode sprite = mgr.getChild(kTagSprite1);
+            CCNode mgr = getChild(kTagSpriteManager);
+            CCNode sprite = mgr.getChild(kTagSprite1);
 
             int z = sprite.getZOrder();
 
@@ -425,33 +425,33 @@ public class AtlasSpriteTest extends Activity {
             AtlasSpriteManager mgr = new AtlasSpriteManager("grossini_dance_atlas.png", 1);
             addChild(mgr, 0, kTagSpriteManager);
 
-            CCSize s = Director.sharedDirector().winSize();
+            CGSize s = Director.sharedDirector().winSize();
 
             IntervalAction rotate = RotateBy.action(10, 360);
             Action action = RepeatForever.action(rotate);
 
             for (int i = 0; i < 3; i++) {
-                AtlasSprite sprite = AtlasSprite.sprite(CCRect.make(85 * i, 121 * 1, 85, 121), mgr);
-                sprite.setPosition(60 + i * 100, s.height / 2);
+                AtlasSprite sprite = AtlasSprite.sprite(CGRect.make(85 * i, 121 * 1, 85, 121), mgr);
+                sprite.setPosition(CGPoint.make(60 + i * 100, s.height / 2));
 
 
                 Sprite point = Sprite.sprite("r1.png");
-                point.scale(0.25f);
-                point.setPosition(sprite.getPositionX(), sprite.getPositionY());
+                point.setScale(0.25f);
+                point.setPosition(sprite.getPosition());
                 addChild(point, 1);
 
                 switch (i) {
                     case 0:
-                        sprite.setAnchorPoint(0, 0);
+                        sprite.setAnchorPoint(CGPoint.zero());
                         break;
                     case 1:
-                        sprite.setAnchorPoint(0.5f, 0.5f);
+                        sprite.setAnchorPoint(CGPoint.make(0.5f, 0.5f));
                         break;
                     case 2:
-                        sprite.setAnchorPoint(1, 1);
+                        sprite.setAnchorPoint(CGPoint.make(1, 1));
                         break;
                 }
-                point.setPosition(sprite.getPositionX(), sprite.getPositionY());
+                point.setPosition(sprite.getPosition());
 
                 Action copy = action.copy();
                 sprite.runAction(copy);
@@ -474,10 +474,10 @@ public class AtlasSpriteTest extends Activity {
             AtlasSpriteManager mgr = new AtlasSpriteManager("grossini_dance_atlas.png", 1);
             addChild(mgr, 0, kTagSpriteManager);
 
-            CCSize s = Director.sharedDirector().winSize();
+            CGSize s = Director.sharedDirector().winSize();
 
             mgr.setRelativeAnchorPoint(false);
-            mgr.setAnchorPoint(0.5f, 0.5f);
+            mgr.setAnchorPoint(CGPoint.make(0.5f, 0.5f));
 
 
             // AtlasSprite actions
@@ -496,8 +496,8 @@ public class AtlasSpriteTest extends Activity {
 
 
             for (int i = 0; i < 3; i++) {
-                AtlasSprite sprite = AtlasSprite.sprite(CCRect.make(85 * i, 121 * 1, 85, 121), mgr);
-                sprite.setPosition(90 + i * 150, s.height / 2);
+                AtlasSprite sprite = AtlasSprite.sprite(CGRect.make(85 * i, 121 * 1, 85, 121), mgr);
+                sprite.setPosition(CGPoint.make(90 + i * 150, s.height / 2));
 
                 sprite.runAction(action.copy());
                 mgr.addChild(sprite, i);

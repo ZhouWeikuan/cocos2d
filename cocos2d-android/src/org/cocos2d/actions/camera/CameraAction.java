@@ -2,7 +2,7 @@ package org.cocos2d.actions.camera;
 
 import org.cocos2d.actions.interval.IntervalAction;
 import org.cocos2d.actions.interval.ReverseTime;
-import org.cocos2d.nodes.CocosNode;
+import org.cocos2d.nodes.CCNode;
 
 public abstract class CameraAction extends IntervalAction {
     protected float centerXOrig;
@@ -22,7 +22,7 @@ public abstract class CameraAction extends IntervalAction {
     }
 
     @Override
-    public void start(CocosNode aTarget) {
+    public void start(CCNode aTarget) {
         super.start(aTarget);
 
         float x[] = new float[1];

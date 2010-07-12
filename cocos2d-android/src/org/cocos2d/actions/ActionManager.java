@@ -2,7 +2,7 @@ package org.cocos2d.actions;
 
 import android.util.Log;
 import org.cocos2d.actions.base.Action;
-import org.cocos2d.nodes.CocosNode;
+import org.cocos2d.nodes.CCNode;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -12,10 +12,10 @@ public class ActionManager {
 
     static class HashElement {
         CopyOnWriteArrayList<Action> actions;
-        CocosNode target;
+        CCNode target;
         boolean paused;
 
-        HashElement(CocosNode t, boolean p) {
+        HashElement(CCNode t, boolean p) {
             target = t;
             paused = p;
         }
@@ -42,7 +42,7 @@ public class ActionManager {
      * @since v0.8
      */
 
-    private ConcurrentHashMap<CocosNode, HashElement> targets;
+    private ConcurrentHashMap<CCNode, HashElement> targets;
 //    private HashElement	currentTarget;
 //    private boolean currentTargetSalvaged;
 
@@ -63,7 +63,7 @@ public class ActionManager {
     private ActionManager() {
         synchronized (ActionManager.class) {
             Scheduler.sharedScheduler().schedule(new Scheduler.Timer(this, "tick"));
-            targets = new ConcurrentHashMap<CocosNode, HashElement>(131);
+            targets = new ConcurrentHashMap<CCNode, HashElement>(131);
         }
     }
 
@@ -96,7 +96,7 @@ public class ActionManager {
      * Pauses all actions for a certain target.
      * When the actions are paused, they won't be "ticked".
      */
-    public void pauseAllActions(CocosNode target) {
+    public void pauseAllActions(CCNode target) {
         HashElement element = targets.get(target);
         if (element != null) {
             element.paused = true;
@@ -109,7 +109,7 @@ public class ActionManager {
      * Resumes all actions for a certain target.
      * Once the actions are resumed, they will be "ticked" in every frame.
      */
-    public void resumeAllActions(CocosNode target) {
+    public void resumeAllActions(CCNode target) {
         HashElement element = targets.get(target);
         if (element != null) {
             element.paused = false;
@@ -125,7 +125,7 @@ public class ActionManager {
      * If the action is added paused, then it will be queued, but it won't be "ticked" until it is resumed.
      * If the action is added unpaused, then it will be queued, and it will be "ticked" in every frame.
      */
-    public void addAction(Action action, CocosNode target, boolean paused) {
+    public void addAction(Action action, CCNode target, boolean paused) {
         assert action != null : "Argument action must be non-null";
         assert target != null : "Argument target must be non-null";
 
@@ -157,7 +157,7 @@ public class ActionManager {
      * Removes all actions from a certain target.
      * All the actions that belongs to the target will be removed.
      */
-    public void removeAllActions(CocosNode target) {
+    public void removeAllActions(CCNode target) {
         // explicit null handling
         if (target == null)
             return;
@@ -197,8 +197,8 @@ public class ActionManager {
     /**
      * Removes an action given its tag and the target
      */
-    public void removeAction(int tag, CocosNode target) {
-        assert tag != Action.INVALID_TAG : "Invalid tag";
+    public void removeAction(int tag, CCNode target) {
+        assert tag != Action.kCCActionTagInvalid : "Invalid tag";
 
         HashElement element = targets.get(target);
         if (element != null) {
@@ -221,8 +221,8 @@ public class ActionManager {
      *
      * @return the Action with the given tag
      */
-    public Action getAction(int tag, CocosNode target) {
-        assert tag != Action.INVALID_TAG : "Invalid tag";
+    public Action getAction(int tag, CCNode target) {
+        assert tag != Action.kCCActionTagInvalid : "Invalid tag";
 
         HashElement element = targets.get(target);
         if (element != null) {
@@ -247,7 +247,7 @@ public class ActionManager {
      * If you are running 1 Sequence of 7 actions, it will return 1.
      * If you are running 7 Sequences of 2 actions, it will return 7.
      */
-    public int numberOfRunningActions(CocosNode target) {
+    public int numberOfRunningActions(CCNode target) {
         HashElement element = targets.get(target);
         if (element != null) {
             return element.actions != null ? element.actions.size() : 0;
@@ -278,4 +278,14 @@ public class ActionManager {
 
         }
     }
+
+	public void resume(CCNode ccNode) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void pause(CCNode ccNode) {
+		// TODO Auto-generated method stub
+		
+	}
 }

@@ -4,25 +4,27 @@ import javax.microedition.khronos.opengles.GL10;
 
 import org.cocos2d.actions.base.Action;
 import org.cocos2d.actions.interval.ScaleTo;
-import org.cocos2d.nodes.CocosNode;
-import org.cocos2d.nodes.Label;
+import org.cocos2d.nodes.CCNode;
+import org.cocos2d.nodes.CCLabel;
+import org.cocos2d.protocols.CCLabelProtocol;
+import org.cocos2d.types.CGSize;
 import org.cocos2d.types.ccColor3B;
 
-public class MenuItemLabel extends MenuItem implements CocosNode.CocosNodeRGBA {
-    private CocosNodeLabel label_;
+public class MenuItemLabel extends MenuItem implements CCNode.CocosNodeRGBA {
+    private CCLabelProtocol label_;
     private ccColor3B colorBackup;
     private ccColor3B disabledColor_;
 
-    public static MenuItemLabel item(CocosNodeLabel label, CocosNode target, String selector) {
+    public static MenuItemLabel item(CCLabelProtocol label, CCNode target, String selector) {
         return new MenuItemLabel(label, target, selector);
     }
     
-    public static MenuItemLabel item(String text, CocosNode target, String selector) {
-    	Label lbl = Label.label(text, "DroidSansMono", 30);
+    public static MenuItemLabel item(String text, CCNode target, String selector) {
+    	CCLabel lbl = CCLabel.makeLabel(text, "DroidSansMono", 30);
         return new MenuItemLabel(lbl, target, selector);
     }
 
-    protected MenuItemLabel(CocosNodeLabel label, CocosNode target, String selector) {
+    protected MenuItemLabel(CCLabelProtocol label, CCNode target, String selector) {
         super(target, selector);
         setLabel(label);
         colorBackup = new ccColor3B(255, 255, 255);
@@ -55,18 +57,18 @@ public class MenuItemLabel extends MenuItem implements CocosNode.CocosNodeRGBA {
         disabledColor_.b = color.b;
     }
 
-    public CocosNodeLabel getLabel() {
+    public CCLabelProtocol getLabel() {
         return label_;
     }
 
-    public void setLabel(CocosNodeLabel label) {
+    public void setLabel(CCLabelProtocol label) {
         label_ = label;
-        setContentSize(((CocosNodeSize) label_).getWidth(), ((CocosNodeSize) label_).getHeight());
+        setContentSize(CGSize.make(((CocosNodeSize) label_).getWidth(), ((CocosNodeSize) label_).getHeight()));
     }
 
     public void setString(String string) {
         label_.setString(string);
-        setContentSize(((CocosNodeSize) label_).getWidth(), ((CocosNodeSize) label_).getHeight());
+        setContentSize(CGSize.make(((CocosNodeSize) label_).getWidth(), ((CocosNodeSize) label_).getHeight()));
     }
 
     public void activate() {
@@ -116,7 +118,7 @@ public class MenuItemLabel extends MenuItem implements CocosNode.CocosNodeRGBA {
     }
 
     public void draw(GL10 gl) {
-        ((CocosNode)label_).draw(gl);
+        ((CCNode)label_).draw(gl);
     }
 
 

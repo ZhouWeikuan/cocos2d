@@ -2,6 +2,7 @@ package org.cocos2d.particlesystem;
 
 import org.cocos2d.nodes.Director;
 import org.cocos2d.nodes.TextureManager;
+import org.cocos2d.types.CGPoint;
 
 public class ParticleRain extends ParticleSystem {
 
@@ -41,8 +42,8 @@ public class ParticleRain extends ParticleSystem {
         tangentialAccelVar = 1;
 
         // emitter position
-        setPosition(Director.sharedDirector().winSize().width / 2,
-                Director.sharedDirector().winSize().height);
+        setPosition(CGPoint.make(Director.sharedDirector().winSize().width / 2,
+                Director.sharedDirector().winSize().height));
         posVar.x = Director.sharedDirector().winSize().width / 2;
         posVar.y = 0;
 

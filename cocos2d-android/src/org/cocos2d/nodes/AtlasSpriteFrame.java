@@ -1,12 +1,12 @@
 package org.cocos2d.nodes;
 
-import org.cocos2d.types.CCRect;
+import org.cocos2d.types.CGRect;
 import org.cocos2d.utils.CCFormatter;
 
 public class AtlasSpriteFrame {
-    public CCRect rect;
+    public CGRect rect;
 
-    public AtlasSpriteFrame(CCRect frame) {
+    public AtlasSpriteFrame(CGRect frame) {
         rect = frame;
     }
 

@@ -1,19 +1,20 @@
 package org.cocos2d.menus;
 
 import org.cocos2d.nodes.AtlasSprite;
-import org.cocos2d.nodes.CocosNode;
+import org.cocos2d.nodes.CCNode;
+import org.cocos2d.types.CGPoint;
 
 import javax.microedition.khronos.opengles.GL10;
 
 public class MenuItemAtlasSprite extends MenuItemSprite {
 
 
-    public static MenuItemAtlasSprite item(AtlasSprite normalSprite, AtlasSprite selectedSprite, AtlasSprite disabledSprite, CocosNode target, String selector) {
+    public static MenuItemAtlasSprite item(AtlasSprite normalSprite, AtlasSprite selectedSprite, AtlasSprite disabledSprite, CCNode target, String selector) {
         return new MenuItemAtlasSprite(normalSprite, selectedSprite, disabledSprite, target, selector);
     }
 
     protected MenuItemAtlasSprite(AtlasSprite normalSprite, AtlasSprite selectedSprite, AtlasSprite disabledSprite,
-                               CocosNode target, String selector) {
+                               CCNode target, String selector) {
         super(normalSprite, selectedSprite, disabledSprite, target, selector);
 
         normalImage_.setVisible(true);
@@ -22,11 +23,11 @@ public class MenuItemAtlasSprite extends MenuItemSprite {
     }
 
     @Override
-    public void setPosition(float x, float y) {
-        super.setPosition(x, y);
-        normalImage_.setPosition(x, y);
-        selectedImage_.setPosition(x, y);
-        disabledImage_.setPosition(x, y);
+    public void setPosition( CGPoint pos) {
+        super.setPosition(pos);
+        normalImage_.setPosition(pos);
+        selectedImage_.setPosition(pos);
+        disabledImage_.setPosition(pos);
     }
 
     @Override

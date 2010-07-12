@@ -1,7 +1,8 @@
 package org.cocos2d.layers;
 
-import org.cocos2d.nodes.CocosNode;
+import org.cocos2d.nodes.CCNode;
 import org.cocos2d.nodes.Director;
+import org.cocos2d.types.CGSize;
 import org.cocos2d.types.ccColor3B;
 import org.cocos2d.types.ccColor4B;
 import org.cocos2d.types.ccMacros;
@@ -11,7 +12,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
-public class ColorLayer extends Layer implements CocosNode.CocosNodeRGBA, CocosNode.CocosNodeSize {
+public class ColorLayer extends Layer implements CCNode.CocosNodeRGBA, CCNode.CocosNodeSize {
     protected ccColor3B color_;
     protected int opacity_;
 
@@ -46,7 +47,7 @@ public class ColorLayer extends Layer implements CocosNode.CocosNodeRGBA, CocosN
         squareVertices_.position(0);
 
         updateColor();
-        setContentSize(w, h);
+        setContentSize(CGSize.make(w, h));
     }
 
     private void updateColor() {
@@ -133,29 +134,29 @@ public class ColorLayer extends Layer implements CocosNode.CocosNodeRGBA, CocosN
     }
 
     @Override
-    public void setContentSize(float w, float h) {
+    public void setContentSize(CGSize size) {
 
         // Layer default ctor calls setContentSize priot to nio alloc
         if (squareVertices_ != null) {
-            squareVertices_.put(2, w);
-            squareVertices_.put(5, h);
-            squareVertices_.put(6, w);
-            squareVertices_.put(7, h);
+            squareVertices_.put(2, size.width);
+            squareVertices_.put(5, size.height);
+            squareVertices_.put(6, size.width);
+            squareVertices_.put(7, size.height);
         }
 
-        super.setContentSize(w, h);
+        super.setContentSize(size);
     }
 
     public void changeWidthAndHeight(float w, float h) {
-        setContentSize(w, h);
+        setContentSize(CGSize.make(w, h));
     }
 
     public void changeWidth(float w) {
-        setContentSize(w, getHeight());
+        setContentSize(CGSize.make(w, getHeight()));
     }
 
     public void changeHeight(float h) {
-        setContentSize(getWidth(), h);
+        setContentSize(CGSize.make(getWidth(), h));
     }
 
 }

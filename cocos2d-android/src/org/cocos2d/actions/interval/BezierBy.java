@@ -1,8 +1,8 @@
 package org.cocos2d.actions.interval;
 
-import org.cocos2d.nodes.CocosNode;
+import org.cocos2d.nodes.CCNode;
 import org.cocos2d.types.CCBezierConfig;
-import org.cocos2d.types.CCPoint;
+import org.cocos2d.types.CGPoint;
 
 //
 // BezierBy
@@ -11,7 +11,7 @@ import org.cocos2d.types.CCPoint;
 public class BezierBy extends IntervalAction {
 
     private CCBezierConfig config;
-    private CCPoint startPosition;
+    private CGPoint startPosition;
 
     public static BezierBy action(float t, CCBezierConfig c) {
         return new BezierBy(t, c);
@@ -20,7 +20,7 @@ public class BezierBy extends IntervalAction {
     protected BezierBy(float t, CCBezierConfig c) {
         super(t);
         config = c;
-        startPosition = CCPoint.make(0, 0);
+        startPosition = CGPoint.make(0, 0);
     }
 
     @Override
@@ -29,10 +29,9 @@ public class BezierBy extends IntervalAction {
     }
 
     @Override
-    public void start(CocosNode aTarget) {
+    public void start(CCNode aTarget) {
         super.start(aTarget);
-        startPosition.x = target.getPositionX();
-        startPosition.y = target.getPositionY();
+        startPosition = target.getPosition();
     }
 
     @Override
@@ -49,7 +48,7 @@ public class BezierBy extends IntervalAction {
 
         float x = bezierat(xa, xb, xc, xd, t);
         float y = bezierat(ya, yb, yc, yd, t);
-        target.setPosition(startPosition.x + x, startPosition.y + y);
+        target.setPosition(CGPoint.make(startPosition.x + x, startPosition.y + y));
     }
 
     // Bezier cubic formulae :
@@ -65,10 +64,10 @@ public class BezierBy extends IntervalAction {
     public IntervalAction reverse() {
         // TODO: reverse it's not working as expected
         CCBezierConfig r = new CCBezierConfig();
-        r.startPosition = CCPoint.ccpNeg(config.startPosition);
-        r.endPosition = CCPoint.ccpNeg(config.endPosition);
-        r.controlPoint_1 = CCPoint.ccpNeg(config.controlPoint_1);
-        r.controlPoint_2 = CCPoint.ccpNeg(config.controlPoint_2);
+        r.startPosition = CGPoint.ccpNeg(config.startPosition);
+        r.endPosition = CGPoint.ccpNeg(config.endPosition);
+        r.controlPoint_1 = CGPoint.ccpNeg(config.controlPoint_1);
+        r.controlPoint_2 = CGPoint.ccpNeg(config.controlPoint_2);
 
         return new BezierBy(duration, r);
     }

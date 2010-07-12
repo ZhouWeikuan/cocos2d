@@ -17,8 +17,8 @@ import org.cocos2d.menus.MenuItemImage;
 import org.cocos2d.nodes.*;
 import org.cocos2d.opengl.CCGLSurfaceView;
 import org.cocos2d.types.ccColor4B;
-import org.cocos2d.types.CCPoint;
-import org.cocos2d.types.CCSize;
+import org.cocos2d.types.CGPoint;
+import org.cocos2d.types.CGSize;
 
 public class MotionStreakTest extends Activity {
     // private static final String LOG_TAG = CocosNodeTest.class.getSimpleName();
@@ -126,21 +126,21 @@ public class MotionStreakTest extends Activity {
 
     static abstract class TestDemo extends Layer {
         public TestDemo() {
-            CCSize s = Director.sharedDirector().winSize();
+            CGSize s = Director.sharedDirector().winSize();
 
-            Label label = Label.label(title(), "DroidSans", 24);
+            CCLabel label = CCLabel.makeLabel(title(), "DroidSans", 24);
             addChild(label, kTagLabel);
-            label.setPosition(s.width / 2, s.height / 2);
+            label.setPosition(CGPoint.make(s.width / 2, s.height / 2));
 
             MenuItemImage item1 = MenuItemImage.item("b1.png", "b2.png", this, "backCallback");
             MenuItemImage item2 = MenuItemImage.item("r1.png", "r2.png", this, "restartCallback");
             MenuItemImage item3 = MenuItemImage.item("f1.png", "f2.png", this, "nextCallback");
 
             Menu menu = Menu.menu(item1, item2, item3);
-            menu.setPosition(0, 0);
-            item1.setPosition(s.width / 2 - 100, 30);
-            item2.setPosition(s.width / 2, 30);
-            item3.setPosition(s.width / 2 + 100, 30);
+            menu.setPosition(CGPoint.make(0, 0));
+            item1.setPosition(CGPoint.make(s.width / 2 - 100, 30));
+            item2.setPosition(CGPoint.make(s.width / 2, 30));
+            item3.setPosition(CGPoint.make(s.width / 2 + 100, 30));
             addChild(menu, -1);
         }
 
@@ -166,24 +166,24 @@ public class MotionStreakTest extends Activity {
     }
 
     static class Test1 extends TestDemo {
-        CocosNode root;
-        CocosNode target;
+        CCNode root;
+        CCNode target;
         MotionStreak streak;
 
         public void onEnter() {
             super.onEnter();
 
-            CCSize s = Director.sharedDirector().winSize();
+            CGSize s = Director.sharedDirector().winSize();
 
             // the root object just rotates around
             root = Sprite.sprite("r1.png");
             addChild(root, 1);
-            root.setPosition(s.width / 2, s.height / 2);
+            root.setPosition(CGPoint.make(s.width / 2, s.height / 2));
 
             // the target object is offset from root, and the streak is moved to follow it
             target = Sprite.sprite("r1.png");
             root.addChild(target);
-            target.setPosition(100, 0);
+            target.setPosition(CGPoint.make(100, 0));
 
             // create the streak object and add it to the scene
             streak = new MotionStreak(2, 3, "streak.png", 32, 32, new ccColor4B(0, 255, 0, 255));
@@ -202,8 +202,8 @@ public class MotionStreakTest extends Activity {
         public void onUpdate(float delta) {
             //  CCPoint p = target.absolutePosition();
             //  float r = root.getRotation();
-            CCPoint p = target.convertToWorldSpace(0, 0);
-            streak.setPosition(p.x, p.y);
+            CGPoint p = target.convertToWorldSpace(0, 0);
+            streak.setPosition(p);
 
         }
 

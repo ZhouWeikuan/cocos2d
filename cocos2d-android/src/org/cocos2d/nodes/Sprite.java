@@ -2,11 +2,21 @@ package org.cocos2d.nodes;
 
 import android.graphics.Bitmap;
 import org.cocos2d.opengl.CCTexture2D;
+import org.cocos2d.types.CGRect;
 
 import java.util.HashMap;
 
-public class Sprite extends TextureNode implements CocosNode.CocosNodeFrames {
+public class Sprite extends TextureNode implements CCNode.CocosNodeFrames {
     private HashMap<String, CocosAnimation> animations;
+    private CGRect rect_;
+
+    public void setTextureRect(CGRect rect) {
+        rect_ = rect;
+    }
+
+    public CGRect getTextureRect() {
+        return rect_;
+    }
 
     public static Sprite sprite(String filename) {
         return new Sprite(TextureManager.sharedTextureManager().addImage(filename));
@@ -22,6 +32,10 @@ public class Sprite extends TextureNode implements CocosNode.CocosNodeFrames {
         return new Sprite(tex);
     }
 
+    protected Sprite() {
+    	
+    }
+    
     protected Sprite(CCTexture2D tex) {
         setTexture(tex);
 

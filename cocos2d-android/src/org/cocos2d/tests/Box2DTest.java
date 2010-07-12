@@ -110,7 +110,7 @@ public class Box2DTest extends Activity {
             setIsTouchEnabled(true);
     //		setIsAccelerometerEnabled = true;
 
-            CCSize screenSize = Director.sharedDirector().winSize();
+            CGSize screenSize = Director.sharedDirector().winSize();
     //		Log.w("Screen width %0.2f screen height %0.2f", screenSize.width,screenSize.height);
 
             // Define the gravity vector.
@@ -173,10 +173,10 @@ public class Box2DTest extends Activity {
 
             addNewSprite(screenSize.width/2, screenSize.height/2);
 
-            Label label = Label.label("Tap screen", "DroidSans", 32);
+            CCLabel label = CCLabel.makeLabel("Tap screen", "DroidSans", 32);
             addChild(label, 0);
             label.setColor(new ccColor3B(0,0,255));
-            label.setPosition( screenSize.width/2, screenSize.height-50);
+            label.setPosition(CGPoint.make( screenSize.width/2, screenSize.height-50));
 
             schedule("tick");
         }
@@ -198,10 +198,10 @@ public class Box2DTest extends Activity {
             //just randomly picking one of the images
             int idx = (ccMacros.CCRANDOM_0_1() > .5 ? 0:1);
             int idy = (ccMacros.CCRANDOM_0_1() > .5 ? 0:1);
-            AtlasSprite sprite = AtlasSprite.sprite(CCRect.make(32 * idx,32 * idy,32,32), mgr);
+            AtlasSprite sprite = AtlasSprite.sprite(CGRect.make(32 * idx,32 * idy,32,32), mgr);
             mgr.addChild(sprite);
 
-            sprite.setPosition( x, y);
+            sprite.setPosition(CGPoint.make( x, y));
 
             // Define the dynamic body.
             //set up a 1m squared box in the physics world
@@ -242,7 +242,7 @@ public class Box2DTest extends Activity {
                 if (b.getUserData() != null) {
                     //synchronize the AtlasSprites position and rotation with the corresponding body
                     AtlasSprite myActor = (AtlasSprite)b.getUserData();
-                    myActor.setPosition( b.getPosition().x * PTM_RATIO, b.getPosition().y * PTM_RATIO);
+                    myActor.setPosition(CGPoint.make( b.getPosition().x * PTM_RATIO, b.getPosition().y * PTM_RATIO));
                     myActor.setRotation(-1 * ccMacros.CC_RADIANS_TO_DEGREES(b.getAngle()));
                 }
             }
@@ -251,7 +251,7 @@ public class Box2DTest extends Activity {
         public boolean ccTouchesEnded(MotionEvent event)
         {
             //Add a new body/atlas sprite at the touched location
-            CCPoint location = CCPoint.make(event.getX(), event.getY());
+            CGPoint location = CGPoint.make(event.getX(), event.getY());
 
             location = Director.sharedDirector().convertCoordinate(location.x, location.y);
 

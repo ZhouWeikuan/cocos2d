@@ -6,7 +6,7 @@ import org.cocos2d.opengl.CCTexture2D;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class Animation implements CocosNode.CocosAnimation {
+public class Animation implements CCNode.CocosAnimation {
     private String name;
     private float delay;
     ArrayList<Object> frames;

@@ -1,6 +1,6 @@
 package org.cocos2d.actions.interval;
 
-import org.cocos2d.nodes.CocosNode;
+import org.cocos2d.nodes.CCNode;
 
 //
 // ScaleBy
@@ -31,7 +31,7 @@ public class ScaleBy extends ScaleTo {
     }
 
     @Override
-    public void start(CocosNode aTarget) {
+    public void start(CCNode aTarget) {
         super.start(aTarget);
         deltaX = startScaleX * endScaleX - startScaleX;
         deltaY = startScaleY * endScaleY - startScaleY;

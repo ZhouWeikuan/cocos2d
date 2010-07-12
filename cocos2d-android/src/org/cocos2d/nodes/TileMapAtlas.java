@@ -57,7 +57,7 @@ public class TileMapAtlas extends AtlasNode {
 
         updateAtlasValues();
 
-        setContentSize(tgaInfo.width * itemWidth, tgaInfo.height * itemHeight);
+        setContentSize(CGSize.make(tgaInfo.width * itemWidth, tgaInfo.height * itemHeight));
 
     }
 

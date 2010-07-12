@@ -1,10 +1,11 @@
 package org.cocos2d.layers;
 
 import org.cocos2d.events.CCTouchDispatcher;
-import org.cocos2d.nodes.CocosNode;
+import org.cocos2d.nodes.CCNode;
 import org.cocos2d.nodes.Director;
 import org.cocos2d.protocols.CCTouchDelegateProtocol;
-import org.cocos2d.types.CCSize;
+import org.cocos2d.types.CGPoint;
+import org.cocos2d.types.CGSize;
 
 import android.content.Context;
 import android.hardware.Sensor;
@@ -14,7 +15,7 @@ import android.hardware.SensorManager;
 import android.util.Log;
 import android.view.MotionEvent;
 
-public class Layer extends CocosNode implements CCTouchDelegateProtocol, SensorEventListener {
+public class Layer extends CCNode implements CCTouchDelegateProtocol, SensorEventListener {
 	
     // used to control registration of Touch events
     protected boolean isTouchEnabled_;
@@ -76,11 +77,11 @@ public class Layer extends CocosNode implements CCTouchDelegateProtocol, SensorE
     	else
     		accelerometer = null;
     	
-        CCSize s = Director.sharedDirector().winSize();
+        CGSize s = Director.sharedDirector().winSize();
         setRelativeAnchorPoint(false);
 
-        setAnchorPoint(0.5f, 0.5f);
-        setContentSize(s.width, s.height);
+        setAnchorPoint(CGPoint.make(0.5f, 0.5f));
+        setContentSize(s);
         setRelativeAnchorPoint(false);
 
         isTouchEnabled_ = false;

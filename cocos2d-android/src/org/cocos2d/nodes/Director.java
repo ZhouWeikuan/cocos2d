@@ -1,29 +1,45 @@
 package org.cocos2d.nodes;
 
-import android.app.Activity;
-import android.graphics.PixelFormat;
-import android.opengl.GLSurfaceView;
-import android.view.View;
-import android.view.WindowManager;
-import android.util.Log;
-import org.cocos2d.actions.ActionManager;
-import org.cocos2d.actions.Scheduler;
-import org.cocos2d.opengl.CCTexture2D;
-import org.cocos2d.opengl.GLU;
-import org.cocos2d.opengl.Camera;
-import org.cocos2d.types.CCPoint;
-import org.cocos2d.types.CCRect;
-import org.cocos2d.types.CCSize;
-import org.cocos2d.utils.CCFormatter;
-import org.cocos2d.events.CCTouchDispatcher;
-import org.cocos2d.transitions.TransitionScene;
+import static javax.microedition.khronos.opengles.GL10.GL_BLEND;
+import static javax.microedition.khronos.opengles.GL10.GL_COLOR_BUFFER_BIT;
+import static javax.microedition.khronos.opengles.GL10.GL_DEPTH_TEST;
+import static javax.microedition.khronos.opengles.GL10.GL_DITHER;
+import static javax.microedition.khronos.opengles.GL10.GL_FASTEST;
+import static javax.microedition.khronos.opengles.GL10.GL_FLAT;
+import static javax.microedition.khronos.opengles.GL10.GL_LIGHTING;
+import static javax.microedition.khronos.opengles.GL10.GL_MODELVIEW;
+import static javax.microedition.khronos.opengles.GL10.GL_ONE_MINUS_SRC_ALPHA;
+import static javax.microedition.khronos.opengles.GL10.GL_PERSPECTIVE_CORRECTION_HINT;
+import static javax.microedition.khronos.opengles.GL10.GL_PROJECTION;
+import static javax.microedition.khronos.opengles.GL10.GL_SRC_ALPHA;
+import static javax.microedition.khronos.opengles.GL10.GL_TEXTURE_2D;
+import static javax.microedition.khronos.opengles.GL10.GL_TEXTURE_COORD_ARRAY;
+import static javax.microedition.khronos.opengles.GL10.GL_VERTEX_ARRAY;
+
+import java.util.ArrayList;
+import java.util.Timer;
 
 import javax.microedition.khronos.egl.EGL10;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
-import static javax.microedition.khronos.opengles.GL10.*;
-import java.util.ArrayList;
-import java.util.Timer;
+
+import org.cocos2d.actions.ActionManager;
+import org.cocos2d.actions.Scheduler;
+import org.cocos2d.events.CCTouchDispatcher;
+import org.cocos2d.opengl.CCTexture2D;
+import org.cocos2d.opengl.Camera;
+import org.cocos2d.opengl.GLU;
+import org.cocos2d.transitions.TransitionScene;
+import org.cocos2d.types.CGPoint;
+import org.cocos2d.types.CGRect;
+import org.cocos2d.types.CGSize;
+import org.cocos2d.utils.CCFormatter;
+
+import android.app.Activity;
+import android.opengl.GLSurfaceView;
+import android.util.Log;
+import android.view.View;
+import android.view.WindowManager;
 
 public class Director implements GLSurfaceView.Renderer {
     private static final String LOG_TAG = Director.class.getSimpleName();
@@ -218,7 +234,7 @@ public class Director implements GLSurfaceView.Renderer {
 
         if (FAST_FPS_DISPLAY) {
             fpsLabel = new LabelAtlas("00.0", "fps_images.png", 16, 24, '.');
-            fpsLabel.setPosition(50, 2);
+            fpsLabel.setPosition(CGPoint.make(50, 2));
         }
 
     }
@@ -379,8 +395,8 @@ public class Director implements GLSurfaceView.Renderer {
 //                width_ / 2, height_ / 2, 0, 0.0f, 1.0f, 0.0f);
     }
 
-    public CCSize winSize() {
-        CCSize s = CCSize.make(width_, height_);
+    public CGSize winSize() {
+        CGSize s = CGSize.make(width_, height_);
         if( deviceOrientation_ == CCDeviceOrientationLandscapeLeft || deviceOrientation_ == CCDeviceOrientationLandscapeRight ) {
             // swap x,y in landscape mode
             s.width = height_;
@@ -389,8 +405,8 @@ public class Director implements GLSurfaceView.Renderer {
         return s;
     }
 
-    public CCSize displaySize() {
-        return CCSize.make(width_, height_);
+    public CGSize displaySize() {
+        return CGSize.make(width_, height_);
     }
 
     public boolean getLandscape() {
@@ -496,16 +512,16 @@ public class Director implements GLSurfaceView.Renderer {
 
 //        CCRect rect = new CCRect(view.getScrollX(), view.getScrollY(), view.getWidth(), view.getHeight());
         WindowManager w = me.getWindowManager();
-        CCRect rect = CCRect.make(0, 0, w.getDefaultDisplay().getWidth(), w.getDefaultDisplay().getHeight());
+        CGRect rect = CGRect.make(0, 0, w.getDefaultDisplay().getWidth(), w.getDefaultDisplay().getHeight());
 
         return initOpenGLViewWithView(view, rect);
     }
 
-    public boolean attachInView(View view, CCRect rect) {
+    public boolean attachInView(View view, CGRect rect) {
         return initOpenGLViewWithView(view, rect);
     }
 
-    private boolean initOpenGLViewWithView(View view, CCRect rect) {
+    private boolean initOpenGLViewWithView(View view, CGRect rect) {
         width_ = (int) rect.size.width;
         height_ = (int) rect.size.height;
 //        try {
@@ -596,47 +612,47 @@ public class Director implements GLSurfaceView.Renderer {
     }
 
 
-    public CCPoint convertCoordinate(float x, float y) {
+    public CGPoint convertCoordinate(float x, float y) {
         return convertToGL(x, y);
     }
 
-    public CCPoint convertToGL(float uiPointX, float uiPointY) {
+    public CGPoint convertToGL(float uiPointX, float uiPointY) {
         float newY = height_ - uiPointY;
         float newX = width_ - uiPointX;
 
         switch ( deviceOrientation_) {
             case CCDeviceOrientationPortrait:
-                return CCPoint.ccp(uiPointX, newY);
+                return CGPoint.ccp(uiPointX, newY);
 
             case CCDeviceOrientationPortraitUpsideDown:
-                return CCPoint.ccp(newX, uiPointY);
+                return CGPoint.ccp(newX, uiPointY);
 
             case CCDeviceOrientationLandscapeLeft:
-                return CCPoint.ccp(uiPointY, uiPointX);
+                return CGPoint.ccp(uiPointY, uiPointX);
 
             case CCDeviceOrientationLandscapeRight:
-                return CCPoint.ccp(newY, newX);
+                return CGPoint.ccp(newY, newX);
             }
         return null;
     }
-
-    CCPoint convertToUI(float glPointX, float glPointY) {
-        CCSize winSize = winSize();
-        int oppositeX = (int)(winSize.width - glPointX);
-        int oppositeY = (int)(winSize.height - glPointY);
+    
+    public CGPoint convertToUI(CGPoint glPoint) {
+    	
+        CGSize winSize = winSize();
+        int oppositeX = (int)(winSize.width - glPoint.x);
+        int oppositeY = (int)(winSize.height - glPoint.y);
         switch ( deviceOrientation_) {
             case CCDeviceOrientationPortrait:
-                return CCPoint.ccp(glPointX, glPointY);
+                return CGPoint.ccp(glPoint.x, glPoint.y);
 
             case CCDeviceOrientationPortraitUpsideDown:
-                return CCPoint.ccp(oppositeX, oppositeY);
+                return CGPoint.ccp(oppositeX, oppositeY);
 
             case CCDeviceOrientationLandscapeLeft:
-                return CCPoint.ccp(glPointY, oppositeX);
+                return CGPoint.ccp(glPoint.y, oppositeX);
 
             case CCDeviceOrientationLandscapeRight:
-                return CCPoint.ccp(oppositeY, glPointX);
-
+                return CGPoint.ccp(oppositeY, glPoint.x);
         }
 
         return null;
@@ -852,7 +868,7 @@ public class Director implements GLSurfaceView.Renderer {
             gl.glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
             gl.glColor4f(224 / 255f, 224 / 255f, 244 / 255f, 200 / 255f);
-            texture.drawAtPoint(gl, CCPoint.ccp(5, 2));
+            texture.drawAtPoint(gl, CGPoint.ccp(5, 2));
 
             gl.glDisable(GL_TEXTURE_2D);
             gl.glDisableClientState(GL_VERTEX_ARRAY);

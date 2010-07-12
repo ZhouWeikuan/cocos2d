@@ -1,33 +1,33 @@
 package org.cocos2d.actions.base;
 
 import android.util.Log;
-import org.cocos2d.nodes.CocosNode;
+import org.cocos2d.nodes.CCNode;
 import org.cocos2d.types.Copyable;
 
 public class Action implements Copyable {
     private static final String LOG_TAG = Action.class.getSimpleName();
 
-    public static final int INVALID_TAG = -1;
+    public static final int kCCActionTagInvalid = -1;
 
 
-    private CocosNode originalTarget;
-    public CocosNode target;
+    private CCNode originalTarget;
+    public CCNode target;
     private int tag;
 
-    public CocosNode getOriginalTarget() {
+    public CCNode getOriginalTarget() {
         return originalTarget;
     }
 
-    public void setOriginalTarget(CocosNode value) {
+    public void setOriginalTarget(CCNode value) {
         originalTarget = value;
 
     }
 
-    public CocosNode getTarget() {
+    public CCNode getTarget() {
         return target;
     }
 
-    public void setTarget(CocosNode value) {
+    public void setTarget(CCNode value) {
         target = value;
     }
 
@@ -46,7 +46,7 @@ public class Action implements Copyable {
 
     protected Action() {
         target = originalTarget = null;
-        tag = INVALID_TAG;
+        tag = kCCActionTagInvalid;
     }
 
     public Action copy() {
@@ -55,7 +55,7 @@ public class Action implements Copyable {
         return copy;
     }
 
-    public void start(CocosNode aTarget) {
+    public void start(CCNode aTarget) {
         originalTarget = target = aTarget;
     }
 

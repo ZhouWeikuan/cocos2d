@@ -1,6 +1,6 @@
 package org.cocos2d.actions.interval;
 
-import org.cocos2d.nodes.CocosNode;
+import org.cocos2d.nodes.CCNode;
 
 //
 // ScaleTo
@@ -41,7 +41,7 @@ public class ScaleTo extends IntervalAction {
 
 
     @Override
-    public void start(CocosNode aTarget) {
+    public void start(CCNode aTarget) {
         super.start(aTarget);
         startScaleX = target.getScaleX();
         startScaleY = target.getScaleY();

@@ -1,6 +1,6 @@
 package org.cocos2d.actions.interval;
 
-import org.cocos2d.nodes.CocosNode;
+import org.cocos2d.nodes.CCNode;
 
 
 //
@@ -9,21 +9,21 @@ import org.cocos2d.nodes.CocosNode;
 
 public class Animate extends IntervalAction {
 
-    private CocosNode.CocosAnimation animation;
+    private CCNode.CocosAnimation animation;
     private Object origFrame;
     private boolean restoreOriginalFrame;
 
-    public static Animate action(CocosNode.CocosAnimation anim) {
+    public static Animate action(CCNode.CocosAnimation anim) {
         assert anim != null : "Animate: argument Animation must be non-null";
         return new Animate(anim, true);
     }
 
-    public static Animate action(CocosNode.CocosAnimation anim, boolean restore) {
+    public static Animate action(CCNode.CocosAnimation anim, boolean restore) {
         assert anim != null : "Animate: argument Animation must be non-null";
         return new Animate(anim, restore);
     }
 
-    protected Animate(CocosNode.CocosAnimation anim, boolean restore) {
+    protected Animate(CCNode.CocosAnimation anim, boolean restore) {
         super(anim.frames().size() * anim.delay());
 
         restoreOriginalFrame = restore;
@@ -37,9 +37,9 @@ public class Animate extends IntervalAction {
     }
 
     @Override
-    public void start(CocosNode aTarget) {
+    public void start(CCNode aTarget) {
         super.start(aTarget);
-        CocosNode.CocosNodeFrames sprite = (CocosNode.CocosNodeFrames) target;
+        CCNode.CocosNodeFrames sprite = (CCNode.CocosNodeFrames) target;
 
         origFrame = sprite.displayFrame();
     }
@@ -47,7 +47,7 @@ public class Animate extends IntervalAction {
     @Override
     public void stop() {
         if (restoreOriginalFrame) {
-            CocosNode.CocosNodeFrames sprite = (CocosNode.CocosNodeFrames) target;
+            CCNode.CocosNodeFrames sprite = (CCNode.CocosNodeFrames) target;
             sprite.setDisplayFrame(origFrame);
         }
 
@@ -67,7 +67,7 @@ public class Animate extends IntervalAction {
             idx = animation.frames().size() - 1;
         }
 
-        CocosNode.CocosNodeFrames sprite = (CocosNode.CocosNodeFrames) target;
+        CCNode.CocosNodeFrames sprite = (CCNode.CocosNodeFrames) target;
         if (!sprite.isFrameDisplayed(animation.frames().get(idx))) {
             sprite.setDisplayFrame(animation.frames().get(idx));
         }

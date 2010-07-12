@@ -1,6 +1,7 @@
 package org.cocos2d.particlesystem;
 
 import org.cocos2d.nodes.TextureManager;
+import org.cocos2d.types.CGPoint;
 
 public class ParticleSmoke extends ParticleSystem {
 
@@ -32,7 +33,7 @@ public class ParticleSmoke extends ParticleSystem {
         radialAccelVar = 0;
 
         // emitter position
-        setPosition(160, 0);
+        setPosition(CGPoint.make(160, 0));
         posVar.x = 20;
         posVar.y = 0;
 

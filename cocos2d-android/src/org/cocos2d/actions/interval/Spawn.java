@@ -1,7 +1,7 @@
 package org.cocos2d.actions.interval;
 
 import org.cocos2d.actions.base.FiniteTimeAction;
-import org.cocos2d.nodes.CocosNode;
+import org.cocos2d.nodes.CCNode;
 
 //
 // Spawn
@@ -48,7 +48,7 @@ public class Spawn extends IntervalAction {
 
 
     @Override
-    public void start(CocosNode aTarget) {
+    public void start(CCNode aTarget) {
         super.start(aTarget);
         one.start(target);
         two.start(target);

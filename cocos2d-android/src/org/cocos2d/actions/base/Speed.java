@@ -1,7 +1,7 @@
 package org.cocos2d.actions.base;
 
 import org.cocos2d.actions.interval.IntervalAction;
-import org.cocos2d.nodes.CocosNode;
+import org.cocos2d.nodes.CCNode;
 
 public class Speed extends Action {
     protected Action other;
@@ -31,7 +31,7 @@ public class Speed extends Action {
 
 
     @Override
-    public void start(CocosNode aTarget) {
+    public void start(CCNode aTarget) {
         super.start(aTarget);
         other.start(target);
     }

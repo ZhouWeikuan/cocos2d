@@ -33,9 +33,9 @@ public class Cocos2D extends ListActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+        super.onCreate(savedInstanceState);        
         setListAdapter(new SimpleAdapter(this,
-                (List<Map<String,?>>) getData("org.cocos2d.tests"),
+                (List<Map<String, ?>>)getData("org.cocos2d.tests"),
                 android.R.layout.simple_list_item_1, new String[]{"title"},
                 new int[]{android.R.id.text1}));
         getListView().setTextFilterEnabled(true);

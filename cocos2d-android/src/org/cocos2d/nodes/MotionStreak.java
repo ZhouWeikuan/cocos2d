@@ -3,7 +3,7 @@ package org.cocos2d.nodes;
 import org.cocos2d.opengl.CCTexture2D;
 import org.cocos2d.types.ccBlendFunc;
 import org.cocos2d.types.ccColor4B;
-import org.cocos2d.types.CCPoint;
+import org.cocos2d.types.CGPoint;
 
 /**
  * Motion Streak manages a Ribbon based on it's motion in absolute space.
@@ -23,11 +23,11 @@ import org.cocos2d.types.CCPoint;
  * @since v0.8.1
  */
 
-public class MotionStreak extends CocosNode /*implements CocosNodeTexture*/ {
+public class MotionStreak extends CCNode /*implements CocosNodeTexture*/ {
     Ribbon ribbon_;
     float mSegThreshold;
     float mWidth;
-    CCPoint mLastLocation;
+    CGPoint mLastLocation;
 
     /**
      * Ribbon used by MotionStreak (weak reference)
@@ -42,7 +42,7 @@ public class MotionStreak extends CocosNode /*implements CocosNodeTexture*/ {
     public MotionStreak(float fade, float seg, String path, float width, float length, ccColor4B color) {
         mSegThreshold = seg;
         mWidth = width;
-        mLastLocation = CCPoint.make(0, 0);
+        mLastLocation = CGPoint.make(0, 0);
         ribbon_ = new Ribbon(mWidth, path, length, color, fade);
         addChild(ribbon_);
 
@@ -54,8 +54,8 @@ public class MotionStreak extends CocosNode /*implements CocosNodeTexture*/ {
      * polling function
      */
     public void update(float delta) {
-        CCPoint location = convertToWorldSpace(0, 0);
-        ribbon_.setPosition(-1 * location.x, -1 * location.y);
+        CGPoint location = convertToWorldSpace(0, 0);
+        ribbon_.setPosition(CGPoint.make(-1 * location.x, -1 * location.y));
         float len = (float)Math.sqrt((float) Math.pow(mLastLocation.x - location.x, 2) + (float) Math.pow(mLastLocation.y - location.y, 2));
         if (len > mSegThreshold) {
             ribbon_.addPoint(location, mWidth);

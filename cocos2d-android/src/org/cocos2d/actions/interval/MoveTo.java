@@ -1,16 +1,15 @@
 package org.cocos2d.actions.interval;
 
-import org.cocos2d.nodes.CocosNode;
+import org.cocos2d.nodes.CCNode;
+import org.cocos2d.types.CGPoint;
 
 //
 // MoveTo
 //
 
 public class MoveTo extends IntervalAction {
-    private float endPositionX;
-    private float endPositionY;
-    private float startPositionX;
-    private float startPositionY;
+    private CGPoint endPosition;
+    private CGPoint startPosition;
     protected float deltaX;
     protected float deltaY;
 
@@ -20,27 +19,25 @@ public class MoveTo extends IntervalAction {
 
     protected MoveTo(float t, float x, float y) {
         super(t);
-        endPositionX = x;
-        endPositionY = y;
+        endPosition = CGPoint.make(x, y);
     }
 
     @Override
     public IntervalAction copy() {
-        return new MoveTo(duration, endPositionX, endPositionY);
+        return new MoveTo(duration, endPosition.x, endPosition.y);
     }
 
     @Override
-    public void start(CocosNode aTarget) {
+    public void start(CCNode aTarget) {
         super.start(aTarget);
 
-        startPositionX = target.getPositionX();
-        startPositionY = target.getPositionY();
-        deltaX = endPositionX - startPositionX;
-        deltaY = endPositionY - startPositionY;
+        startPosition = target.getPosition();
+        deltaX = endPosition.x - startPosition.x;
+        deltaY = endPosition.y - startPosition.y;
     }
 
     @Override
     public void update(float t) {
-        target.setPosition(startPositionX + deltaX * t, startPositionY + deltaY * t);
+        target.setPosition(CGPoint.make(startPosition.x + deltaX * t, startPosition.y + deltaY * t));
     }
 }

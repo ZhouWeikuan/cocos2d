@@ -12,13 +12,14 @@ import org.cocos2d.layers.Layer;
 import org.cocos2d.menus.Menu;
 import org.cocos2d.menus.MenuItemFont;
 import org.cocos2d.nodes.Director;
-import org.cocos2d.nodes.Label;
+import org.cocos2d.nodes.CCLabel;
 import org.cocos2d.nodes.Scene;
 import org.cocos2d.nodes.TextureManager;
 import org.cocos2d.opengl.CCGLSurfaceView;
 import org.cocos2d.transitions.FlipXTransition;
 import org.cocos2d.transitions.SlideInTTransition;
 import org.cocos2d.transitions.TransitionScene;
+import org.cocos2d.types.CGPoint;
 import org.cocos2d.types.ccColor4B;
 import org.cocos2d.events.CCTouchDispatcher;
 
@@ -110,11 +111,11 @@ public class SceneTest extends Activity {
 
             isTouchEnabled_ = true;
 
-            Label label = Label.label("Touch to pop scene", "DroidSans", 32);
+            CCLabel label = CCLabel.makeLabel("Touch to pop scene", "DroidSans", 32);
             addChild(label);
             float width = Director.sharedDirector().winSize().width;
             float height = Director.sharedDirector().winSize().height;
-            label.setPosition(width / 2, height / 2);
+            label.setPosition(CGPoint.make(width / 2, height / 2));
         }
 
         @Override

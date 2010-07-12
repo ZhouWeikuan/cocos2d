@@ -36,7 +36,7 @@ import java.io.IOException;
  *
  * @since Android 1.0
  */
-public class CCAffineTransform /*implements Cloneable, Serializable*/ {
+public class CGAffineTransform {
 
     /**
      * The Constant serialVersionUID.
@@ -139,15 +139,15 @@ public class CCAffineTransform /*implements Cloneable, Serializable*/ {
      */
     transient int type;
 
-    public static CCAffineTransform identity() {
-        return new CCAffineTransform();
+    public static CGAffineTransform identity() {
+        return new CGAffineTransform();
     }
-
+  
     /**
      * Instantiates a new affine transform of type <code>TYPE_IDENTITY</code>
      * (which leaves coordinates unchanged).
      */
-    public CCAffineTransform() {
+    public CGAffineTransform() {
         type = TYPE_IDENTITY;
         m00 = m11 = 1.0;
         m10 = m01 = m02 = m12 = 0.0;
@@ -159,7 +159,7 @@ public class CCAffineTransform /*implements Cloneable, Serializable*/ {
      *
      * @param t the transform to copy.
      */
-    public CCAffineTransform(CCAffineTransform t) {
+    public CGAffineTransform(CGAffineTransform t) {
         this.type = t.type;
         this.m00 = t.m00;
         this.m10 = t.m10;
@@ -181,7 +181,7 @@ public class CCAffineTransform /*implements Cloneable, Serializable*/ {
      * @param m02 the m02 entry in the transformation matrix.
      * @param m12 the m12 entry in the transformation matrix.
      */
-    public CCAffineTransform(float m00, float m10, float m01, float m11, float m02, float m12) {
+    public CGAffineTransform(float m00, float m10, float m01, float m11, float m02, float m12) {
         this.type = TYPE_UNKNOWN;
         this.m00 = m00;
         this.m10 = m10;
@@ -203,7 +203,7 @@ public class CCAffineTransform /*implements Cloneable, Serializable*/ {
      * @param m02 the m02 entry in the transformation matrix.
      * @param m12 the m12 entry in the transformation matrix.
      */
-    public CCAffineTransform(double m00, double m10, double m01, double m11, double m02, double m12) {
+    public CGAffineTransform(double m00, double m10, double m01, double m11, double m02, double m12) {
         this.type = TYPE_UNKNOWN;
         this.m00 = m00;
         this.m10 = m10;
@@ -211,6 +211,10 @@ public class CCAffineTransform /*implements Cloneable, Serializable*/ {
         this.m11 = m11;
         this.m02 = m02;
         this.m12 = m12;
+    }
+    
+    public static CGAffineTransform make(double m00, double m10, double m01, double m11, double m02, double m12) {
+        return new CGAffineTransform(m00, m10, m01, m11, m02, m12);
     }
 
     /**
@@ -227,7 +231,7 @@ public class CCAffineTransform /*implements Cloneable, Serializable*/ {
      *               matrix.
      * @throws ArrayIndexOutOfBoundsException if the size of the array is 0, 1, 2, 3, or 5.
      */
-    public CCAffineTransform(float[] matrix) {
+    public CGAffineTransform(float[] matrix) {
         this.type = TYPE_UNKNOWN;
         m00 = matrix[0];
         m10 = matrix[1];
@@ -253,7 +257,7 @@ public class CCAffineTransform /*implements Cloneable, Serializable*/ {
      *               matrix.
      * @throws ArrayIndexOutOfBoundsException if the size of the array is 0, 1, 2, 3, or 5.
      */
-    public CCAffineTransform(double[] matrix) {
+    public CGAffineTransform(double[] matrix) {
         this.type = TYPE_UNKNOWN;
         m00 = matrix[0];
         m10 = matrix[1];
@@ -451,7 +455,7 @@ public class CCAffineTransform /*implements Cloneable, Serializable*/ {
      *
      * @param t the transform that gives the new values.
      */
-    public void setTransform(CCAffineTransform t) {
+    public void setTransform(CGAffineTransform t) {
         type = t.type;
         setTransform(t.m00, t.m10, t.m01, t.m11, t.m02, t.m12);
     }
@@ -579,8 +583,8 @@ public class CCAffineTransform /*implements Cloneable, Serializable*/ {
      * @param my the distance to translate in the y direction.
      * @return the new AffineTransformation.
      */
-    public static CCAffineTransform makeTranslation(double mx, double my) {
-        CCAffineTransform t = new CCAffineTransform();
+    public static CGAffineTransform makeTranslation(double mx, double my) {
+        CGAffineTransform t = new CGAffineTransform();
         t.setToTranslation(mx, my);
         return t;
     }
@@ -595,8 +599,8 @@ public class CCAffineTransform /*implements Cloneable, Serializable*/ {
      * @param scY the scaling factor in the y direction.
      * @return the new AffineTransformation.
      */
-    public static CCAffineTransform getScaleInstance(double scx, double scY) {
-        CCAffineTransform t = new CCAffineTransform();
+    public static CGAffineTransform makeScale(double scx, double scY) {
+        CGAffineTransform t = new CGAffineTransform();
         t.setToScale(scx, scY);
         return t;
     }
@@ -611,8 +615,8 @@ public class CCAffineTransform /*implements Cloneable, Serializable*/ {
      * @param shy the shearing factor in the y direction.
      * @return the new AffineTransformation.
      */
-    public static CCAffineTransform getShearInstance(double shx, double shy) {
-        CCAffineTransform m = new CCAffineTransform();
+    public static CGAffineTransform makeShear(double shx, double shy) {
+        CGAffineTransform m = new CGAffineTransform();
         m.setToShear(shx, shy);
         return m;
     }
@@ -626,8 +630,8 @@ public class CCAffineTransform /*implements Cloneable, Serializable*/ {
      * @param angle the angle of rotation in radians.
      * @return the new AffineTransformation.
      */
-    public static CCAffineTransform getRotateInstance(double angle) {
-        CCAffineTransform t = new CCAffineTransform();
+    public static CGAffineTransform makeRotation(double angle) {
+        CGAffineTransform t = new CGAffineTransform();
         t.setToRotation(angle);
         return t;
     }
@@ -641,8 +645,8 @@ public class CCAffineTransform /*implements Cloneable, Serializable*/ {
      * @param y     the distance to translate in the y direction.
      * @return the new AffineTransformation.
      */
-    public static CCAffineTransform getRotateInstance(double angle, double x, double y) {
-        CCAffineTransform t = new CCAffineTransform();
+    public static CGAffineTransform makeRotation(double angle, double x, double y) {
+        CGAffineTransform t = new CGAffineTransform();
         t.setToRotation(angle, x, y);
         return t;
     }
@@ -653,8 +657,8 @@ public class CCAffineTransform /*implements Cloneable, Serializable*/ {
      * @param mx the distance to translate in the x direction.
      * @param my the distance to translate in the y direction.
      */
-    public void translate(double mx, double my) {
-        concatenate(CCAffineTransform.makeTranslation(mx, my));
+    public CGAffineTransform getTransformTranslate(double mx, double my) {
+        return getTransformConcat(CGAffineTransform.makeTranslation(mx, my));
     }
 
     /**
@@ -663,8 +667,8 @@ public class CCAffineTransform /*implements Cloneable, Serializable*/ {
      * @param scx the scaling factor in the x direction.
      * @param scy the scaling factor in the y direction.
      */
-    public void scale(double scx, double scy) {
-        concatenate(CCAffineTransform.getScaleInstance(scx, scy));
+    public CGAffineTransform getTransformScale(double scx, double scy) {
+        return getTransformConcat(CGAffineTransform.makeScale(scx, scy));
     }
 
     /**
@@ -674,7 +678,7 @@ public class CCAffineTransform /*implements Cloneable, Serializable*/ {
      * @param shy the shearing factor in the y direction.
      */
     public void shear(double shx, double shy) {
-        concatenate(CCAffineTransform.getShearInstance(shx, shy));
+        getTransformConcat(CGAffineTransform.makeShear(shx, shy));
     }
 
     /**
@@ -682,8 +686,8 @@ public class CCAffineTransform /*implements Cloneable, Serializable*/ {
      *
      * @param angle the angle of rotation in radians.
      */
-    public void rotate(double angle) {
-        concatenate(CCAffineTransform.getRotateInstance(angle));
+    public CGAffineTransform getTransformRotate(double angle) {
+        return getTransformConcat(CGAffineTransform.makeRotation(angle));
     }
 
     /**
@@ -695,7 +699,7 @@ public class CCAffineTransform /*implements Cloneable, Serializable*/ {
      * @param py    the distance to translate in the y direction.
      */
     public void rotate(double angle, double px, double py) {
-        concatenate(CCAffineTransform.getRotateInstance(angle, px, py));
+        getTransformConcat(CGAffineTransform.makeRotation(angle, px, py));
     }
 
     /**
@@ -706,8 +710,8 @@ public class CCAffineTransform /*implements Cloneable, Serializable*/ {
      * @return an AffineTransform object that is the result of t1 multiplied by
      *         the matrix t2.
      */
-    CCAffineTransform multiply(CCAffineTransform t1, CCAffineTransform t2) {
-        return new CCAffineTransform(t1.m00 * t2.m00 + t1.m10 * t2.m01, // m00
+    public static CGAffineTransform multiply(CGAffineTransform t1, CGAffineTransform t2) {
+        return new CGAffineTransform(t1.m00 * t2.m00 + t1.m10 * t2.m01, // m00
                 t1.m00 * t2.m10 + t1.m10 * t2.m11, // m01
                 t1.m01 * t2.m00 + t1.m11 * t2.m01, // m10
                 t1.m01 * t2.m10 + t1.m11 * t2.m11, // m11
@@ -721,9 +725,10 @@ public class CCAffineTransform /*implements Cloneable, Serializable*/ {
      *
      * @param t the AffineTransform to apply to this AffineTransform.
      */
-    public void concatenate(CCAffineTransform t) {
-        setTransform(multiply(t, this));
+    public CGAffineTransform getTransformConcat(CGAffineTransform t) {
+        return multiply(t, this);
     }
+    
 
     /**
      * Changes the current AffineTransform the one obtained by taking the
@@ -732,7 +737,7 @@ public class CCAffineTransform /*implements Cloneable, Serializable*/ {
      * @param t the AffineTransform that this AffineTransform is multiplied
      *          by.
      */
-    public void preConcatenate(CCAffineTransform t) {
+    public void preConcatenate(CGAffineTransform t) {
         setTransform(multiply(this, t));
     }
 
@@ -744,13 +749,13 @@ public class CCAffineTransform /*implements Cloneable, Serializable*/ {
      *          if this AffineTransform cannot be inverted (the determinant
      *          of the linear transformation part is zero).
      */
-    public CCAffineTransform createInverse() /*throws NoninvertibleTransformException*/ {
+    public CGAffineTransform getTransformInvert() /*throws NoninvertibleTransformException*/ {
         double det = getDeterminant();
         if (Math.abs(det) < ZERO) {
 //            throw new NoninvertibleTransformException("Determinant is zero");
-            return identity();
+            return this;
         }
-        return new CCAffineTransform(m11 / det, // m00
+        return new CGAffineTransform(m11 / det, // m00
                 -m10 / det, // m10
                 -m01 / det, // m01
                 m00 / det, // m11
@@ -769,10 +774,8 @@ public class CCAffineTransform /*implements Cloneable, Serializable*/ {
      * @return the point in the AffineTransform's image space where the original
      *         point is sent.
      */
-    public CCPoint transform(CCPoint src, CCPoint dst) {
-        if (dst == null) {
-            dst = CCPoint.zero();
-        }
+    public CGPoint applyTransform(CGPoint src) {
+        CGPoint dst = CGPoint.make(0, 0);
 
         float x = src.x;
         float y = src.y;
@@ -796,14 +799,14 @@ public class CCAffineTransform /*implements Cloneable, Serializable*/ {
      * @throws ArrayIndexOutOfBoundsException if <code>srcOff + length > src.length</code> or
      *                                        <code>dstOff + length > dst.length</code>.
      */
-    public void transform(CCPoint[] src, int srcOff, CCPoint[] dst, int dstOff, int length) {
+    public void transform(CGPoint[] src, int srcOff, CGPoint[] dst, int dstOff, int length) {
         while (--length >= 0) {
-            CCPoint srcPoint = src[srcOff++];
+            CGPoint srcPoint = src[srcOff++];
             double x = srcPoint.x;
             double y = srcPoint.y;
-            CCPoint dstPoint = dst[dstOff];
+            CGPoint dstPoint = dst[dstOff];
             if (dstPoint == null) {
-                dstPoint = CCPoint.zero();
+                dstPoint = CGPoint.zero();
             }
             dstPoint.x = (float) (x * m00 + y * m01 + m02);
             dstPoint.y = (float) (x * m10 + y * m11 + m12);
@@ -945,9 +948,9 @@ public class CCAffineTransform /*implements Cloneable, Serializable*/ {
      */
     // TODO: is this right? if dst is null, we check what it's an
     // instance of? Shouldn't it be src instanceof Point2D.Double?
-    public CCPoint deltaTransform(CCPoint src, CCPoint dst) {
+    public CGPoint deltaTransform(CGPoint src, CGPoint dst) {
         if (dst == null) {
-            dst = CCPoint.zero();
+            dst = CGPoint.make(0, 0);
         }
 
         double x = src.x;
@@ -997,7 +1000,7 @@ public class CCAffineTransform /*implements Cloneable, Serializable*/ {
      *          if this AffineTransform cannot be inverted (the determinant
      *          of the linear transformation part is zero).
      */
-    public CCPoint inverseTransform(CCPoint src, CCPoint dst)
+    public CGPoint inverseTransform(CGPoint src, CGPoint dst)
             throws NoninvertibleTransformException {
         double det = getDeterminant();
         if (Math.abs(det) < ZERO) {
@@ -1005,7 +1008,7 @@ public class CCAffineTransform /*implements Cloneable, Serializable*/ {
         }
 
         if (dst == null) {
-            dst = CCPoint.zero();
+            dst = CGPoint.zero();
         }
 
         double x = src.x - m02;
@@ -1105,8 +1108,8 @@ public class CCAffineTransform /*implements Cloneable, Serializable*/ {
         if (obj == this) {
             return true;
         }
-        if (obj instanceof CCAffineTransform) {
-            CCAffineTransform t = (CCAffineTransform) obj;
+        if (obj instanceof CGAffineTransform) {
+            CGAffineTransform t = (CGAffineTransform) obj;
             return m00 == t.m00 && m01 == t.m01 && m02 == t.m02 && m10 == t.m10 && m11 == t.m11
                     && m12 == t.m12;
         }
@@ -1137,6 +1140,22 @@ public class CCAffineTransform /*implements Cloneable, Serializable*/ {
         type = TYPE_UNKNOWN;
     }
 
+    public static void CGAffineToGL(CGAffineTransform t, float []m) {
+        // | m[0] m[4] m[8]  m[12] |     | m11 m21 m31 m41 |     | a c 0 tx |
+        // | m[1] m[5] m[9]  m[13] |     | m12 m22 m32 m42 |     | b d 0 ty |
+        // | m[2] m[6] m[10] m[14] | <=> | m13 m23 m33 m43 | <=> | 0 0 1  0 |
+        // | m[3] m[7] m[11] m[15] |     | m14 m24 m34 m44 |     | 0 0 0  1 |
+
+        m[2] = m[3] = m[6] = m[7] = m[8] = m[9] = m[11] = m[14] = 0.0f;
+        m[10] = m[15] = 1.0f;
+        m[0] = (float)t.m00; m[4] = (float)t.m01; m[12] = (float)t.m02;
+        m[1] = (float)t.m10; m[5] = (float)t.m11; m[13] = (float)t.m12;
+    }
+
+    public static void GLToCGAffine(float []m, CGAffineTransform t) {
+        t.m00 = m[0]; t.m01 = m[4]; t.m02 = m[12];
+        t.m10 = m[1]; t.m11 = m[5]; t.m12 = m[13];
+    }    
 }
 
 final class HashCode {

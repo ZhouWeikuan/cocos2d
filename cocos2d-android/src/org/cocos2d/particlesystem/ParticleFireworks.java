@@ -1,6 +1,7 @@
 package org.cocos2d.particlesystem;
 
 import org.cocos2d.nodes.TextureManager;
+import org.cocos2d.types.CGPoint;
 
 public class ParticleFireworks extends ParticleSystem {
 
@@ -35,7 +36,7 @@ public class ParticleFireworks extends ParticleSystem {
         speedVar = 50;
 
         // emitter position
-        setPosition(160, 160);
+        setPosition(CGPoint.make(160, 160));
 
         // life of particles
         life = 3.5f;

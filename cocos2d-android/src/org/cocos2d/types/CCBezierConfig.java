@@ -2,11 +2,11 @@ package org.cocos2d.types;
 
 public class CCBezierConfig {
     //! startPosition of the bezier
-    public CCPoint startPosition;
+    public CGPoint startPosition;
     //! end position of the bezier
-    public CCPoint endPosition;
+    public CGPoint endPosition;
     //! Bezier control point 1
-    public CCPoint controlPoint_1;
+    public CGPoint controlPoint_1;
     //! Bezier control point 2
-    public CCPoint controlPoint_2;
+    public CGPoint controlPoint_2;
 }

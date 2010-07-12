@@ -135,11 +135,11 @@ public class AtlasTest extends Activity {
 
         public AtlasDemo() {
 
-        	CCSize s = Director.sharedDirector().winSize();
+        	CGSize s = Director.sharedDirector().winSize();
 
-            Label label = Label.label(title(), "DroidSans", 32);
+            CCLabel label = CCLabel.makeLabel(title(), "DroidSans", 32);
             addChild(label, 1);
-            label.setPosition(s.width / 2, s.height / 2);
+            label.setPosition(CGPoint.make(s.width / 2, s.height / 2));
 
             MenuItemImage item1 = MenuItemImage.item("b1.png", "b2.png", this, "backCallback");
             MenuItemImage item2 = MenuItemImage.item("r1.png", "r2.png", this, "restartCallback");
@@ -147,10 +147,10 @@ public class AtlasTest extends Activity {
 
             Menu menu = Menu.menu(item1, item2, item3);
 
-            menu.setPosition(0, 0);
-            item1.setPosition(s.width / 2 - 100, 30);
-            item2.setPosition(s.width / 2, 30);
-            item3.setPosition(s.width / 2 + 100, 30);
+            menu.setPosition(CGPoint.make(0, 0));
+            item1.setPosition(CGPoint.make(s.width / 2 - 100, 30));
+            item2.setPosition(CGPoint.make(s.width / 2, 30));
+            item3.setPosition(CGPoint.make(s.width / 2 + 100, 30));
             addChild(menu, 1);
         }
 
@@ -232,7 +232,7 @@ public class AtlasTest extends Activity {
 
             addChild(label);
 
-            label.setPosition(10, 100);
+            label.setPosition(CGPoint.make(10, 100));
 
             schedule("step");
 
@@ -264,7 +264,7 @@ public class AtlasTest extends Activity {
 
             addChild(tilemap, 0, kTagTileMap);
 
-            tilemap.setAnchorPoint(0, 0);
+            tilemap.setAnchorPoint(CGPoint.make(0, 0));
 
             IntervalAction s = ScaleBy.action(4, 0.8f);
             IntervalAction scaleBack = s.reverse();
@@ -305,8 +305,8 @@ public class AtlasTest extends Activity {
 
             addChild(tilemap, 0, kTagTileMap);
 
-            tilemap.setAnchorPoint(0, 0);
-            tilemap.setPosition(-20, -200);
+            tilemap.setAnchorPoint(CGPoint.make(0, 0));
+            tilemap.setPosition(CGPoint.make(-20, -200));
 
             Log.i(LOG_TAG, "Atlas4 starts");
 

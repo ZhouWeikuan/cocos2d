@@ -15,7 +15,7 @@ import org.cocos2d.nodes.*;
 import org.cocos2d.opengl.CCGLSurfaceView;
 import org.cocos2d.types.ccColor4B;
 import org.cocos2d.types.ccMacros;
-import org.cocos2d.types.CCPoint;
+import org.cocos2d.types.CGPoint;
 import org.cocos2d.events.CCTouchDispatcher;
 
 public class ClickAndMoveTest extends Activity {
@@ -103,7 +103,7 @@ public class ClickAndMoveTest extends Activity {
             addChild(layer, -1);
 
             addChild(sprite, 0, kTagSprite);
-            sprite.setPosition(20, 150);
+            sprite.setPosition(CGPoint.make(20, 150));
 
             sprite.runAction(JumpTo.action(4, 300, 48, 100, 4));
 
@@ -112,13 +112,15 @@ public class ClickAndMoveTest extends Activity {
 
         @Override
         public boolean ccTouchesBegan(MotionEvent event) {
-            CCPoint convertedLocation = Director.sharedDirector().convertCoordinate(event.getX(), event.getY());
+            CGPoint convertedLocation = Director.sharedDirector().convertCoordinate(event.getX(), event.getY());
 
-            CocosNode s = getChild(kTagSprite);
+            CCNode s = getChild(kTagSprite);
             s.stopAllActions();
             s.runAction(MoveTo.action(1.0f, convertedLocation.x, convertedLocation.y));
-            float o = convertedLocation.x - s.getPositionX();
-            float a = convertedLocation.y - s.getPositionY();
+           
+            CGPoint pnt = s.getPosition();
+            float o = convertedLocation.x - pnt.x;
+            float a = convertedLocation.y - pnt.y;
             float at = ccMacros.CC_RADIANS_TO_DEGREES((float) Math.atan(o / a));
 
             if (a < 0) {

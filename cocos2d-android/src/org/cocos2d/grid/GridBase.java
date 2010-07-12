@@ -8,8 +8,8 @@ import org.cocos2d.nodes.Director;
 import org.cocos2d.opengl.CCTexture2D;
 import org.cocos2d.opengl.GLU;
 import org.cocos2d.types.ccGridSize;
-import org.cocos2d.types.CCPoint;
-import org.cocos2d.types.CCSize;
+import org.cocos2d.types.CGPoint;
+import org.cocos2d.types.CGSize;
 import org.cocos2d.utils.CCFormatter;
 
 import javax.microedition.khronos.opengles.GL10;
@@ -20,7 +20,7 @@ public abstract class GridBase {
     protected int reuseGrid;
     protected ccGridSize gridSize;
     protected CCTexture2D texture;
-    protected CCPoint step;
+    protected CGPoint step;
 
     public static final int kTextureSize = 512;
 
@@ -49,7 +49,7 @@ public abstract class GridBase {
         reuseGrid = 0;
         gridSize = gSize;
 
-        CCSize win = Director.sharedDirector().winSize();
+        CGSize win = Director.sharedDirector().winSize();
 
         if (texture == null) {
             Bitmap.Config config = Bitmap.Config.ARGB_8888;
@@ -60,7 +60,7 @@ public abstract class GridBase {
             texture = new CCTexture2D(bitmap, win);
         }
 
-        step = CCPoint.make(0, 0);
+        step = CGPoint.make(0, 0);
         step.x = win.width / gridSize.x;
         step.y = win.height / gridSize.y;
     }
@@ -90,7 +90,7 @@ public abstract class GridBase {
     }
 
     public void set2DProjection(GL10 gl) {
-        CCSize winSize = Director.sharedDirector().winSize();
+        CGSize winSize = Director.sharedDirector().winSize();
 
         gl.glLoadIdentity();
         gl.glViewport(0, 0, (int) winSize.width, (int) winSize.height);
@@ -102,7 +102,7 @@ public abstract class GridBase {
 
     // This routine can be merged with Director
     public void set3DProjection(GL10 gl) {
-        CCSize winSize = Director.sharedDirector().displaySize();
+        CGSize winSize = Director.sharedDirector().displaySize();
 
         gl.glViewport(0, 0, (int) winSize.width, (int) winSize.height);
         gl.glMatrixMode(GL10.GL_PROJECTION);

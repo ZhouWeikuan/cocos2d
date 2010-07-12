@@ -5,13 +5,13 @@ import org.cocos2d.opengl.TextureAtlas;
 import org.cocos2d.opengl.Primitives;
 import org.cocos2d.types.ccMacros;
 import org.cocos2d.types.ccBlendFunc;
-import org.cocos2d.types.CCRect;
-import org.cocos2d.types.CCPoint;
+import org.cocos2d.types.CGRect;
+import org.cocos2d.types.CGPoint;
 
 import javax.microedition.khronos.opengles.GL10;
 import java.util.ArrayList;
 
-public class AtlasSpriteManager extends CocosNode {
+public class AtlasSpriteManager extends CCNode {
 
     // private static final String LOG_TAG = AtlasSpriteManager.class.getSimpleName();
 
@@ -43,7 +43,7 @@ public class AtlasSpriteManager extends CocosNode {
         updateBlendFunc();
         
         // no lazy alloc in this node
-        children = new ArrayList<CocosNode>(capacity);
+        children_ = new ArrayList<CCNode>(capacity);
     }
 
     /*
@@ -62,13 +62,13 @@ public class AtlasSpriteManager extends CocosNode {
         updateBlendFunc();
 
         // no lazy alloc in this node
-        children = new ArrayList<CocosNode>(capacity);
+        children_ = new ArrayList<CCNode>(capacity);
     }
 
 
     // TODO: CAREFUL:
     // This visit is almost identical to CocosNode#visit
-    // with the exception that it doesn't call visit on its children
+    // with the exception that it doesn't call visit on its children_
     //
     // The alternative is to have a void AtlasSprite#visit, but this
     // although is less mantainable, is faster
@@ -98,8 +98,8 @@ public class AtlasSpriteManager extends CocosNode {
     private int indexForNewChild(int z) {
         int index = 0;
 
-        for (int i = 0; i < children.size(); i++) {
-            CocosNode sprite = children.get(i);
+        for (int i = 0; i < children_.size(); i++) {
+            CCNode sprite = children_.get(i);
             if (sprite.getZOrder() > z) {
                 break;
             }
@@ -110,9 +110,9 @@ public class AtlasSpriteManager extends CocosNode {
     }
 
     @Override
-    public CocosNode addChild(CocosNode node, int z, int aTag) {
+    public CCNode addChild(CCNode node, int z, int aTag) {
         assert node != null : "Argument must be non-null";
-        assert node instanceof AtlasSprite : "AtlasSpriteManager only supports AtlasSprites as children";
+        assert node instanceof AtlasSprite : "AtlasSpriteManager only supports AtlasSprites as children_";
 
         AtlasSprite child = (AtlasSprite) node;
 
@@ -128,10 +128,10 @@ public class AtlasSpriteManager extends CocosNode {
         totalSprites_++;
         super.addChild(child, z, aTag);
 
-        int count = children.size();
+        int count = children_.size();
         index++;
         for (; index < count; index++) {
-            AtlasSprite sprite = (AtlasSprite) children.get(index);
+            AtlasSprite sprite = (AtlasSprite) children_.get(index);
             assert sprite.atlasIndex() == index - 1 : "AtlasSpriteManager: index failed";
             sprite.setIndex(index);
         }
@@ -140,14 +140,14 @@ public class AtlasSpriteManager extends CocosNode {
     }
 
     @Override
-    public void removeChild(CocosNode node, boolean doCleanup) {
+    public void removeChild(CCNode node, boolean doCleanup) {
         AtlasSprite child = (AtlasSprite) node;
 
         // explicit null handling
         if (child == null)
             return;
-        // ignore non-children
-        if (!children.contains(child))
+        // ignore non-children_
+        if (!children_.contains(child))
             return;
 
         int index = child.atlasIndex();
@@ -156,9 +156,9 @@ public class AtlasSpriteManager extends CocosNode {
         textureAtlas_.removeQuad(index);
 
         // update all sprites beyond this one
-        int count = children.size();
+        int count = children_.size();
         for (; index < count; index++) {
-            AtlasSprite other = (AtlasSprite) children.get(index);
+            AtlasSprite other = (AtlasSprite) children_.get(index);
             assert other.atlasIndex() == index + 1 : "AtlasSpriteManager: index failed";
             other.setIndex(index);
         }
@@ -166,17 +166,17 @@ public class AtlasSpriteManager extends CocosNode {
     }
 
     @Override
-    public void reorderChild(CocosNode node, int z) {
+    public void reorderChild(CCNode node, int z) {
         AtlasSprite child = (AtlasSprite) node;
 
-        // reorder child in the children array
+        // reorder child in the children_ array
         super.reorderChild(child, z);
 
 
         // What's the new atlas index ?
         int newAtlasIndex = 0;
-        for (int i = 0; i < children.size(); i++) {
-            CocosNode sprite = children.get(i);
+        for (int i = 0; i < children_.size(); i++) {
+            CCNode sprite = children_.get(i);
             if (sprite == child)
                 break;
             newAtlasIndex++;
@@ -190,7 +190,7 @@ public class AtlasSpriteManager extends CocosNode {
             int count = Math.max(newAtlasIndex, child.atlasIndex());
             int index = Math.min(newAtlasIndex, child.atlasIndex());
             for (; index < count + 1; index++) {
-                AtlasSprite sprite = (AtlasSprite) children.get(index);
+                AtlasSprite sprite = (AtlasSprite) children_.get(index);
                 sprite.setIndex(index);
             }
         }
@@ -198,7 +198,7 @@ public class AtlasSpriteManager extends CocosNode {
 
     @Override
     public void removeChild(int index, boolean doCleanup) {
-        super.removeChild(children.get(index), doCleanup);
+        super.removeChild(children_.get(index), doCleanup);
     }
 
     @Override
@@ -215,19 +215,19 @@ public class AtlasSpriteManager extends CocosNode {
             return;
 
         
-        for (int i = 0; i < children.size(); i++) {
-            AtlasSprite sprite = (AtlasSprite) children.get(i);
+        for (int i = 0; i < children_.size(); i++) {
+            AtlasSprite sprite = (AtlasSprite) children_.get(i);
             if (sprite.isDirty())
                 sprite.updatePosition();
                 sprite.updateColor();
 
             if (DEBUG_DRAW) {
-		        CCRect rect = sprite.getBoundingBox(); //Inssue 528
-                CCPoint[] vertices= {
-                    CCPoint.ccp(rect.origin.x, rect.origin.y),
-                    CCPoint.ccp(rect.origin.x+rect.size.width, rect.origin.y),
-                    CCPoint.ccp(rect.origin.x+rect.size.width, rect.origin.y+rect.size.height),
-                    CCPoint.ccp(rect.origin.x, rect.origin.y+rect.size.height),
+		        CGRect rect = sprite.getBoundingBox(); //Inssue 528
+                CGPoint[] vertices= {
+                    CGPoint.ccp(rect.origin.x, rect.origin.y),
+                    CGPoint.ccp(rect.origin.x+rect.size.width, rect.origin.y),
+                    CGPoint.ccp(rect.origin.x+rect.size.width, rect.origin.y+rect.size.height),
+                    CGPoint.ccp(rect.origin.x, rect.origin.y+rect.size.height),
                 };
 		        Primitives.drawPoly(gl, vertices, 4, true);
             }
@@ -275,8 +275,8 @@ public class AtlasSpriteManager extends CocosNode {
 
         textureAtlas_.resizeCapacity(quantity);
 
-        for (int i = 0; i < children.size(); i++) {
-            AtlasSprite sprite = (AtlasSprite) children.get(i);
+        for (int i = 0; i < children_.size(); i++) {
+            AtlasSprite sprite = (AtlasSprite) children_.get(i);
             sprite.updateAtlas();
         }
     }

@@ -31,14 +31,15 @@ import org.cocos2d.layers.Layer;
 import org.cocos2d.menus.Menu;
 import org.cocos2d.menus.MenuItemImage;
 import org.cocos2d.nodes.Director;
-import org.cocos2d.nodes.Label;
+import org.cocos2d.nodes.CCLabel;
 import org.cocos2d.nodes.Scene;
 import org.cocos2d.nodes.Sprite;
 import org.cocos2d.nodes.TextureManager;
 import org.cocos2d.opengl.CCGLSurfaceView;
 import org.cocos2d.opengl.CCTexture2D;
+import org.cocos2d.types.CGPoint;
 import org.cocos2d.types.ccMacros;
-import org.cocos2d.types.CCSize;
+import org.cocos2d.types.CGSize;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -175,15 +176,15 @@ public class EaseActionsTest extends Activity {
             addChild(tamara, 1);
 
 
-            CCSize s = Director.sharedDirector().winSize();
+            CGSize s = Director.sharedDirector().winSize();
 
-            grossini.setPosition(60, 150);
-            kathia.setPosition(60, 250);
-            tamara.setPosition(60, 350);
+            grossini.setPosition(CGPoint.make(60, 150));
+            kathia.setPosition(CGPoint.make(60, 250));
+            tamara.setPosition(CGPoint.make(60, 350));
 
-            Label label = Label.label(title(), "DroidSans", 24);
+            CCLabel label = CCLabel.makeLabel(title(), "DroidSans", 24);
             addChild(label, 1);
-            label.setPosition(s.width / 2, s.height - 30);
+            label.setPosition(CGPoint.make(s.width / 2, s.height - 30));
 
             MenuItemImage item1 = MenuItemImage.item("b1.png", "b2.png", this, "backCallback");
             MenuItemImage item2 = MenuItemImage.item("r1.png", "r2.png", this, "restartCallback");
@@ -191,10 +192,10 @@ public class EaseActionsTest extends Activity {
 
             Menu menu = Menu.menu(item1, item2, item3);
 
-            menu.setPosition(0, 0);
-            item1.setPosition(s.width / 2 - 100, 30);
-            item2.setPosition(s.width / 2, 30);
-            item3.setPosition(s.width / 2 + 100, 30);
+            menu.setPosition(CGPoint.make(0, 0));
+            item1.setPosition(CGPoint.make(s.width / 2 - 100, 30));
+            item2.setPosition(CGPoint.make(s.width / 2, 30));
+            item3.setPosition(CGPoint.make(s.width / 2 + 100, 30));
             addChild(menu, 1);
         }
 
@@ -218,8 +219,8 @@ public class EaseActionsTest extends Activity {
 
         public void positionForTwo()
         {
-            grossini.setPosition( 60, 120 );
-            tamara.setPosition( 60, 220);
+            grossini.setPosition(CGPoint.make( 60, 120 ));
+            tamara.setPosition(CGPoint.make( 60, 220));
             kathia.setVisible(false);
         }
         

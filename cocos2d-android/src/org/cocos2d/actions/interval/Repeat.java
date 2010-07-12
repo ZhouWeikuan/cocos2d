@@ -1,7 +1,7 @@
 package org.cocos2d.actions.interval;
 
 import org.cocos2d.actions.base.FiniteTimeAction;
-import org.cocos2d.nodes.CocosNode;
+import org.cocos2d.nodes.CCNode;
 
 //
 // Repeat
@@ -31,7 +31,7 @@ public class Repeat extends IntervalAction {
     }
 
     @Override
-    public void start(CocosNode aTarget) {
+    public void start(CCNode aTarget) {
         total = 0;
         super.start(aTarget);
         other.start(aTarget);

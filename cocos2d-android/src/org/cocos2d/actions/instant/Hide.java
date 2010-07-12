@@ -1,7 +1,7 @@
 package org.cocos2d.actions.instant;
 
 import org.cocos2d.actions.base.FiniteTimeAction;
-import org.cocos2d.nodes.CocosNode;
+import org.cocos2d.nodes.CCNode;
 
 /**
  * Hide the node
@@ -13,7 +13,7 @@ public class Hide extends InstantAction {
     }
 
     @Override
-    public void start(CocosNode aTarget) {
+    public void start(CCNode aTarget) {
         super.start(aTarget);
         target.setVisible(false);
     }

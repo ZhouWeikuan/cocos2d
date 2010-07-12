@@ -1,11 +1,11 @@
 package org.cocos2d.nodes;
 
-import org.cocos2d.types.CCRect;
+import org.cocos2d.types.CGRect;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class AtlasAnimation implements CocosNode.CocosAnimation {
+public class AtlasAnimation implements CCNode.CocosAnimation {
     String name;
     float delay;
     ArrayList<Object> frames;
@@ -37,7 +37,7 @@ public class AtlasAnimation implements CocosNode.CocosAnimation {
         frames.addAll(Arrays.asList(f));
     }
 
-    public void addFrame(CCRect rect) {
+    public void addFrame(CGRect rect) {
         AtlasSpriteFrame frame = new AtlasSpriteFrame(rect);
         frames.add(frame);
     }

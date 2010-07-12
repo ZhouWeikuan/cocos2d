@@ -1,6 +1,7 @@
 package org.cocos2d.menus;
 
-import org.cocos2d.nodes.CocosNode;
+import org.cocos2d.nodes.CCNode;
+import org.cocos2d.types.CGSize;
 import org.cocos2d.types.ccColor3B;
 
 import javax.microedition.khronos.opengles.GL10;
@@ -14,26 +15,27 @@ import javax.microedition.khronos.opengles.GL10;
  *
  * @since v0.8.0
  */
-public class MenuItemSprite extends MenuItem implements CocosNode.CocosNodeRGBA {
+public class MenuItemSprite extends MenuItem implements CCNode.CocosNodeRGBA {
 
-    protected CocosNode normalImage_;
-    protected CocosNode selectedImage_;
-    protected CocosNode disabledImage_;
+    protected CCNode normalImage_;
+    protected CCNode selectedImage_;
+    protected CCNode disabledImage_;
 
-    public static MenuItemSprite item(CocosNode normalSprite, CocosNode selectedSprite, CocosNode disabledSprite) {
+    public static MenuItemSprite item(CCNode normalSprite, CCNode selectedSprite, CCNode disabledSprite) {
         return new MenuItemSprite(normalSprite, selectedSprite, disabledSprite, null, null);
     }
 
-    public static MenuItemSprite item(CocosNode normalSprite, CocosNode selectedSprite, CocosNode disabledSprite, CocosNode target, String selector) {
+    public static MenuItemSprite item(CCNode normalSprite, CCNode selectedSprite, CCNode disabledSprite, CCNode target, String selector) {
         return new MenuItemSprite(normalSprite, selectedSprite, disabledSprite, target, selector);
     }
 
-    protected MenuItemSprite(CocosNode normalSprite, CocosNode selectedSprite, CocosNode disabledSprite, CocosNode target, String selector) {
+    protected MenuItemSprite(CCNode normalSprite, CCNode selectedSprite, CCNode disabledSprite, CCNode target, String selector) {
         super(target, selector);
         normalImage_ = normalSprite;
         selectedImage_ = selectedSprite;
         disabledImage_ = disabledSprite;
-        setContentSize(normalImage_.getWidth(), normalImage_.getHeight());
+        CGSize size = normalImage_.getContentSize();
+        setContentSize(size);
     }
 
     @Override

@@ -1,11 +1,13 @@
 package org.cocos2d.nodes;
 
+import org.cocos2d.protocols.CCLabelProtocol;
 import org.cocos2d.types.ccQuad2;
 import org.cocos2d.types.ccQuad3;
 
 import javax.microedition.khronos.opengles.GL10;
 
-public class LabelAtlas extends AtlasNode implements CocosNode.CocosNodeLabel, CocosNode.CocosNodeSize {
+public class LabelAtlas extends AtlasNode 
+	implements CCLabelProtocol, CCNode.CocosNodeSize {
     /// string to render
     String string;
 

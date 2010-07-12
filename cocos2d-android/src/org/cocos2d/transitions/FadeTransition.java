@@ -6,7 +6,7 @@ import org.cocos2d.actions.interval.FadeOut;
 import org.cocos2d.actions.interval.IntervalAction;
 import org.cocos2d.actions.interval.Sequence;
 import org.cocos2d.layers.ColorLayer;
-import org.cocos2d.nodes.CocosNode;
+import org.cocos2d.nodes.CCNode;
 import org.cocos2d.nodes.Scene;
 import org.cocos2d.types.ccColor3B;
 import org.cocos2d.types.ccColor4B;
@@ -49,7 +49,7 @@ public class FadeTransition extends TransitionScene {
         addChild(l, 2, kSceneFade);
 
 
-        CocosNode f = getChild(kSceneFade);
+        CCNode f = getChild(kSceneFade);
 
         IntervalAction a = Sequence.actions(
                 FadeIn.action(duration / 2),

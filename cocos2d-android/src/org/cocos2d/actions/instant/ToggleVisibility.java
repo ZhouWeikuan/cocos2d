@@ -1,6 +1,6 @@
 package org.cocos2d.actions.instant;
 
-import org.cocos2d.nodes.CocosNode;
+import org.cocos2d.nodes.CCNode;
 
 /**
  * Toggles the visibility of a node
@@ -12,9 +12,9 @@ public class ToggleVisibility extends InstantAction {
     }
 
     @Override
-    public void start(CocosNode aTarget) {
+    public void start(CCNode aTarget) {
         super.start(aTarget);
-        target.setVisible(!target.isVisible());
+        target.setVisible(!target.getVisible());
     }
 
 

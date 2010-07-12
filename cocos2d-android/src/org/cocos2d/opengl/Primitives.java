@@ -1,7 +1,7 @@
 package org.cocos2d.opengl;
 
-import org.cocos2d.types.CCPoint;
-import org.cocos2d.types.CCRect;
+import org.cocos2d.types.CGPoint;
+import org.cocos2d.types.CGRect;
 
 import javax.microedition.khronos.opengles.GL10;
 import static javax.microedition.khronos.opengles.GL10.*;
@@ -29,7 +29,7 @@ public class Primitives {
         gl.glDisableClientState(GL_VERTEX_ARRAY);
     }
 
-    public static void drawPoints(GL10 gl, CCPoint points[], int numberOfPoints) {
+    public static void drawPoints(GL10 gl, CGPoint points[], int numberOfPoints) {
         ByteBuffer vbb = ByteBuffer.allocateDirect(4 * 2 * numberOfPoints);
         vbb.order(ByteOrder.nativeOrder());
         FloatBuffer vertices = vbb.asFloatBuffer();
@@ -49,7 +49,7 @@ public class Primitives {
     }
 
 
-    public static void drawLine(GL10 gl, CCPoint origin, CCPoint destination) {
+    public static void drawLine(GL10 gl, CGPoint origin, CGPoint destination) {
         ByteBuffer vbb = ByteBuffer.allocateDirect(4 * 2 * 2);
         vbb.order(ByteOrder.nativeOrder());
         FloatBuffer vertices = vbb.asFloatBuffer();
@@ -68,18 +68,18 @@ public class Primitives {
         gl.glDisableClientState(GL_VERTEX_ARRAY);
     }
 
-    public static void drawRect(GL10 gl, CCRect rect) {
-        CCPoint[] poli = new CCPoint[4];
+    public static void drawRect(GL10 gl, CGRect rect) {
+        CGPoint[] poli = new CGPoint[4];
 
-        poli[0] = CCPoint.ccp(rect.origin.x, rect.origin.y);
-        poli[1] = CCPoint.ccp(rect.origin.x + rect.size.width, rect.origin.y);
-        poli[2] = CCPoint.ccp(rect.origin.x + rect.size.width, rect.origin.y + rect.size.height);
-        poli[3] = CCPoint.ccp(rect.origin.x, rect.origin.y + rect.size.height);
+        poli[0] = CGPoint.ccp(rect.origin.x, rect.origin.y);
+        poli[1] = CGPoint.ccp(rect.origin.x + rect.size.width, rect.origin.y);
+        poli[2] = CGPoint.ccp(rect.origin.x + rect.size.width, rect.origin.y + rect.size.height);
+        poli[3] = CGPoint.ccp(rect.origin.x, rect.origin.y + rect.size.height);
 
         drawPoly(gl, poli, poli.length, true);
     }
 
-    public static void drawPoly(GL10 gl, CCPoint poli[], int numberOfPoints, boolean closePolygon) {
+    public static void drawPoly(GL10 gl, CGPoint poli[], int numberOfPoints, boolean closePolygon) {
         ByteBuffer vbb = ByteBuffer.allocateDirect(4 * 2 * numberOfPoints);
         vbb.order(ByteOrder.nativeOrder());
         FloatBuffer vertices = vbb.asFloatBuffer();

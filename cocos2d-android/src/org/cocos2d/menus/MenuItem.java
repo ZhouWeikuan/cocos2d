@@ -1,11 +1,13 @@
 package org.cocos2d.menus;
 
-import org.cocos2d.nodes.CocosNode;
-import org.cocos2d.types.CCRect;
+import org.cocos2d.nodes.CCNode;
+import org.cocos2d.types.CGPoint;
+import org.cocos2d.types.CGRect;
+import org.cocos2d.types.CGSize;
 
 import java.lang.reflect.Method;
 
-public abstract class MenuItem extends CocosNode {
+public abstract class MenuItem extends CCNode {
     public static final int kItemSize = 32;
 
     static int _fontSize = kItemSize;
@@ -30,7 +32,7 @@ public abstract class MenuItem extends CocosNode {
         targetCallback = rec;
         selector = cb;
 
-        setAnchorPoint(0.5f, 0.5f);
+        setAnchorPoint(CGPoint.make(0.5f, 0.5f));
 
         invocation = null;
         if (rec != null && cb != null)
@@ -92,10 +94,13 @@ public abstract class MenuItem extends CocosNode {
     /**
      * Returns the outside box
      */
-    public CCRect rect() {
-        return CCRect.make(getPositionX() - getWidth() * getAnchorPointX(), getPositionY() -
-                getHeight() * getAnchorPointY(),
-                getWidth(), getHeight());
+    public CGRect rect() {
+    	CGPoint pos = getPosition();
+    	CGPoint pnt = getAnchorPoint();
+    	CGSize size = this.getContentSize();
+        return CGRect.make(pos.x - size.width * pnt.x, pos.y -
+                size.height * pnt.y,
+                size.width, size.height);
     }
 
 

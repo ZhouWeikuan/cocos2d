@@ -58,7 +58,7 @@ public class ccConfig {
 
       To enable set it to a value different than 0. Enabled by default.
       */
-    public static final int CC_COCOSNODE_RENDER_SUBPIXEL    =   1;
+    public static final boolean CC_COCOSNODE_RENDER_SUBPIXEL    =   true;
 
     /** @def CC_SPRITESHEET_RENDER_SUBPIXEL
       If enabled, the CCSprite objects rendered with CCSpriteSheet will be able to render in subpixels.
@@ -89,7 +89,7 @@ public class ccConfig {
       To enable set it to a value different than 0. Enabled by default.
 
     */
-    public static final int CC_NODE_TRANSFORM_USING_AFFINE_MATRIX  = 1;
+    public static final boolean CC_NODE_TRANSFORM_USING_AFFINE_MATRIX  = true;
 
     /** @def CC_TEXTURE_ATLAS_USE_TRIANGLE_STRIP
       Use GL_TRIANGLE_STRIP instead of GL_TRIANGLES when rendering the texture atlas.

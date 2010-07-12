@@ -15,8 +15,8 @@ import org.cocos2d.menus.MenuItemImage;
 import org.cocos2d.nodes.*;
 import org.cocos2d.opengl.CCGLSurfaceView;
 import org.cocos2d.types.CCBezierConfig;
-import org.cocos2d.types.CCPoint;
-import org.cocos2d.types.CCSize;
+import org.cocos2d.types.CGPoint;
+import org.cocos2d.types.CGSize;
 import org.cocos2d.utils.CCFormatter;
 
 public class SpritesTest extends Activity {
@@ -92,10 +92,10 @@ public class SpritesTest extends Activity {
         Sprite tamara;
 
         public SpriteDemo() {
-            CCSize s = Director.sharedDirector().winSize();
+            CGSize s = Director.sharedDirector().winSize();
 
-            Label label = Label.label(title(), "DroidSans", 24);
-            label.setPosition(s.width / 2, s.height / 2);
+            CCLabel label = CCLabel.makeLabel(title(), "DroidSans", 24);
+            label.setPosition(CGPoint.make(s.width / 2, s.height / 2));
             addChild(label);
 
             // TODO
@@ -112,18 +112,18 @@ public class SpritesTest extends Activity {
             addChild(grossini, 1);
             addChild(tamara, 2);
 
-            grossini.setPosition(60, s.height / 3);
-            tamara.setPosition(60, 2 * s.height / 3);
+            grossini.setPosition(CGPoint.make(60, s.height / 3));
+            tamara.setPosition(CGPoint.make(60, 2 * s.height / 3));
 
             MenuItemImage item1 = MenuItemImage.item("b1.png", "b2.png", this, "backCallback");
             MenuItemImage item2 = MenuItemImage.item("r1.png", "r2.png", this, "restartCallback");
             MenuItemImage item3 = MenuItemImage.item("f1.png", "f2.png", this, "nextCallback");
 
             Menu menu = Menu.menu(item1, item2, item3);
-            menu.setPosition(0, 0);
-            item1.setPosition(s.width / 2 - 100, 30);
-            item2.setPosition(s.width / 2, 30);
-            item3.setPosition(s.width / 2 + 100, 30);
+            menu.setPosition(CGPoint.make(0, 0));
+            item1.setPosition(CGPoint.make(s.width / 2 - 100, 30));
+            item2.setPosition(CGPoint.make(s.width / 2, 30));
+            item3.setPosition(CGPoint.make(s.width / 2 + 100, 30));
             addChild(menu, 1);
         }
 
@@ -148,10 +148,10 @@ public class SpritesTest extends Activity {
 
 
         protected void centerSprites() {
-            CCSize s = Director.sharedDirector().winSize();
+            CGSize s = Director.sharedDirector().winSize();
 
-            grossini.setPosition(s.width / 3, s.height / 2);
-            tamara.setPosition(2 * s.width / 3, s.height / 2);
+            grossini.setPosition(CGPoint.make(s.width / 3, s.height / 2));
+            tamara.setPosition(CGPoint.make(2 * s.width / 3, s.height / 2));
         }
 
         protected abstract String title();
@@ -167,11 +167,11 @@ public class SpritesTest extends Activity {
 
             tamara.setScaleX(2.5f);
             tamara.setScaleY(-1.0f);
-            tamara.setPosition(100, 100);
+            tamara.setPosition(CGPoint.make(100, 100));
 
             grossini.setRotation(120.0f);
             grossini.setOpacity((byte) 128);
-            grossini.setPosition(240, 160);
+            grossini.setPosition(CGPoint.make(240, 160));
         }
 
         @Override
@@ -187,7 +187,7 @@ public class SpritesTest extends Activity {
         public void onEnter() {
             super.onEnter();
 
-            CCSize s = Director.sharedDirector().winSize();
+            CGSize s = Director.sharedDirector().winSize();
 
 
             IntervalAction actionTo = MoveTo.action(2, s.width - 40, s.height - 40);
@@ -266,7 +266,7 @@ public class SpritesTest extends Activity {
         public void onEnter() {
             super.onEnter();
 
-            CCSize s = Director.sharedDirector().winSize();
+            CGSize s = Director.sharedDirector().winSize();
 
             //
             // startPosition can be any coordinate, but since the movement
@@ -275,10 +275,10 @@ public class SpritesTest extends Activity {
 
             // sprite 1
             CCBezierConfig bezier = new CCBezierConfig();
-            bezier.startPosition = CCPoint.ccp(0, 0);
-            bezier.controlPoint_1 = CCPoint.ccp(0, s.height / 2);
-            bezier.controlPoint_2 = CCPoint.ccp(300, -s.height / 2);
-            bezier.endPosition = CCPoint.ccp(300, 100);
+            bezier.startPosition = CGPoint.ccp(0, 0);
+            bezier.controlPoint_1 = CGPoint.ccp(0, s.height / 2);
+            bezier.controlPoint_2 = CGPoint.ccp(300, -s.height / 2);
+            bezier.endPosition = CGPoint.ccp(300, 100);
 
             IntervalAction bezierForward = BezierBy.action(3, bezier);
             IntervalAction bezierBack = bezierForward.reverse();
@@ -288,10 +288,10 @@ public class SpritesTest extends Activity {
 
             // sprite 2
             CCBezierConfig bezier2 = new CCBezierConfig();
-            bezier2.startPosition = CCPoint.ccp(0, 0);
-            bezier2.controlPoint_1 = CCPoint.ccp(100, s.height / 2);
-            bezier2.controlPoint_2 = CCPoint.ccp(200, -s.height / 2);
-            bezier2.endPosition = CCPoint.ccp(300, 0);
+            bezier2.startPosition = CGPoint.ccp(0, 0);
+            bezier2.controlPoint_1 = CGPoint.ccp(100, s.height / 2);
+            bezier2.controlPoint_2 = CGPoint.ccp(200, -s.height / 2);
+            bezier2.endPosition = CGPoint.ccp(300, 0);
 
             IntervalAction bezierForward2 = BezierBy.action(3, bezier2);
             IntervalAction bezierBack2 = bezierForward2.reverse();

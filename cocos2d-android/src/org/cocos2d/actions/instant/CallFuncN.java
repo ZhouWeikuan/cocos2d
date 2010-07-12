@@ -1,6 +1,6 @@
 package org.cocos2d.actions.instant;
 
-import org.cocos2d.nodes.CocosNode;
+import org.cocos2d.nodes.CCNode;
 
 
 /**
@@ -22,7 +22,7 @@ public class CallFuncN extends CallFunc {
         try {
             Class<?> cls = targetCallback.getClass();
             Class<?> partypes[] = new Class[1];
-            partypes[0] = CocosNode.class;
+            partypes[0] = CCNode.class;
             invocation = cls.getMethod(selector, partypes);
         } catch (NoSuchMethodException e) {
         }

@@ -11,8 +11,9 @@ import org.cocos2d.menus.MenuItemImage;
 import org.cocos2d.nodes.*;
 import org.cocos2d.opengl.CCGLSurfaceView;
 import org.cocos2d.transitions.*;
+import org.cocos2d.types.CGPoint;
 import org.cocos2d.types.ccColor3B;
-import org.cocos2d.types.CCSize;
+import org.cocos2d.types.CGSize;
 
 import java.lang.reflect.Constructor;
 
@@ -234,17 +235,17 @@ public class TransitionsTest extends Activity {
 
         public TestLayer1() {
 
-            CCSize s = Director.sharedDirector().winSize();
+            CGSize s = Director.sharedDirector().winSize();
             float x = s.width;
             float y = s.height;
 
             Sprite bg1 = Sprite.sprite("background1.jpg");
-            bg1.setAnchorPoint(0, 0);
+            bg1.setAnchorPoint(CGPoint.make(0, 0));
             addChild(bg1, -1);
 
-            Label label = Label.label("SCENE 1", "DroidSans", 64);
+            CCLabel label = CCLabel.makeLabel("SCENE 1", "DroidSans", 64);
 
-            label.setPosition(x / 2, y / 2);
+            label.setPosition(CGPoint.make(x / 2, y / 2));
             addChild(label);
 
             // menu
@@ -253,10 +254,10 @@ public class TransitionsTest extends Activity {
             MenuItemImage item3 = MenuItemImage.item("f1.png", "f2.png", this, "nextCallback");
 
             Menu menu = Menu.menu(item1, item2, item3);
-            menu.setPosition(0, 0);
-            item1.setPosition(s.width / 2 - 100, 30);
-            item2.setPosition(s.width / 2, 30);
-            item3.setPosition(s.width / 2 + 100, 30);
+            menu.setPosition(CGPoint.make(0, 0));
+            item1.setPosition(CGPoint.make(s.width / 2 - 100, 30));
+            item2.setPosition(CGPoint.make(s.width / 2, 30));
+            item3.setPosition(CGPoint.make(s.width / 2 + 100, 30));
             addChild(menu, 1);
         }
 
@@ -283,17 +284,17 @@ public class TransitionsTest extends Activity {
 
         public TestLayer2() {
 
-            CCSize s = Director.sharedDirector().winSize();
+            CGSize s = Director.sharedDirector().winSize();
             float x = s.width;
             float y = s.height;
 
             Sprite bg2 = Sprite.sprite("background2.jpg");
-            bg2.setAnchorPoint(0, 0);
+            bg2.setAnchorPoint(CGPoint.make(0, 0));
             addChild(bg2, -1);
 
-            Label label = Label.label("SCENE 2", "DroidSans", 64);
+            CCLabel label = CCLabel.makeLabel("SCENE 2", "DroidSans", 64);
 
-            label.setPosition(x / 2, y / 2);
+            label.setPosition(CGPoint.make(x / 2, y / 2));
             addChild(label);
 
             // menu
@@ -302,10 +303,10 @@ public class TransitionsTest extends Activity {
             MenuItemImage item3 = MenuItemImage.item("f1.png", "f2.png", this, "nextCallback");
 
             Menu menu = Menu.menu(item1, item2, item3);
-            menu.setPosition(0, 0);
-            item1.setPosition(s.width / 2 - 100, 30);
-            item2.setPosition(s.width / 2, 30);
-            item3.setPosition(s.width / 2 + 100, 30);
+            menu.setPosition(CGPoint.make(0, 0));
+            item1.setPosition(CGPoint.make(s.width / 2 - 100, 30));
+            item2.setPosition(CGPoint.make(s.width / 2, 30));
+            item3.setPosition(CGPoint.make(s.width / 2 + 100, 30));
             addChild(menu, 1);
 
         }

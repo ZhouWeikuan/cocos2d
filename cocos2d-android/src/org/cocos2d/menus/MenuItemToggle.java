@@ -1,6 +1,8 @@
 package org.cocos2d.menus;
 
-import org.cocos2d.nodes.CocosNode;
+import org.cocos2d.nodes.CCNode;
+import org.cocos2d.types.CGPoint;
+import org.cocos2d.types.CGSize;
 import org.cocos2d.types.ccColor3B;
 
 import java.util.ArrayList;
@@ -9,14 +11,14 @@ import java.util.Arrays;
 public class MenuItemToggle extends MenuItem {
     private int selectedIndex_;
     private ArrayList<MenuItem> subItems_;
-    private byte opacity_;
+    // private byte opacity_;
     ccColor3B color_;
 
-    public static MenuItemToggle item(CocosNode target, String selector, MenuItem... items) {
+    public static MenuItemToggle item(CCNode target, String selector, MenuItem... items) {
         return new MenuItemToggle(target, selector, items);
     }
 
-    protected MenuItemToggle(CocosNode t, String sel, MenuItem... items) {
+    protected MenuItemToggle(CCNode t, String sel, MenuItem... items) {
         super(t, sel);
 
         subItems_ = new ArrayList<MenuItem>(items.length);
@@ -37,11 +39,11 @@ public class MenuItemToggle extends MenuItem {
             MenuItem item = subItems_.get(selectedIndex_);
             addChild(item, 0, kCurrentItem);
 
-            float width = item.getWidth();
-            float height = item.getHeight();
+            float width = item.getContentSize().width;
+            float height = item.getContentSize().height;
 
-            setContentSize(width, height);
-            item.setPosition(width / 2, height / 2);
+            setContentSize(CGSize.make(width, height));
+            item.setPosition(CGPoint.make(width / 2, height / 2));
         }
     }
 
@@ -83,7 +85,7 @@ public class MenuItemToggle extends MenuItem {
     }
 
     public void setOpacity(byte opacity) {
-        opacity_ = opacity;
+        // opacity_ = opacity;
         for (MenuItem item : subItems_)
             ((CocosNodeRGBA) item).setOpacity(opacity);
     }

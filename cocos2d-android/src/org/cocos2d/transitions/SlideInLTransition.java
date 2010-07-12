@@ -7,7 +7,8 @@ import org.cocos2d.actions.interval.Sequence;
 import org.cocos2d.actions.interval.MoveBy;
 import org.cocos2d.nodes.Director;
 import org.cocos2d.nodes.Scene;
-import org.cocos2d.types.CCSize;
+import org.cocos2d.types.CGPoint;
+import org.cocos2d.types.CGSize;
 
 /**
  * SlideInL Transition.
@@ -47,15 +48,15 @@ public class SlideInLTransition extends TransitionScene {
      * initializes the scenes
      */
     protected void initScenes() {
-        CCSize s = Director.sharedDirector().winSize();
-        inScene.setPosition(-s.width, 0);
+        CGSize s = Director.sharedDirector().winSize();
+        inScene.setPosition(CGPoint.make(-s.width, 0));
     }
 
     /**
      * returns the action that will be performed
      */
     protected IntervalAction action() {
-        CCSize s = Director.sharedDirector().winSize();
+        CGSize s = Director.sharedDirector().winSize();
         return MoveBy.action(duration, s.width-ADJUST_FACTOR,0);
     }
 

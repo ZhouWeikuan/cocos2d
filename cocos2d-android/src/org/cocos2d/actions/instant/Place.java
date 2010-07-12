@@ -1,13 +1,13 @@
 package org.cocos2d.actions.instant;
 
-import android.graphics.PointF;
-import org.cocos2d.nodes.CocosNode;
+import org.cocos2d.nodes.CCNode;
+import org.cocos2d.types.CGPoint;
 
 /**
  * Places the node in a certain position
  */
 public class Place extends InstantAction {
-    private PointF position;
+    private CGPoint position;
 
     public static Place action(float x, float y) {
         return new Place(x, y);
@@ -17,7 +17,7 @@ public class Place extends InstantAction {
      * creates a Place action with a position
      */
     protected Place(float x, float y) {
-        position = new PointF(x, y);
+        position = CGPoint.make(x, y);
     }
 
     @Override
@@ -26,8 +26,8 @@ public class Place extends InstantAction {
     }
 
     @Override
-    public void start(CocosNode aTarget) {
+    public void start(CCNode aTarget) {
         super.start(aTarget);
-        target.setPosition(position.x, position.y);
+        target.setPosition(position);
     }
 }

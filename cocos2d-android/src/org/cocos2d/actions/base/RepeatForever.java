@@ -1,7 +1,7 @@
 package org.cocos2d.actions.base;
 
 import org.cocos2d.actions.interval.IntervalAction;
-import org.cocos2d.nodes.CocosNode;
+import org.cocos2d.nodes.CCNode;
 
 public class RepeatForever extends Action {
     protected IntervalAction other;
@@ -21,7 +21,7 @@ public class RepeatForever extends Action {
     }
 
     @Override
-    public void start(CocosNode aTarget) {
+    public void start(CCNode aTarget) {
         super.start(aTarget);
         other.start(target);
     }

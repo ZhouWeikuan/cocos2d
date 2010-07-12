@@ -1,6 +1,7 @@
 package org.cocos2d.particlesystem;
 
 import org.cocos2d.nodes.TextureManager;
+import org.cocos2d.types.CGPoint;
 
 public class ParticleGalaxy extends ParticleSystem {
 
@@ -39,7 +40,7 @@ public class ParticleGalaxy extends ParticleSystem {
         tangentialAccelVar = 0;
 
         // emitter position
-        setPosition(160, 240);
+        setPosition(CGPoint.make(160, 240));
         posVar.x = 0;
         posVar.y = 0;
 

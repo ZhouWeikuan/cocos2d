@@ -17,7 +17,8 @@ import org.cocos2d.menus.MenuItemImage;
 import org.cocos2d.nodes.*;
 import org.cocos2d.opengl.CCGLSurfaceView;
 import org.cocos2d.particlesystem.ParticleSun;
-import org.cocos2d.types.CCSize;
+import org.cocos2d.types.CGPoint;
+import org.cocos2d.types.CGSize;
 
 public class CocosNodeTest extends Activity {
     // private static final String LOG_TAG = CocosNodeTest.class.getSimpleName();
@@ -124,10 +125,10 @@ public class CocosNodeTest extends Activity {
 
     static abstract class TestDemo extends Layer {
         public TestDemo() {
-            CCSize s = Director.sharedDirector().winSize();
+            CGSize s = Director.sharedDirector().winSize();
 
-            Label label = Label.label(title(), "DroidSans", 18);
-            label.setPosition(s.width / 2, s.height - 30);
+            CCLabel label = CCLabel.makeLabel(title(), "DroidSans", 18);
+            label.setPosition(CGPoint.make(s.width / 2, s.height - 30));
             addChild(label);
 
             MenuItemImage item1 = MenuItemImage.item("b1.png", "b2.png", this, "backCallback");
@@ -135,10 +136,10 @@ public class CocosNodeTest extends Activity {
             MenuItemImage item3 = MenuItemImage.item("f1.png", "f2.png", this, "nextCallback");
 
             Menu menu = Menu.menu(item1, item2, item3);
-            menu.setPosition(0, 0);
-            item1.setPosition(s.width / 2 - 100, 30);
-            item2.setPosition(s.width / 2, 30);
-            item3.setPosition(s.width / 2 + 100, 30);
+            menu.setPosition(CGPoint.zero());
+            item1.setPosition(CGPoint.make(s.width / 2 - 100, 30));
+            item2.setPosition(CGPoint.make(s.width / 2, 30));
+            item3.setPosition(CGPoint.make(s.width / 2 + 100, 30));
             addChild(menu, -1);
         }
 
@@ -168,7 +169,7 @@ public class CocosNodeTest extends Activity {
         public void onEnter() {
             super.onEnter();
 
-            CCSize s = Director.sharedDirector().winSize();
+            CGSize s = Director.sharedDirector().winSize();
 
             Sprite sp0 = Sprite.sprite("grossini.png");
             Sprite sp1 = Sprite.sprite("grossinis_sister1.png");
@@ -177,21 +178,21 @@ public class CocosNodeTest extends Activity {
             Sprite point1 = Sprite.sprite("r1.png");
             Sprite point2 = Sprite.sprite("r1.png");
 
-            point0.scale(0.25f);
-            point1.scale(0.25f);
-            point2.scale(0.25f);
+            point0.setScale(0.25f);
+            point1.setScale(0.25f);
+            point2.setScale(0.25f);
 
-            sp0.setPosition(s.width/2, s.height / 2);
-            point0.setPosition(sp0.getPositionX(), sp0.getPositionY());
-            sp0.setAnchorPoint(0.5f, 0.5f);
+            sp0.setPosition(CGPoint.make(s.width/2, s.height / 2));
+            point0.setPosition(sp0.getPosition());
+            sp0.setAnchorPoint(CGPoint.make(0.5f, 0.5f));
 
-            sp1.setPosition(s.width/2 - 100, s.height / 2);
-            point1.setPosition(sp1.getPositionX(), sp1.getPositionY());
-            sp1.setAnchorPoint(0, 0);
+            sp1.setPosition(CGPoint.make(s.width/2 - 100, s.height / 2));
+            point1.setPosition(sp1.getPosition());
+            sp1.setAnchorPoint(CGPoint.zero());
 
-            sp2.setPosition(s.width/2 + 100, s.height / 2);
-            point2.setPosition(sp2.getPositionX(), sp2.getPositionY());
-            sp2.setAnchorPoint(1, 1);
+            sp2.setPosition(CGPoint.make(s.width/2 + 100, s.height / 2));
+            point2.setPosition(sp2.getPosition());
+            sp2.setAnchorPoint(CGPoint.make(1, 1));
 
             addChild(sp0);
             addChild(sp1);
@@ -224,20 +225,20 @@ public class CocosNodeTest extends Activity {
         public void onEnter() {
             super.onEnter();
 
-            CCSize s = Director.sharedDirector().winSize();
+            CGSize s = Director.sharedDirector().winSize();
 
             Sprite sp1 = Sprite.sprite("grossinis_sister1.png");
             Sprite sp2 = Sprite.sprite("grossinis_sister2.png");
             Sprite sp3 = Sprite.sprite("grossinis_sister1.png");
             Sprite sp4 = Sprite.sprite("grossinis_sister2.png");
 
-            sp1.setPosition(100, s.height / 2);
-            sp2.setPosition(s.width - 100, s.height / 2);
+            sp1.setPosition(CGPoint.make(100, s.height / 2));
+            sp2.setPosition(CGPoint.make(s.width - 100, s.height / 2));
             addChild(sp1);
             addChild(sp2);
 
-            sp3.scale(0.25f);
-            sp4.scale(0.25f);
+            sp3.setScale(0.25f);
+            sp4.setScale(0.25f);
 
             sp1.addChild(sp3);
             sp2.addChild(sp4);
@@ -248,7 +249,7 @@ public class CocosNodeTest extends Activity {
             Action action1 = RepeatForever.action(Sequence.actions(a1, a2, a2.reverse()));
             Action action2 = RepeatForever.action(Sequence.actions(a1.copy(), a2.copy(), a2.reverse()));
 
-            sp2.setAnchorPoint(0, 0);
+            sp2.setAnchorPoint(CGPoint.zero());
 
             sp1.runAction(action1);
             sp2.runAction(action2);
@@ -264,15 +265,15 @@ public class CocosNodeTest extends Activity {
         public void onEnter() {
             super.onEnter();
 
-            CCSize s = Director.sharedDirector().winSize();
+            CGSize s = Director.sharedDirector().winSize();
 
             Sprite sp1 = Sprite.sprite("grossinis_sister1.png");
             Sprite sp2 = Sprite.sprite("grossinis_sister2.png");
             Sprite sp3 = Sprite.sprite("grossini.png");
 
-            sp1.setPosition(20, 80);
-            sp2.setPosition(70, 50);
-            sp3.setPosition(s.width / 2, s.height / 2);
+            sp1.setPosition(CGPoint.make(20, 80));
+            sp2.setPosition(CGPoint.make(70, 50));
+            sp3.setPosition(CGPoint.make(s.width / 2, s.height / 2));
 
             // these tags belong to sp3 (kTagSprite1, kTagSprite2)
             sp3.addChild(sp1, -1, kTagSprite1);
@@ -289,10 +290,10 @@ public class CocosNodeTest extends Activity {
         }
 
         public void changeZOrder(float dt) {
-            CocosNode grossini = getChild(kTagSprite1);
+            CCNode grossini = getChild(kTagSprite1);
 
-            CocosNode sprite1 = grossini.getChild(kTagSprite1);
-            CocosNode sprite2 = grossini.getChild(kTagSprite2);
+            CCNode sprite1 = grossini.getChild(kTagSprite1);
+            CCNode sprite2 = grossini.getChild(kTagSprite2);
 
             int zt = sprite1.getZOrder();
             grossini.reorderChild(sprite1, sprite2.getZOrder());
@@ -308,13 +309,13 @@ public class CocosNodeTest extends Activity {
 
         public Test4() {
 
-            CCSize s = Director.sharedDirector().winSize();
+            CGSize s = Director.sharedDirector().winSize();
 
             Sprite sp1 = Sprite.sprite("grossinis_sister1.png");
             Sprite sp2 = Sprite.sprite("grossinis_sister2.png");
 
-            sp1.setPosition(100, s.height / 2);
-            sp2.setPosition(s.width - 100, s.height / 2);
+            sp1.setPosition(CGPoint.make(100, s.height / 2));
+            sp2.setPosition(CGPoint.make(s.width - 100, s.height / 2));
 
             addChild(sp1, 0, 2);
             addChild(sp2, 0, 3);
@@ -324,7 +325,7 @@ public class CocosNodeTest extends Activity {
         }
 
         public void delay2(float dt) {
-            CocosNode node = getChild(2);
+            CCNode node = getChild(2);
             IntervalAction action1 = RotateBy.action(1, 360);
             node.runAction(action1);
         }
@@ -343,13 +344,13 @@ public class CocosNodeTest extends Activity {
     static class Test5 extends TestDemo {
 
         public Test5() {
-            CCSize s = Director.sharedDirector().winSize();
+            CGSize s = Director.sharedDirector().winSize();
 
             Sprite sp1 = Sprite.sprite("grossinis_sister1.png");
             Sprite sp2 = Sprite.sprite("grossinis_sister2.png");
 
-            sp1.setPosition(100, s.height / 2);
-            sp2.setPosition(s.width - 100, s.height / 2);
+            sp1.setPosition(CGPoint.make(100, s.height / 2));
+            sp2.setPosition(CGPoint.make(s.width - 100, s.height / 2));
 
             IntervalAction rot = RotateBy.action(2, 360);
             IntervalAction rot_back = rot.reverse();
@@ -367,8 +368,8 @@ public class CocosNodeTest extends Activity {
         }
 
         public void addAndRemove(float dt) {
-            CocosNode sp1 = getChild(kTagSprite1);
-            CocosNode sp2 = getChild(kTagSprite2);
+            CCNode sp1 = getChild(kTagSprite1);
+            CCNode sp2 = getChild(kTagSprite2);
 
             removeChild(sp1, false);
             removeChild(sp2, true);
@@ -385,7 +386,7 @@ public class CocosNodeTest extends Activity {
     static class Test6 extends TestDemo {
 
         public Test6() {
-            CCSize s = Director.sharedDirector().winSize();
+            CGSize s = Director.sharedDirector().winSize();
 
             Sprite sp1 = Sprite.sprite("grossinis_sister1.png");
             Sprite sp11 = Sprite.sprite("grossinis_sister1.png");
@@ -393,8 +394,8 @@ public class CocosNodeTest extends Activity {
             Sprite sp2 = Sprite.sprite("grossinis_sister2.png");
             Sprite sp21 = Sprite.sprite("grossinis_sister2.png");
 
-            sp1.setPosition(100, s.height / 2);
-            sp2.setPosition(s.width - 100, s.height / 2);
+            sp1.setPosition(CGPoint.make(100, s.height / 2));
+            sp2.setPosition(CGPoint.make(s.width - 100, s.height / 2));
 
 
             IntervalAction rot = RotateBy.action(2, 360);
@@ -419,8 +420,8 @@ public class CocosNodeTest extends Activity {
         }
 
         public void addAndRemove(float dt) {
-            CocosNode sp1 = getChild(kTagSprite1);
-            CocosNode sp2 = getChild(kTagSprite2);
+            CCNode sp1 = getChild(kTagSprite1);
+            CCNode sp2 = getChild(kTagSprite2);
 
             removeChild(sp1, false);
             removeChild(sp2, true);
@@ -439,12 +440,12 @@ public class CocosNodeTest extends Activity {
     static class Test7 extends TestDemo {
 
         public Test7() {
-            CCSize s = Director.sharedDirector().winSize();
+            CGSize s = Director.sharedDirector().winSize();
 
             Sprite sp1 = Sprite.sprite("grossinis_sister1.png");
             addChild(sp1, 0, kTagSprite1);
 
-            sp1.setPosition(s.width / 2, s.height / 2);
+            sp1.setPosition(CGPoint.make(s.width / 2, s.height / 2));
 
             schedule("shouldNotCrash", 1.0f);
         }
@@ -452,15 +453,15 @@ public class CocosNodeTest extends Activity {
         public void shouldNotCrash(float delta) {
             unschedule("shouldNotCrash");
 
-            CCSize s = Director.sharedDirector().winSize();
+            CGSize s = Director.sharedDirector().winSize();
 
             // if the node has timers, it crashes
-            CocosNode explosion = ParticleSun.node();
+            CCNode explosion = ParticleSun.node();
 
             // if it doesn't, it works Ok.
             //	CocosNode explosion = Sprite.sprite("grossinis_sister2.png");
 
-            explosion.setPosition(s.width / 2, s.height / 2);
+            explosion.setPosition(CGPoint.make(s.width / 2, s.height / 2));
 
             runAction(Sequence.actions(RotateBy.action(2, 360),
                     CallFuncN.action(this, "removeMe")));
@@ -469,8 +470,8 @@ public class CocosNodeTest extends Activity {
         }
 
         // remove
-        public void removeMe(CocosNode node) {
-            parent.removeChild(node, true);
+        public void removeMe(CCNode node) {
+            parent_.removeChild(node, true);
             nextCallback();
         }
 

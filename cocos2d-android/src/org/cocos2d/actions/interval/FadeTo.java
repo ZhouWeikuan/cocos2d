@@ -1,6 +1,6 @@
 package org.cocos2d.actions.interval;
 
-import org.cocos2d.nodes.CocosNode;
+import org.cocos2d.nodes.CCNode;
 
 //
 // FadeTo
@@ -24,13 +24,13 @@ public class FadeTo extends IntervalAction {
     }
 
     @Override
-    public void start(CocosNode aTarget) {
+    public void start(CCNode aTarget) {
         super.start(aTarget);
-        fromOpacity = (byte) ((CocosNode.CocosNodeRGBA) target).getOpacity();
+        fromOpacity = (byte) ((CCNode.CocosNodeRGBA) target).getOpacity();
     }
 
     @Override
     public void update(float t) {
-        ((CocosNode.CocosNodeRGBA) target).setOpacity((byte) (fromOpacity + (toOpacity - fromOpacity) * t));
+        ((CCNode.CocosNodeRGBA) target).setOpacity((byte) (fromOpacity + (toOpacity - fromOpacity) * t));
     }
 }

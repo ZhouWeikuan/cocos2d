@@ -1,7 +1,7 @@
 package org.cocos2d.actions.ease;
 
 import org.cocos2d.actions.interval.IntervalAction;
-import org.cocos2d.nodes.CocosNode;
+import org.cocos2d.nodes.CCNode;
 
 
 public class EaseAction extends IntervalAction {
@@ -18,7 +18,7 @@ public class EaseAction extends IntervalAction {
     }
 
     @Override
-    public void start(CocosNode aTarget) {
+    public void start(CCNode aTarget) {
         super.start(aTarget);
         other.start(target);
     }

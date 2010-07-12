@@ -2,7 +2,7 @@ package org.cocos2d.transitions;
 
 import org.cocos2d.nodes.Director;
 import org.cocos2d.nodes.Scene;
-import org.cocos2d.types.CCSize;
+import org.cocos2d.types.CGSize;
 import org.cocos2d.actions.interval.IntervalAction;
 import org.cocos2d.actions.ease.EaseOut;
 
@@ -29,7 +29,7 @@ public class TurnOffTilesTransition extends TransitionScene {
     public void onEnter() {
         super.onEnter();
 
-        CCSize s = Director.sharedDirector().winSize();
+        CGSize s = Director.sharedDirector().winSize();
         // float aspect = s.width / s.height;
         // int x = (int) (12 * aspect);
         // int y = 12;

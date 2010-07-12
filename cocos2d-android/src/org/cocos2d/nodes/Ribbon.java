@@ -24,7 +24,7 @@ import java.util.ArrayList;
  *
  * @since v0.8.1
  */
-public class Ribbon extends CocosNode {
+public class Ribbon extends CCNode {
 
     /**
      * object to hold ribbon segment data
@@ -129,9 +129,9 @@ public class Ribbon extends CocosNode {
     ArrayList<RibbonSegment> mSegments;
     ArrayList<RibbonSegment> dSegments;
 
-    CCPoint mLastPoint1;
-    CCPoint mLastPoint2;
-    CCPoint mLastLocation;
+    CGPoint mLastPoint1;
+    CGPoint mLastPoint2;
+    CGPoint mLastLocation;
     int mVertCount;
     float mTexVPos;
     float mCurTime;
@@ -169,7 +169,7 @@ public class Ribbon extends CocosNode {
 
         color_ = color;
         mFadeTime = fade;
-        mLastLocation = CCPoint.make(0, 0);
+        mLastLocation = CGPoint.make(0, 0);
         mLastWidth = w / 2;
         mTexVPos = 0.0f;
 
@@ -191,7 +191,7 @@ public class Ribbon extends CocosNode {
     }
 
     // rotates a point around 0, 0
-    private CCPoint rotatePoint(CCPoint vec, float a) {
+    private CGPoint rotatePoint(CGPoint vec, float a) {
         float xtemp = (vec.x * (float)Math.cos(a)) - (vec.y * (float)Math.sin(a));
         vec.y = (vec.x * (float)Math.sin(a)) + (vec.y * (float)Math.cos(a));
         vec.x = xtemp;
@@ -201,7 +201,7 @@ public class Ribbon extends CocosNode {
     /**
      * add a point to the ribbon
      */
-    public void addPoint(CCPoint location, float w) {
+    public void addPoint(CGPoint location, float w) {
         w = w * 0.5f;
         // if this is the first point added, cache it and return
         if (!mPastFirstPoint) {
@@ -211,10 +211,10 @@ public class Ribbon extends CocosNode {
             return;
         }
 
-        CCPoint sub = CCPoint.ccpSub(mLastLocation, location);
-        float r = CCPoint.ccpToAngle(sub) + (float) Math.PI * 2;
-        CCPoint p1 = CCPoint.ccpAdd(rotatePoint(CCPoint.ccp(-w, 0), r), location);
-        CCPoint p2 = CCPoint.ccpAdd(rotatePoint(CCPoint.ccp(w, 0), r), location);
+        CGPoint sub = CGPoint.ccpSub(mLastLocation, location);
+        float r = CGPoint.ccpToAngle(sub) + (float) Math.PI * 2;
+        CGPoint p1 = CGPoint.ccpAdd(rotatePoint(CGPoint.ccp(-w, 0), r), location);
+        CGPoint p2 = CGPoint.ccpAdd(rotatePoint(CGPoint.ccp(w, 0), r), location);
         float len = (float) Math.sqrt((float) Math.pow(mLastLocation.x - location.x, 2) + (float) Math.pow(mLastLocation.y - location.y, 2));
         float tend = mTexVPos + len / textureLength_;
         RibbonSegment seg;
@@ -264,8 +264,8 @@ public class Ribbon extends CocosNode {
         }
         if (seg.end == 0) {
             // first edge has to get rotation from the first real polygon
-            CCPoint lp1 = CCPoint.ccpAdd(rotatePoint(CCPoint.ccp(-mLastWidth, 0), r), mLastLocation);
-            CCPoint lp2 = CCPoint.ccpAdd(rotatePoint(CCPoint.ccp(+mLastWidth, 0), r), mLastLocation);
+            CGPoint lp1 = CGPoint.ccpAdd(rotatePoint(CGPoint.ccp(-mLastWidth, 0), r), mLastLocation);
+            CGPoint lp2 = CGPoint.ccpAdd(rotatePoint(CGPoint.ccp(+mLastWidth, 0), r), mLastLocation);
             seg.creationTime[0] = mCurTime - mDelta;
             seg.verts[0] = lp1.x;
             seg.verts[1] = lp1.y;
@@ -316,10 +316,10 @@ public class Ribbon extends CocosNode {
     /**
      * determine side of line
      */
-    public float sideOfLine(CCPoint p, CCPoint l1, CCPoint l2) {
-        CCPoint vp = CCPoint.ccpPerp(CCPoint.ccpSub(l1, l2));
-        CCPoint vx = CCPoint.ccpSub(p, l1);
-        return CCPoint.ccpDot(vx, vp);
+    public float sideOfLine(CGPoint p, CGPoint l1, CGPoint l2) {
+        CGPoint vp = CGPoint.ccpPerp(CGPoint.ccpSub(l1, l2));
+        CGPoint vx = CGPoint.ccpSub(p, l1);
+        return CGPoint.ccpDot(vx, vp);
     }
 
     @Override
@@ -361,7 +361,7 @@ public class Ribbon extends CocosNode {
     // CocosNodeTexture protocol
 
     public void setTexture(CCTexture2D texture) {
-        setContentSize(texture.getWidth(), texture.getHeight());
+        setContentSize(CGSize.make(texture.getWidth(), texture.getHeight()));
         /* XXX Don't update blending function in Ribbons */
     }
 

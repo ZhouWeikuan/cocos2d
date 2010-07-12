@@ -55,7 +55,7 @@ public class CCTouchHandler implements CCTouchDelegateProtocol {
         assert delegate !=null : "Touch delegate may not be nil";
         delegate_ = delegate;
         priority_ = priority;
-        enabledSelectors_ = ccTouchSelectorFlag.ccTouchSelectorNoneBit;
+        enabledSelectors_ = ccTouchSelectorFlag.ccTouchSelectorNoneBit.getFlag();
     }
 
     public boolean ccTouchesBegan(MotionEvent event) {

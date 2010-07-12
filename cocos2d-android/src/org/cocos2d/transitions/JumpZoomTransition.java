@@ -4,7 +4,8 @@ import org.cocos2d.actions.instant.CallFunc;
 import org.cocos2d.actions.interval.*;
 import org.cocos2d.nodes.Director;
 import org.cocos2d.nodes.Scene;
-import org.cocos2d.types.CCSize;
+import org.cocos2d.types.CGPoint;
+import org.cocos2d.types.CGSize;
 
 /**
  * JumpZoom Transition.
@@ -22,16 +23,16 @@ public class JumpZoomTransition extends TransitionScene {
 
     public void onEnter() {
         super.onEnter();
-        CCSize size = Director.sharedDirector().winSize();
+        CGSize size = Director.sharedDirector().winSize();
         
         float width = size.getWidth();
         float height = size.getHeight();
 
-        inScene.scale(0.5f);
-        inScene.setPosition(width, 0);
+        inScene.setScale(0.5f);
+        inScene.setPosition(CGPoint.make(width, 0));
 
-        inScene.setAnchorPoint(0.5f, 0.5f);
-        outScene.setAnchorPoint(0.5f, 0.5f);
+        inScene.setAnchorPoint(CGPoint.make(0.5f, 0.5f));
+        outScene.setAnchorPoint(CGPoint.make(0.5f, 0.5f));
 
         IntervalAction jump = JumpBy.action(duration / 4, -width, 0, width / 4, 2);
         IntervalAction scaleIn = ScaleTo.action(duration / 4, 1.0f);

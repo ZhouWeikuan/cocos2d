@@ -1,6 +1,6 @@
 package org.cocos2d.actions.interval;
 
-import org.cocos2d.nodes.CocosNode;
+import org.cocos2d.nodes.CCNode;
 
 //
 // JumpTo
@@ -22,7 +22,7 @@ public class JumpTo extends JumpBy {
     }
 
     @Override
-    public void start(CocosNode aTarget) {
+    public void start(CCNode aTarget) {
         super.start(aTarget);
         delta.x -= startPosition.x;
         delta.y -= startPosition.y;

@@ -14,8 +14,8 @@ import org.cocos2d.nodes.TextureManager;
 import org.cocos2d.opengl.CCGLSurfaceView;
 import org.cocos2d.opengl.Primitives;
 import org.cocos2d.types.ccMacros;
-import org.cocos2d.types.CCPoint;
-import org.cocos2d.types.CCSize;
+import org.cocos2d.types.CGPoint;
+import org.cocos2d.types.CGSize;
 
 import javax.microedition.khronos.opengles.GL10;
 
@@ -114,7 +114,7 @@ public class DrawPrimitivesTest extends Activity {
 
     public static class TestDemo extends Layer {
         public TestDemo() {
-            CCSize s = Director.sharedDirector().winSize();
+            CGSize s = Director.sharedDirector().winSize();
 
             MenuItemImage item1 = MenuItemImage.item("b1.png", "b2.png", this, "backCallback");
             MenuItemImage item2 = MenuItemImage.item("r1.png", "r2.png", this, "restartCallback");
@@ -122,10 +122,10 @@ public class DrawPrimitivesTest extends Activity {
 
             Menu menu = Menu.menu(item1, item2, item3);
 
-            menu.setPosition(0, 0);
-            item1.setPosition(s.width / 2 - 100, 30);
-            item2.setPosition(s.width / 2, 30);
-            item3.setPosition(s.width / 2 + 100, 30);
+            menu.setPosition(CGPoint.make(0, 0));
+            item1.setPosition(CGPoint.make(s.width / 2 - 100, 30));
+            item2.setPosition(CGPoint.make(s.width / 2, 30));
+            item3.setPosition(CGPoint.make(s.width / 2 + 100, 30));
             addChild(menu, -1);
         }
 
@@ -186,7 +186,7 @@ public class DrawPrimitivesTest extends Activity {
         //    this.rotation = 90;
         //
         public void draw(GL10 gl) {
-            CCSize s = Director.sharedDirector().winSize();
+            CGSize s = Director.sharedDirector().winSize();
 
 
             // draw a simple line
@@ -196,7 +196,7 @@ public class DrawPrimitivesTest extends Activity {
             // Anti-Aliased
             gl.glEnable(GL10.GL_LINE_SMOOTH);
             
-            Primitives.drawLine(gl, CCPoint.ccp(0, 0), CCPoint.ccp(s.width, s.height));
+            Primitives.drawLine(gl, CGPoint.ccp(0, 0), CGPoint.ccp(s.width, s.height));
 
             // line: color, width, aliased
             // glLineWidth > 1 and GL_LINE_SMOOTH are not compatible
@@ -204,7 +204,7 @@ public class DrawPrimitivesTest extends Activity {
             gl.glDisable(GL10.GL_LINE_SMOOTH);
             gl.glLineWidth(5.0f);
             gl.glColor4f(1.0f, 0.0f, 0.0f, 1.0f);
-            Primitives.drawLine(gl, CCPoint.ccp(0, s.height), CCPoint.ccp(s.width, 0));
+            Primitives.drawLine(gl, CGPoint.ccp(0, s.height), CGPoint.ccp(s.width, 0));
 
             // TIP:
             // If you are going to use always the same color or width, you don't
@@ -218,7 +218,7 @@ public class DrawPrimitivesTest extends Activity {
             Primitives.drawPoint(gl, s.width / 2, s.height / 2);
 
             // draw 4 small points
-            CCPoint points[] = {CCPoint.ccp(60, 60), CCPoint.ccp(70, 70), CCPoint.ccp(60, 70), CCPoint.ccp(70, 60)};
+            CGPoint points[] = {CGPoint.ccp(60, 60), CGPoint.ccp(70, 70), CGPoint.ccp(60, 70), CGPoint.ccp(70, 60)};
             gl.glPointSize(4);
             gl.glColor4f(0.0f, 1.0f, 1.0f, 1.0f);
             Primitives.drawPoints(gl, points, 4);
@@ -236,13 +236,13 @@ public class DrawPrimitivesTest extends Activity {
             // open yellow poly
             gl.glColor4f(1.0f, 1.0f, 0.0f, 1.0f);
             gl.glLineWidth(10);
-            CCPoint vertices[] = {CCPoint.ccp(0, 0), CCPoint.ccp(50, 50), CCPoint.ccp(100, 50), CCPoint.ccp(100, 100), CCPoint.ccp(50, 100)};
+            CGPoint vertices[] = {CGPoint.ccp(0, 0), CGPoint.ccp(50, 50), CGPoint.ccp(100, 50), CGPoint.ccp(100, 100), CGPoint.ccp(50, 100)};
             Primitives.drawPoly(gl, vertices, 5, false);
 
             // closed purple poly
             gl.glColor4f(1.0f, 0.0f, 1.0f, 1.0f);
             gl.glLineWidth(2);
-            CCPoint vertices2[] = {CCPoint.ccp(30, 130), CCPoint.ccp(30, 230), CCPoint.ccp(50, 200)};
+            CGPoint vertices2[] = {CGPoint.ccp(30, 130), CGPoint.ccp(30, 230), CGPoint.ccp(50, 200)};
             Primitives.drawPoly(gl, vertices2, 3, true);
 
             // draw quad bezier path

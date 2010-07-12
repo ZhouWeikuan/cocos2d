@@ -1,6 +1,6 @@
 package org.cocos2d.opengl;
 
-import org.cocos2d.types.CCSize;
+import org.cocos2d.types.CGSize;
 import org.cocos2d.utils.CCFormatter;
 import org.cocos2d.opengl.GLU;
 import org.cocos2d.nodes.Director;
@@ -97,7 +97,7 @@ public class Camera {
     }
 
     public static float getZEye() {
-        CCSize s = Director.sharedDirector().displaySize();
+        CGSize s = Director.sharedDirector().displaySize();
         return (s.height / 1.1566f);
     }
 

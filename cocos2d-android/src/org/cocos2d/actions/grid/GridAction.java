@@ -3,7 +3,7 @@ package org.cocos2d.actions.grid;
 import org.cocos2d.actions.interval.IntervalAction;
 import org.cocos2d.actions.interval.ReverseTime;
 import org.cocos2d.grid.GridBase;
-import org.cocos2d.nodes.CocosNode;
+import org.cocos2d.nodes.CCNode;
 import org.cocos2d.types.ccGridSize;
 
 public abstract class GridAction extends IntervalAction {
@@ -15,7 +15,7 @@ public abstract class GridAction extends IntervalAction {
         gridSize = gSize;
     }
 
-    public void start(CocosNode aTarget) {
+    public void start(CCNode aTarget) {
         super.start(aTarget);
 
         GridBase newgrid = grid();

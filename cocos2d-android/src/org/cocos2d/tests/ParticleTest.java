@@ -9,7 +9,7 @@ import org.cocos2d.layers.Layer;
 import org.cocos2d.menus.Menu;
 import org.cocos2d.menus.MenuItemImage;
 import org.cocos2d.nodes.Director;
-import org.cocos2d.nodes.Label;
+import org.cocos2d.nodes.CCLabel;
 import org.cocos2d.nodes.LabelAtlas;
 import org.cocos2d.nodes.Scene;
 import org.cocos2d.nodes.Sprite;
@@ -20,8 +20,9 @@ import org.cocos2d.particlesystem.ParticleExplosion;
 import org.cocos2d.particlesystem.ParticleFire;
 import org.cocos2d.particlesystem.ParticleFireworks;
 import org.cocos2d.particlesystem.ParticleSystem;
+import org.cocos2d.types.CGPoint;
 import org.cocos2d.types.ccColor4B;
-import org.cocos2d.types.CCSize;
+import org.cocos2d.types.CGSize;
 import org.cocos2d.utils.CCFormatter;
 
 import android.app.Activity;
@@ -140,10 +141,10 @@ public class ParticleTest extends Activity {
         public ParticleDemo() {
             super(new ccColor4B(127,127,127,255));
 
-            CCSize s = Director.sharedDirector().winSize();
+            CGSize s = Director.sharedDirector().winSize();
 
-            Label label = Label.label(title(), "DroidSans", 18);
-            label.setPosition(s.width / 2, s.height - 30);
+            CCLabel label = CCLabel.makeLabel(title(), "DroidSans", 18);
+            label.setPosition(CGPoint.make(s.width / 2, s.height - 30));
             addChild(label);
 
             MenuItemImage item1 = MenuItemImage.item("b1.png", "b2.png", this, "backCallback");
@@ -155,22 +156,22 @@ public class ParticleTest extends Activity {
 //                                     MenuItemFont.item("Grouped Movement"));
 
             Menu menu = Menu.menu(item1, item2, item3 /*, item4 */);
-            menu.setPosition(0, 0);
-            item1.setPosition(s.width / 2 - 100, 30);
-            item2.setPosition(s.width / 2, 30);
-            item3.setPosition(s.width / 2 + 100, 30);
+            menu.setPosition(CGPoint.make(0, 0));
+            item1.setPosition(CGPoint.make(s.width / 2 - 100, 30));
+            item2.setPosition(CGPoint.make(s.width / 2, 30));
+            item3.setPosition(CGPoint.make(s.width / 2 + 100, 30));
 //            item4.setAnchorPoint(0,0);
 
             addChild(menu, 100);
 
             LabelAtlas labelAtlas = LabelAtlas.label("0000", "fps_images.png", 16, 24, '.');
             addChild(labelAtlas, 100, kTagLabelAtlas);
-            labelAtlas.setPosition(254,50);
+            labelAtlas.setPosition(CGPoint.make(254,50));
 
             // moving background
             background = Sprite.sprite("background3.png");
             addChild(background, 5);
-            background.setPosition(s.width/2, s.height-180);
+            background.setPosition(CGPoint.make(s.width/2, s.height-180));
 
             IntervalAction move = MoveBy.action(4, 300, 0);
             IntervalAction move_back = move.reverse();
@@ -208,7 +209,7 @@ public class ParticleTest extends Activity {
 
         public void setEmitterPosition()
         {
-            emitter.setPosition(200, 70);
+            emitter.setPosition(CGPoint.make(200, 70));
         }
 
 

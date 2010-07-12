@@ -1,21 +1,22 @@
 package org.cocos2d.nodes;
 
 import org.cocos2d.opengl.CCTexture2D;
+import org.cocos2d.types.CGSize;
 import org.cocos2d.types.ccBlendFunc;
 import org.cocos2d.types.ccColor3B;
 import org.cocos2d.types.ccMacros;
-import org.cocos2d.types.CCPoint;
+import org.cocos2d.types.CGPoint;
 
 import javax.microedition.khronos.opengles.GL10;
 import static javax.microedition.khronos.opengles.GL10.*;
 
 
-public class TextureNode extends CocosNode implements CocosNode.CocosNodeRGBA, CocosNode.CocosNodeSize {
+public class TextureNode extends CCNode implements CCNode.CocosNodeRGBA, CCNode.CocosNodeSize {
 
     /**
      * The texture that is rendered
      */
-    private CCTexture2D texture_;
+    protected CCTexture2D texture_;
 
     // blend func
     private ccBlendFunc blendFunc_;
@@ -33,7 +34,7 @@ public class TextureNode extends CocosNode implements CocosNode.CocosNodeRGBA, C
 
     public void setTexture(CCTexture2D texture) {
         texture_ = texture;
-        setContentSize(texture.getWidth(), texture.getHeight());
+        setContentSize(CGSize.make(texture.getWidth(), texture.getHeight()));
 //        if( ! texture.hasPremultipliedAlpha() ) {
 //            blendFunc_.src = GL_SRC_ALPHA;
 //            blendFunc_.dst = GL_ONE_MINUS_SRC_ALPHA;
@@ -66,7 +67,7 @@ public class TextureNode extends CocosNode implements CocosNode.CocosNodeRGBA, C
     public TextureNode() {
         opacity_ = 255;
         color_ = new ccColor3B(255, 255, 255);
-        setAnchorPoint(0.5f, 0.5f);
+        setAnchorPoint(CGPoint.make(0.5f, 0.5f));
         blendFunc_ = new ccBlendFunc(ccMacros.CC_BLEND_SRC, ccMacros.CC_BLEND_DST);
 
     }
@@ -87,7 +88,7 @@ public class TextureNode extends CocosNode implements CocosNode.CocosNodeRGBA, C
         }
 
         if (texture_ != null)
-            texture_.drawAtPoint(gl, CCPoint.zero());
+            texture_.drawAtPoint(gl, CGPoint.zero());
 
         if (newBlend)
             gl.glBlendFunc(ccMacros.CC_BLEND_SRC, ccMacros.CC_BLEND_DST);

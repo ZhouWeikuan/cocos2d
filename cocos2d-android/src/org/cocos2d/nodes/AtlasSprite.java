@@ -27,7 +27,7 @@ import java.util.HashMap;
  *
  */
 
-public class AtlasSprite extends CocosNode implements CocosNode.CocosNodeSize, CocosNode.CocosNodeFrames, CocosNode.CocosNodeRGBA {
+public class AtlasSprite extends CCNode implements CCNode.CocosNodeSize, CCNode.CocosNodeFrames, CCNode.CocosNodeRGBA {
     public static final int kIndexNotInitialized = -1;
 
     TextureAtlas textureAtlas_;
@@ -45,7 +45,7 @@ public class AtlasSprite extends CocosNode implements CocosNode.CocosNodeSize, C
     }
 
     // texture pixels
-    private CCRect rect_;
+    private CGRect rect_;
 
     // texture coords
     // stored as floats in the range [0..1]
@@ -78,22 +78,22 @@ public class AtlasSprite extends CocosNode implements CocosNode.CocosNodeSize, C
     /**
      * returns the rect of the AtlasSprite
      */
-    public CCRect getTextureRect() {
+    public CGRect getTextureRect() {
         return rect_;
     }
 
 
-    public static AtlasSprite sprite(CCRect rect, AtlasSpriteManager manager) {
+    public static AtlasSprite sprite(CGRect rect, AtlasSpriteManager manager) {
         return new AtlasSprite(rect, manager);
     }
 
-    protected AtlasSprite(CCRect rect, AtlasSpriteManager manager) {
+    protected AtlasSprite(CGRect rect, AtlasSpriteManager manager) {
         textureAtlas_ = manager.atlas();
 
         atlasIndex_ = kIndexNotInitialized;
 
         // default transform anchor: center
-        setAnchorPoint(0.5f, 0.5f);
+        setAnchorPoint(CGPoint.make(0.5f, 0.5f));
 
         // RGB and opacity
         opacity_ = (byte) 255;
@@ -114,7 +114,7 @@ public class AtlasSprite extends CocosNode implements CocosNode.CocosNodeSize, C
         animations = new HashMap<String, AtlasAnimation>(2);
     }
 
-    public void setTextureRect(CCRect rect) {
+    public void setTextureRect(CGRect rect) {
         rect_ = rect;
 
         updateTextureCoords();
@@ -127,7 +127,7 @@ public class AtlasSprite extends CocosNode implements CocosNode.CocosNodeSize, C
 
         // add these lines
         if (!((rect.size.width == getWidth()) && ((rect.size.getHeight()) == getHeight()))) {
-            setContentSize(rect.size.width, rect.size.height);
+            setContentSize(rect.size);
             dirty_ = true;
         }
     }
@@ -183,13 +183,16 @@ public class AtlasSprite extends CocosNode implements CocosNode.CocosNodeSize, C
 
         // rotation ? -> update: rotation, scale, position
         else if (getRotation() != 0) {
-            float x1 = -getTransformAnchorX() * getScaleX();
-            float y1 = -getTransformAnchorY() * getScaleY();
+        	CGPoint anchorPoint = this.getAnchorPointInPixels();
+            float x1 = -anchorPoint.x * getScaleX();
+            float y1 = -anchorPoint.y * getScaleY();
 
             float x2 = x1 + rect_.size.width * getScaleX();
             float y2 = y1 + rect_.size.height * getScaleY();
-            float x = getPositionX();
-            float y = getPositionY();
+            
+            CGPoint pos = this.getPosition();
+            float x = pos.x;
+            float y = pos.y;
 
             float r = -ccMacros.CC_DEGREES_TO_RADIANS(getRotation());
             float cr = (float)Math.cos(r);
@@ -214,11 +217,13 @@ public class AtlasSprite extends CocosNode implements CocosNode.CocosNodeSize, C
 
         // scale ? -> update: scale, position
         else if (getScaleX() != 1 || getScaleY() != 1) {
-            float x = getPositionX();
-            float y = getPositionY();
+        	CGPoint pos = this.getPosition();
+            float x = pos.x;
+            float y = pos.y;
 
-            float x1 = (x - getTransformAnchorX() * getScaleX());
-            float y1 = (y - getTransformAnchorY() * getScaleY());
+            CGPoint anchorPoint = this.getAnchorPointInPixels();
+            float x1 = (x - anchorPoint.x * getScaleX());
+            float y1 = (y - anchorPoint.y * getScaleY());
             float x2 = (x1 + rect_.size.width * getScaleX());
             float y2 = (y1 + rect_.size.height * getScaleY());
 
@@ -233,11 +238,10 @@ public class AtlasSprite extends CocosNode implements CocosNode.CocosNodeSize, C
 
         // update position
         else {
-            float x = getPositionX();
-            float y = getPositionY();
-
-            float x1 = (x - getTransformAnchorX());
-            float y1 = (y - getTransformAnchorY());
+            CGPoint pos = getPosition();
+            CGPoint anchorPoint = this.getAnchorPointInPixels();
+            float x1 = (pos.x - anchorPoint.x);
+            float y1 = (pos.y - anchorPoint.y);
             float x2 = (x1 + rect_.size.width);
             float y2 = (y1 + rect_.size.height);
 
@@ -264,8 +268,8 @@ public class AtlasSprite extends CocosNode implements CocosNode.CocosNodeSize, C
     }
 
     @Override
-    public void setPosition(float x, float y) {
-        super.setPosition(x, y);
+    public void setPosition(CGPoint pos) {
+        super.setPosition(pos);
         dirty_ = true;
     }
 
@@ -289,7 +293,7 @@ public class AtlasSprite extends CocosNode implements CocosNode.CocosNodeSize, C
 
     @Override
     public void setScale(float s) {
-        super.scale(s);
+        super.setScale(s);
         dirty_ = true;
     }
 
@@ -300,8 +304,8 @@ public class AtlasSprite extends CocosNode implements CocosNode.CocosNodeSize, C
     }
 
     @Override
-    public void setAnchorPoint(float x, float y) {
-        super.setAnchorPoint(x, y);
+    public void setAnchorPoint(CGPoint anchorPoint) {
+        super.setAnchorPoint(anchorPoint);
         dirty_ = true;
     }
 
@@ -343,7 +347,7 @@ public class AtlasSprite extends CocosNode implements CocosNode.CocosNodeSize, C
     }
     
     @Override
-    public CocosNode addChild(CocosNode child, int z, int aTag) {
+    public CCNode addChild(CCNode child, int z, int aTag) {
         assert false : "AtlasSprite can't have children";
         return null;
     }
@@ -372,7 +376,7 @@ public class AtlasSprite extends CocosNode implements CocosNode.CocosNodeSize, C
     public void setDisplayFrame(Object newFrame) {
         if (newFrame instanceof AtlasSpriteFrame) {
             AtlasSpriteFrame frame = (AtlasSpriteFrame) newFrame;
-            CCRect rect = frame.rect;
+            CGRect rect = frame.rect;
 
             setTextureRect(rect);
         }
@@ -387,7 +391,7 @@ public class AtlasSprite extends CocosNode implements CocosNode.CocosNodeSize, C
         AtlasSpriteFrame frame = (AtlasSpriteFrame) a.frames.get(frameIndex);
 
         assert frame != null : "AtlasSprite#setDisplayFrame. Invalid frame";
-        CCRect rect = frame.rect;
+        CGRect rect = frame.rect;
 
         setTextureRect(rect);
 
@@ -397,8 +401,8 @@ public class AtlasSprite extends CocosNode implements CocosNode.CocosNodeSize, C
     public boolean isFrameDisplayed(Object frame) {
         if (frame instanceof AtlasSpriteFrame) {
             AtlasSpriteFrame spr = (AtlasSpriteFrame) frame;
-            CCRect r = spr.rect;
-            return CCRect.equalToRect(r, rect_);
+            CGRect r = spr.rect;
+            return CGRect.equalToRect(r, rect_);
         }
         return false;
     }
@@ -419,4 +423,16 @@ public class AtlasSprite extends CocosNode implements CocosNode.CocosNodeSize, C
         assert animationName != null : "animationName parameter must be non null";
         return animations.get(animationName);
     }
+
+	@Override
+	public float getHeight() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public float getWidth() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 }

@@ -1,7 +1,8 @@
 package org.cocos2d.actions.interval;
 
 import android.graphics.PointF;
-import org.cocos2d.nodes.CocosNode;
+import org.cocos2d.nodes.CCNode;
+import org.cocos2d.types.CGPoint;
 
 //
 // JumpBy
@@ -31,10 +32,11 @@ public class JumpBy extends IntervalAction {
     }
 
     @Override
-    public void start(CocosNode aTarget) {
+    public void start(CCNode aTarget) {
         super.start(aTarget);
-        startPosition.x = target.getPositionX();
-        startPosition.y = target.getPositionY();
+        CGPoint pnt = target.getPosition();
+        startPosition.x = pnt.x;
+        startPosition.y = pnt.y;
     }
 
     @Override
@@ -42,7 +44,7 @@ public class JumpBy extends IntervalAction {
         float y = height * (float) Math.abs(Math.sin(t * (float) Math.PI * jumps));
         y += delta.y * t;
         float x = delta.x * t;
-        target.setPosition(startPosition.x + x, startPosition.y + y);
+        target.setPosition(CGPoint.make(startPosition.x + x, startPosition.y + y));
     }
 
     @Override

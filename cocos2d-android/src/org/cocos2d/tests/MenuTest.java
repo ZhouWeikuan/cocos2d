@@ -17,9 +17,9 @@ import org.cocos2d.menus.*;
 import org.cocos2d.nodes.*;
 import org.cocos2d.opengl.CCGLSurfaceView;
 import org.cocos2d.types.ccColor3B;
-import org.cocos2d.types.CCPoint;
-import org.cocos2d.types.CCRect;
-import org.cocos2d.types.CCSize;
+import org.cocos2d.types.CGPoint;
+import org.cocos2d.types.CGRect;
+import org.cocos2d.types.CGSize;
 
 public class MenuTest extends Activity {
     public static final int kTagMenu = 1;
@@ -27,7 +27,7 @@ public class MenuTest extends Activity {
     public static final int kTagMenu1 = 1;
 
 
-    private static final String LOG_TAG = MenuTest.class.getSimpleName();
+    // private static final String LOG_TAG = MenuTest.class.getSimpleName();
     private CCGLSurfaceView mGLSurfaceView;
 
     public static final int kTagSpriteManager = 1;
@@ -107,9 +107,9 @@ public class MenuTest extends Activity {
             AtlasSpriteManager mgr = new AtlasSpriteManager("menuitemsprite.png");
             addChild(mgr);
 
-            AtlasSprite spriteNormal = AtlasSprite.sprite(CCRect.make(0, 23 * 2, 115, 23), mgr);
-            AtlasSprite spriteSelected = AtlasSprite.sprite(CCRect.make(0, 23 * 1, 115, 23), mgr);
-            AtlasSprite spriteDisabled = AtlasSprite.sprite(CCRect.make(0, 23 * 0, 115, 23), mgr);
+            AtlasSprite spriteNormal = AtlasSprite.sprite(CGRect.make(0, 23 * 2, 115, 23), mgr);
+            AtlasSprite spriteSelected = AtlasSprite.sprite(CGRect.make(0, 23 * 1, 115, 23), mgr);
+            AtlasSprite spriteDisabled = AtlasSprite.sprite(CGRect.make(0, 23 * 0, 115, 23), mgr);
             mgr.addChild(spriteNormal);
             mgr.addChild(spriteSelected);
             mgr.addChild(spriteDisabled);
@@ -160,7 +160,7 @@ public class MenuTest extends Activity {
             // IMPORTANT
             // If you are going to use AtlasSprite as items, you should
             // re-position the AtlasSpriteManager AFTER modifying the menu position
-            mgr.setPosition(menu.getPositionX(), menu.getPositionY());
+            mgr.setPosition(menu.getPosition());
 
             disabledItem = item3;
             disabledItem.setIsEnabled(false);
@@ -188,7 +188,7 @@ public class MenuTest extends Activity {
         }
 
         public void menuCallback2() {
-            ((MultiplexLayer) parent).switchTo(2);
+            ((MultiplexLayer) parent_).switchTo(2);
         }
 
         public void onQuit() {
@@ -197,7 +197,7 @@ public class MenuTest extends Activity {
     }
 
     static class Layer2 extends Layer {
-        CCPoint centeredMenu;
+        CGPoint centeredMenu;
         boolean alignedH;
 
         public void menuCallbackBack() {

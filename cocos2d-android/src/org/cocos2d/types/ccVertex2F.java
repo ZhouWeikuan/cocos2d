@@ -4,6 +4,6 @@ package org.cocos2d.types;
  @since v0.8
  */
 public class ccVertex2F {
-    CCPoint pnt;
+    CGPoint pnt;
 }
 

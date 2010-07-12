@@ -5,10 +5,10 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.opengl.GLUtils;
-import org.cocos2d.nodes.Label;
-import org.cocos2d.types.CCAffineTransform;
-import org.cocos2d.types.CCPoint;
-import org.cocos2d.types.CCSize;
+import org.cocos2d.nodes.CCLabel;
+import org.cocos2d.types.CGAffineTransform;
+import org.cocos2d.types.CGPoint;
+import org.cocos2d.types.CGSize;
 import org.cocos2d.types.CCTexParams;
 
 import javax.microedition.khronos.opengles.GL10;
@@ -18,7 +18,7 @@ import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
 public class CCTexture2D {
-    private static final String LOG_TAG = CCTexture2D.class.getSimpleName();
+    // private static final String LOG_TAG = CCTexture2D.class.getSimpleName();
 
     public static final int kMaxTextureSize = 1024;
 
@@ -83,19 +83,22 @@ public class CCTexture2D {
 
     private Bitmap mBitmap;
     private int _name = -1;
-    private CCSize mSize;
+    private CGSize mSize;
     private int mWidth, mHeight;
     private Bitmap.Config _format;
     private float _maxS, _maxT;
     private CCTexParams _texParams;
 
+    public final CGSize getContentSize() {
+        return mSize;
+    }
 
     public CCTexture2D(Bitmap image) {
 
         boolean sizeToFit = false;
 
-        CCSize imageSize = CCSize.make(image.getWidth(), image.getHeight());
-        CCAffineTransform transform = CCAffineTransform.identity();
+        CGSize imageSize = CGSize.make(image.getWidth(), image.getHeight());
+        CGAffineTransform transform = CGAffineTransform.identity();
 
         int width = (int) imageSize.width;
         if ((width != 1) && (width & (width - 1)) != 0) {
@@ -116,7 +119,7 @@ public class CCTexture2D {
         while (width > kMaxTextureSize || height > kMaxTextureSize) {
             width /= 2;
             height /= 2;
-            transform.scale(0.5f, 0.5f);
+            transform = transform.getTransformScale(0.5f, 0.5f);
             imageSize.width *= 0.5f;
             imageSize.height *= 0.5f;
         }
@@ -132,7 +135,7 @@ public class CCTexture2D {
         init(image, imageSize);
     }
 
-    public CCTexture2D(Bitmap image, CCSize imageSize) {
+    public CCTexture2D(Bitmap image, CGSize imageSize) {
         Bitmap.Config config = Bitmap.Config.ARGB_8888;
         Bitmap bitmap = Bitmap.createBitmap((int) imageSize.width, (int) imageSize.height, config);
         Canvas canvas = new Canvas(bitmap);
@@ -142,7 +145,7 @@ public class CCTexture2D {
         init(bitmap, imageSize);
     }
 
-    private void init(Bitmap image, CCSize imageSize) {
+    private void init(Bitmap image, CGSize imageSize) {
         mBitmap = image;
 
         mWidth = image.getWidth();
@@ -167,10 +170,10 @@ public class CCTexture2D {
 
     public CCTexture2D(String text, String fontname, float fontSize) {
 
-        this(text, calculateTextSize(text, fontname, fontSize), Label.TextAlignment.CENTER, fontname, fontSize);
+        this(text, calculateTextSize(text, fontname, fontSize), CCLabel.TextAlignment.CENTER, fontname, fontSize);
     }
 
-    private static CCSize calculateTextSize(String text, String fontname, float fontSize) {
+    private static CGSize calculateTextSize(String text, String fontname, float fontSize) {
         Typeface typeface = Typeface.create(fontname, Typeface.NORMAL);
 
         Paint textPaint = new Paint();
@@ -181,10 +184,10 @@ public class CCTexture2D {
         int descent = (int) Math.ceil(textPaint.descent());
         int measuredTextWidth = (int) Math.ceil(textPaint.measureText(text));
 
-        return CCSize.make(measuredTextWidth, ascent + descent);
+        return CGSize.make(measuredTextWidth, ascent + descent);
     }
 
-    public CCTexture2D(String text, CCSize dimensions, Label.TextAlignment alignment, String fontname, float fontSize) {
+    public CCTexture2D(String text, CGSize dimensions, CCLabel.TextAlignment alignment, String fontname, float fontSize) {
         Typeface typeface = Typeface.create(fontname, Typeface.NORMAL);
 
         Paint textPaint = new Paint();
@@ -262,7 +265,7 @@ public class CCTexture2D {
         }
     }
 
-    public void drawAtPoint(GL10 gl, CCPoint point) {
+    public void drawAtPoint(GL10 gl, CGPoint point) {
         gl.glEnable(GL_TEXTURE_2D);
 
         loadTexture(gl);

@@ -5,7 +5,7 @@ package org.cocos2d.actions.interval;
 //
 
 import org.cocos2d.actions.base.FiniteTimeAction;
-import org.cocos2d.nodes.CocosNode;
+import org.cocos2d.nodes.CCNode;
 
 public class ReverseTime extends IntervalAction {
     private FiniteTimeAction other;
@@ -27,7 +27,7 @@ public class ReverseTime extends IntervalAction {
 
 
     @Override
-    public void start(CocosNode aTarget) {
+    public void start(CCNode aTarget) {
         super.start(aTarget);
         other.start(target);
     }

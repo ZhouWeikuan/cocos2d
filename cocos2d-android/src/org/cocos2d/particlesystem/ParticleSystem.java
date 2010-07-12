@@ -1,10 +1,10 @@
 package org.cocos2d.particlesystem;
 
-import org.cocos2d.nodes.CocosNode;
+import org.cocos2d.nodes.CCNode;
 import org.cocos2d.opengl.CCTexture2D;
 import org.cocos2d.types.ccColor4F;
 import static org.cocos2d.types.ccMacros.*;
-import org.cocos2d.types.CCPoint;
+import org.cocos2d.types.CGPoint;
 import org.cocos2d.types.ccPointSprite;
 
 import javax.microedition.khronos.opengles.GL10;
@@ -14,12 +14,12 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
-public abstract class ParticleSystem extends CocosNode {
+public abstract class ParticleSystem extends CCNode {
 
     public static class Particle {
-        CCPoint pos = new CCPoint();
-        CCPoint startPos = new CCPoint();
-        CCPoint dir = new CCPoint();
+        CGPoint pos = new CGPoint();
+        CGPoint startPos = new CGPoint();
+        CGPoint dir = new CGPoint();
         float radialAccel;
         float tangentialAccel;
         ccColor4F color = new ccColor4F();
@@ -40,14 +40,14 @@ public abstract class ParticleSystem extends CocosNode {
     protected float elapsed;
 
     /// Gravity of the particles
-    protected CCPoint gravity = CCPoint.zero();
+    protected CGPoint gravity = CGPoint.zero();
 
     // position is from "superclass" CocosNode
     // Emitter source position
-    protected CCPoint source = CCPoint.zero();
+    protected CGPoint source = CGPoint.zero();
 
     // Position variance
-    protected CCPoint posVar = CCPoint.zero();
+    protected CGPoint posVar = CGPoint.zero();
 
     // The angle (direction) of the particles measured in degrees
     protected float angle;
@@ -153,11 +153,11 @@ public abstract class ParticleSystem extends CocosNode {
      * Gravity value
      */
 
-    public CCPoint getGravity() {
+    public CGPoint getGravity() {
         return gravity;
     }
 
-    public void setGravity(CCPoint gravity) {
+    public void setGravity(CGPoint gravity) {
         this.gravity = gravity;
     }
 
@@ -177,18 +177,18 @@ public abstract class ParticleSystem extends CocosNode {
      * Source location of particles respective to emitter location
      */
 
-    public CCPoint getSource() {
+    public CGPoint getSource() {
         return source;
     }
 
-    public void setSource(CCPoint source) {
+    public void setSource(CGPoint source) {
         this.source = source;
     }
 
     /**
      * Position variance of the emitter
      */
-    public CCPoint getPosVar() {
+    public CGPoint getPosVar() {
         return posVar;
     }
 
@@ -328,7 +328,7 @@ public abstract class ParticleSystem extends CocosNode {
     }
 
     private void initParticle(Particle particle) {
-        CCPoint v = CCPoint.zero();
+        CGPoint v = CGPoint.zero();
 
         // position
         particle.pos.x = (int) (source.x + posVar.x * CCRANDOM_MINUS1_1());
@@ -339,7 +339,7 @@ public abstract class ParticleSystem extends CocosNode {
         v.y = (float)Math.sin(a);
         v.x = (float)Math.cos(a);
         float s = speed + speedVar * CCRANDOM_MINUS1_1();
-        particle.dir = CCPoint.ccpMult(v, s);
+        particle.dir = CGPoint.ccpMult(v, s);
 
         // radial accel
         particle.radialAccel = radialAccel + radialAccelVar * CCRANDOM_MINUS1_1();
@@ -376,7 +376,7 @@ public abstract class ParticleSystem extends CocosNode {
         if( positionType_ == kPositionTypeFree ) {
             particle.startPos = convertToWorldSpace(0, 0);
         } else {
-            particle.startPos = CCPoint.make(getPositionX(), getPositionY());
+            particle.startPos = getPosition();
         }
 
     }
@@ -408,27 +408,27 @@ public abstract class ParticleSystem extends CocosNode {
 
             if (p.life > 0) {
 
-                CCPoint tmp, radial, tangential;
+                CGPoint tmp, radial, tangential;
 
-                radial = CCPoint.zero();
+                radial = CGPoint.zero();
                 // radial acceleration
                 if (p.pos.x != 9 || p.pos.y != 0)
-                    radial = CCPoint.ccpNormalize(p.pos);
+                    radial = CGPoint.ccpNormalize(p.pos);
                 tangential = radial;
-                radial = CCPoint.ccpMult(radial, p.radialAccel);
+                radial = CGPoint.ccpMult(radial, p.radialAccel);
 
                 // tangential acceleration
                 float newy = tangential.x;
                 tangential.x = -tangential.y;
                 tangential.y = newy;
-                tangential = CCPoint.ccpMult(tangential, p.tangentialAccel);
+                tangential = CGPoint.ccpMult(tangential, p.tangentialAccel);
 
                 // (gravity + radial + tangential) * dt
-                tmp = CCPoint.ccpAdd(CCPoint.ccpAdd(radial, tangential), gravity);
-                tmp = CCPoint.ccpMult(tmp, dt);
-                p.dir = CCPoint.ccpAdd(p.dir, tmp);
-                tmp = CCPoint.ccpMult(p.dir, dt);
-                p.pos = CCPoint.ccpAdd(p.pos, tmp);
+                tmp = CGPoint.ccpAdd(CGPoint.ccpAdd(radial, tangential), gravity);
+                tmp = CGPoint.ccpMult(tmp, dt);
+                p.dir = CGPoint.ccpAdd(p.dir, tmp);
+                tmp = CGPoint.ccpMult(p.dir, dt);
+                p.pos = CGPoint.ccpAdd(p.pos, tmp);
 
                 p.color.r += (p.deltaColor.r * dt);
                 p.color.g += (p.deltaColor.g * dt);

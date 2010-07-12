@@ -4,7 +4,8 @@ import org.cocos2d.actions.instant.CallFunc;
 import org.cocos2d.actions.interval.*;
 import org.cocos2d.nodes.Director;
 import org.cocos2d.nodes.Scene;
-import org.cocos2d.types.CCSize;
+import org.cocos2d.types.CGPoint;
+import org.cocos2d.types.CGSize;
 
 /**
  * RotoZoom Transition.
@@ -25,11 +26,11 @@ public class RotoZoomTransition extends TransitionScene {
         super.onEnter();
         // CCSize s = Director.sharedDirector().winSize();
 
-        inScene.scale(0.001f);
-        outScene.scale(1.0f);
+        inScene.setScale(0.001f);
+        outScene.setScale(1.0f);
 
-        inScene.setAnchorPoint(0.5f, 0.5f);
-        outScene.setAnchorPoint(0.5f, 0.5f);
+        inScene.setAnchorPoint(CGPoint.make(0.5f, 0.5f));
+        outScene.setAnchorPoint(CGPoint.make(0.5f, 0.5f));
 
         IntervalAction rotozoom = Sequence.actions(Spawn.actions(ScaleBy.action(duration / 2, 0.001f),
                 RotateBy.action(duration / 2, 360 * 2)),

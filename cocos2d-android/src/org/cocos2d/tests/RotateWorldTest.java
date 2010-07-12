@@ -10,11 +10,12 @@ import org.cocos2d.layers.ColorLayer;
 import org.cocos2d.layers.Layer;
 import org.cocos2d.nodes.*;
 import org.cocos2d.opengl.CCGLSurfaceView;
+import org.cocos2d.types.CGPoint;
 import org.cocos2d.types.ccColor4B;
-import org.cocos2d.types.CCSize;
+import org.cocos2d.types.CGSize;
 
 public class RotateWorldTest extends Activity {
-    private static final String LOG_TAG = RotateWorldTest.class.getSimpleName();
+    // private static final String LOG_TAG = RotateWorldTest.class.getSimpleName();
     private CCGLSurfaceView mGLSurfaceView;
 
     @Override
@@ -33,7 +34,7 @@ public class RotateWorldTest extends Activity {
         public SpriteLayer() {
             float x, y;
 
-            CCSize size = Director.sharedDirector().winSize();
+            CGSize size = Director.sharedDirector().winSize();
             x = size.width;
             y = size.height;
 
@@ -41,13 +42,13 @@ public class RotateWorldTest extends Activity {
             Sprite spriteSister1 = Sprite.sprite("grossinis_sister1.png");
             Sprite spriteSister2 = Sprite.sprite("grossinis_sister2.png");
 
-            sprite.scale(1.5f);
-            spriteSister1.scale(1.5f);
-            spriteSister2.scale(1.5f);
+            sprite.setScale(1.5f);
+            spriteSister1.setScale(1.5f);
+            spriteSister2.setScale(1.5f);
 
-            sprite.setPosition(x / 2, y / 2);
-            spriteSister1.setPosition(40, y / 2);
-            spriteSister2.setPosition(x - 40, y / 2);
+            sprite.setPosition(CGPoint.make(x / 2, y / 2));
+            spriteSister1.setPosition(CGPoint.make(40, y / 2));
+            spriteSister2.setPosition(CGPoint.make(x - 40, y / 2));
 
             Action rot = RotateBy.action(16, -3600);
 
@@ -76,27 +77,27 @@ public class RotateWorldTest extends Activity {
         public MainLayer() {
             float x, y;
 
-            CCSize size = Director.sharedDirector().winSize();
+            CGSize size = Director.sharedDirector().winSize();
             x = size.width;
             y = size.height;
 
-            CocosNode blue = ColorLayer.node(new ccColor4B(0, 0, 255, 255));
-            CocosNode red = ColorLayer.node(new ccColor4B(255, 0, 0, 255));
-            CocosNode green = ColorLayer.node(new ccColor4B(0, 255, 0, 255));
-            CocosNode white = ColorLayer.node(new ccColor4B(255, 255, 255, 255));
+            CCNode blue = ColorLayer.node(new ccColor4B(0, 0, 255, 255));
+            CCNode red = ColorLayer.node(new ccColor4B(255, 0, 0, 255));
+            CCNode green = ColorLayer.node(new ccColor4B(0, 255, 0, 255));
+            CCNode white = ColorLayer.node(new ccColor4B(255, 255, 255, 255));
 
-            blue.scale(0.5f);
-            blue.setPosition(-x / 4, -y / 4);
+            blue.setScale(0.5f);
+            blue.setPosition(CGPoint.make(-x / 4, -y / 4));
             blue.addChild(new SpriteLayer());
 
-            red.scale(0.5f);
-            red.setPosition(x / 4, -y / 4);
+            red.setScale(0.5f);
+            red.setPosition(CGPoint.make(x / 4, -y / 4));
 
-            green.scale(0.5f);
-            green.setPosition(-x / 4, y / 4);
+            green.setScale(0.5f);
+            green.setPosition(CGPoint.make(-x / 4, y / 4));
 
-            white.scale(0.5f);
-            white.setPosition(x / 4, y / 4);
+            white.setScale(0.5f);
+            white.setPosition(CGPoint.make(x / 4, y / 4));
 
             addChild(blue, -1);
             addChild(white);

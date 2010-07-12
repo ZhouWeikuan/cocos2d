@@ -2,6 +2,7 @@ package org.cocos2d.transitions;
 
 import org.cocos2d.nodes.Director;
 import org.cocos2d.nodes.Scene;
+import org.cocos2d.types.CGPoint;
 import org.cocos2d.events.CCTouchDispatcher;
 
 import javax.microedition.khronos.opengles.GL10;
@@ -81,14 +82,14 @@ public class TransitionScene extends Scene {
     public void finish() {
         /* clean up */
         inScene.setVisible(true);
-        inScene.setPosition(0, 0);
-        inScene.scale(1.0f);
+        inScene.setPosition(CGPoint.zero());
+        inScene.setScale(1.0f);
         inScene.setRotation(0.0f);
         inScene.getCamera().restore();
 
         outScene.setVisible(false);
-        outScene.setPosition(0, 0);
-        outScene.scale(1.0f);
+        outScene.setPosition(CGPoint.zero());
+        outScene.setScale(1.0f);
         outScene.setRotation(0.0f);
         outScene.getCamera().restore();
 

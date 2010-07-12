@@ -115,10 +115,10 @@ public class ParallaxTest extends Activity {
         static final int kTagGrossini = 2;
 
         public ParallaxDemo() {
-            CCSize s = Director.sharedDirector().winSize();
+            CGSize s = Director.sharedDirector().winSize();
 
-            Label label = Label.label(title(), "DroidSans", 18);
-            label.setPosition(s.width / 2, s.height - 30);
+            CCLabel label = CCLabel.makeLabel(title(), "DroidSans", 18);
+            label.setPosition(CGPoint.make(s.width / 2, s.height - 30));
             addChild(label, 1);
 
             MenuItemImage item1 = MenuItemImage.item("b1.png", "b2.png", this, "backCallback");
@@ -126,10 +126,10 @@ public class ParallaxTest extends Activity {
             MenuItemImage item3 = MenuItemImage.item("f1.png", "f2.png", this, "nextCallback");
 
             Menu menu = Menu.menu(item1, item2, item3);
-            menu.setPosition(0, 0);
-            item1.setPosition(s.width / 2 - 100, 30);
-            item2.setPosition(s.width / 2, 30);
-            item3.setPosition(s.width / 2 + 100, 30);
+            menu.setPosition(CGPoint.make(0, 0));
+            item1.setPosition(CGPoint.make(s.width / 2 - 100, 30));
+            item2.setPosition(CGPoint.make(s.width / 2, 30));
+            item3.setPosition(CGPoint.make(s.width / 2 + 100, 30));
             addChild(menu, 1);
         }
 
@@ -163,14 +163,14 @@ public class ParallaxTest extends Activity {
             // scale the image (optional)
             cocosImage.setScale(2.5f);
             // change the transform anchor point to 0,0 (optional)
-            cocosImage.setAnchorPoint(0,0);
+            cocosImage.setAnchorPoint(CGPoint.make(0,0));
 
 
             // Middle layer: a Tile map atlas
             TileMapAtlas tilemap = TileMapAtlas.tilemap("tiles.png", "levelmap.tga", 16, 16);
 
             // change the transform anchor to 0,0 (optional)
-            tilemap.setAnchorPoint(0, 0);
+            tilemap.setAnchorPoint(CGPoint.make(0, 0));
 
             // Aliased images
             //	tilemap.texture.setAliasTexParameters();
@@ -181,7 +181,7 @@ public class ParallaxTest extends Activity {
             // scale the image (optional)
             background.setScale(1.5f);
             // change the transform anchor point (optional)
-            background.setAnchorPoint(0,0);
+            background.setAnchorPoint(CGPoint.make(0,0));
 
 
             // create a void node, a parent node
@@ -224,7 +224,7 @@ public class ParallaxTest extends Activity {
     }
 
     static class Parallax2 extends ParallaxDemo {
-        CCPoint previousLocation;
+        CGPoint previousLocation;
 
         public Parallax2() {
             setIsTouchEnabled(true);
@@ -234,14 +234,14 @@ public class ParallaxTest extends Activity {
             // scale the image (optional)
             cocosImage.setScale(2.5f);
             // change the transform anchor point to 0,0 (optional)
-            cocosImage.setAnchorPoint(0,0);
+            cocosImage.setAnchorPoint(CGPoint.make(0,0));
 
 
             // Middle layer: a Tile map atlas
             TileMapAtlas tilemap = TileMapAtlas.tilemap("tiles.png", "levelmap.tga", 16, 16);
 
             // change the transform anchor to 0,0 (optional)
-            tilemap.setAnchorPoint(0, 0);
+            tilemap.setAnchorPoint(CGPoint.make(0, 0));
 
             // Aliased images
             //tilemap.texture.setAliasTexParameters();
@@ -252,7 +252,7 @@ public class ParallaxTest extends Activity {
             // scale the image (optional)
             background.setScale(1.5f);
             // change the transform anchor point (optional)
-            background.setAnchorPoint(0,0);
+            background.setAnchorPoint(CGPoint.make(0,0));
 
 
             // create a void node, a parent node
@@ -282,7 +282,7 @@ public class ParallaxTest extends Activity {
         @Override
         public boolean ccTouchesBegan(MotionEvent event)
         {
-            previousLocation = CCPoint.make(event.getX(), event.getY());
+            previousLocation = CGPoint.make(event.getX(), event.getY());
             return CCTouchDispatcher.kEventHandled;
         }
 
@@ -301,18 +301,18 @@ public class ParallaxTest extends Activity {
         @Override
         public boolean ccTouchesMoved(MotionEvent event)
         {
-            CCPoint diff = CCPoint.zero();
+            CGPoint diff = CGPoint.zero();
 
-            CCPoint touchLocation = CCPoint.make(event.getX(), event.getY());
+            CGPoint touchLocation = CGPoint.make(event.getX(), event.getY());
 
-            CCPoint location = Director.sharedDirector().convertToGL(touchLocation.x, touchLocation.y);
-            CCPoint prevLocation = Director.sharedDirector().convertToGL(previousLocation.x, previousLocation.y);
+            CGPoint location = Director.sharedDirector().convertToGL(touchLocation.x, touchLocation.y);
+            CGPoint prevLocation = Director.sharedDirector().convertToGL(previousLocation.x, previousLocation.y);
 
             diff.x = location.x-prevLocation.x;
             diff.y = location.y-prevLocation.y;
 
-            CocosNode node = getChild(kTagNode);
-            node.setPosition(node.getPositionX()+diff.x, node.getPositionY()+diff.y);
+            CCNode node = getChild(kTagNode);
+            node.setPosition(CGPoint.ccpAdd(node.getPosition(), diff));
 
             previousLocation = touchLocation;
             

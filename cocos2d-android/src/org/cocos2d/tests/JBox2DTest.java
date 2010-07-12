@@ -5,15 +5,15 @@ import org.cocos2d.layers.Layer;
 import org.cocos2d.nodes.AtlasSprite;
 import org.cocos2d.nodes.AtlasSpriteManager;
 import org.cocos2d.nodes.Director;
-import org.cocos2d.nodes.Label;
+import org.cocos2d.nodes.CCLabel;
 import org.cocos2d.nodes.Scene;
 import org.cocos2d.nodes.TextureManager;
 import org.cocos2d.opengl.CCGLSurfaceView;
 import org.cocos2d.types.ccColor3B;
 import org.cocos2d.types.ccMacros;
-import org.cocos2d.types.CCPoint;
-import org.cocos2d.types.CCRect;
-import org.cocos2d.types.CCSize;
+import org.cocos2d.types.CGPoint;
+import org.cocos2d.types.CGRect;
+import org.cocos2d.types.CGSize;
 import org.jbox2d.collision.AABB;
 import org.jbox2d.collision.shapes.EdgeChainDef;
 import org.jbox2d.collision.shapes.PolygonDef;
@@ -39,7 +39,7 @@ import android.view.WindowManager;
  * @author Ray Cardillo
  */
 public class JBox2DTest extends Activity {
-    private static final String LOG_TAG = JBox2DTest.class.getSimpleName();
+    // private static final String LOG_TAG = JBox2DTest.class.getSimpleName();
     
     private CCGLSurfaceView mGLSurfaceView;
 
@@ -116,7 +116,7 @@ public class JBox2DTest extends Activity {
             this.isTouchEnabled_ = true;
         	this.isAccelerometerEnabled_ = true;
 
-            CCSize s = Director.sharedDirector().winSize();
+            CGSize s = Director.sharedDirector().winSize();
             float scaledWidth = s.width/PTM_RATIO;
             float scaledHeight = s.height/PTM_RATIO;
 
@@ -156,10 +156,10 @@ public class JBox2DTest extends Activity {
             AtlasSpriteManager mgr = new AtlasSpriteManager("blocks.png", 150);
             addChild(mgr, 0, kTagSpriteManager);
 
-            addNewSpriteWithCoords(CCPoint.ccp(s.width / 2.0f, s.height / 2.0f));
+            addNewSpriteWithCoords(CGPoint.ccp(s.width / 2.0f, s.height / 2.0f));
             
-            Label label = Label.label("Tap screen", "DroidSans", 32);
-            label.setPosition(s.width / 2f, s.height - 50f);
+            CCLabel label = CCLabel.makeLabel("Tap screen", "DroidSans", 32);
+            label.setPosition(CGPoint.make(s.width / 2f, s.height - 50f));
             label.setColor(new ccColor3B(0, 0, 255));
             addChild(label);
         }
@@ -180,17 +180,17 @@ public class JBox2DTest extends Activity {
 			unschedule("tick");
 		}
 
-		private void addNewSpriteWithCoords(CCPoint pos) {
+		private void addNewSpriteWithCoords(CGPoint pos) {
             AtlasSpriteManager mgr = (AtlasSpriteManager) getChild(kTagSpriteManager);
 
         	// We have a 64x64 sprite sheet with 4 different 32x32 images.  The following code is
         	// just randomly picking one of the images
         	int idx = (ccMacros.CCRANDOM_0_1() > 0.5f ? 0:1);
         	int idy = (ccMacros.CCRANDOM_0_1() > 0.5f ? 0:1);
-            AtlasSprite sprite = AtlasSprite.sprite(CCRect.make(idx * 32f, idy * 32f, 32f, 32f), mgr);
+            AtlasSprite sprite = AtlasSprite.sprite(CGRect.make(idx * 32f, idy * 32f, 32f, 32f), mgr);
             mgr.addChild(sprite);
 
-            sprite.setPosition(pos.x, pos.y);
+            sprite.setPosition(pos);
 
         	// Define the dynamic body.
         	// Set up a 1m squared box in the physics world
@@ -232,7 +232,7 @@ public class JBox2DTest extends Activity {
         		if (userData != null && userData instanceof AtlasSprite) {
         			// Synchronize the AtlasSprite position and rotation with the corresponding body
         			AtlasSprite sprite = (AtlasSprite)userData;
-        			sprite.setPosition(b.getPosition().x * PTM_RATIO, b.getPosition().y * PTM_RATIO);
+        			sprite.setPosition(CGPoint.make(b.getPosition().x * PTM_RATIO, b.getPosition().y * PTM_RATIO));
         			sprite.setRotation(-1.0f * ccMacros.CC_RADIANS_TO_DEGREES(b.getAngle()));
         		}	
         	}
@@ -240,7 +240,7 @@ public class JBox2DTest extends Activity {
         
         @Override
         public boolean ccTouchesBegan(MotionEvent event) {
-            CCPoint location = Director.sharedDirector().convertCoordinate(event.getX(), event.getY());
+            CGPoint location = Director.sharedDirector().convertCoordinate(event.getX(), event.getY());
 
             addNewSpriteWithCoords(location);
  

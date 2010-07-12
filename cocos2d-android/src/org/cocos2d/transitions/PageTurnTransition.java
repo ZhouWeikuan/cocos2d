@@ -3,7 +3,7 @@ package org.cocos2d.transitions;
 import org.cocos2d.actions.interval.IntervalAction;
 import org.cocos2d.nodes.Director;
 import org.cocos2d.nodes.Scene;
-import org.cocos2d.types.CCSize;
+import org.cocos2d.types.CGSize;
 
 public class PageTurnTransition extends TransitionScene {
     private boolean back_;
@@ -30,7 +30,7 @@ public class PageTurnTransition extends TransitionScene {
     {
         super.onEnter();
 
-        CCSize s = Director.sharedDirector().winSize();
+        CGSize s = Director.sharedDirector().winSize();
         int x,y;
         if( s.width > s.height)
         {

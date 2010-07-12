@@ -1,10 +1,10 @@
 package org.cocos2d.utils;
 
-import org.cocos2d.types.CCAffineTransform;
+import org.cocos2d.types.CGAffineTransform;
 
 public class TransformUtils {
 
-    public static void CCAffineToGL(final CCAffineTransform t, float[] m)
+    public static void CCAffineToGL(final CGAffineTransform t, float[] m)
     {
         // | m[0] m[4] m[8]  m[12] |     | m11 m21 m31 m41 |     | a c 0 tx |
         // | m[1] m[5] m[9]  m[13] |     | m12 m22 m32 m42 |     | b d 0 ty |
@@ -17,7 +17,7 @@ public class TransformUtils {
         m[1] = (float)t.m10; m[5] = (float)t.m11; m[13] = (float)t.m12;
     }
 
-    void GLToCGAffine(final float[] m, CCAffineTransform t)
+    void GLToCGAffine(final float[] m, CGAffineTransform t)
     {
         t.m00 = m[0]; t.m01 = m[4]; t.m02 = m[12];
         t.m10 = m[1]; t.m11 = m[5]; t.m12 = m[13];

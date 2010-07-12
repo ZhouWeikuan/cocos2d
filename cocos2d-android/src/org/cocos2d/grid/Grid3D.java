@@ -1,7 +1,7 @@
 package org.cocos2d.grid;
 
 import org.cocos2d.types.ccGridSize;
-import org.cocos2d.types.CCPoint;
+import org.cocos2d.types.CGPoint;
 import org.cocos2d.types.ccQuad3;
 import org.cocos2d.types.CCVertex3D;
 
@@ -98,7 +98,7 @@ public class Grid3D extends GridBase {
                 CCVertex3D[] l2 = {e, f, g, h};
 
                 int[] tex1 = {a * 2, b * 2, c * 2, d * 2};
-                CCPoint[] tex2 = {CCPoint.ccp(x1, y1), CCPoint.ccp(x2, y1), CCPoint.ccp(x2, y2), CCPoint.ccp(x1, y2)};
+                CGPoint[] tex2 = {CGPoint.ccp(x1, y1), CGPoint.ccp(x2, y1), CGPoint.ccp(x2, y2), CGPoint.ccp(x1, y2)};
 
                 for (i = 0; i < 4; i++) {
                     vertices.put(l1[i] + 0, l2[i].x);

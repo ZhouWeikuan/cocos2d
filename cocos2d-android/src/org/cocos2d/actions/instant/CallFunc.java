@@ -1,6 +1,6 @@
 package org.cocos2d.actions.instant;
 
-import org.cocos2d.nodes.CocosNode;
+import org.cocos2d.nodes.CCNode;
 
 import java.lang.reflect.Method;
 
@@ -41,7 +41,7 @@ public class CallFunc extends InstantAction {
     }
 
     @Override
-    public void start(CocosNode aTarget) {
+    public void start(CCNode aTarget) {
         super.start(aTarget);
         execute();
     }
