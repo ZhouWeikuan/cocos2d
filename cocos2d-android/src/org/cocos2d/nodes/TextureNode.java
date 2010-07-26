@@ -1,10 +1,11 @@
 package org.cocos2d.nodes;
 
+import org.cocos2d.config.ccConfig;
+import org.cocos2d.config.ccMacros;
 import org.cocos2d.opengl.CCTexture2D;
 import org.cocos2d.types.CGSize;
 import org.cocos2d.types.ccBlendFunc;
 import org.cocos2d.types.ccColor3B;
-import org.cocos2d.types.ccMacros;
 import org.cocos2d.types.CGPoint;
 
 import javax.microedition.khronos.opengles.GL10;
@@ -68,7 +69,7 @@ public class TextureNode extends CCNode implements CCNode.CocosNodeRGBA, CCNode.
         opacity_ = 255;
         color_ = new ccColor3B(255, 255, 255);
         setAnchorPoint(CGPoint.make(0.5f, 0.5f));
-        blendFunc_ = new ccBlendFunc(ccMacros.CC_BLEND_SRC, ccMacros.CC_BLEND_DST);
+        blendFunc_ = new ccBlendFunc(ccConfig.CC_BLEND_SRC, ccConfig.CC_BLEND_DST);
 
     }
 
@@ -82,7 +83,7 @@ public class TextureNode extends CCNode implements CCNode.CocosNodeRGBA, CCNode.
         gl.glColor4f(color_.r / 255f, color_.g / 255f, color_.b / 255f, opacity_ / 255f);
 
         boolean newBlend = false;
-        if (blendFunc_.src != ccMacros.CC_BLEND_SRC || blendFunc_.dst != ccMacros.CC_BLEND_DST) {
+        if (blendFunc_.src != ccConfig.CC_BLEND_SRC || blendFunc_.dst != ccConfig.CC_BLEND_DST) {
             newBlend = true;
             gl.glBlendFunc(blendFunc_.src, blendFunc_.dst);
         }
@@ -91,7 +92,7 @@ public class TextureNode extends CCNode implements CCNode.CocosNodeRGBA, CCNode.
             texture_.drawAtPoint(gl, CGPoint.zero());
 
         if (newBlend)
-            gl.glBlendFunc(ccMacros.CC_BLEND_SRC, ccMacros.CC_BLEND_DST);
+            gl.glBlendFunc(ccConfig.CC_BLEND_SRC, ccConfig.CC_BLEND_DST);
 
         // is this chepear than saving/restoring color state ?
         gl.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);

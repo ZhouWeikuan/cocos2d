@@ -1,6 +1,6 @@
 package org.cocos2d.transitions;
 
-import org.cocos2d.nodes.Director;
+import org.cocos2d.nodes.CCDirector;
 import org.cocos2d.nodes.Scene;
 import org.cocos2d.types.CGSize;
 
@@ -27,7 +27,7 @@ public class FadeTRTransition extends TransitionScene {
     public void onEnter() {
         super.onEnter();
 
-        CGSize s = Director.sharedDirector().winSize();
+        CGSize s = CCDirector.sharedDirector().winSize();
         float aspect = s.width / s.height;
         // int x = (int) (12 * aspect);
         // int y = 12;

@@ -41,22 +41,22 @@ public class CocosNodeTest extends Activity {
         super.onStart();
 
         // attach the OpenGL view to a window
-        Director.sharedDirector().attachInView(mGLSurfaceView);
+        CCDirector.sharedDirector().attachInView(mGLSurfaceView);
 
         // set landscape mode
-        Director.sharedDirector().setLandscape(false);
+        CCDirector.sharedDirector().setLandscape(false);
 
         // show FPS
-        Director.sharedDirector().setDisplayFPS(true);
+        CCDirector.sharedDirector().setDisplayFPS(true);
 
         // frames per second
-        Director.sharedDirector().setAnimationInterval(1.0f / 60);
+        CCDirector.sharedDirector().setAnimationInterval(1.0f / 60);
 
         Scene scene = Scene.node();
         scene.addChild(nextAction());
 
         // Make the Scene active
-        Director.sharedDirector().runWithScene(scene);
+        CCDirector.sharedDirector().runWithScene(scene);
 
     }
 
@@ -64,14 +64,14 @@ public class CocosNodeTest extends Activity {
     public void onPause() {
         super.onPause();
 
-        Director.sharedDirector().pause();
+        CCDirector.sharedDirector().pause();
     }
 
     @Override
     public void onResume() {
         super.onResume();
 
-        Director.sharedDirector().resume();
+        CCDirector.sharedDirector().resume();
     }
 
     @Override
@@ -125,7 +125,7 @@ public class CocosNodeTest extends Activity {
 
     static abstract class TestDemo extends Layer {
         public TestDemo() {
-            CGSize s = Director.sharedDirector().winSize();
+            CGSize s = CCDirector.sharedDirector().winSize();
 
             CCLabel label = CCLabel.makeLabel(title(), "DroidSans", 18);
             label.setPosition(CGPoint.make(s.width / 2, s.height - 30));
@@ -146,19 +146,19 @@ public class CocosNodeTest extends Activity {
         public static void restartCallback() {
             Scene s = Scene.node();
             s.addChild(restartAction());
-            Director.sharedDirector().replaceScene(s);
+            CCDirector.sharedDirector().replaceScene(s);
         }
 
         public void nextCallback() {
             Scene s = Scene.node();
             s.addChild(nextAction());
-            Director.sharedDirector().replaceScene(s);
+            CCDirector.sharedDirector().replaceScene(s);
         }
 
         public void backCallback() {
             Scene s = Scene.node();
             s.addChild(backAction());
-            Director.sharedDirector().replaceScene(s);
+            CCDirector.sharedDirector().replaceScene(s);
         }
 
         public abstract String title();
@@ -169,7 +169,7 @@ public class CocosNodeTest extends Activity {
         public void onEnter() {
             super.onEnter();
 
-            CGSize s = Director.sharedDirector().winSize();
+            CGSize s = CCDirector.sharedDirector().winSize();
 
             Sprite sp0 = Sprite.sprite("grossini.png");
             Sprite sp1 = Sprite.sprite("grossinis_sister1.png");
@@ -225,7 +225,7 @@ public class CocosNodeTest extends Activity {
         public void onEnter() {
             super.onEnter();
 
-            CGSize s = Director.sharedDirector().winSize();
+            CGSize s = CCDirector.sharedDirector().winSize();
 
             Sprite sp1 = Sprite.sprite("grossinis_sister1.png");
             Sprite sp2 = Sprite.sprite("grossinis_sister2.png");
@@ -265,7 +265,7 @@ public class CocosNodeTest extends Activity {
         public void onEnter() {
             super.onEnter();
 
-            CGSize s = Director.sharedDirector().winSize();
+            CGSize s = CCDirector.sharedDirector().winSize();
 
             Sprite sp1 = Sprite.sprite("grossinis_sister1.png");
             Sprite sp2 = Sprite.sprite("grossinis_sister2.png");
@@ -309,7 +309,7 @@ public class CocosNodeTest extends Activity {
 
         public Test4() {
 
-            CGSize s = Director.sharedDirector().winSize();
+            CGSize s = CCDirector.sharedDirector().winSize();
 
             Sprite sp1 = Sprite.sprite("grossinis_sister1.png");
             Sprite sp2 = Sprite.sprite("grossinis_sister2.png");
@@ -344,7 +344,7 @@ public class CocosNodeTest extends Activity {
     static class Test5 extends TestDemo {
 
         public Test5() {
-            CGSize s = Director.sharedDirector().winSize();
+            CGSize s = CCDirector.sharedDirector().winSize();
 
             Sprite sp1 = Sprite.sprite("grossinis_sister1.png");
             Sprite sp2 = Sprite.sprite("grossinis_sister2.png");
@@ -386,7 +386,7 @@ public class CocosNodeTest extends Activity {
     static class Test6 extends TestDemo {
 
         public Test6() {
-            CGSize s = Director.sharedDirector().winSize();
+            CGSize s = CCDirector.sharedDirector().winSize();
 
             Sprite sp1 = Sprite.sprite("grossinis_sister1.png");
             Sprite sp11 = Sprite.sprite("grossinis_sister1.png");
@@ -440,7 +440,7 @@ public class CocosNodeTest extends Activity {
     static class Test7 extends TestDemo {
 
         public Test7() {
-            CGSize s = Director.sharedDirector().winSize();
+            CGSize s = CCDirector.sharedDirector().winSize();
 
             Sprite sp1 = Sprite.sprite("grossinis_sister1.png");
             addChild(sp1, 0, kTagSprite1);
@@ -453,7 +453,7 @@ public class CocosNodeTest extends Activity {
         public void shouldNotCrash(float delta) {
             unschedule("shouldNotCrash");
 
-            CGSize s = Director.sharedDirector().winSize();
+            CGSize s = CCDirector.sharedDirector().winSize();
 
             // if the node has timers, it crashes
             CCNode explosion = ParticleSun.node();

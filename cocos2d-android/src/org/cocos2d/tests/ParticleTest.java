@@ -8,9 +8,9 @@ import org.cocos2d.layers.ColorLayer;
 import org.cocos2d.layers.Layer;
 import org.cocos2d.menus.Menu;
 import org.cocos2d.menus.MenuItemImage;
-import org.cocos2d.nodes.Director;
+import org.cocos2d.nodes.CCDirector;
 import org.cocos2d.nodes.CCLabel;
-import org.cocos2d.nodes.LabelAtlas;
+import org.cocos2d.nodes.CCLabelAtlas;
 import org.cocos2d.nodes.Scene;
 import org.cocos2d.nodes.Sprite;
 import org.cocos2d.nodes.TextureManager;
@@ -61,22 +61,22 @@ public class ParticleTest extends Activity {
         super.onStart();
 
         // attach the OpenGL view to a window
-        Director.sharedDirector().attachInView(mGLSurfaceView);
+        CCDirector.sharedDirector().attachInView(mGLSurfaceView);
 
         // set landscape mode
-        Director.sharedDirector().setLandscape(false);
+        CCDirector.sharedDirector().setLandscape(false);
 
         // show FPS
-        Director.sharedDirector().setDisplayFPS(true);
+        CCDirector.sharedDirector().setDisplayFPS(true);
 
         // frames per second
-        Director.sharedDirector().setAnimationInterval(1.0f / 60);
+        CCDirector.sharedDirector().setAnimationInterval(1.0f / 60);
 
         Scene scene = Scene.node();
         scene.addChild(nextAction());
 
         // Make the Scene active
-        Director.sharedDirector().runWithScene(scene);
+        CCDirector.sharedDirector().runWithScene(scene);
 
     }
 
@@ -84,14 +84,14 @@ public class ParticleTest extends Activity {
     public void onPause() {
         super.onPause();
 
-        Director.sharedDirector().pause();
+        CCDirector.sharedDirector().pause();
     }
 
     @Override
     public void onResume() {
         super.onResume();
 
-        Director.sharedDirector().resume();
+        CCDirector.sharedDirector().resume();
     }
 
     @Override
@@ -141,7 +141,7 @@ public class ParticleTest extends Activity {
         public ParticleDemo() {
             super(new ccColor4B(127,127,127,255));
 
-            CGSize s = Director.sharedDirector().winSize();
+            CGSize s = CCDirector.sharedDirector().winSize();
 
             CCLabel label = CCLabel.makeLabel(title(), "DroidSans", 18);
             label.setPosition(CGPoint.make(s.width / 2, s.height - 30));
@@ -164,7 +164,7 @@ public class ParticleTest extends Activity {
 
             addChild(menu, 100);
 
-            LabelAtlas labelAtlas = LabelAtlas.label("0000", "fps_images.png", 16, 24, '.');
+            CCLabelAtlas labelAtlas = CCLabelAtlas.label("0000", "fps_images.png", 16, 24, '.');
             addChild(labelAtlas, 100, kTagLabelAtlas);
             labelAtlas.setPosition(CGPoint.make(254,50));
 
@@ -185,7 +185,7 @@ public class ParticleTest extends Activity {
 
         public void step(float dt)
         {
-            LabelAtlas atlas = (LabelAtlas) getChild(kTagLabelAtlas);
+            CCLabelAtlas atlas = (CCLabelAtlas) getChild(kTagLabelAtlas);
 
             String str = new CCFormatter().format("%4d", emitter.getParticleCount());
             atlas.setString(str);
@@ -216,13 +216,13 @@ public class ParticleTest extends Activity {
         public void nextCallback() {
             Scene s = Scene.node();
             s.addChild(nextAction());
-            Director.sharedDirector().replaceScene(s);
+            CCDirector.sharedDirector().replaceScene(s);
         }
 
         public void backCallback() {
             Scene s = Scene.node();
             s.addChild(backAction());
-            Director.sharedDirector().replaceScene(s);
+            CCDirector.sharedDirector().replaceScene(s);
         }
 
         public abstract String title();

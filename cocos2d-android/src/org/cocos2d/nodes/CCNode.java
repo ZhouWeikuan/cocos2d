@@ -5,18 +5,18 @@ import java.util.ArrayList;
 import javax.microedition.khronos.opengles.GL10;
 
 import org.cocos2d.actions.ActionManager;
-import org.cocos2d.actions.Scheduler;
+import org.cocos2d.actions.CCScheduler;
 import org.cocos2d.actions.base.Action;
 import org.cocos2d.config.ccConfig;
+import org.cocos2d.config.ccMacros;
 import org.cocos2d.grid.GridBase;
 import org.cocos2d.opengl.CCTexture2D;
-import org.cocos2d.opengl.Camera;
+import org.cocos2d.opengl.CCCamera;
 import org.cocos2d.types.CGAffineTransform;
 import org.cocos2d.types.CGPoint;
 import org.cocos2d.types.CGRect;
 import org.cocos2d.types.CGSize;
 import org.cocos2d.types.ccColor3B;
-import org.cocos2d.types.ccMacros;
 
 import android.util.Log;
 import android.view.MotionEvent;
@@ -242,7 +242,6 @@ public class CCNode {
 
     // #if	CC_NODE_TRANSFORM_USING_AFFINE_MATRIX
 	private float []	transformGL_; // [16];
-	private static final int transformGLLength = 16;
 	
     // #endif
     private CGAffineTransform transform_, inverse_;
@@ -284,12 +283,12 @@ public class CCNode {
 
 
     /** A CCCamera object that lets you move the node using a gluLookAt */
-    private Camera camera_;
+    private CCCamera camera_;
 
     // camera: lazy alloc
-    public Camera getCamera() {
+    public CCCamera getCamera() {
         if (camera_ == null)
-            camera_ = new Camera();
+            camera_ = new CCCamera();
 
 		// by default, center camera at the Sprite's anchor point
 		//		[camera_ setCenterX:anchorPointInPixels_.x centerY:anchorPointInPixels_.y centerZ:0];
@@ -419,6 +418,8 @@ public class CCNode {
 
     /** initializes the node */
     protected CCNode() {
+    	transformGL_ = new float[16];
+    	
         isRunning_ = false;
 
         rotation_ = 0.0f;
@@ -678,7 +679,7 @@ public class CCNode {
                 isTransformGLDirty_ = false;
             }
 
-            gl.glMultMatrixf(transformGL_, transformGLLength);
+            gl.glMultMatrixf(transformGL_, transformGL_.length);
             
             if( vertexZ_ != 0)
                 gl.glTranslatef(0, 0, vertexZ_);
@@ -814,7 +815,7 @@ public class CCNode {
       @since v0.99.3
     */
     public void scheduleUpdateWithPriority(int priority) {
-        Scheduler.sharedScheduler().scheduleUpdate(this, priority, !isRunning_);
+        CCScheduler.sharedScheduler().scheduleUpdate(this, priority, !isRunning_);
     }
 
     /** unschedules the "update" method.
@@ -822,7 +823,7 @@ public class CCNode {
        @since v0.99.3
     */
     public void unscheduleUpdate() {
-        Scheduler.sharedScheduler().scheduleUpdate(this);
+        CCScheduler.sharedScheduler().unscheduleUpdate(this);
     }
 
     /** schedules a selector.
@@ -840,7 +841,7 @@ public class CCNode {
         assert selector != null : "Argument selector must be non-null";
         assert interval >= 0 : "Argument interval must be positive";
         
-        Scheduler.sharedScheduler().schedule(selector, this, interval, !isRunning_);
+        CCScheduler.sharedScheduler().schedule(selector, this, interval, !isRunning_);
     }
 
     /** unschedules a custom selector.*/
@@ -849,7 +850,7 @@ public class CCNode {
         if (selector == null)
             return;
 
-        Scheduler.sharedScheduler().unschedule(selector, this);
+        CCScheduler.sharedScheduler().unschedule(selector, this);
     }
 
     /** unschedule all scheduled selectors: custom selectors, and the 'update' selector.
@@ -857,14 +858,14 @@ public class CCNode {
       @since v0.99.3
       */
     public void unscheduleAllSelectors() {
-        Scheduler.sharedScheduler().unscheduleAllSelectors(this);
+        CCScheduler.sharedScheduler().unscheduleAllSelectors(this);
     }
 
     /** resumes all scheduled selectors and actions.
       Called internally by onEnter
       */
     public void resumeSchedulerAndActions() {
-	    Scheduler.sharedScheduler().resume(this);
+	    CCScheduler.sharedScheduler().resume(this);
 	    ActionManager.sharedManager().resume(this);
     }
 
@@ -872,7 +873,7 @@ public class CCNode {
       Called internally by onExit
       */
     public void pauseSchedulerAndActions() {
-    	Scheduler.sharedScheduler().pause(this);
+    	CCScheduler.sharedScheduler().pause(this);
     	ActionManager.sharedManager().pause(this);
     }
 
@@ -972,7 +973,7 @@ public class CCNode {
       @since v0.7.1
     */
     public CGPoint convertTouchToNodeSpace(MotionEvent event) {
-        CGPoint point = Director.sharedDirector().convertCoordinate(event.getX(), event.getY());
+        CGPoint point = CCDirector.sharedDirector().convertCoordinate(event.getX(), event.getY());
         return convertToNodeSpace(point.x, point.y);
     }
 
@@ -980,13 +981,13 @@ public class CCNode {
       @since v0.7.1
     */
     public CGPoint convertTouchToNodeSpaceAR(MotionEvent event) {
-        CGPoint point = Director.sharedDirector().convertCoordinate(event.getX(), event.getY());
+        CGPoint point = CCDirector.sharedDirector().convertCoordinate(event.getX(), event.getY());
         return convertToNodeSpaceAR(point.x, point.y);
     }
 
     public CGPoint convertToWindowSpace(CGPoint nodePoint) {
         CGPoint worldPoint = convertToWorldSpace(nodePoint.x, nodePoint.y);
-        return Director.sharedDirector().convertToUI(worldPoint);
+        return CCDirector.sharedDirector().convertToUI(worldPoint);
     }
 
     public interface CocosNodeSize {

@@ -1,9 +1,12 @@
 package org.cocos2d.particlesystem;
 
+import org.cocos2d.config.ccConfig;
 import org.cocos2d.nodes.CCNode;
 import org.cocos2d.opengl.CCTexture2D;
 import org.cocos2d.types.ccColor4F;
-import static org.cocos2d.types.ccMacros.*;
+
+import static org.cocos2d.config.ccMacros.*;
+
 import org.cocos2d.types.CGPoint;
 import org.cocos2d.types.ccPointSprite;
 
@@ -532,7 +535,7 @@ public abstract class ParticleSystem extends CCNode {
         gl.glDrawArrays(GL_POINTS, 0, particleIdx);
 
         // restore blend state
-        gl.glBlendFunc(CC_BLEND_SRC, CC_BLEND_DST);
+        gl.glBlendFunc(ccConfig.CC_BLEND_SRC, ccConfig.CC_BLEND_DST);
 
         // restore color mode
         //glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, colorMode);

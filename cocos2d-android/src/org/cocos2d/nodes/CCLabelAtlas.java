@@ -6,7 +6,7 @@ import org.cocos2d.types.ccQuad3;
 
 import javax.microedition.khronos.opengles.GL10;
 
-public class LabelAtlas extends AtlasNode 
+public class CCLabelAtlas extends AtlasNode 
 	implements CCLabelProtocol, CCNode.CocosNodeSize {
     /// string to render
     String string;
@@ -14,11 +14,11 @@ public class LabelAtlas extends AtlasNode
     /// the first char in the charmap
     char mapStartChar;
 
-    public static LabelAtlas label(String theString, String charmapfile, int w, int h, char c) {
-        return new LabelAtlas(theString, charmapfile, w, h, c);
+    public static CCLabelAtlas label(String theString, String charmapfile, int w, int h, char c) {
+        return new CCLabelAtlas(theString, charmapfile, w, h, c);
     }
 
-    protected LabelAtlas(String theString, String charmapfile, int w, int h, char c) {
+    protected CCLabelAtlas(String theString, String charmapfile, int w, int h, char c) {
         super(charmapfile, w, h, theString.length());
 
         string = theString;

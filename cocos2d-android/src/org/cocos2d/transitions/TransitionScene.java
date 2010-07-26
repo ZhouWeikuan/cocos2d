@@ -1,6 +1,6 @@
 package org.cocos2d.transitions;
 
-import org.cocos2d.nodes.Director;
+import org.cocos2d.nodes.CCDirector;
 import org.cocos2d.nodes.Scene;
 import org.cocos2d.types.CGPoint;
 import org.cocos2d.events.CCTouchDispatcher;
@@ -51,7 +51,7 @@ public class TransitionScene extends Scene {
 
         // Don't retain them, it will be reatined when added
         inScene = s;
-        outScene = Director.sharedDirector().runningScene();
+        outScene = CCDirector.sharedDirector().getRunningScene();
 
         if (inScene == outScene) {
             throw new TransitionWithInvalidSceneException("Incoming scene must be different from the outgoing scene");
@@ -100,7 +100,7 @@ public class TransitionScene extends Scene {
 
         unschedule("setNewScene");
 
-        Director.sharedDirector().replaceScene(inScene);
+        CCDirector.sharedDirector().replaceScene(inScene);
 
         // enable events after transition
         CCTouchDispatcher.sharedDispatcher().setDispatchEvents(true);

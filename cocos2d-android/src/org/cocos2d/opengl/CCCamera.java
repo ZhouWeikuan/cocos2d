@@ -2,12 +2,31 @@ package org.cocos2d.opengl;
 
 import org.cocos2d.types.CGSize;
 import org.cocos2d.utils.CCFormatter;
-import org.cocos2d.opengl.GLU;
-import org.cocos2d.nodes.Director;
+import org.cocos2d.config.ccMacros;
+import org.cocos2d.nodes.CCDirector;
+
+import android.opengl.GLU;
 
 import javax.microedition.khronos.opengles.GL10;
 
-public class Camera {
+/** 
+    A Camera is used in every CocosNode.
+    Useful to look at the object from different views.
+    The OpenGL gluLookAt() function is used to locate the
+    camera.
+
+    If the object is transformed by any of the scale, rotation or
+    position attributes, then they will override the camera.
+ 
+	IMPORTANT: Either your use the camera or the rotation/scale/position properties. You can't use both.
+    World coordinates won't work if you use the camera.
+
+    Limitations:
+ 
+     - Some nodes, like CCParallaxNode, CCParticle uses world node coordinates, and they won't work properly if you move them (or any of their ancestors)
+       using the camera.
+*/
+public class CCCamera {
     private float eyeX;
     private float eyeY;
     private float eyeZ;
@@ -22,7 +41,8 @@ public class Camera {
 
     private boolean dirty;
 
-    public boolean isDirty() {
+    /** whether of not the camera is dirty */
+    public boolean getDirty() {
         return dirty;
     }
 
@@ -30,7 +50,7 @@ public class Camera {
         dirty = value;
     }
 
-    public Camera() {
+    public CCCamera() {
         restore();
     }
 
@@ -38,16 +58,14 @@ public class Camera {
         return new CCFormatter().format("<%s = %08X | center = (%.2f,%.2f,%.2f)>", this.getClass(), this, centerX, centerY, centerZ);
     }
 
-
+    /** sets the camera in the defaul position */
     public void restore() {
-        // CCSize s = Director.sharedDirector().displaySize();
+        eyeX = 0;
+        eyeY = 0;
+        eyeZ = CCCamera.getZEye();
 
-        eyeX = 0;//s.width / 2;
-        eyeY = 0;//s.height / 2;
-        eyeZ = Camera.getZEye();
-
-        centerX = 0;//s.width / 2;
-        centerY = 0;//s.height / 2;
+        centerX = 0;
+        centerY = 0;
         centerZ = 0.0f;
 
         upX = 0.0f;
@@ -57,50 +75,24 @@ public class Camera {
         dirty = false;
     }
 
+
+    /** Sets the camera using gluLookAt using its eye, center and up_vector */
     public void locate(GL10 gl) {
         if( dirty ) {
-            int orientation = Director.sharedDirector().getDeviceOrientation();
-
-            gl.glLoadIdentity();
-
-            switch( orientation ) {
-                case Director.CCDeviceOrientationPortrait:
-                    break;
-                case Director.CCDeviceOrientationPortraitUpsideDown:
-                    gl.glRotatef(-180,0,0,1);
-                    break;
-                case Director.CCDeviceOrientationLandscapeLeft:
-                    gl.glRotatef(-90,0,0,1);
-                    break;
-                case Director.CCDeviceOrientationLandscapeRight:
-                    gl.glRotatef(90,0,0,1);
-                    break;
-            }
-
             GLU.gluLookAt(gl, eyeX, eyeY, eyeZ,
                     centerX, centerY, centerZ,
                     upX, upY, upZ);
-
-            switch( orientation ) {
-                case Director.CCDeviceOrientationPortrait:
-                case Director.CCDeviceOrientationPortraitUpsideDown:
-                    // none
-                    break;
-                case Director.CCDeviceOrientationLandscapeLeft:
-                    gl.glTranslatef(-80,80,0);
-                    break;
-                case Director.CCDeviceOrientationLandscapeRight:
-                    gl.glTranslatef(-80,80,0);
-                    break;
-            }
         }
     }
 
+    /** returns the Z eye */
     public static float getZEye() {
-        CGSize s = Director.sharedDirector().displaySize();
-        return (s.height / 1.1566f);
+        return ccMacros.FLT_EPSILON;
+        // CGSize s = CCDirector.sharedDirector().displaySize();
+        // return (s.height / 1.1566f);
     }
 
+    /** sets the eye values */
     public void setEye(float x, float y, float z) {
         eyeX = x;
         eyeY = y;
@@ -108,6 +100,7 @@ public class Camera {
         dirty = true;
     }
 
+    /** sets the center values */
     public void setCenter(float x, float y, float z) {
         centerX = x;
         centerY = y;
@@ -115,6 +108,7 @@ public class Camera {
         dirty = true;
     }
 
+    /** sets the up values */
     public void setUp(float x, float y, float z) {
         upX = x;
         upY = y;
@@ -122,22 +116,25 @@ public class Camera {
         dirty = true;
     }
 
+    /** get the eye vector values */
     public void getEye(float x[], float y[], float z[]) {
         x[0] = eyeX;
         y[0] = eyeY;
         z[0] = eyeZ;
     }
 
+    /** get the center vector values */
     public void getCenter(float x[], float y[], float z[]) {
         x[0] = centerX;
         y[0] = centerY;
         z[0] = centerZ;
     }
 
+    /** get the up vector values */
     public void getUp(float x[], float y[], float z[]) {
         x[0] = upX;
         y[0] = upY;
         z[0] = upZ;
     }
-
 }
+

@@ -1,16 +1,16 @@
 package org.cocos2d.tests;
 
+import org.cocos2d.config.ccMacros;
 import org.cocos2d.events.CCTouchDispatcher;
 import org.cocos2d.layers.Layer;
 import org.cocos2d.nodes.AtlasSprite;
 import org.cocos2d.nodes.AtlasSpriteManager;
-import org.cocos2d.nodes.Director;
+import org.cocos2d.nodes.CCDirector;
 import org.cocos2d.nodes.CCLabel;
 import org.cocos2d.nodes.Scene;
 import org.cocos2d.nodes.TextureManager;
 import org.cocos2d.opengl.CCGLSurfaceView;
 import org.cocos2d.types.ccColor3B;
-import org.cocos2d.types.ccMacros;
 import org.cocos2d.types.CGPoint;
 import org.cocos2d.types.CGRect;
 import org.cocos2d.types.CGSize;
@@ -59,36 +59,36 @@ public class JBox2DTest extends Activity {
         super.onStart();
 
         // attach the OpenGL view to a window
-        Director.sharedDirector().attachInView(mGLSurfaceView);
+        CCDirector.sharedDirector().attachInView(mGLSurfaceView);
 
         // set landscape mode
-        Director.sharedDirector().setLandscape(false);
+        CCDirector.sharedDirector().setLandscape(false);
 
         // show FPS
-        Director.sharedDirector().setDisplayFPS(true);
+        CCDirector.sharedDirector().setDisplayFPS(true);
 
         // frames per second
-        Director.sharedDirector().setAnimationInterval(1.0f / 60.0f);
+        CCDirector.sharedDirector().setAnimationInterval(1.0f / 60.0f);
 
         Scene scene = Scene.node();
         scene.addChild(new JBox2DTestLayer());
 
         // Make the Scene active
-        Director.sharedDirector().runWithScene(scene);
+        CCDirector.sharedDirector().runWithScene(scene);
     }
 
     @Override
     public void onPause() {
         super.onPause();
 
-        Director.sharedDirector().pause();
+        CCDirector.sharedDirector().pause();
     }
 
     @Override
     public void onResume() {
         super.onResume();
 
-        Director.sharedDirector().resume();
+        CCDirector.sharedDirector().resume();
     }
 
     @Override
@@ -116,7 +116,7 @@ public class JBox2DTest extends Activity {
             this.isTouchEnabled_ = true;
         	this.isAccelerometerEnabled_ = true;
 
-            CGSize s = Director.sharedDirector().winSize();
+            CGSize s = CCDirector.sharedDirector().winSize();
             float scaledWidth = s.width/PTM_RATIO;
             float scaledHeight = s.height/PTM_RATIO;
 
@@ -240,7 +240,7 @@ public class JBox2DTest extends Activity {
         
         @Override
         public boolean ccTouchesBegan(MotionEvent event) {
-            CGPoint location = Director.sharedDirector().convertCoordinate(event.getX(), event.getY());
+            CGPoint location = CCDirector.sharedDirector().convertCoordinate(event.getX(), event.getY());
 
             addNewSpriteWithCoords(location);
  

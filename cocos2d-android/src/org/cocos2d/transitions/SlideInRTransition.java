@@ -1,6 +1,6 @@
 package org.cocos2d.transitions;
 
-import org.cocos2d.nodes.Director;
+import org.cocos2d.nodes.CCDirector;
 import org.cocos2d.nodes.Scene;
 import org.cocos2d.types.CGPoint;
 import org.cocos2d.types.CGSize;
@@ -29,12 +29,12 @@ public class SlideInRTransition extends SlideInLTransition {
      * initializes the scenes
      */
     protected void initScenes() {
-        CGSize s = Director.sharedDirector().winSize();
+        CGSize s = CCDirector.sharedDirector().winSize();
         inScene.setPosition(CGPoint.make(s.width-ADJUST_FACTOR, 0));
     }
 
     protected IntervalAction action() {
-        CGSize s = Director.sharedDirector().winSize();
+        CGSize s = CCDirector.sharedDirector().winSize();
         return MoveBy.action(duration, -(s.width-ADJUST_FACTOR),0);
     }
     

@@ -81,7 +81,7 @@ public class TileMapAtlas extends AtlasNode {
 
 //        String path = FileUtils.fullPathFromRelativePath(file);
         try {
-            tgaInfo = TGA.load(Director.sharedDirector().getActivity().getAssets().open(file));
+            tgaInfo = TGA.load(CCDirector.sharedDirector().getActivity().getAssets().open(file));
         } catch (IOException e) {
         }
     }

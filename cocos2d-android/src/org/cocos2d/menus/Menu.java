@@ -2,11 +2,11 @@ package org.cocos2d.menus;
 
 import android.view.MotionEvent;
 import org.cocos2d.layers.Layer;
-import org.cocos2d.nodes.Director;
+import org.cocos2d.nodes.CCDirector;
 import org.cocos2d.types.CGPoint;
 import org.cocos2d.types.CGRect;
 import org.cocos2d.types.CGSize;
-import org.cocos2d.types.ccMacros;
+import org.cocos2d.config.ccMacros;
 import org.cocos2d.events.CCTouchDispatcher;
 
 import java.util.ArrayList;
@@ -47,7 +47,7 @@ public class Menu extends Layer {
 
     protected Menu(MenuItem... items) {
         // menu in the center of the screen
-        CGSize s = Director.sharedDirector().winSize();
+        CGSize s = CCDirector.sharedDirector().winSize();
 
 //        CCRect r = [[UIApplication sharedApplication] statusBarFrame];
 //        if(Director.sharedDirector().landscape())
@@ -230,7 +230,7 @@ public class Menu extends Layer {
 
         assert columnsOccupied != 0 : "Too many rows/columns for available menu items.";
 
-        CGSize winSize = Director.sharedDirector().winSize();
+        CGSize winSize = CCDirector.sharedDirector().winSize();
 
         row = 0;
         rowHeight = 0;
@@ -301,7 +301,7 @@ public class Menu extends Layer {
 
         assert rowsOccupied != 0 : "Too many rows/columns for available menu items.";
 
-        CGSize winSize = Director.sharedDirector().winSize();
+        CGSize winSize = CCDirector.sharedDirector().winSize();
 
         column = 0;
         columnWidth = 0;
@@ -333,7 +333,7 @@ public class Menu extends Layer {
 
     private MenuItem itemForTouch(MotionEvent event) {
     	CGPoint touchLocation =
-    		Director.sharedDirector().convertCoordinate(event.getX(), event.getY());
+    		CCDirector.sharedDirector().convertCoordinate(event.getX(), event.getY());
     	CGPoint pnt = getPosition();
     	float menuX = pnt.x;
     	float menuY = pnt.y;

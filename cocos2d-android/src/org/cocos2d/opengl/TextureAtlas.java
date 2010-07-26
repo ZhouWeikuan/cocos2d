@@ -27,7 +27,7 @@ import java.nio.ShortBuffer;
  */
 public class TextureAtlas {
 
-    private static final String TAG = TextureAtlas.class.getSimpleName();
+    private static final String LOG_TAG = TextureAtlas.class.getSimpleName();
 
     private int totalQuads_;
     private int capacity_;

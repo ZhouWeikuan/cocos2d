@@ -34,6 +34,9 @@ public class AtlasTest extends Activity {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         mGLSurfaceView = new CCGLSurfaceView(this);
+        CCDirector director = CCDirector.sharedDirector();
+        director.attachInView(mGLSurfaceView);
+        director.setLandscape(true);
         setContentView(mGLSurfaceView);
     }
 
@@ -48,24 +51,17 @@ public class AtlasTest extends Activity {
     @Override
     public void onStart() {
         super.onStart();
-
-        // attach the OpenGL view to a window
-        Director.sharedDirector().attachInView(mGLSurfaceView);
-
-        // set landscape mode
-        Director.sharedDirector().setLandscape(false);
-
         // show FPS
-        Director.sharedDirector().setDisplayFPS(true);
+        CCDirector.sharedDirector().setDisplayFPS(true);
 
         // frames per second
-        Director.sharedDirector().setAnimationInterval(1.0f / 60);
+        CCDirector.sharedDirector().setAnimationInterval(1.0f / 60);
 
         Scene scene = Scene.node();
         scene.addChild(nextAction());
 
         // Make the Scene active
-        Director.sharedDirector().runWithScene(scene);
+        CCDirector.sharedDirector().runWithScene(scene);
 
     }
 
@@ -73,14 +69,14 @@ public class AtlasTest extends Activity {
     public void onPause() {
         super.onPause();
 
-        Director.sharedDirector().pause();
+        CCDirector.sharedDirector().pause();
     }
 
     @Override
     public void onResume() {
         super.onResume();
 
-        Director.sharedDirector().resume();
+        CCDirector.sharedDirector().resume();
     }
 
     @Override
@@ -135,7 +131,7 @@ public class AtlasTest extends Activity {
 
         public AtlasDemo() {
 
-        	CGSize s = Director.sharedDirector().winSize();
+        	CGSize s = CCDirector.sharedDirector().winSize();
 
             CCLabel label = CCLabel.makeLabel(title(), "DroidSans", 32);
             addChild(label, 1);
@@ -157,19 +153,19 @@ public class AtlasTest extends Activity {
         public static void restartCallback() {
             Scene s = Scene.node();
             s.addChild(restartAction());
-            Director.sharedDirector().replaceScene(s);
+            CCDirector.sharedDirector().replaceScene(s);
         }
 
         public void nextCallback() {
             Scene s = Scene.node();
             s.addChild(nextAction());
-            Director.sharedDirector().replaceScene(s);
+            CCDirector.sharedDirector().replaceScene(s);
         }
 
         public void backCallback() {
             Scene s = Scene.node();
             s.addChild(backAction());
-            Director.sharedDirector().replaceScene(s);
+            CCDirector.sharedDirector().replaceScene(s);
         }
 
         public abstract String title();
@@ -223,12 +219,12 @@ public class AtlasTest extends Activity {
     }
 
     static class Atlas2 extends AtlasDemo {
-        LabelAtlas label;
+        CCLabelAtlas label;
         float time;
 
         public Atlas2() {
         	//The size of the texture should be a power of 2
-            label = LabelAtlas.label("123 Test", "tuffy_bold_italic-charmap_s.png", 16, 21, ' ');
+            label = CCLabelAtlas.label("123 Test", "tuffy_bold_italic-charmap_s.png", 16, 21, ' ');
 
             addChild(label);
 

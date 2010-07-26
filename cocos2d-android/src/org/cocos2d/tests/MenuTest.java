@@ -1,25 +1,34 @@
 package org.cocos2d.tests;
 
+import org.cocos2d.actions.base.RepeatForever;
+import org.cocos2d.actions.interval.IntervalAction;
+import org.cocos2d.actions.interval.Sequence;
+import org.cocos2d.actions.interval.TintBy;
+import org.cocos2d.layers.Layer;
+import org.cocos2d.layers.MultiplexLayer;
+import org.cocos2d.menus.Menu;
+import org.cocos2d.menus.MenuItem;
+import org.cocos2d.menus.MenuItemAtlasSprite;
+import org.cocos2d.menus.MenuItemFont;
+import org.cocos2d.menus.MenuItemImage;
+import org.cocos2d.menus.MenuItemLabel;
+import org.cocos2d.menus.MenuItemSprite;
+import org.cocos2d.nodes.AtlasSprite;
+import org.cocos2d.nodes.AtlasSpriteManager;
+import org.cocos2d.nodes.CCDirector;
+import org.cocos2d.nodes.CCLabelAtlas;
+import org.cocos2d.nodes.Scene;
+import org.cocos2d.nodes.TextureManager;
+import org.cocos2d.opengl.CCGLSurfaceView;
+import org.cocos2d.types.CGPoint;
+import org.cocos2d.types.CGRect;
+import org.cocos2d.types.ccColor3B;
+
 import android.app.Activity;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.Window;
 import android.view.WindowManager;
-import org.cocos2d.actions.base.RepeatForever;
-import org.cocos2d.actions.ease.EaseElasticOut;
-import org.cocos2d.actions.interval.IntervalAction;
-import org.cocos2d.actions.interval.MoveBy;
-import org.cocos2d.actions.interval.Sequence;
-import org.cocos2d.actions.interval.TintBy;
-import org.cocos2d.layers.Layer;
-import org.cocos2d.layers.MultiplexLayer;
-import org.cocos2d.menus.*;
-import org.cocos2d.nodes.*;
-import org.cocos2d.opengl.CCGLSurfaceView;
-import org.cocos2d.types.ccColor3B;
-import org.cocos2d.types.CGPoint;
-import org.cocos2d.types.CGRect;
-import org.cocos2d.types.CGSize;
 
 public class MenuTest extends Activity {
     public static final int kTagMenu = 1;
@@ -56,22 +65,22 @@ public class MenuTest extends Activity {
         super.onStart();
 
         // attach the OpenGL view to a window
-        Director.sharedDirector().attachInView(mGLSurfaceView);
+        CCDirector.sharedDirector().attachInView(mGLSurfaceView);
 
         // set landscape mode
-        Director.sharedDirector().setLandscape(false);
+        CCDirector.sharedDirector().setLandscape(false);
 
         // show FPS
-        Director.sharedDirector().setDisplayFPS(false);
+        CCDirector.sharedDirector().setDisplayFPS(false);
 
         // frames per second
-        Director.sharedDirector().setAnimationInterval(1.0f / 60);
+        CCDirector.sharedDirector().setAnimationInterval(1.0f / 60);
 
         Scene scene = Scene.node();
         scene.addChild(new Layer1());
 
         // Make the Scene active
-        Director.sharedDirector().runWithScene(scene);
+        CCDirector.sharedDirector().runWithScene(scene);
 
     }
 
@@ -79,14 +88,14 @@ public class MenuTest extends Activity {
     public void onPause() {
         super.onPause();
 
-        Director.sharedDirector().pause();
+        CCDirector.sharedDirector().pause();
     }
 
     @Override
     public void onResume() {
         super.onResume();
 
-        Director.sharedDirector().resume();
+        CCDirector.sharedDirector().resume();
     }
 
     @Override
@@ -119,7 +128,7 @@ public class MenuTest extends Activity {
             MenuItem item2 = MenuItemImage.item("SendScoreButton.png", "SendScoreButtonPressed.png", this, "menuCallback2");
 
             // Label Item (LabelAtlas)
-            LabelAtlas labelAtlas = LabelAtlas.label("0123456789", "fps_images.png", 16, 24, '.');
+            CCLabelAtlas labelAtlas = CCLabelAtlas.label("0123456789", "fps_images.png", 16, 24, '.');
             MenuItemLabel item3 = MenuItemLabel.item(labelAtlas, this, "menuCallbackDisabled");
             item3.setDisabledColor(new ccColor3B(32, 32, 64));
             item3.setColor(new ccColor3B(200, 200, 255));
@@ -192,7 +201,7 @@ public class MenuTest extends Activity {
         }
 
         public void onQuit() {
-            Director.sharedDirector().end();
+            CCDirector.sharedDirector().end();
         }
     }
 

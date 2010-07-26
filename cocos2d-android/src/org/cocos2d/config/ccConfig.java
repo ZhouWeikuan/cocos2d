@@ -1,10 +1,14 @@
 package org.cocos2d.config;
 
+import javax.microedition.khronos.opengles.GL10;
+
 /**
   @file
   cocos2d (cc) configuration file
   */
 public class ccConfig {
+    public static final String cocos2dVersion = "cocos2d v0.99.4";
+
     /** @def COCOS2D_DEBUG
       Define the log level for cocos2d-android
       if 0, no log outputs
@@ -29,7 +33,7 @@ public class ccConfig {
 
       To enable set it to a value different than 0. Enabled by default.
       */
-    public static final int CC_DIRECTOR_FAST_FPS    =	1;
+    public static final boolean CC_DIRECTOR_FAST_FPS    =	true;
 
     /** @def CC_DIRECTOR_FPS_INTERVAL
       Senconds between FPS updates.
@@ -151,7 +155,7 @@ public class ccConfig {
 
       To enable set it to a value different than 0. Disabled by default.
       */
-    public static final int CC_ENABLE_PROFILERS = 0;
+    public static final boolean CC_ENABLE_PROFILERS = false;
 
     /** @def CC_COMPATIBILITY_WITH_0_8
       Enable it if you want to support v0.8 compatbility.
@@ -162,5 +166,20 @@ public class ccConfig {
       */
     public static final int CC_COMPATIBILITY_WITH_0_8 = 0;
 
+    
+
+    /** @def CC_BLEND_SRC
+      default gl blend src function. Compatible with premultiplied alpha images.
+    */
+    // default gl blend src function
+    // public static final int CC_BLEND_SRC = GL10.GL_SRC_ALPHA;
+    public static final int CC_BLEND_SRC = GL10.GL_ONE;
+
+    /** @def CC_BLEND_DST
+      default gl blend dst function. Compatible with premultiplied alpha images.
+    */
+    // default gl blend dst function
+    public static final int CC_BLEND_DST = GL10.GL_ONE_MINUS_SRC_ALPHA;
+    
 }
 

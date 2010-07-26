@@ -39,22 +39,22 @@ public class ParallaxTest extends Activity {
         super.onStart();
 
         // attach the OpenGL view to a window
-        Director.sharedDirector().attachInView(mGLSurfaceView);
+        CCDirector.sharedDirector().attachInView(mGLSurfaceView);
 
         // set landscape mode
-        Director.sharedDirector().setLandscape(false);
+        CCDirector.sharedDirector().setLandscape(false);
 
         // show FPS
-        Director.sharedDirector().setDisplayFPS(true);
+        CCDirector.sharedDirector().setDisplayFPS(true);
 
         // frames per second
-        Director.sharedDirector().setAnimationInterval(1.0f / 60);
+        CCDirector.sharedDirector().setAnimationInterval(1.0f / 60);
 
         Scene scene = Scene.node();
         scene.addChild(nextAction());
 
         // Make the Scene active
-        Director.sharedDirector().runWithScene(scene);
+        CCDirector.sharedDirector().runWithScene(scene);
 
     }
 
@@ -62,14 +62,14 @@ public class ParallaxTest extends Activity {
     public void onPause() {
         super.onPause();
 
-        Director.sharedDirector().pause();
+        CCDirector.sharedDirector().pause();
     }
 
     @Override
     public void onResume() {
         super.onResume();
 
-        Director.sharedDirector().resume();
+        CCDirector.sharedDirector().resume();
     }
 
     @Override
@@ -115,7 +115,7 @@ public class ParallaxTest extends Activity {
         static final int kTagGrossini = 2;
 
         public ParallaxDemo() {
-            CGSize s = Director.sharedDirector().winSize();
+            CGSize s = CCDirector.sharedDirector().winSize();
 
             CCLabel label = CCLabel.makeLabel(title(), "DroidSans", 18);
             label.setPosition(CGPoint.make(s.width / 2, s.height - 30));
@@ -136,19 +136,19 @@ public class ParallaxTest extends Activity {
         public static void restartCallback() {
             Scene s = Scene.node();
             s.addChild(restartAction());
-            Director.sharedDirector().replaceScene(s);
+            CCDirector.sharedDirector().replaceScene(s);
         }
 
         public void nextCallback() {
             Scene s = Scene.node();
             s.addChild(nextAction());
-            Director.sharedDirector().replaceScene(s);
+            CCDirector.sharedDirector().replaceScene(s);
         }
 
         public void backCallback() {
             Scene s = Scene.node();
             s.addChild(backAction());
-            Director.sharedDirector().replaceScene(s);
+            CCDirector.sharedDirector().replaceScene(s);
         }
 
         public abstract String title();
@@ -305,8 +305,8 @@ public class ParallaxTest extends Activity {
 
             CGPoint touchLocation = CGPoint.make(event.getX(), event.getY());
 
-            CGPoint location = Director.sharedDirector().convertToGL(touchLocation.x, touchLocation.y);
-            CGPoint prevLocation = Director.sharedDirector().convertToGL(previousLocation.x, previousLocation.y);
+            CGPoint location = CCDirector.sharedDirector().convertToGL(touchLocation);
+            CGPoint prevLocation = CCDirector.sharedDirector().convertToGL(previousLocation);
 
             diff.x = location.x-prevLocation.x;
             diff.y = location.y-prevLocation.y;

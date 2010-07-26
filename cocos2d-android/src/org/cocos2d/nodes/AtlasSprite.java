@@ -1,6 +1,8 @@
 package org.cocos2d.nodes;
 
 import android.util.Log;
+
+import org.cocos2d.config.ccMacros;
 import org.cocos2d.opengl.TextureAtlas;
 import org.cocos2d.types.*;
 import org.cocos2d.utils.CCFormatter;

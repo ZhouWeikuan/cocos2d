@@ -5,7 +5,7 @@ import org.cocos2d.actions.instant.CallFunc;
 import org.cocos2d.actions.interval.IntervalAction;
 import org.cocos2d.actions.interval.MoveTo;
 import org.cocos2d.actions.interval.Sequence;
-import org.cocos2d.nodes.Director;
+import org.cocos2d.nodes.CCDirector;
 import org.cocos2d.nodes.Scene;
 import org.cocos2d.types.CGPoint;
 import org.cocos2d.types.CGSize;
@@ -52,7 +52,7 @@ public class MoveInLTransition extends TransitionScene {
      * initializes the scenes
      */
     protected void initScenes() {
-        CGSize s = Director.sharedDirector().winSize();
+        CGSize s = CCDirector.sharedDirector().winSize();
         inScene.setPosition(CGPoint.make(-s.width, 0));
     }
 }

@@ -1,11 +1,12 @@
 package org.cocos2d.layers;
 
+import org.cocos2d.config.ccConfig;
+import org.cocos2d.config.ccMacros;
 import org.cocos2d.nodes.CCNode;
-import org.cocos2d.nodes.Director;
+import org.cocos2d.nodes.CCDirector;
 import org.cocos2d.types.CGSize;
 import org.cocos2d.types.ccColor3B;
 import org.cocos2d.types.ccColor4B;
-import org.cocos2d.types.ccMacros;
 
 import javax.microedition.khronos.opengles.GL10;
 import java.nio.ByteBuffer;
@@ -20,7 +21,7 @@ public class ColorLayer extends Layer implements CCNode.CocosNodeRGBA, CCNode.Co
     private ByteBuffer squareColors_;
 
     public static ColorLayer node(ccColor4B color) {
-        return new ColorLayer(color, Director.sharedDirector().winSize().width, Director.sharedDirector().winSize().height);
+        return new ColorLayer(color, CCDirector.sharedDirector().winSize().width, CCDirector.sharedDirector().winSize().height);
     }
 
     public static ColorLayer node(ccColor4B color, float w, float h) {
@@ -28,7 +29,7 @@ public class ColorLayer extends Layer implements CCNode.CocosNodeRGBA, CCNode.Co
     }
 
     protected ColorLayer(ccColor4B color) {
-        this(color, Director.sharedDirector().winSize().width, Director.sharedDirector().winSize().height);
+        this(color, CCDirector.sharedDirector().winSize().width, CCDirector.sharedDirector().winSize().height);
     }
 
     protected ColorLayer(ccColor4B color, float w, float h) {
@@ -89,7 +90,7 @@ public class ColorLayer extends Layer implements CCNode.CocosNodeRGBA, CCNode.Co
         gl.glDrawArrays(GL10.GL_TRIANGLE_STRIP, 0, 4);
 
         if (opacity_ != 255)
-            gl.glBlendFunc(ccMacros.CC_BLEND_SRC, ccMacros.CC_BLEND_DST);
+            gl.glBlendFunc(ccConfig.CC_BLEND_SRC, ccConfig.CC_BLEND_DST);
 
         // Clear the vertex and color arrays
         gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);

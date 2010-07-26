@@ -1,9 +1,14 @@
-package org.cocos2d.types;
+package org.cocos2d.config;
 
 import javax.microedition.khronos.opengles.GL10;
-import org.cocos2d.config.ccConfig;
 
+import org.cocos2d.nodes.CCDirector;
+import org.cocos2d.opengl.CCGLSurfaceView;
+
+import android.app.Activity;
+import android.opengl.GLSurfaceView;
 import android.util.Log;
+import android.view.ViewGroup;
 
 /**
  @file
@@ -43,6 +48,7 @@ public class ccMacros {
         }
     }
 
+    public static final float FLT_EPSILON = 0.000001f;
     public static final int INT_MIN = -2147483648;
 
     /// java doesn't support swap primitive types.
@@ -61,19 +67,6 @@ public class ccMacros {
     public static final float CCRANDOM_0_1() {
         return (float) Math.random();
     }
-
-    /** @def CC_BLEND_SRC
-      default gl blend src function. Compatible with premultiplied alpha images.
-    */
-    // default gl blend src function
-    // public static final int CC_BLEND_SRC = GL10.GL_SRC_ALPHA;
-    public static final int CC_BLEND_SRC = GL10.GL_ONE;
-
-    /** @def CC_BLEND_DST
-      default gl blend dst function. Compatible with premultiplied alpha images.
-    */
-    // default gl blend dst function
-    public static final int CC_BLEND_DST = GL10.GL_ONE_MINUS_SRC_ALPHA;
 
     /** @def CC_DEGREES_TO_RADIANS
         converts degrees to radians
@@ -135,23 +128,16 @@ public class ccMacros {
     @since v0.99.4
     */
     // not supported yet...
-    public static final void CC_DIRECTOR_INIT() {
-        /*
-        window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-        if( ! [CCDirector setDirectorType:kCCDirectorTypeDisplayLink] )
-        [CCDirector setDirectorType:kCCDirectorTypeNSTimer];
-        CCDirector *__director = [CCDirector sharedDirector];
-        [__director setDeviceOrientation:kCCDeviceOrientationPortrait];
-        [__director setDisplayFPS:NO];
-        [__director setAnimationInterval:1.0/60];
-        EAGLView *__glView = [EAGLView viewWithFrame:[window bounds]
-        pixelFormat:kEAGLColorFormatRGB565
-        depthFormat:0 // GL_DEPTH_COMPONENT24_OES
-        preserveBackbuffer:NO];
-        [__director setOpenGLView:__glView];
-        [window addSubview:__glView];
-        [window makeKeyAndVisible];
-        */
+    public static final void CC_DIRECTOR_INIT(Activity app) {
+    	CCDirector director = CCDirector.sharedDirector();
+    	director.setDeviceOrientation(CCDirector.kCCDeviceOrientationPortrait);
+    	director.setDisplayFPS(false);
+    	director.setAnimationInterval(1.0/60);
+    	
+    	CCGLSurfaceView sv = new CCGLSurfaceView(app);
+    	
+    	director.attachInView(sv);
+    	app.setContentView(sv);
     }
 
     /** @def CC_DIRECTOR_END
@@ -162,12 +148,11 @@ public class ccMacros {
       */
     // do nothing yet...
     public static final void CC_DIRECTOR_END() {
-        /*
         CCDirector director = CCDirector.sharedDirector();
-        CCGLSurfaceView view = director.openGLView();
-        view.removeFromSuperview();
+        GLSurfaceView view = director.getOpenGLView();
+        ViewGroup vg = (ViewGroup)view.getParent();
+        vg.removeView(view);
         director.end();
-        */
     }
 
 }

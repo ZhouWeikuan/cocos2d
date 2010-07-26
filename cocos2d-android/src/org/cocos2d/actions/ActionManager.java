@@ -62,7 +62,7 @@ public class ActionManager {
 
     private ActionManager() {
         synchronized (ActionManager.class) {
-            Scheduler.sharedScheduler().schedule(new Scheduler.Timer(this, "tick"));
+            CCScheduler.sharedScheduler().scheduleTimer(new CCTimer(this, "tick"));
             targets = new ConcurrentHashMap<CCNode, HashElement>(131);
         }
     }

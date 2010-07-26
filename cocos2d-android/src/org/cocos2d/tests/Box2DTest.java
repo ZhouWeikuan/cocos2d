@@ -6,6 +6,7 @@ import org.cocos2d.nodes.*;
 import org.cocos2d.types.*;
 import org.cocos2d.events.CCTouchDispatcher;
 import org.cocos2d.box2d.GLESDebugDraw;
+import org.cocos2d.config.ccMacros;
 import org.jbox2d.common.Vec2;
 
 import org.box2d.dynamics.BBWorld;
@@ -49,22 +50,22 @@ public class Box2DTest extends Activity {
         super.onStart();
 
         // attach the OpenGL view to a window
-        Director.sharedDirector().attachInView(mGLSurfaceView);
+        CCDirector.sharedDirector().attachInView(mGLSurfaceView);
 
         // set landscape mode
-        Director.sharedDirector().setLandscape(false);
+        CCDirector.sharedDirector().setLandscape(false);
 
         // show FPS
-        Director.sharedDirector().setDisplayFPS(true);
+        CCDirector.sharedDirector().setDisplayFPS(true);
 
         // frames per second
-        Director.sharedDirector().setAnimationInterval(1.0f / 60);
+        CCDirector.sharedDirector().setAnimationInterval(1.0f / 60);
 
         Scene scene = Scene.node();
         scene.addChild(new Box2DTestLayer(), 0);
 
         // Make the Scene active
-        Director.sharedDirector().runWithScene(scene);
+        CCDirector.sharedDirector().runWithScene(scene);
 
     }
 
@@ -72,14 +73,14 @@ public class Box2DTest extends Activity {
     public void onPause() {
         super.onPause();
 
-        Director.sharedDirector().pause();
+        CCDirector.sharedDirector().pause();
     }
 
     @Override
     public void onResume() {
         super.onResume();
 
-        Director.sharedDirector().resume();
+        CCDirector.sharedDirector().resume();
     }
 
     @Override
@@ -110,7 +111,7 @@ public class Box2DTest extends Activity {
             setIsTouchEnabled(true);
     //		setIsAccelerometerEnabled = true;
 
-            CGSize screenSize = Director.sharedDirector().winSize();
+            CGSize screenSize = CCDirector.sharedDirector().winSize();
     //		Log.w("Screen width %0.2f screen height %0.2f", screenSize.width,screenSize.height);
 
             // Define the gravity vector.
@@ -253,7 +254,7 @@ public class Box2DTest extends Activity {
             //Add a new body/atlas sprite at the touched location
             CGPoint location = CGPoint.make(event.getX(), event.getY());
 
-            location = Director.sharedDirector().convertCoordinate(location.x, location.y);
+            location = CCDirector.sharedDirector().convertCoordinate(location.x, location.y);
 
             addNewSprite(location.x, location.y);
             return CCTouchDispatcher.kEventHandled;

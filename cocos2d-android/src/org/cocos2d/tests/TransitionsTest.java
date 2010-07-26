@@ -46,21 +46,21 @@ public class TransitionsTest extends Activity {
         super.onStart();
 
         // attach the OpenGL view to a window
-        Director.sharedDirector().attachInView(mGLSurfaceView);
+        CCDirector.sharedDirector().attachInView(mGLSurfaceView);
 
         // set landscape mode
-        Director.sharedDirector().setLandscape(true);
+        CCDirector.sharedDirector().setLandscape(true);
 
         // show FPS
-        Director.sharedDirector().setDisplayFPS(true);
+        CCDirector.sharedDirector().setDisplayFPS(true);
 
         // frames per second
-        Director.sharedDirector().setAnimationInterval(1.0f / 60);
+        CCDirector.sharedDirector().setAnimationInterval(1.0f / 60);
 
         Scene scene = Scene.node();
         scene.addChild(new TestLayer1());
         // Make the Scene active
-        Director.sharedDirector().runWithScene(scene);
+        CCDirector.sharedDirector().runWithScene(scene);
 
     }
 
@@ -68,14 +68,14 @@ public class TransitionsTest extends Activity {
     public void onPause() {
         super.onPause();
 
-        Director.sharedDirector().pause();
+        CCDirector.sharedDirector().pause();
     }
 
     @Override
     public void onResume() {
         super.onResume();
 
-        Director.sharedDirector().resume();
+        CCDirector.sharedDirector().resume();
     }
 
     @Override
@@ -235,7 +235,7 @@ public class TransitionsTest extends Activity {
 
         public TestLayer1() {
 
-            CGSize s = Director.sharedDirector().winSize();
+            CGSize s = CCDirector.sharedDirector().winSize();
             float x = s.width;
             float y = s.height;
 
@@ -264,19 +264,19 @@ public class TransitionsTest extends Activity {
         public void nextCallback() {
             Scene scene = Scene.node();
             scene.addChild(new TestLayer2());
-            Director.sharedDirector().replaceScene(nextTransition(TRANSITION_DURATION, scene));
+            CCDirector.sharedDirector().replaceScene(nextTransition(TRANSITION_DURATION, scene));
         }
 
         public void backCallback() {
             Scene scene = Scene.node();
             scene.addChild(new TestLayer2());
-            Director.sharedDirector().replaceScene(backTransition(TRANSITION_DURATION, scene));
+            CCDirector.sharedDirector().replaceScene(backTransition(TRANSITION_DURATION, scene));
         }
 
         public void restartCallback() {
             Scene scene = Scene.node();
             scene.addChild(new TestLayer2());
-            Director.sharedDirector().replaceScene(restartTransition(TRANSITION_DURATION, scene));
+            CCDirector.sharedDirector().replaceScene(restartTransition(TRANSITION_DURATION, scene));
         }
     }
 
@@ -284,7 +284,7 @@ public class TransitionsTest extends Activity {
 
         public TestLayer2() {
 
-            CGSize s = Director.sharedDirector().winSize();
+            CGSize s = CCDirector.sharedDirector().winSize();
             float x = s.width;
             float y = s.height;
 
@@ -314,19 +314,19 @@ public class TransitionsTest extends Activity {
         public void nextCallback() {
             Scene scene = Scene.node();
             scene.addChild(new TestLayer1());
-            Director.sharedDirector().replaceScene(nextTransition(TRANSITION_DURATION, scene));
+            CCDirector.sharedDirector().replaceScene(nextTransition(TRANSITION_DURATION, scene));
         }
 
         public void backCallback() {
             Scene scene = Scene.node();
             scene.addChild(new TestLayer1());
-            Director.sharedDirector().replaceScene(backTransition(TRANSITION_DURATION, scene));
+            CCDirector.sharedDirector().replaceScene(backTransition(TRANSITION_DURATION, scene));
         }
 
         public void restartCallback() {
             Scene scene = Scene.node();
             scene.addChild(new TestLayer1());
-            Director.sharedDirector().replaceScene(restartTransition(TRANSITION_DURATION, scene));
+            CCDirector.sharedDirector().replaceScene(restartTransition(TRANSITION_DURATION, scene));
 
         }
     }

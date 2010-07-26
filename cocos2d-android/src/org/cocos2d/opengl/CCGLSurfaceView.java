@@ -6,13 +6,13 @@ import android.opengl.GLSurfaceView;
 import android.view.Display;
 import android.view.MotionEvent;
 import android.view.WindowManager;
-import org.cocos2d.nodes.Director;
+import org.cocos2d.nodes.CCDirector;
 import org.cocos2d.events.CCTouchDispatcher;
 
 public class CCGLSurfaceView extends GLSurfaceView {
 
     // private static final String LOG_TAG = CCGLSurfaceView.class.getSimpleName();
-    private Director mRenderer;
+    private CCDirector mRenderer;
     private CCTouchDispatcher mDispatcher;
 
     public Display frame;
@@ -21,17 +21,8 @@ public class CCGLSurfaceView extends GLSurfaceView {
     public CCGLSurfaceView(Context context) {
         super(context);
 
-//        setGLWrapper(new GLDebugWrapper());
-
-//        mRenderer = new CCGLImageRenderer(context, bitmap);
-
-//        GLSurfaceView.Renderer renderer = new CCGLSpriteRenderer(context, "background1.png");
-//        setRenderer(renderer);
-
-//        mRenderer = new CCGLSquareRenderer(context);
-
-        mRenderer = Director.sharedDirector();
-        Director.me = (Activity) context;
+        mRenderer = CCDirector.sharedDirector();
+        CCDirector.theApp = (Activity) context;
 
         mDispatcher = CCTouchDispatcher.sharedDispatcher();
 
@@ -61,9 +52,9 @@ public class CCGLSurfaceView extends GLSurfaceView {
                 break;
         }
 
-        synchronized (Director.sharedDirector()) {
+        synchronized (CCDirector.sharedDirector()) {
             try {
-                Director.sharedDirector().wait(20L);
+                CCDirector.sharedDirector().wait(20L);
             } catch (InterruptedException e) {
                 // Do nothing
             }
@@ -73,3 +64,4 @@ public class CCGLSurfaceView extends GLSurfaceView {
     }
 
 }
+

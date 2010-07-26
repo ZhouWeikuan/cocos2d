@@ -2,7 +2,7 @@ package org.cocos2d.transitions;
 
 import org.cocos2d.actions.instant.CallFunc;
 import org.cocos2d.actions.interval.*;
-import org.cocos2d.nodes.Director;
+import org.cocos2d.nodes.CCDirector;
 import org.cocos2d.nodes.Scene;
 import org.cocos2d.types.CGPoint;
 import org.cocos2d.types.CGSize;
@@ -23,7 +23,7 @@ public class JumpZoomTransition extends TransitionScene {
 
     public void onEnter() {
         super.onEnter();
-        CGSize size = Director.sharedDirector().winSize();
+        CGSize size = CCDirector.sharedDirector().winSize();
         
         float width = size.getWidth();
         float height = size.getHeight();

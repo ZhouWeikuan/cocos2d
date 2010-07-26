@@ -47,22 +47,22 @@ public class MotionStreakTest extends Activity {
         super.onStart();
 
         // attach the OpenGL view to a window
-        Director.sharedDirector().attachInView(mGLSurfaceView);
+        CCDirector.sharedDirector().attachInView(mGLSurfaceView);
 
         // set landscape mode
-        Director.sharedDirector().setLandscape(false);
+        CCDirector.sharedDirector().setLandscape(false);
 
         // show FPS
-        Director.sharedDirector().setDisplayFPS(true);
+        CCDirector.sharedDirector().setDisplayFPS(true);
 
         // frames per second
-        Director.sharedDirector().setAnimationInterval(1.0f / 60);
+        CCDirector.sharedDirector().setAnimationInterval(1.0f / 60);
 
         Scene scene = Scene.node();
         scene.addChild(nextAction());
 
         // Make the Scene active
-        Director.sharedDirector().runWithScene(scene);
+        CCDirector.sharedDirector().runWithScene(scene);
 
     }
 
@@ -70,14 +70,14 @@ public class MotionStreakTest extends Activity {
     public void onPause() {
         super.onPause();
 
-        Director.sharedDirector().pause();
+        CCDirector.sharedDirector().pause();
     }
 
     @Override
     public void onResume() {
         super.onResume();
 
-        Director.sharedDirector().resume();
+        CCDirector.sharedDirector().resume();
     }
 
     @Override
@@ -126,7 +126,7 @@ public class MotionStreakTest extends Activity {
 
     static abstract class TestDemo extends Layer {
         public TestDemo() {
-            CGSize s = Director.sharedDirector().winSize();
+            CGSize s = CCDirector.sharedDirector().winSize();
 
             CCLabel label = CCLabel.makeLabel(title(), "DroidSans", 24);
             addChild(label, kTagLabel);
@@ -147,19 +147,19 @@ public class MotionStreakTest extends Activity {
         public static void restartCallback() {
             Scene s = Scene.node();
             s.addChild(restartAction());
-            Director.sharedDirector().replaceScene(s);
+            CCDirector.sharedDirector().replaceScene(s);
         }
 
         public void nextCallback() {
             Scene s = Scene.node();
             s.addChild(nextAction());
-            Director.sharedDirector().replaceScene(s);
+            CCDirector.sharedDirector().replaceScene(s);
         }
 
         public void backCallback() {
             Scene s = Scene.node();
             s.addChild(backAction());
-            Director.sharedDirector().replaceScene(s);
+            CCDirector.sharedDirector().replaceScene(s);
         }
 
         public abstract String title();
@@ -173,7 +173,7 @@ public class MotionStreakTest extends Activity {
         public void onEnter() {
             super.onEnter();
 
-            CGSize s = Director.sharedDirector().winSize();
+            CGSize s = CCDirector.sharedDirector().winSize();
 
             // the root object just rotates around
             root = Sprite.sprite("r1.png");

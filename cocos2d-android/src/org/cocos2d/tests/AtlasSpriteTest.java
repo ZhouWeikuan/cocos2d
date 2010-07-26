@@ -8,6 +8,7 @@ import android.view.WindowManager;
 import org.cocos2d.actions.base.Action;
 import org.cocos2d.actions.base.RepeatForever;
 import org.cocos2d.actions.interval.*;
+import org.cocos2d.config.ccMacros;
 import org.cocos2d.layers.Layer;
 import org.cocos2d.menus.Menu;
 import org.cocos2d.menus.MenuItemImage;
@@ -40,22 +41,22 @@ public class AtlasSpriteTest extends Activity {
         super.onStart();
 
         // attach the OpenGL view to a window
-        Director.sharedDirector().attachInView(mGLSurfaceView);
+        CCDirector.sharedDirector().attachInView(mGLSurfaceView);
 
         // set landscape mode
-        Director.sharedDirector().setLandscape(false);
+        CCDirector.sharedDirector().setLandscape(false);
 
         // show FPS
-        Director.sharedDirector().setDisplayFPS(true);
+        CCDirector.sharedDirector().setDisplayFPS(true);
 
         // frames per second
-        Director.sharedDirector().setAnimationInterval(1.0f / 60);
+        CCDirector.sharedDirector().setAnimationInterval(1.0f / 60);
 
         Scene scene = Scene.node();
         scene.addChild(nextAction());
 
         // Make the Scene active
-        Director.sharedDirector().runWithScene(scene);
+        CCDirector.sharedDirector().runWithScene(scene);
 
     }
 
@@ -63,14 +64,14 @@ public class AtlasSpriteTest extends Activity {
     public void onPause() {
         super.onPause();
 
-        Director.sharedDirector().pause();
+        CCDirector.sharedDirector().pause();
     }
 
     @Override
     public void onResume() {
         super.onResume();
 
-        Director.sharedDirector().resume();
+        CCDirector.sharedDirector().resume();
     }
 
     @Override
@@ -129,7 +130,7 @@ public class AtlasSpriteTest extends Activity {
         public static final int kTagSprite8 = 8;
 
         public AtlasSpriteDemo() {
-            CGSize s = Director.sharedDirector().winSize();
+            CGSize s = CCDirector.sharedDirector().winSize();
 
             CCLabel label = CCLabel.makeLabel(title(), "DroidSans", 18);
             label.setPosition(CGPoint.make(s.width / 2, s.height - 30));
@@ -150,19 +151,19 @@ public class AtlasSpriteTest extends Activity {
         public static void restartCallback() {
             Scene s = Scene.node();
             s.addChild(restartAction());
-            Director.sharedDirector().replaceScene(s);
+            CCDirector.sharedDirector().replaceScene(s);
         }
 
         public void nextCallback() {
             Scene s = Scene.node();
             s.addChild(nextAction());
-            Director.sharedDirector().replaceScene(s);
+            CCDirector.sharedDirector().replaceScene(s);
         }
 
         public void backCallback() {
             Scene s = Scene.node();
             s.addChild(backAction());
-            Director.sharedDirector().replaceScene(s);
+            CCDirector.sharedDirector().replaceScene(s);
         }
 
         public abstract String title();
@@ -176,7 +177,7 @@ public class AtlasSpriteTest extends Activity {
 
             float x, y;
 
-            CGSize s = Director.sharedDirector().winSize();
+            CGSize s = CCDirector.sharedDirector().winSize();
             x = s.width;
             y = s.height;
 
@@ -217,7 +218,7 @@ public class AtlasSpriteTest extends Activity {
 
         @Override
         public boolean ccTouchesBegan(MotionEvent event) {
-            CGPoint location = Director.sharedDirector().convertCoordinate(event.getX(), event.getY());
+            CGPoint location = CCDirector.sharedDirector().convertCoordinate(event.getX(), event.getY());
 
             addNewSprite(location);
 
@@ -257,7 +258,7 @@ public class AtlasSpriteTest extends Activity {
             mgr.addChild(sprite2);
             mgr.addChild(sprite3);
 
-            CGSize s = Director.sharedDirector().winSize();
+            CGSize s = CCDirector.sharedDirector().winSize();
             sprite1.setPosition(CGPoint.make(s.width / 2, s.height / 2));
             sprite2.setPosition(CGPoint.make(s.width / 2 - 100, s.height / 2));
             sprite3.setPosition(CGPoint.make(s.width / 2 + 100, s.height / 2));
@@ -299,7 +300,7 @@ public class AtlasSpriteTest extends Activity {
             AtlasSprite sprite7 = AtlasSprite.sprite(CGRect.make(85 * 2, 121 * 1, 85, 121), mgr);
             AtlasSprite sprite8 = AtlasSprite.sprite(CGRect.make(85 * 3, 121 * 1, 85, 121), mgr);
 
-            CGSize s = Director.sharedDirector().winSize();
+            CGSize s = CCDirector.sharedDirector().winSize();
             sprite1.setPosition(CGPoint.make((s.width / 5) * 1, (s.height / 3) * 1));
             sprite2.setPosition(CGPoint.make((s.width / 5) * 2, (s.height / 3) * 1));
             sprite3.setPosition(CGPoint.make((s.width / 5) * 3, (s.height / 3) * 1));
@@ -371,7 +372,7 @@ public class AtlasSpriteTest extends Activity {
             AtlasSpriteManager mgr = new AtlasSpriteManager("grossini_dance_atlas.png", 1);
             addChild(mgr, 0, kTagSpriteManager);
 
-            CGSize s = Director.sharedDirector().winSize();
+            CGSize s = CCDirector.sharedDirector().winSize();
 
             for (int i = 0; i < 5; i++) {
                 AtlasSprite sprite = AtlasSprite.sprite(CGRect.make(85 * 0, 121 * 1, 85, 121), mgr);
@@ -425,7 +426,7 @@ public class AtlasSpriteTest extends Activity {
             AtlasSpriteManager mgr = new AtlasSpriteManager("grossini_dance_atlas.png", 1);
             addChild(mgr, 0, kTagSpriteManager);
 
-            CGSize s = Director.sharedDirector().winSize();
+            CGSize s = CCDirector.sharedDirector().winSize();
 
             IntervalAction rotate = RotateBy.action(10, 360);
             Action action = RepeatForever.action(rotate);
@@ -474,7 +475,7 @@ public class AtlasSpriteTest extends Activity {
             AtlasSpriteManager mgr = new AtlasSpriteManager("grossini_dance_atlas.png", 1);
             addChild(mgr, 0, kTagSpriteManager);
 
-            CGSize s = Director.sharedDirector().winSize();
+            CGSize s = CCDirector.sharedDirector().winSize();
 
             mgr.setRelativeAnchorPoint(false);
             mgr.setAnchorPoint(CGPoint.make(0.5f, 0.5f));

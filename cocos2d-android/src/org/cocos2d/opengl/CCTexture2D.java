@@ -8,15 +8,26 @@ import android.opengl.GLUtils;
 import org.cocos2d.nodes.CCLabel;
 import org.cocos2d.types.CGAffineTransform;
 import org.cocos2d.types.CGPoint;
+import org.cocos2d.types.CGRect;
 import org.cocos2d.types.CGSize;
 import org.cocos2d.types.CCTexParams;
 
 import javax.microedition.khronos.opengles.GL10;
+import javax.microedition.khronos.opengles.GL11;
+
 import static javax.microedition.khronos.opengles.GL10.*;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
+/** CCTexture2D class.
+ * This class allows to easily create OpenGL 2D textures from images, text or raw data.
+ * The created CCTexture2D object will always have power-of-two dimensions. 
+ * Depending on how you create the CCTexture2D object, the actual image area of the texture
+ * might be smaller than the texture dimensions i.e. "contentSize" != (pixelsWide, pixelsHigh)
+ * and (maxS, maxT) != (1.0, 1.0).
+ * Be aware that the content of the generated textures will be upside-down!
+*/
 public class CCTexture2D {
     // private static final String LOG_TAG = CCTexture2D.class.getSimpleName();
 
@@ -40,38 +51,32 @@ public class CCTexture2D {
      * width in pixels
      */
     public float getWidth() {
-        return mSize.width;
+        return mContentSize.width;
     }
 
     /**
      * height in pixels
      */
     public float getHeight() {
-        return mSize.height;
+        return mContentSize.height;
     }
 
-    /**
-     * texture name
-     */
+    /** texture name */
     public int name() {
         return _name;
     }
 
-
-    /**
-     * texture max S
-     */
+    /** texture max S */
     public float maxS() {
         return _maxS;
     }
 
-    /**
-     * texture max T
-     */
+    /** texture max T */
     public float maxT() {
         return _maxT;
     }
 
+    /** whether or not the texture has their Alpha premultiplied */
     // TODO: Implement me
     public boolean hasPremultipliedAlpha() {
         return false;
@@ -82,39 +87,51 @@ public class CCTexture2D {
 //    private ShortBuffer mIndices;
 
     private Bitmap mBitmap;
+
+    /** texture name */
     private int _name = -1;
-    private CGSize mSize;
-    private int mWidth, mHeight;
+
+    /** content size */
+    private CGSize mContentSize;
+
+    /** width in pixels */
+    private int mWidth;
+
+    /** hight in pixels */
+    private int mHeight;
     private Bitmap.Config _format;
-    private float _maxS, _maxT;
+
+    /** texture max S */
+    private float _maxS;
+
+    /** texture max T */
+    private float _maxT;
+
     private CCTexParams _texParams;
 
     public final CGSize getContentSize() {
-        return mSize;
+        return mContentSize;
     }
 
-    public CCTexture2D(Bitmap image) {
+    public void releaseTexture (GL10 gl) {
+        if (_name > 0) {
+            gl.glDeleteTextures(1, new int[]{_name}, 0);
+            _name = 0;
+        }
+    }
 
-        boolean sizeToFit = false;
+    /**
+      Extensions to make it easy to create a CCTexture2D object from an image file.
+      Note that RGBA type textures will have their alpha premultiplied - use the blending mode (GL_ONE, GL_ONE_MINUS_SRC_ALPHA).
+      */
+    /** Initializes a texture from a UIImage object */
+    public CCTexture2D(Bitmap image) {
 
         CGSize imageSize = CGSize.make(image.getWidth(), image.getHeight());
         CGAffineTransform transform = CGAffineTransform.identity();
 
-        int width = (int) imageSize.width;
-        if ((width != 1) && (width & (width - 1)) != 0) {
-            int i = 1;
-            while ((sizeToFit ? 2 * i : i) < width)
-                i *= 2;
-            width = i;
-        }
-
-        int height = (int) imageSize.height;
-        if ((height != 1) && (height & (height - 1)) != 0) {
-            int i = 1;
-            while ((sizeToFit ? 2 * i : i) < height)
-                i *= 2;
-            height = i;
-        }
+        int width = toPow2((int) imageSize.width);
+        int height = toPow2((int) imageSize.height);
 
         while (width > kMaxTextureSize || height > kMaxTextureSize) {
             width /= 2;
@@ -132,6 +149,7 @@ public class CCTexture2D {
             image.recycle();
             image = bitmap;
         }
+
         init(image, imageSize);
     }
 
@@ -150,10 +168,10 @@ public class CCTexture2D {
 
         mWidth = image.getWidth();
         mHeight = image.getHeight();
-        mSize = imageSize;
+        mContentSize = imageSize;
         _format = image.getConfig();
-        _maxS = mSize.width / (float) mWidth;
-        _maxT = mSize.height / (float) mHeight;
+        _maxS = mContentSize.width / (float) mWidth;
+        _maxT = mContentSize.height / (float) mHeight;
         _texParams = _gTexParams;
         ByteBuffer vfb = ByteBuffer.allocateDirect(4 * 3 * 4);
         vfb.order(ByteOrder.nativeOrder());
@@ -168,12 +186,17 @@ public class CCTexture2D {
 //        mIndices = isb.asShortBuffer();
     }
 
+    /**
+      Extensions to make it easy to create a CCTexture2D object from a string of text.
+      Note that the generated textures are of type A8 - use the blending mode (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA).
+    */
+    /** Initializes a texture from a string with font name and font size */
     public CCTexture2D(String text, String fontname, float fontSize) {
-
-        this(text, calculateTextSize(text, fontname, fontSize), CCLabel.TextAlignment.CENTER, fontname, fontSize);
+        this(text, calculateTextSize(text, fontname, fontSize),
+                CCLabel.TextAlignment.CENTER, fontname, fontSize);
     }
 
-    private static CGSize calculateTextSize(String text, String fontname, float fontSize) {
+    public static CGSize calculateTextSize(String text, String fontname, float fontSize) {
         Typeface typeface = Typeface.create(fontname, Typeface.NORMAL);
 
         Paint textPaint = new Paint();
@@ -187,38 +210,34 @@ public class CCTexture2D {
         return CGSize.make(measuredTextWidth, ascent + descent);
     }
 
+    public static int toPow2(int v) {
+        if ((v != 1) && (v & (v - 1)) != 0) {
+            int i = 1;
+            while (i < v)
+                i *= 2;
+            v = i;
+        }
+        return v;
+    }
+
+    /** Initializes a texture from a string with dimensions, alignment, font name and font size */
     public CCTexture2D(String text, CGSize dimensions, CCLabel.TextAlignment alignment, String fontname, float fontSize) {
-        Typeface typeface = Typeface.create(fontname, Typeface.NORMAL);
+    	Typeface typeface = Typeface.create(fontname, Typeface.NORMAL);
 
         Paint textPaint = new Paint();
         textPaint.setTypeface(typeface);
         textPaint.setTextSize(fontSize);
 
-        int ascent = 0;
-        int descent = 0;
-        int measuredTextWidth = 0;
+        int ascent = (int) Math.ceil(-textPaint.ascent());  // Paint.ascent is negative, so negate it
+        int descent = (int) Math.ceil(textPaint.descent());
+        int measuredTextWidth = (int) Math.ceil(textPaint.measureText(text));
 
-        ascent = (int) Math.ceil(-textPaint.ascent());  // Paint.ascent is negative, so negate it
-        descent = (int) Math.ceil(textPaint.descent());
-        measuredTextWidth = (int) Math.ceil(textPaint.measureText(text));
 
         int textWidth = measuredTextWidth;
         int textHeight = ascent + descent;
 
-        int width = (int) dimensions.width;
-        if ((width != 1) && (width & (width - 1)) != 0) {
-            int i = 1;
-            while (i < width)
-                i *= 2;
-            width = i;
-        }
-        int height = (int) dimensions.height;
-        if ((height != 1) && (height & (height - 1)) != 0) {
-            int i = 1;
-            while (i < height)
-                i *= 2;
-            height = i;
-        }
+        int width = toPow2((int)dimensions.width);
+        int height = toPow2((int) dimensions.height);
 
         Bitmap.Config config = Bitmap.Config.ALPHA_8;
         Bitmap bitmap = Bitmap.createBitmap(width, height, config);
@@ -254,7 +273,6 @@ public class CCTexture2D {
             gl.glGenTextures(1, textures, 0);
 
             _name = textures[0];
-            gl.glBindTexture(GL_TEXTURE_2D, _name);
 
             applyTexParameters(gl);
 
@@ -265,6 +283,13 @@ public class CCTexture2D {
         }
     }
 
+
+    /**
+      Drawing extensions to make it easy to draw basic quads using a CCTexture2D object.
+      These functions require GL_TEXTURE_2D and both GL_VERTEX_ARRAY and GL_TEXTURE_COORD_ARRAY
+            client states to be enabled.
+      */
+    /** draws a texture at a given point */
     public void drawAtPoint(GL10 gl, CGPoint point) {
         gl.glEnable(GL_TEXTURE_2D);
 
@@ -289,10 +314,6 @@ public class CCTexture2D {
         mCoordinates.put(coordinates);
         mCoordinates.position(0);
 
-//        short indices = { 0, 1, 2, 3, 2, 1 };
-//        mIndices.put(indices);
-//        mIndices.position(0);
-
         gl.glEnableClientState(GL_VERTEX_ARRAY);
         gl.glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
@@ -305,14 +326,57 @@ public class CCTexture2D {
         gl.glTexCoordPointer(2, GL_FLOAT, 0, mCoordinates);
         gl.glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
-//        gl.glDrawElements(GL10.GL_TRIANGLES, 6, GL10.GL_UNSIGNED_SHORT, mIndices);
+        // Clear the vertex and color arrays
+        gl.glDisableClientState(GL_VERTEX_ARRAY);
+        gl.glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+
+        gl.glDisable(GL_TEXTURE_2D);
+    }
+
+    /** draws a texture inside a rect */
+    public void drawInRect(GL10 gl, CGRect rect) {
+        gl.glEnable(GL_TEXTURE_2D);
+
+        loadTexture(gl);
+
+        float width = (float) mWidth * _maxS;
+        float height = (float) mHeight * _maxT;
+
+	    float vertices[] = {
+            rect.origin.x, rect.origin.y, /*0.0f,*/
+			rect.origin.x + rect.size.width,	rect.origin.y,	/*0.0f,*/
+			rect.origin.x, rect.origin.y + rect.size.height, /*0.0f,*/
+			rect.origin.x + rect.size.width, rect.origin.y + rect.size.height, /*0.0f*/
+        };
+
+        mVertices.put(vertices);
+        mVertices.position(0);
+
+        float coordinates[] = {0.0f, _maxT,
+                _maxS, _maxT,
+                0.0f, 0.0f,
+                _maxS, 0.0f};
+
+        mCoordinates.put(coordinates);
+        mCoordinates.position(0);
+
+        gl.glEnableClientState(GL_VERTEX_ARRAY);
+        gl.glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+
+        gl.glBindTexture(GL_TEXTURE_2D, _name);
+
+        gl.glTexParameterx(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        gl.glTexParameterx(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+        gl.glVertexPointer(2, GL_FLOAT, 0, mVertices);
+        gl.glTexCoordPointer(2, GL_FLOAT, 0, mCoordinates);
+        gl.glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
         // Clear the vertex and color arrays
         gl.glDisableClientState(GL_VERTEX_ARRAY);
         gl.glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 
         gl.glDisable(GL_TEXTURE_2D);
-
     }
 
     //
@@ -322,6 +386,11 @@ public class CCTexture2D {
     private static CCTexParams _gTexParams = new CCTexParams(GL_LINEAR, GL_LINEAR, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE);
     private static CCTexParams _texParamsCopy;
 
+    /** sets the min filter, mag filter, wrap s and wrap t texture parameters.
+      If the texture size is NPOT (non power of 2),
+             then in can only use GL_CLAMP_TO_EDGE in GL_TEXTURE_WRAP_{S,T}.
+      @since v0.8
+    */
     public static void setTexParameters(CCTexParams texParams) {
         _gTexParams = texParams;
     }
@@ -331,6 +400,7 @@ public class CCTexture2D {
     }
 
     public void applyTexParameters(GL10 gl) {
+        gl.glBindTexture(GL_TEXTURE_2D, _name);
         gl.glTexParameterx(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, _texParams.minFilter );
         gl.glTexParameterx(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, _texParams.magFilter);
         gl.glTexParameterx(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, _texParams.wrapS);
@@ -345,12 +415,38 @@ public class CCTexture2D {
         _texParamsCopy = _gTexParams.copy();
     }
 
+
+    /** sets alias texture parameters:
+      - GL_TEXTURE_MIN_FILTER = GL_NEAREST
+      - GL_TEXTURE_MAG_FILTER = GL_NEAREST
+
+      @since v0.8
+    */
     public static void setAliasTexParameters() {
         _gTexParams.magFilter = _gTexParams.minFilter = GL_NEAREST;
     }
 
+
+    /** sets antialias texture parameters:
+      - GL_TEXTURE_MIN_FILTER = GL_LINEAR
+      - GL_TEXTURE_MAG_FILTER = GL_LINEAR
+
+      @since v0.8
+      */
     public static void setAntiAliasTexParameters() {
         _gTexParams.magFilter = _gTexParams.minFilter = GL_LINEAR;
     }
 
+    /** Generates mipmap images for the texture.
+      It only works if the texture size is POT (power of 2).
+      @since v0.99.0
+      */
+    public void generateMipmap(GL10 gl) {
+        assert ( mWidth == toPow2((int)mWidth) && mHeight == toPow2((int)mHeight))
+                : "Mimpap texture only works in POT textures";
+        gl.glBindTexture( GL_TEXTURE_2D, _name);
+        gl.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_GENERATE_MIPMAP, GL11.GL_TRUE);
+        GLUtils.texImage2D(GL10.GL_TEXTURE_2D, 0, mBitmap, 0);
+    }
 }
+

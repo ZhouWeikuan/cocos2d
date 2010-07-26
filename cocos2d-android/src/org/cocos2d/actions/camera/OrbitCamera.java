@@ -1,9 +1,9 @@
 package org.cocos2d.actions.camera;
 
 import org.cocos2d.actions.interval.IntervalAction;
+import org.cocos2d.config.ccMacros;
 import org.cocos2d.nodes.CCNode;
-import org.cocos2d.opengl.Camera;
-import org.cocos2d.types.ccMacros;
+import org.cocos2d.opengl.CCCamera;
 
 public class OrbitCamera extends CameraAction {
     private float radius;
@@ -60,7 +60,7 @@ public class OrbitCamera extends CameraAction {
 
     @Override
     public void update(float t) {
-        float r = (radius + deltaRadius * t) * Camera.getZEye();
+        float r = (radius + deltaRadius * t) * CCCamera.getZEye();
         float za = radZ + radDeltaZ * t;
         float xa = radX + radDeltaX * t;
 
@@ -100,7 +100,7 @@ public class OrbitCamera extends CameraAction {
         else
             azimuth[0] = (float) Math.asin(y / s);
 
-        newRadius[0] = r / Camera.getZEye();
+        newRadius[0] = r / CCCamera.getZEye();
     }
 
 }

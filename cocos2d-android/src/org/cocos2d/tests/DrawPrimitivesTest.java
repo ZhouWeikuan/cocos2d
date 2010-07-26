@@ -5,15 +5,15 @@ import android.os.Bundle;
 import android.view.Window;
 import android.view.WindowManager;
 import org.cocos2d.actions.interval.RotateBy;
+import org.cocos2d.config.ccMacros;
 import org.cocos2d.layers.Layer;
 import org.cocos2d.menus.Menu;
 import org.cocos2d.menus.MenuItemImage;
-import org.cocos2d.nodes.Director;
+import org.cocos2d.nodes.CCDirector;
 import org.cocos2d.nodes.Scene;
 import org.cocos2d.nodes.TextureManager;
 import org.cocos2d.opengl.CCGLSurfaceView;
 import org.cocos2d.opengl.Primitives;
-import org.cocos2d.types.ccMacros;
 import org.cocos2d.types.CGPoint;
 import org.cocos2d.types.CGSize;
 
@@ -40,23 +40,23 @@ public class DrawPrimitivesTest extends Activity {
         super.onStart();
 
         // attach the OpenGL view to a window
-        Director.sharedDirector().attachInView(mGLSurfaceView);
+        CCDirector.sharedDirector().attachInView(mGLSurfaceView);
 
         // set landscape mode
-        Director.sharedDirector().setLandscape(false);
+        CCDirector.sharedDirector().setLandscape(false);
 
         // show FPS
-        Director.sharedDirector().setDisplayFPS(true);
+        CCDirector.sharedDirector().setDisplayFPS(true);
 
         // frames per second
-        Director.sharedDirector().setAnimationInterval(1.0f / 60);
+        CCDirector.sharedDirector().setAnimationInterval(1.0f / 60);
 
         Scene scene = Scene.node();
         scene.addChild(nextAction());
         scene.runAction(RotateBy.action(4, -360));
 
         // Make the Scene active
-        Director.sharedDirector().runWithScene(scene);
+        CCDirector.sharedDirector().runWithScene(scene);
 
     }
 
@@ -64,14 +64,14 @@ public class DrawPrimitivesTest extends Activity {
     public void onPause() {
         super.onPause();
 
-        Director.sharedDirector().pause();
+        CCDirector.sharedDirector().pause();
     }
 
     @Override
     public void onResume() {
         super.onResume();
 
-        Director.sharedDirector().resume();
+        CCDirector.sharedDirector().resume();
     }
 
     @Override
@@ -114,7 +114,7 @@ public class DrawPrimitivesTest extends Activity {
 
     public static class TestDemo extends Layer {
         public TestDemo() {
-            CGSize s = Director.sharedDirector().winSize();
+            CGSize s = CCDirector.sharedDirector().winSize();
 
             MenuItemImage item1 = MenuItemImage.item("b1.png", "b2.png", this, "backCallback");
             MenuItemImage item2 = MenuItemImage.item("r1.png", "r2.png", this, "restartCallback");
@@ -130,30 +130,30 @@ public class DrawPrimitivesTest extends Activity {
         }
 
         public void restartCallback() {
-            boolean landscape = Director.sharedDirector().getLandscape();
-            Director.sharedDirector().setLandscape(!landscape);
+            boolean landscape = CCDirector.sharedDirector().getLandscape();
+            CCDirector.sharedDirector().setLandscape(!landscape);
 
             Scene s = Scene.node();
             s.addChild(restartAction());
-            Director.sharedDirector().replaceScene(s);
+            CCDirector.sharedDirector().replaceScene(s);
         }
 
         public void nextCallback() {
-            boolean landscape = Director.sharedDirector().getLandscape();
-            Director.sharedDirector().setLandscape(!landscape);
+            boolean landscape = CCDirector.sharedDirector().getLandscape();
+            CCDirector.sharedDirector().setLandscape(!landscape);
 
             Scene s = Scene.node();
             s.addChild(nextAction());
-            Director.sharedDirector().replaceScene(s);
+            CCDirector.sharedDirector().replaceScene(s);
         }
 
         public void backCallback() {
-            boolean landscape = Director.sharedDirector().getLandscape();
-            Director.sharedDirector().setLandscape(!landscape);
+            boolean landscape = CCDirector.sharedDirector().getLandscape();
+            CCDirector.sharedDirector().setLandscape(!landscape);
 
             Scene s = Scene.node();
             s.addChild(backAction());
-            Director.sharedDirector().replaceScene(s);
+            CCDirector.sharedDirector().replaceScene(s);
         }
 
         String title() {
@@ -186,7 +186,7 @@ public class DrawPrimitivesTest extends Activity {
         //    this.rotation = 90;
         //
         public void draw(GL10 gl) {
-            CGSize s = Director.sharedDirector().winSize();
+            CGSize s = CCDirector.sharedDirector().winSize();
 
 
             // draw a simple line

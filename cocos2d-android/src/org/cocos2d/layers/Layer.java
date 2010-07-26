@@ -2,7 +2,7 @@ package org.cocos2d.layers;
 
 import org.cocos2d.events.CCTouchDispatcher;
 import org.cocos2d.nodes.CCNode;
-import org.cocos2d.nodes.Director;
+import org.cocos2d.nodes.CCDirector;
 import org.cocos2d.protocols.CCTouchDelegateProtocol;
 import org.cocos2d.types.CGPoint;
 import org.cocos2d.types.CGSize;
@@ -69,7 +69,7 @@ public class Layer extends CCNode implements CCTouchDelegateProtocol, SensorEven
 
     protected Layer() {
     	// get the SensorManager from the Activity
-    	sensorManager = (SensorManager) Director.sharedDirector().getActivity().getSystemService(Context.SENSOR_SERVICE);
+    	sensorManager = (SensorManager) CCDirector.sharedDirector().getActivity().getSystemService(Context.SENSOR_SERVICE);
     	
     	// if we have a SensorManager then get the accelerometer Sensor
     	if (sensorManager != null) 
@@ -77,7 +77,7 @@ public class Layer extends CCNode implements CCTouchDelegateProtocol, SensorEven
     	else
     		accelerometer = null;
     	
-        CGSize s = Director.sharedDirector().winSize();
+        CGSize s = CCDirector.sharedDirector().winSize();
         setRelativeAnchorPoint(false);
 
         setAnchorPoint(CGPoint.make(0.5f, 0.5f));

@@ -10,7 +10,7 @@ public class Scene extends CCNode {
     }
 
     protected Scene() {
-        CGSize s = Director.sharedDirector().winSize();
+        CGSize s = CCDirector.sharedDirector().winSize();
         
         setRelativeAnchorPoint(false);
 

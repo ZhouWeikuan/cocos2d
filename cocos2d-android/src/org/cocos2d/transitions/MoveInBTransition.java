@@ -1,6 +1,6 @@
 package org.cocos2d.transitions;
 
-import org.cocos2d.nodes.Director;
+import org.cocos2d.nodes.CCDirector;
 import org.cocos2d.nodes.Scene;
 import org.cocos2d.types.CGPoint;
 import org.cocos2d.types.CGSize;
@@ -23,7 +23,7 @@ public class MoveInBTransition extends MoveInLTransition {
      * initializes the scenes
      */
     protected void initScenes() {
-        CGSize s = Director.sharedDirector().winSize();
+        CGSize s = CCDirector.sharedDirector().winSize();
         inScene.setPosition(CGPoint.make(0, -s.height));
     }
 }

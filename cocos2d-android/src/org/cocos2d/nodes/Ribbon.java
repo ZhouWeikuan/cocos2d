@@ -1,5 +1,7 @@
 package org.cocos2d.nodes;
 
+import org.cocos2d.config.ccConfig;
+import org.cocos2d.config.ccMacros;
 import org.cocos2d.opengl.CCTexture2D;
 import org.cocos2d.types.*;
 
@@ -331,7 +333,7 @@ public class Ribbon extends CCNode {
             gl.glBindTexture(GL10.GL_TEXTURE_2D, texture_.name());
 
             boolean newBlend = false;
-            if (blendFunc_.src != ccMacros.CC_BLEND_SRC || blendFunc_.dst != ccMacros.CC_BLEND_DST) {
+            if (blendFunc_.src != ccConfig.CC_BLEND_SRC || blendFunc_.dst != ccConfig.CC_BLEND_DST) {
                 newBlend = true;
                 gl.glBlendFunc(blendFunc_.src, blendFunc_.dst);
             }
@@ -340,7 +342,7 @@ public class Ribbon extends CCNode {
                 seg.draw(gl, mCurTime, mFadeTime, color_);
 
             if (newBlend)
-                gl.glBlendFunc(ccMacros.CC_BLEND_SRC, ccMacros.CC_BLEND_DST);
+                gl.glBlendFunc(ccConfig.CC_BLEND_SRC, ccConfig.CC_BLEND_DST);
 
             gl.glDisable(GL10.GL_TEXTURE_2D);
             gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);

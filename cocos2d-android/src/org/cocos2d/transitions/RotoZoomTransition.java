@@ -1,11 +1,14 @@
 package org.cocos2d.transitions;
 
 import org.cocos2d.actions.instant.CallFunc;
-import org.cocos2d.actions.interval.*;
-import org.cocos2d.nodes.Director;
+import org.cocos2d.actions.interval.DelayTime;
+import org.cocos2d.actions.interval.IntervalAction;
+import org.cocos2d.actions.interval.RotateBy;
+import org.cocos2d.actions.interval.ScaleBy;
+import org.cocos2d.actions.interval.Sequence;
+import org.cocos2d.actions.interval.Spawn;
 import org.cocos2d.nodes.Scene;
 import org.cocos2d.types.CGPoint;
-import org.cocos2d.types.CGSize;
 
 /**
  * RotoZoom Transition.

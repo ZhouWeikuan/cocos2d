@@ -9,12 +9,12 @@ import android.view.WindowManager;
 import org.cocos2d.actions.ActionManager;
 import org.cocos2d.actions.base.RepeatForever;
 import org.cocos2d.actions.interval.*;
+import org.cocos2d.config.ccMacros;
 import org.cocos2d.layers.ColorLayer;
 import org.cocos2d.layers.Layer;
 import org.cocos2d.nodes.*;
 import org.cocos2d.opengl.CCGLSurfaceView;
 import org.cocos2d.types.ccColor4B;
-import org.cocos2d.types.ccMacros;
 import org.cocos2d.types.CGPoint;
 import org.cocos2d.events.CCTouchDispatcher;
 
@@ -49,22 +49,22 @@ public class ClickAndMoveTest extends Activity {
         super.onStart();
 
         // attach the OpenGL view to a window
-        Director.sharedDirector().attachInView(mGLSurfaceView);
+        CCDirector.sharedDirector().attachInView(mGLSurfaceView);
 
         // set landscape mode
-        Director.sharedDirector().setLandscape(false);
+        CCDirector.sharedDirector().setLandscape(false);
 
         // show FPS
-        Director.sharedDirector().setDisplayFPS(true);
+        CCDirector.sharedDirector().setDisplayFPS(true);
 
         // frames per second
-        Director.sharedDirector().setAnimationInterval(1.0f / 60);
+        CCDirector.sharedDirector().setAnimationInterval(1.0f / 60);
 
         Scene scene = Scene.node();
         scene.addChild(new MainLayer(), 2);
 
         // Make the Scene active
-        Director.sharedDirector().runWithScene(scene);
+        CCDirector.sharedDirector().runWithScene(scene);
 
     }
 
@@ -72,14 +72,14 @@ public class ClickAndMoveTest extends Activity {
     public void onPause() {
         super.onPause();
 
-        Director.sharedDirector().pause();
+        CCDirector.sharedDirector().pause();
     }
 
     @Override
     public void onResume() {
         super.onResume();
 
-        Director.sharedDirector().resume();
+        CCDirector.sharedDirector().resume();
     }
 
     @Override
@@ -112,7 +112,7 @@ public class ClickAndMoveTest extends Activity {
 
         @Override
         public boolean ccTouchesBegan(MotionEvent event) {
-            CGPoint convertedLocation = Director.sharedDirector().convertCoordinate(event.getX(), event.getY());
+            CGPoint convertedLocation = CCDirector.sharedDirector().convertCoordinate(event.getX(), event.getY());
 
             CCNode s = getChild(kTagSprite);
             s.stopAllActions();

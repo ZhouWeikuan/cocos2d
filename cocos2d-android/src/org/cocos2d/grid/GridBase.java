@@ -3,10 +3,11 @@ package org.cocos2d.grid;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import org.cocos2d.opengl.Camera;
-import org.cocos2d.nodes.Director;
+import android.opengl.GLU;
+
+import org.cocos2d.opengl.CCCamera;
+import org.cocos2d.nodes.CCDirector;
 import org.cocos2d.opengl.CCTexture2D;
-import org.cocos2d.opengl.GLU;
 import org.cocos2d.types.ccGridSize;
 import org.cocos2d.types.CGPoint;
 import org.cocos2d.types.CGSize;
@@ -49,7 +50,7 @@ public abstract class GridBase {
         reuseGrid = 0;
         gridSize = gSize;
 
-        CGSize win = Director.sharedDirector().winSize();
+        CGSize win = CCDirector.sharedDirector().winSize();
 
         if (texture == null) {
             Bitmap.Config config = Bitmap.Config.ARGB_8888;
@@ -73,7 +74,7 @@ public abstract class GridBase {
 
     // This routine can be merged with Director
     public void applyLandscape(GL10 gl) {
-        boolean landscape = Director.sharedDirector().getLandscape();
+        boolean landscape = CCDirector.sharedDirector().getLandscape();
 
         if (landscape) {
             gl.glTranslatef(160, 240, 0);
@@ -90,7 +91,7 @@ public abstract class GridBase {
     }
 
     public void set2DProjection(GL10 gl) {
-        CGSize winSize = Director.sharedDirector().winSize();
+        CGSize winSize = CCDirector.sharedDirector().winSize();
 
         gl.glLoadIdentity();
         gl.glViewport(0, 0, (int) winSize.width, (int) winSize.height);
@@ -102,7 +103,7 @@ public abstract class GridBase {
 
     // This routine can be merged with Director
     public void set3DProjection(GL10 gl) {
-        CGSize winSize = Director.sharedDirector().displaySize();
+        CGSize winSize = CCDirector.sharedDirector().displaySize();
 
         gl.glViewport(0, 0, (int) winSize.width, (int) winSize.height);
         gl.glMatrixMode(GL10.GL_PROJECTION);
@@ -111,7 +112,7 @@ public abstract class GridBase {
 
         gl.glMatrixMode(GL10.GL_MODELVIEW);
         gl.glLoadIdentity();
-        GLU.gluLookAt(gl, winSize.width / 2, winSize.height / 2, Camera.getZEye(),
+        GLU.gluLookAt(gl, winSize.width / 2, winSize.height / 2, CCCamera.getZEye(),
                 winSize.width / 2, winSize.height / 2, 0,
                 0.0f, 1.0f, 0.0f
         );
@@ -121,11 +122,11 @@ public abstract class GridBase {
         set2DProjection(gl);
     }
 
-    public void afterDraw(GL10 gl, Camera camera) {
+    public void afterDraw(GL10 gl, CCCamera camera) {
         set3DProjection(gl);
         applyLandscape(gl);
 
-        boolean cDirty = camera.isDirty();
+        boolean cDirty = camera.getDirty();
         camera.setDirty(true);
         camera.locate(gl);
         camera.setDirty(cDirty);

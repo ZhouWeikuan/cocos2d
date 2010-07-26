@@ -34,7 +34,7 @@ public class RotateWorldTest extends Activity {
         public SpriteLayer() {
             float x, y;
 
-            CGSize size = Director.sharedDirector().winSize();
+            CGSize size = CCDirector.sharedDirector().winSize();
             x = size.width;
             y = size.height;
 
@@ -77,7 +77,7 @@ public class RotateWorldTest extends Activity {
         public MainLayer() {
             float x, y;
 
-            CGSize size = Director.sharedDirector().winSize();
+            CGSize size = CCDirector.sharedDirector().winSize();
             x = size.width;
             y = size.height;
 
@@ -118,23 +118,23 @@ public class RotateWorldTest extends Activity {
         super.onStart();
 
         // attach the OpenGL view to a window
-        Director.sharedDirector().attachInView(mGLSurfaceView);
+        CCDirector.sharedDirector().attachInView(mGLSurfaceView);
 
         // set landscape mode
-        Director.sharedDirector().setLandscape(false);
+        CCDirector.sharedDirector().setLandscape(false);
 
         // show FPS
-        Director.sharedDirector().setDisplayFPS(true);
+        CCDirector.sharedDirector().setDisplayFPS(true);
 
         // frames per second
-        Director.sharedDirector().setAnimationInterval(1.0f / 60);
+        CCDirector.sharedDirector().setAnimationInterval(1.0f / 60);
 
         Scene scene = Scene.node();
         scene.addChild(new MainLayer());
         scene.runAction(RotateBy.action(4, -360));
 
         // Make the Scene active
-        Director.sharedDirector().runWithScene(scene);
+        CCDirector.sharedDirector().runWithScene(scene);
 
     }
 
@@ -142,14 +142,14 @@ public class RotateWorldTest extends Activity {
     public void onPause() {
         super.onPause();
 
-        Director.sharedDirector().pause();
+        CCDirector.sharedDirector().pause();
     }
 
     @Override
     public void onResume() {
         super.onResume();
 
-        Director.sharedDirector().resume();
+        CCDirector.sharedDirector().resume();
     }
 
     @Override

@@ -17,3 +17,4 @@ public class CCTexParams {
         return new CCTexParams(minFilter, magFilter, wrapS, wrapT);
     }
 }
+

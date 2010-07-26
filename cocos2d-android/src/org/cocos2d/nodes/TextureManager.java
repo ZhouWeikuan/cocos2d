@@ -68,7 +68,7 @@ public class TextureManager {
 
     public static CCTexture2D createTextureFromFilePath(String path) {
         try {
-            Bitmap bmp = BitmapFactory.decodeStream(Director.sharedDirector().getActivity().getAssets().open(path));
+            Bitmap bmp = BitmapFactory.decodeStream(CCDirector.sharedDirector().getActivity().getAssets().open(path));
             return createTextureFromBitmap(bmp);
         } catch (IOException e) {
             e.printStackTrace();

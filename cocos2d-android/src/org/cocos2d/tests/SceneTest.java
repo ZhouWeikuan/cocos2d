@@ -11,7 +11,7 @@ import org.cocos2d.layers.ColorLayer;
 import org.cocos2d.layers.Layer;
 import org.cocos2d.menus.Menu;
 import org.cocos2d.menus.MenuItemFont;
-import org.cocos2d.nodes.Director;
+import org.cocos2d.nodes.CCDirector;
 import org.cocos2d.nodes.CCLabel;
 import org.cocos2d.nodes.Scene;
 import org.cocos2d.nodes.TextureManager;
@@ -58,18 +58,18 @@ public class SceneTest extends Activity {
         public void onPushScene() {
             Scene scene = Scene.node();
             scene.addChild(new Layer2(), 0);
-            Director.sharedDirector().pushScene(scene);
+            CCDirector.sharedDirector().pushScene(scene);
         }
 
         public void onPushSceneTran() {
             Scene scene = Scene.node();
             scene.addChild(new Layer2(), 0);
-            Director.sharedDirector().pushScene(SlideInTTransition.transition(1, scene));
+            CCDirector.sharedDirector().pushScene(SlideInTTransition.transition(1, scene));
         }
 
 
         public void onQuit() {
-            Director.sharedDirector().popScene();
+            CCDirector.sharedDirector().popScene();
         }
 
         public void onVoid() {
@@ -89,19 +89,19 @@ public class SceneTest extends Activity {
         }
 
         public void onGoBack() {
-            Director.sharedDirector().popScene();
+            CCDirector.sharedDirector().popScene();
         }
 
         public void onReplaceScene() {
             Scene scene = Scene.node();
             scene.addChild(new Layer3(), 0);
-            Director.sharedDirector().replaceScene(scene);
+            CCDirector.sharedDirector().replaceScene(scene);
         }
 
         public void onReplaceSceneTransition() {
             Scene s = Scene.node();
             s.addChild(new Layer3(), 0);
-            Director.sharedDirector().replaceScene(FlipXTransition.transition(2.0f, s, TransitionScene.Orientation.kOrientationLeftOver));
+            CCDirector.sharedDirector().replaceScene(FlipXTransition.transition(2.0f, s, TransitionScene.Orientation.kOrientationLeftOver));
         }
     }
 
@@ -113,14 +113,14 @@ public class SceneTest extends Activity {
 
             CCLabel label = CCLabel.makeLabel("Touch to pop scene", "DroidSans", 32);
             addChild(label);
-            float width = Director.sharedDirector().winSize().width;
-            float height = Director.sharedDirector().winSize().height;
+            float width = CCDirector.sharedDirector().winSize().width;
+            float height = CCDirector.sharedDirector().winSize().height;
             label.setPosition(CGPoint.make(width / 2, height / 2));
         }
 
         @Override
         public boolean ccTouchesEnded(MotionEvent event) {
-            Director.sharedDirector().popScene();
+            CCDirector.sharedDirector().popScene();
             return CCTouchDispatcher.kEventHandled;
         }
     }
@@ -130,33 +130,33 @@ public class SceneTest extends Activity {
     public void applicationDidFinishLaunching(Context context, View view) {
 
         // attach the OpenGL view to a window
-        Director.sharedDirector().attachInView(view);
+        CCDirector.sharedDirector().attachInView(view);
 
         // set landscape mode
-        Director.sharedDirector().setLandscape(false);
+        CCDirector.sharedDirector().setLandscape(false);
 
         // show FPS
-        Director.sharedDirector().setDisplayFPS(false);
+        CCDirector.sharedDirector().setDisplayFPS(false);
 
         // frames per second
-        Director.sharedDirector().setAnimationInterval(1.0f / 60);
+        CCDirector.sharedDirector().setAnimationInterval(1.0f / 60);
 
         Scene scene = Scene.node();
         scene.addChild(new Layer1(), 0);
 
         // Make the Scene active
-        Director.sharedDirector().runWithScene(scene);
+        CCDirector.sharedDirector().runWithScene(scene);
 
     }
 
     // getting a call, pause the game
     public void applicationWillResignActive(Context context) {
-        Director.sharedDirector().pause();
+        CCDirector.sharedDirector().pause();
     }
 
     // call got rejected
     public void applicationDidBecomeActive(Context context) {
-        Director.sharedDirector().resume();
+        CCDirector.sharedDirector().resume();
     }
 
     // purge memroy
