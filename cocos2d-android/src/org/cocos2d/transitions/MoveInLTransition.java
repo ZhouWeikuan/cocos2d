@@ -1,10 +1,10 @@
 package org.cocos2d.transitions;
 
-import org.cocos2d.actions.ease.EaseOut;
-import org.cocos2d.actions.instant.CallFunc;
-import org.cocos2d.actions.interval.IntervalAction;
-import org.cocos2d.actions.interval.MoveTo;
-import org.cocos2d.actions.interval.Sequence;
+import org.cocos2d.actions.ease.CCEaseOut;
+import org.cocos2d.actions.instant.CCCallFunc;
+import org.cocos2d.actions.interval.CCIntervalAction;
+import org.cocos2d.actions.interval.CCMoveTo;
+import org.cocos2d.actions.interval.CCSequence;
 import org.cocos2d.nodes.CCDirector;
 import org.cocos2d.nodes.Scene;
 import org.cocos2d.types.CGPoint;
@@ -29,23 +29,23 @@ public class MoveInLTransition extends TransitionScene {
 
         initScenes();
 
-        IntervalAction a = action();
+        CCIntervalAction a = action();
 
-        inScene.runAction(Sequence.actions(
+        inScene.runAction(CCSequence.actions(
                 easeAction(a),
-                CallFunc.action(this, "finish")));
+                CCCallFunc.action(this, "finish")));
 
     }
 
     /**
      * returns the action that will be performed
      */
-    protected IntervalAction action() {
-        return MoveTo.action(duration, 0, 0);
+    protected CCIntervalAction action() {
+        return CCMoveTo.action(duration, new CGPoint());
     }
 
-    protected IntervalAction easeAction(IntervalAction action) {
-        return EaseOut.action(action, 2.0f);
+    protected CCIntervalAction easeAction(CCIntervalAction action) {
+        return CCEaseOut.action(action, 2.0f);
     }
 
     /**

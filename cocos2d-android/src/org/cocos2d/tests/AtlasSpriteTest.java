@@ -5,11 +5,11 @@ import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.Window;
 import android.view.WindowManager;
-import org.cocos2d.actions.base.Action;
-import org.cocos2d.actions.base.RepeatForever;
+import org.cocos2d.actions.base.CCAction;
+import org.cocos2d.actions.base.CCRepeatForever;
 import org.cocos2d.actions.interval.*;
 import org.cocos2d.config.ccMacros;
-import org.cocos2d.layers.Layer;
+import org.cocos2d.layers.CCLayer;
 import org.cocos2d.menus.Menu;
 import org.cocos2d.menus.MenuItemImage;
 import org.cocos2d.nodes.*;
@@ -78,7 +78,7 @@ public class AtlasSpriteTest extends Activity {
     public void onDestroy() {
         super.onDestroy();
 
-        TextureManager.sharedTextureManager().removeAllTextures();
+        CCTextureCache.sharedTextureCache().removeAllTextures();
     }
 
     static int sceneIdx = -1;
@@ -91,30 +91,30 @@ public class AtlasSpriteTest extends Activity {
             Atlas6.class,
     };
 
-    static Layer nextAction() {
+    static CCLayer nextAction() {
         sceneIdx++;
         sceneIdx = sceneIdx % transitions.length;
         return restartAction();
     }
 
-    static Layer backAction() {
+    static CCLayer backAction() {
         sceneIdx--;
         if (sceneIdx < 0)
             sceneIdx += transitions.length;
         return restartAction();
     }
 
-    static Layer restartAction() {
+    static CCLayer restartAction() {
         try {
             Class<?> c = transitions[sceneIdx];
-            return (Layer) c.newInstance();
+            return (CCLayer) c.newInstance();
         } catch (Exception e) {
             if (DEBUG) e.printStackTrace();
             return null;
         }
     }
 
-    static abstract class AtlasSpriteDemo extends Layer {
+    static abstract class AtlasSpriteDemo extends CCLayer {
 
         public static final int kTagTileMap = 1;
         public static final int kTagSpriteManager = 1;
@@ -181,7 +181,7 @@ public class AtlasSpriteTest extends Activity {
             x = s.width;
             y = s.height;
 
-            AtlasSpriteManager mgr = new AtlasSpriteManager("grossini_dance_atlas.png", 50);
+            CCSpriteFrameCache mgr = new CCSpriteFrameCache("grossini_dance_atlas.png", 50);
             addChild(mgr, 0, kTagSpriteManager);
 
             addNewSprite(CGPoint.ccp(x / 2, y / 2));
@@ -189,7 +189,7 @@ public class AtlasSpriteTest extends Activity {
         }
 
         private void addNewSprite(CGPoint pos) {
-            AtlasSpriteManager mgr = (AtlasSpriteManager) getChild(kTagSpriteManager);
+            CCSpriteFrameCache mgr = (CCSpriteFrameCache) getChild(kTagSpriteManager);
 
             float rnd = ccMacros.CCRANDOM_0_1() * 1400.0f / 100.0f;
             int idx = (int) rnd;
@@ -201,19 +201,19 @@ public class AtlasSpriteTest extends Activity {
 
             sprite.setPosition(pos);
 
-            IntervalAction action;
+            CCIntervalAction action;
             float r = ccMacros.CCRANDOM_0_1();
 
             if (r < 0.33)
-                action = ScaleBy.action(3, 2);
+                action = CCScaleBy.action(3, 2);
             else if (r < 0.66)
-                action = RotateBy.action(3, 360);
+                action = CCRotateBy.action(3, 360);
             else
-                action = Blink.action(1, 3);
-            IntervalAction action_back = action.reverse();
-            IntervalAction seq = Sequence.actions(action, action_back);
+                action = CCBlink.action(1, 3);
+            CCIntervalAction action_back = action.reverse();
+            CCIntervalAction seq = CCSequence.actions(action, action_back);
 
-            sprite.runAction(RepeatForever.action(seq));
+            sprite.runAction(CCRepeatForever.action(seq));
         }
 
         @Override
@@ -238,7 +238,7 @@ public class AtlasSpriteTest extends Activity {
             CCTexture2D.saveTexParameters();
             CCTexture2D.setAliasTexParameters();
 
-            AtlasSpriteManager mgr = new AtlasSpriteManager("grossini_dance_atlas.png", 50);
+            CCSpriteFrameCache mgr = new CCSpriteFrameCache("grossini_dance_atlas.png", 50);
             addChild(mgr, 0, kTagSpriteManager);
 
             CCTexture2D.restoreTexParameters();
@@ -263,9 +263,9 @@ public class AtlasSpriteTest extends Activity {
             sprite2.setPosition(CGPoint.make(s.width / 2 - 100, s.height / 2));
             sprite3.setPosition(CGPoint.make(s.width / 2 + 100, s.height / 2));
 
-            IntervalAction action1 = Animate.action(animation);
-            IntervalAction action2 = action1.copy();
-            IntervalAction action3 = action1.copy();
+            CCIntervalAction action1 = CCAnimate.action(animation);
+            CCIntervalAction action2 = action1.copy();
+            CCIntervalAction action3 = action1.copy();
 
             sprite1.setScale(0.5f);
             sprite2.setScale(1.0f);
@@ -288,7 +288,7 @@ public class AtlasSpriteTest extends Activity {
 
             // small capacity. Testing resizing.
             // Don't use capacity=1 in your real game. It is expensive to resize the capacity
-            AtlasSpriteManager mgr = new AtlasSpriteManager("grossini_dance_atlas.png", 1);
+            CCSpriteFrameCache mgr = new CCSpriteFrameCache("grossini_dance_atlas.png", 1);
             addChild(mgr, 0, kTagSpriteManager);
 
             AtlasSprite sprite1 = AtlasSprite.sprite(CGRect.make(85 * 0, 121 * 1, 85, 121), mgr);
@@ -310,21 +310,21 @@ public class AtlasSpriteTest extends Activity {
             sprite7.setPosition(CGPoint.make((s.width / 5) * 3, (s.height / 3) * 2));
             sprite8.setPosition(CGPoint.make((s.width / 5) * 4, (s.height / 3) * 2));
 
-            IntervalAction action = FadeIn.action(2);
-            IntervalAction action_back = action.reverse();
-            Action fade = RepeatForever.action(Sequence.actions(action, action_back));
+            CCIntervalAction action = CCFadeIn.action(2);
+            CCIntervalAction action_back = action.reverse();
+            CCAction fade = CCRepeatForever.action(CCSequence.actions(action, action_back));
 
-            IntervalAction tintred = TintBy.action(2, 0, -255, -255);
-            IntervalAction tintred_back = tintred.reverse();
-            Action red = RepeatForever.action(Sequence.actions(tintred, tintred_back));
+            CCIntervalAction tintred = CCTintBy.action(2, ccColor3B.ccc3(0, -255, -255));
+            CCIntervalAction tintred_back = tintred.reverse();
+            CCAction red = CCRepeatForever.action(CCSequence.actions(tintred, tintred_back));
 
-            IntervalAction tintgreen = TintBy.action(2,  -255 , 0,  -255);
-            IntervalAction tintgreen_back = tintgreen.reverse();
-            Action green = RepeatForever.action(Sequence.actions(tintgreen, tintgreen_back));
+            CCIntervalAction tintgreen = CCTintBy.action(2, ccColor3B.ccc3(-255 , 0,  -255));
+            CCIntervalAction tintgreen_back = tintgreen.reverse();
+            CCAction green = CCRepeatForever.action(CCSequence.actions(tintgreen, tintgreen_back));
 
-            IntervalAction tintblue = TintBy.action(2, -255,  -255, 0);
-            IntervalAction tintblue_back = tintblue.reverse();
-            Action blue = RepeatForever.action(Sequence.actions(tintblue, tintblue_back));
+            CCIntervalAction tintblue = CCTintBy.action(2, ccColor3B.ccc3(-255,  -255, 0));
+            CCIntervalAction tintblue_back = tintblue.reverse();
+            CCAction blue = CCRepeatForever.action(CCSequence.actions(tintblue, tintblue_back));
 
 
             sprite5.runAction(red);
@@ -369,7 +369,7 @@ public class AtlasSpriteTest extends Activity {
 
             // small capacity. Testing resizing.
             // Don't use capacity=1 in your real game. It is expensive to resize the capacity
-            AtlasSpriteManager mgr = new AtlasSpriteManager("grossini_dance_atlas.png", 1);
+            CCSpriteFrameCache mgr = new CCSpriteFrameCache("grossini_dance_atlas.png", 1);
             addChild(mgr, 0, kTagSpriteManager);
 
             CGSize s = CCDirector.sharedDirector().winSize();
@@ -423,13 +423,13 @@ public class AtlasSpriteTest extends Activity {
         public Atlas5() {
             // small capacity. Testing resizing.
             // Don't use capacity=1 in your real game. It is expensive to resize the capacity
-            AtlasSpriteManager mgr = new AtlasSpriteManager("grossini_dance_atlas.png", 1);
+            CCSpriteFrameCache mgr = new CCSpriteFrameCache("grossini_dance_atlas.png", 1);
             addChild(mgr, 0, kTagSpriteManager);
 
             CGSize s = CCDirector.sharedDirector().winSize();
 
-            IntervalAction rotate = RotateBy.action(10, 360);
-            Action action = RepeatForever.action(rotate);
+            CCIntervalAction rotate = CCRotateBy.action(10, 360);
+            CCAction action = CCRepeatForever.action(rotate);
 
             for (int i = 0; i < 3; i++) {
                 AtlasSprite sprite = AtlasSprite.sprite(CGRect.make(85 * i, 121 * 1, 85, 121), mgr);
@@ -454,7 +454,7 @@ public class AtlasSpriteTest extends Activity {
                 }
                 point.setPosition(sprite.getPosition());
 
-                Action copy = action.copy();
+                CCAction copy = action.copy();
                 sprite.runAction(copy);
                 mgr.addChild(sprite, i);
             }
@@ -472,7 +472,7 @@ public class AtlasSpriteTest extends Activity {
         public Atlas6() {
             // small capacity. Testing resizing
             // Don't use capacity=1 in your real game. It is expensive to resize the capacity
-            AtlasSpriteManager mgr = new AtlasSpriteManager("grossini_dance_atlas.png", 1);
+            CCSpriteFrameCache mgr = new CCSpriteFrameCache("grossini_dance_atlas.png", 1);
             addChild(mgr, 0, kTagSpriteManager);
 
             CGSize s = CCDirector.sharedDirector().winSize();
@@ -482,18 +482,18 @@ public class AtlasSpriteTest extends Activity {
 
 
             // AtlasSprite actions
-            IntervalAction rotate = RotateBy.action(5, 360);
-            Action action = RepeatForever.action(rotate);
+            CCIntervalAction rotate = CCRotateBy.action(5, 360);
+            CCAction action = CCRepeatForever.action(rotate);
 
             // AtlasSpriteManager actions
-            IntervalAction rotate_back = rotate.reverse();
-            IntervalAction rotate_seq = Sequence.actions(rotate, rotate_back);
-            Action rotate_forever = RepeatForever.action(rotate_seq);
+            CCIntervalAction rotate_back = rotate.reverse();
+            CCIntervalAction rotate_seq = CCSequence.actions(rotate, rotate_back);
+            CCAction rotate_forever = CCRepeatForever.action(rotate_seq);
 
-            IntervalAction scale = ScaleBy.action(5, 1.5f);
-            IntervalAction scale_back = scale.reverse();
-            IntervalAction scale_seq = Sequence.actions(scale, scale_back);
-            Action scale_forever = RepeatForever.action(scale_seq);
+            CCIntervalAction scale = CCScaleBy.action(5, 1.5f);
+            CCIntervalAction scale_back = scale.reverse();
+            CCIntervalAction scale_seq = CCSequence.actions(scale, scale_back);
+            CCAction scale_forever = CCRepeatForever.action(scale_seq);
 
 
             for (int i = 0; i < 3; i++) {

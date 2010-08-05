@@ -1,12 +1,12 @@
 package org.cocos2d.transitions;
 
-import org.cocos2d.actions.instant.CallFunc;
-import org.cocos2d.actions.interval.DelayTime;
-import org.cocos2d.actions.interval.IntervalAction;
-import org.cocos2d.actions.interval.RotateBy;
-import org.cocos2d.actions.interval.ScaleBy;
-import org.cocos2d.actions.interval.Sequence;
-import org.cocos2d.actions.interval.Spawn;
+import org.cocos2d.actions.instant.CCCallFunc;
+import org.cocos2d.actions.interval.CCDelayTime;
+import org.cocos2d.actions.interval.CCIntervalAction;
+import org.cocos2d.actions.interval.CCRotateBy;
+import org.cocos2d.actions.interval.CCScaleBy;
+import org.cocos2d.actions.interval.CCSequence;
+import org.cocos2d.actions.interval.CCSpawn;
 import org.cocos2d.nodes.Scene;
 import org.cocos2d.types.CGPoint;
 
@@ -35,13 +35,13 @@ public class RotoZoomTransition extends TransitionScene {
         inScene.setAnchorPoint(CGPoint.make(0.5f, 0.5f));
         outScene.setAnchorPoint(CGPoint.make(0.5f, 0.5f));
 
-        IntervalAction rotozoom = Sequence.actions(Spawn.actions(ScaleBy.action(duration / 2, 0.001f),
-                RotateBy.action(duration / 2, 360 * 2)),
-                DelayTime.action(duration / 2));
+        CCIntervalAction rotozoom = CCSequence.actions(CCSpawn.actions(CCScaleBy.action(duration / 2, 0.001f),
+                CCRotateBy.action(duration / 2, 360 * 2)),
+                CCDelayTime.action(duration / 2));
 
 
         outScene.runAction(rotozoom);
-        inScene.runAction(Sequence.actions(rotozoom.reverse(),
-                CallFunc.action(this, "finish")));
+        inScene.runAction(CCSequence.actions(rotozoom.reverse(),
+                CCCallFunc.action(this, "finish")));
     }
 }

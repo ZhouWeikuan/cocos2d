@@ -4,14 +4,14 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.Window;
 import android.view.WindowManager;
-import org.cocos2d.actions.base.Action;
-import org.cocos2d.actions.base.RepeatForever;
-import org.cocos2d.actions.instant.CallFuncN;
-import org.cocos2d.actions.interval.IntervalAction;
-import org.cocos2d.actions.interval.RotateBy;
-import org.cocos2d.actions.interval.ScaleBy;
-import org.cocos2d.actions.interval.Sequence;
-import org.cocos2d.layers.Layer;
+import org.cocos2d.actions.base.CCAction;
+import org.cocos2d.actions.base.CCRepeatForever;
+import org.cocos2d.actions.instant.CCCallFuncN;
+import org.cocos2d.actions.interval.CCIntervalAction;
+import org.cocos2d.actions.interval.CCRotateBy;
+import org.cocos2d.actions.interval.CCScaleBy;
+import org.cocos2d.actions.interval.CCSequence;
+import org.cocos2d.layers.CCLayer;
 import org.cocos2d.menus.Menu;
 import org.cocos2d.menus.MenuItemImage;
 import org.cocos2d.nodes.*;
@@ -78,7 +78,7 @@ public class CocosNodeTest extends Activity {
     public void onDestroy() {
         super.onDestroy();
 
-        TextureManager.sharedTextureManager().removeAllTextures();
+        CCTextureCache.sharedTextureCache().removeAllTextures();
     }
 
     public static final int kTagSprite1 = 1;
@@ -97,7 +97,7 @@ public class CocosNodeTest extends Activity {
             Test7.class,
     };
 
-    static Layer nextAction() {
+    static CCLayer nextAction() {
 
         sceneIdx++;
         sceneIdx = sceneIdx % transitions.length;
@@ -105,7 +105,7 @@ public class CocosNodeTest extends Activity {
         return restartAction();
     }
 
-    static Layer backAction() {
+    static CCLayer backAction() {
         sceneIdx--;
         int total = transitions.length;
         if (sceneIdx < 0)
@@ -113,17 +113,17 @@ public class CocosNodeTest extends Activity {
         return restartAction();
     }
 
-    static Layer restartAction() {
+    static CCLayer restartAction() {
         try {
             Class<?> c = transitions[sceneIdx];
-            return (Layer) c.newInstance();
+            return (CCLayer) c.newInstance();
         } catch (Exception e) {
             return null;
         }
     }
 
 
-    static abstract class TestDemo extends Layer {
+    static abstract class TestDemo extends CCLayer {
         public TestDemo() {
             CGSize s = CCDirector.sharedDirector().winSize();
 
@@ -202,13 +202,13 @@ public class CocosNodeTest extends Activity {
             addChild(point1, 1);
             addChild(point2, 1);
 
-            IntervalAction a1 = RotateBy.action(2, 360);
-            IntervalAction a2 = ScaleBy.action(2, 2);
+            CCIntervalAction a1 = CCRotateBy.action(2, 360);
+            CCIntervalAction a2 = CCScaleBy.action(2, 2);
 
-            Action action1 = RepeatForever.action(Sequence.actions(a1, a2, a2.reverse()));
+            CCAction action1 = CCRepeatForever.action(CCSequence.actions(a1, a2, a2.reverse()));
 
-            Action action2 = action1.copy();
-            Action action0 = action1.copy();
+            CCAction action2 = action1.copy();
+            CCAction action0 = action1.copy();
 
             sp0.runAction(action0);
             sp1.runAction(action1);
@@ -243,11 +243,11 @@ public class CocosNodeTest extends Activity {
             sp1.addChild(sp3);
             sp2.addChild(sp4);
 
-            IntervalAction a1 = RotateBy.action(2, 360);
-            IntervalAction a2 = ScaleBy.action(2, 2);
+            CCIntervalAction a1 = CCRotateBy.action(2, 360);
+            CCIntervalAction a2 = CCScaleBy.action(2, 2);
 
-            Action action1 = RepeatForever.action(Sequence.actions(a1, a2, a2.reverse()));
-            Action action2 = RepeatForever.action(Sequence.actions(a1.copy(), a2.copy(), a2.reverse()));
+            CCAction action1 = CCRepeatForever.action(CCSequence.actions(a1, a2, a2.reverse()));
+            CCAction action2 = CCRepeatForever.action(CCSequence.actions(a1.copy(), a2.copy(), a2.reverse()));
 
             sp2.setAnchorPoint(CGPoint.zero());
 
@@ -282,8 +282,8 @@ public class CocosNodeTest extends Activity {
             // this tag belong to Test3 (kTagSprite1)
             addChild(sp3, 0, kTagSprite1);
 
-            IntervalAction a1 = RotateBy.action(4, 360);
-            Action action1 = RepeatForever.action(a1);
+            CCIntervalAction a1 = CCRotateBy.action(4, 360);
+            CCAction action1 = CCRepeatForever.action(a1);
             sp3.runAction(action1);
 
             schedule("changeZOrder", 2.0f);
@@ -326,7 +326,7 @@ public class CocosNodeTest extends Activity {
 
         public void delay2(float dt) {
             CCNode node = getChild(2);
-            IntervalAction action1 = RotateBy.action(1, 360);
+            CCIntervalAction action1 = CCRotateBy.action(1, 360);
             node.runAction(action1);
         }
 
@@ -352,11 +352,11 @@ public class CocosNodeTest extends Activity {
             sp1.setPosition(CGPoint.make(100, s.height / 2));
             sp2.setPosition(CGPoint.make(s.width - 100, s.height / 2));
 
-            IntervalAction rot = RotateBy.action(2, 360);
-            IntervalAction rot_back = rot.reverse();
-            Action forever = RepeatForever.action(
-                    Sequence.actions(rot, rot_back));
-            Action forever2 = forever.copy();
+            CCIntervalAction rot = CCRotateBy.action(2, 360);
+            CCIntervalAction rot_back = rot.reverse();
+            CCAction forever = CCRepeatForever.action(
+                    CCSequence.actions(rot, rot_back));
+            CCAction forever2 = forever.copy();
 
             addChild(sp1, 0, kTagSprite1);
             addChild(sp2, 0, kTagSprite2);
@@ -398,13 +398,13 @@ public class CocosNodeTest extends Activity {
             sp2.setPosition(CGPoint.make(s.width - 100, s.height / 2));
 
 
-            IntervalAction rot = RotateBy.action(2, 360);
-            IntervalAction rot_back = rot.reverse();
-            Action forever1 = RepeatForever.action(Sequence.actions(rot, rot_back));
-            Action forever11 = forever1.copy();
+            CCIntervalAction rot = CCRotateBy.action(2, 360);
+            CCIntervalAction rot_back = rot.reverse();
+            CCAction forever1 = CCRepeatForever.action(CCSequence.actions(rot, rot_back));
+            CCAction forever11 = forever1.copy();
 
-            Action forever2 = forever1.copy();
-            Action forever21 = forever1.copy();
+            CCAction forever2 = forever1.copy();
+            CCAction forever21 = forever1.copy();
 
             addChild(sp1, 0, kTagSprite1);
             sp1.addChild(sp11);
@@ -463,8 +463,8 @@ public class CocosNodeTest extends Activity {
 
             explosion.setPosition(CGPoint.make(s.width / 2, s.height / 2));
 
-            runAction(Sequence.actions(RotateBy.action(2, 360),
-                    CallFuncN.action(this, "removeMe")));
+            runAction(CCSequence.actions(CCRotateBy.action(2, 360),
+                    CCCallFuncN.action(this, "removeMe")));
 
             addChild(explosion);
         }

@@ -6,12 +6,12 @@ import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.Window;
 import android.view.WindowManager;
-import org.cocos2d.actions.ActionManager;
-import org.cocos2d.actions.base.RepeatForever;
+import org.cocos2d.actions.CCActionManager;
+import org.cocos2d.actions.base.CCRepeatForever;
 import org.cocos2d.actions.interval.*;
 import org.cocos2d.config.ccMacros;
-import org.cocos2d.layers.ColorLayer;
-import org.cocos2d.layers.Layer;
+import org.cocos2d.layers.CCColorLayer;
+import org.cocos2d.layers.CCLayer;
 import org.cocos2d.nodes.*;
 import org.cocos2d.opengl.CCGLSurfaceView;
 import org.cocos2d.types.ccColor4B;
@@ -86,11 +86,11 @@ public class ClickAndMoveTest extends Activity {
     public void onDestroy() {
         super.onDestroy();
 
-        ActionManager.sharedManager().removeAllActions();
-        TextureManager.sharedTextureManager().removeAllTextures();
+        CCActionManager.sharedManager().removeAllActions();
+        CCTextureCache.sharedTextureCache().removeAllTextures();
     }
 
-    static class MainLayer extends Layer {
+    static class MainLayer extends CCLayer {
         static final int kTagSprite = 1;
 
         public MainLayer() {
@@ -99,15 +99,15 @@ public class ClickAndMoveTest extends Activity {
 
             Sprite sprite = Sprite.sprite("grossini.png");
 
-            Layer layer = ColorLayer.node(new ccColor4B(255, 255, 0, 255));
+            CCLayer layer = CCColorLayer.node(new ccColor4B(255, 255, 0, 255));
             addChild(layer, -1);
 
             addChild(sprite, 0, kTagSprite);
             sprite.setPosition(CGPoint.make(20, 150));
 
-            sprite.runAction(JumpTo.action(4, 300, 48, 100, 4));
+            sprite.runAction(CCJumpTo.action(4, CGPoint.make(300, 48), 100, 4));
 
-            layer.runAction(RepeatForever.action(Sequence.actions(FadeIn.action(1), FadeOut.action(1))));
+            layer.runAction(CCRepeatForever.action(CCSequence.actions(CCFadeIn.action(1), CCFadeOut.action(1))));
         }
 
         @Override
@@ -116,7 +116,7 @@ public class ClickAndMoveTest extends Activity {
 
             CCNode s = getChild(kTagSprite);
             s.stopAllActions();
-            s.runAction(MoveTo.action(1.0f, convertedLocation.x, convertedLocation.y));
+            s.runAction(CCMoveTo.action(1.0f, convertedLocation));
            
             CGPoint pnt = s.getPosition();
             float o = convertedLocation.x - pnt.x;
@@ -130,7 +130,7 @@ public class ClickAndMoveTest extends Activity {
                     at = 180 - Math.abs(at);
             }
 
-            s.runAction(RotateTo.action(1, at));
+            s.runAction(CCRotateTo.action(1, at));
 
             return CCTouchDispatcher.kEventHandled;
         }

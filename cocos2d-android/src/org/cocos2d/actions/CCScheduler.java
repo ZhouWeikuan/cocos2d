@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.cocos2d.config.ccConfig;
-import org.cocos2d.nodes.CCNode;
 
 //
 // CCScheduler
@@ -27,7 +26,7 @@ public class CCScheduler {
     private static class tListEntry {
         // struct	_listEntry *prev, *next;
         public Method impMethod;
-        public CCNode	target;				// not retained (retained by hashUpdateEntry)
+        public Object	target;				// not retained (retained by hashUpdateEntry)
         public int		priority;
         public boolean	paused;
     };
@@ -35,7 +34,7 @@ public class CCScheduler {
     // Hash Element used for "selectors with interval"
     private static class tHashSelectorEntry {
         ArrayList<CCTimer>    timers;
-        CCNode			target;		// hash key (retained)
+        Object			target;		// hash key (retained)
         int	            timerIndex;
         CCTimer			currentTimer;
         boolean			currentTimerSalvaged;
@@ -51,8 +50,8 @@ public class CCScheduler {
 	ArrayList<tListEntry>    updatesPos;	// list priority > 0
 		
 	// Used for "selectors with interval"
-    HashMap<CCNode, tHashSelectorEntry>  hashForSelectors;
-    HashMap<CCNode, tHashSelectorEntry>  hashForUpdates;
+    HashMap<Object, tHashSelectorEntry>  hashForSelectors;
+    HashMap<Object, tHashSelectorEntry>  hashForUpdates;
 	tHashSelectorEntry	                currentTarget;
 	boolean						        currentTargetSalvaged;
 	
@@ -114,15 +113,15 @@ public class CCScheduler {
         updates0 = new ArrayList<tListEntry>();
         updatesNeg = new ArrayList<tListEntry>();
         updatesPos = new ArrayList<tListEntry>();
-        hashForUpdates = new HashMap<CCNode, tHashSelectorEntry>();
-        hashForSelectors = new HashMap<CCNode, tHashSelectorEntry>();
+        hashForUpdates = new HashMap<Object, tHashSelectorEntry>();
+        hashForSelectors = new HashMap<Object, tHashSelectorEntry>();
 
         // selectors with interval
         currentTarget = null;
         currentTargetSalvaged = false;
     }
 
-    private void removeHashElement(CCNode key, tHashSelectorEntry element){
+    private void removeHashElement(Object key, tHashSelectorEntry element){
         element.timers.clear();
         element.timers = null;
         element.target = null;
@@ -216,13 +215,24 @@ public class CCScheduler {
     }
 
     static class SchedulerTimerAlreadyScheduled extends RuntimeException {
-        public SchedulerTimerAlreadyScheduled(String reason) {
+
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 5996803998420105321L;
+
+		public SchedulerTimerAlreadyScheduled(String reason) {
             super(reason);
         }
     }
 
     static class SchedulerTimerNotFound extends RuntimeException {
-        public SchedulerTimerNotFound(String reason) {
+        /**
+		 * 
+		 */
+		private static final long serialVersionUID = -1912889437889458701L;
+
+		public SchedulerTimerNotFound(String reason) {
             super(reason);
         }
     }
@@ -233,7 +243,7 @@ public class CCScheduler {
 
       @since v0.99.3
     */
-    public void schedule(String selector, CCNode target, float interval, boolean paused) {
+    public void schedule(String selector, Object target, float interval, boolean paused) {
         assert selector != null: "Argument selector must be non-nil";
         assert target != null: "Argument target must be non-nil";	
 
@@ -263,7 +273,7 @@ public class CCScheduler {
      If you want to unschedule the "update", use unscheudleUpdateForTarget.
      @since v0.99.3
     */
-    public void unschedule(String selector, CCNode target) {
+    public void unschedule(String selector, Object target) {
         // explicity handle nil arguments when removing an object
         if( target==null && selector==null)
             return;
@@ -306,7 +316,7 @@ public class CCScheduler {
     /** Unschedules the update selector for a given target
       @since v0.99.3
       */
-    public void unscheduleUpdate(CCNode target) {
+    public void unscheduleUpdate(Object target) {
         if( target == null )
             return;
         hashForUpdates.remove(target);
@@ -316,7 +326,7 @@ public class CCScheduler {
      This also includes the "update" selector.
      @since v0.99.3
     */
-	public void unscheduleAllSelectors(CCNode target) {
+	public void unscheduleAllSelectors(Object target) {
         // TODO Auto-generated method stub
         // explicit nil handling
         if( target == null )
@@ -352,7 +362,7 @@ public class CCScheduler {
     public void unscheduleAllSelectors() {
         // Custom Selectors
         for(tHashSelectorEntry element : hashForSelectors.values()) {	
-            CCNode target = element.target;
+            Object target = element.target;
             unscheduleAllSelectors(target);
         }
 
@@ -373,7 +383,7 @@ public class CCScheduler {
      If the target is not present, nothing happens.
      @since v0.99.3
     */
-	public void resume(CCNode target) {
+	public void resume(Object target) {
         assert  target != null: "target must be non nil";
 
         // Custom Selectors
@@ -395,7 +405,7 @@ public class CCScheduler {
      If the target is not present, nothing happens.
      @since v0.99.3
     */
-	public void pause(CCNode target) {
+	public void pause(Object target) {
         assert target != null: "target must be non nil";
 
         // Custom selectors
@@ -417,7 +427,7 @@ public class CCScheduler {
       The lower the priority, the earlier it is called.
       @since v0.99.3
     */
-	public void scheduleUpdate(CCNode target, int priority, boolean paused) {
+	public void scheduleUpdate(Object target, int priority, boolean paused) {
         // TODO Auto-generated method stub
         if (ccConfig.COCOS2D_DEBUG >= 1) {
             tHashSelectorEntry hashElement = hashForUpdates.get(target);
@@ -468,7 +478,7 @@ public class CCScheduler {
         _sharedScheduler = null;
     }
 
-    public void append(ArrayList<tListEntry> list, CCNode target, boolean paused) {
+    public void append(ArrayList<tListEntry> list, Object target, boolean paused) {
         tListEntry listElement = new tListEntry();
 
         listElement.target = target;
@@ -488,7 +498,7 @@ public class CCScheduler {
         hashForUpdates.put(target, hashElement);
     }
 
-    public void priority(ArrayList<tListEntry> list, CCNode target, int priority, boolean paused) {
+    public void priority(ArrayList<tListEntry> list, Object target, int priority, boolean paused) {
         tListEntry listElement = new tListEntry();
 
         listElement.target = target;

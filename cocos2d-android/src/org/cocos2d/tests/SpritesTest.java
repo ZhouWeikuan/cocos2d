@@ -4,12 +4,12 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.Window;
 import android.view.WindowManager;
-import org.cocos2d.actions.base.Action;
-import org.cocos2d.actions.base.RepeatForever;
-import org.cocos2d.actions.camera.OrbitCamera;
+import org.cocos2d.actions.base.CCAction;
+import org.cocos2d.actions.base.CCRepeatForever;
+import org.cocos2d.actions.camera.CCOrbitCamera;
 import org.cocos2d.actions.instant.*;
 import org.cocos2d.actions.interval.*;
-import org.cocos2d.layers.Layer;
+import org.cocos2d.layers.CCLayer;
 import org.cocos2d.menus.Menu;
 import org.cocos2d.menus.MenuItemImage;
 import org.cocos2d.nodes.*;
@@ -17,6 +17,7 @@ import org.cocos2d.opengl.CCGLSurfaceView;
 import org.cocos2d.types.CCBezierConfig;
 import org.cocos2d.types.CGPoint;
 import org.cocos2d.types.CGSize;
+import org.cocos2d.types.ccColor3B;
 import org.cocos2d.utils.CCFormatter;
 
 public class SpritesTest extends Activity {
@@ -60,7 +61,7 @@ public class SpritesTest extends Activity {
             SpriteOrbit.class
     };
 
-    static Layer nextAction() {
+    static CCLayer nextAction() {
 
         sceneIdx++;
         sceneIdx = sceneIdx % transitions.length;
@@ -68,7 +69,7 @@ public class SpritesTest extends Activity {
         return restartAction();
     }
 
-    static Layer backAction() {
+    static CCLayer backAction() {
         sceneIdx--;
         int total = transitions.length;
         if (sceneIdx < 0)
@@ -76,17 +77,17 @@ public class SpritesTest extends Activity {
         return restartAction();
     }
 
-    static Layer restartAction() {
+    static CCLayer restartAction() {
         try {
             Class<?> c = transitions[sceneIdx];
-            return (Layer) c.newInstance();
+            return (CCLayer) c.newInstance();
         } catch (Exception e) {
             return null;
         }
     }
 
 
-    static abstract class SpriteDemo extends Layer {
+    static abstract class SpriteDemo extends CCLayer {
 
         Sprite grossini;
         Sprite tamara;
@@ -190,8 +191,8 @@ public class SpritesTest extends Activity {
             CGSize s = CCDirector.sharedDirector().winSize();
 
 
-            IntervalAction actionTo = MoveTo.action(2, s.width - 40, s.height - 40);
-            IntervalAction actionBy = MoveBy.action(2, 80, 80);
+            CCIntervalAction actionTo = CCMoveTo.action(2, CGPoint.make(s.width - 40, s.height - 40));
+            CCIntervalAction actionBy = CCMoveBy.action(2, CGPoint.make(80, 80));
 
             tamara.runAction(actionTo);
             grossini.runAction(actionBy);
@@ -210,8 +211,8 @@ public class SpritesTest extends Activity {
 
             centerSprites();
 
-            IntervalAction actionTo = RotateTo.action(2, 45);
-            IntervalAction actionBy = RotateBy.action(2, 360);
+            CCIntervalAction actionTo = CCRotateTo.action(2, 45);
+            CCIntervalAction actionBy = CCRotateBy.action(2, 360);
 
             tamara.runAction(actionTo);
             grossini.runAction(actionBy);
@@ -229,8 +230,8 @@ public class SpritesTest extends Activity {
 
             centerSprites();
 
-            IntervalAction actionTo = ScaleTo.action(2, 0.5f);
-            IntervalAction actionBy = ScaleBy.action(2, 2.0f);
+            CCIntervalAction actionTo = CCScaleTo.action(2, 0.5f);
+            CCIntervalAction actionBy = CCScaleBy.action(2, 2.0f);
 
             //	grossini.transformAnchor_ = CCPoint.ccp( [grossini transformAnchor_].x, 0 );
 
@@ -249,8 +250,8 @@ public class SpritesTest extends Activity {
         public void onEnter() {
             super.onEnter();
 
-            IntervalAction actionTo = JumpTo.action(2, 300, 300, 50, 4);
-            IntervalAction actionBy = JumpBy.action(2, 300, 0, 50, 4);
+            CCIntervalAction actionTo = CCJumpTo.action(2, CGPoint.make(300, 300), 50, 4);
+            CCIntervalAction actionBy = CCJumpBy.action(2, CGPoint.make(300, 0), 50, 4);
 
             tamara.runAction(actionTo);
             grossini.runAction(actionBy);
@@ -275,28 +276,26 @@ public class SpritesTest extends Activity {
 
             // sprite 1
             CCBezierConfig bezier = new CCBezierConfig();
-            bezier.startPosition = CGPoint.ccp(0, 0);
             bezier.controlPoint_1 = CGPoint.ccp(0, s.height / 2);
             bezier.controlPoint_2 = CGPoint.ccp(300, -s.height / 2);
             bezier.endPosition = CGPoint.ccp(300, 100);
 
-            IntervalAction bezierForward = BezierBy.action(3, bezier);
-            IntervalAction bezierBack = bezierForward.reverse();
-            IntervalAction seq = Sequence.actions(bezierForward, bezierBack);
-            Action rep = RepeatForever.action(seq);
+            CCIntervalAction bezierForward = CCBezierBy.action(3, bezier);
+            CCIntervalAction bezierBack = bezierForward.reverse();
+            CCIntervalAction seq = CCSequence.actions(bezierForward, bezierBack);
+            CCAction rep = CCRepeatForever.action(seq);
 
 
             // sprite 2
             CCBezierConfig bezier2 = new CCBezierConfig();
-            bezier2.startPosition = CGPoint.ccp(0, 0);
             bezier2.controlPoint_1 = CGPoint.ccp(100, s.height / 2);
             bezier2.controlPoint_2 = CGPoint.ccp(200, -s.height / 2);
             bezier2.endPosition = CGPoint.ccp(300, 0);
 
-            IntervalAction bezierForward2 = BezierBy.action(3, bezier2);
-            IntervalAction bezierBack2 = bezierForward2.reverse();
-            IntervalAction seq2 = Sequence.actions(bezierForward2, bezierBack2);
-            Action rep2 = RepeatForever.action(seq2);
+            CCIntervalAction bezierForward2 = CCBezierBy.action(3, bezier2);
+            CCIntervalAction bezierBack2 = bezierForward2.reverse();
+            CCIntervalAction seq2 = CCSequence.actions(bezierForward2, bezierBack2);
+            CCAction rep2 = CCRepeatForever.action(seq2);
 
 
             grossini.runAction(rep);
@@ -316,8 +315,8 @@ public class SpritesTest extends Activity {
 
             centerSprites();
 
-            IntervalAction action1 = Blink.action(2, 10);
-            IntervalAction action2 = Blink.action(2, 5);
+            CCIntervalAction action1 = CCBlink.action(2, 10);
+            CCIntervalAction action2 = CCBlink.action(2, 5);
 
             tamara.runAction(action1);
             grossini.runAction(action2);
@@ -335,8 +334,8 @@ public class SpritesTest extends Activity {
             centerSprites();
 
             tamara.setOpacity((byte) 0);
-            IntervalAction action1 = FadeIn.action(1.0f);
-            IntervalAction action2 = FadeOut.action(1.0f);
+            CCIntervalAction action1 = CCFadeIn.action(1.0f);
+            CCIntervalAction action2 = CCFadeOut.action(1.0f);
 
             tamara.runAction(action1);
             grossini.runAction(action2);
@@ -354,8 +353,8 @@ public class SpritesTest extends Activity {
 
             centerSprites();
 
-            IntervalAction action1 = TintTo.action(2, (byte) 255, (byte) 0, (byte) 255);
-            IntervalAction action2 = TintBy.action(2, (byte) 0, (byte) 128, (byte) 128);
+            CCIntervalAction action1 = CCTintTo.action(2, ccColor3B.ccc3((byte) 255, (byte) 0, (byte) 255));
+            CCIntervalAction action2 = CCTintBy.action(2, ccColor3B.ccc3((byte) 0, (byte) 128, (byte) 128));
 
             tamara.runAction(action1);
             grossini.runAction(action2);
@@ -380,7 +379,7 @@ public class SpritesTest extends Activity {
                 animation.addFrame(new CCFormatter().format("grossini_dance_%02d.png", i));
             }
 
-            IntervalAction action = Animate.action(animation);
+            CCIntervalAction action = CCAnimate.action(animation);
 
             grossini.runAction(action);
         }
@@ -392,7 +391,7 @@ public class SpritesTest extends Activity {
 
 
     static class SpriteSequence extends SpriteDemo {
-        public static Layer layer() {
+        public static CCLayer layer() {
             return new SpriteSequence();
         }
 
@@ -401,8 +400,8 @@ public class SpritesTest extends Activity {
 
             tamara.setVisible(false);
 
-            IntervalAction action = Sequence.actions(MoveBy.action(2, 240, 0),
-                    RotateBy.action(2, 540));
+            CCIntervalAction action = CCSequence.actions(CCMoveBy.action(2, CGPoint.make(240, 0)),
+                    CCRotateBy.action(2, 540));
 
             grossini.runAction(action);
         }
@@ -419,8 +418,8 @@ public class SpritesTest extends Activity {
 
             tamara.setVisible(false);
 
-            IntervalAction action = Spawn.actions(JumpBy.action(2, 300, 0, 50, 4),
-                    RotateBy.action(2, 720));
+            CCIntervalAction action = CCSpawn.actions(CCJumpBy.action(2, CGPoint.make(300, 0), 50, 4),
+                    CCRotateBy.action(2, 720));
 
             grossini.runAction(action);
         }
@@ -431,7 +430,7 @@ public class SpritesTest extends Activity {
     }
 
     static class SpriteReverse extends SpriteDemo {
-        public static Layer layer() {
+        public static CCLayer layer() {
             return new SpriteReverse();
         }
 
@@ -440,8 +439,8 @@ public class SpritesTest extends Activity {
 
             tamara.setVisible(false);
 
-            IntervalAction jump = JumpBy.action(2, 300, 0, 50, 4);
-            IntervalAction action = Sequence.actions(jump, jump.reverse());
+            CCIntervalAction jump = CCJumpBy.action(2, CGPoint.make(300, 0), 50, 4);
+            CCIntervalAction action = CCSequence.actions(jump, jump.reverse());
 
             grossini.runAction(action);
         }
@@ -458,8 +457,8 @@ public class SpritesTest extends Activity {
 
             tamara.setVisible(false);
 
-            IntervalAction move = MoveBy.action(1, 150, 0);
-            IntervalAction action = Sequence.actions(move, DelayTime.action(2), move);
+            CCIntervalAction move = CCMoveBy.action(1, CGPoint.make(150, 0));
+            CCIntervalAction action = CCSequence.actions(move, CCDelayTime.action(2), move);
 
             grossini.runAction(action);
         }
@@ -476,10 +475,10 @@ public class SpritesTest extends Activity {
 
             tamara.setVisible(false);
 
-            IntervalAction move1 = MoveBy.action(1, 250, 0);
-            IntervalAction move2 = MoveBy.action(1, 0, 50);
-            IntervalAction seq = Sequence.actions(move1, move2, move1.reverse());
-            Action action = Sequence.actions(seq, seq.reverse());
+            CCIntervalAction move1 = CCMoveBy.action(1, CGPoint.make(250, 0));
+            CCIntervalAction move2 = CCMoveBy.action(1, CGPoint.make(0, 50));
+            CCIntervalAction seq = CCSequence.actions(move1, move2, move1.reverse());
+            CCAction action = CCSequence.actions(seq, seq.reverse());
 
             grossini.runAction(action);
         }
@@ -497,24 +496,24 @@ public class SpritesTest extends Activity {
             // Test:
             //   Sequence should work both with IntervalAction and InstantActions
 
-            IntervalAction move1 = MoveBy.action(1, 250, 0);
-            IntervalAction move2 = MoveBy.action(1, 0, 50);
-            InstantAction tog1 = ToggleVisibility.action();
-            InstantAction tog2 = ToggleVisibility.action();
-            IntervalAction seq = Sequence.actions(move1, tog1, move2, tog2, move1.reverse());
-            Action action = Repeat.action(Sequence.actions(seq, seq.reverse()), 3);
+            CCIntervalAction move1 = CCMoveBy.action(1, CGPoint.make(250, 0));
+            CCIntervalAction move2 = CCMoveBy.action(1, CGPoint.make(0, 50));
+            CCInstantAction tog1 = CCToggleVisibility.action();
+            CCInstantAction tog2 = CCToggleVisibility.action();
+            CCIntervalAction seq = CCSequence.actions(move1, tog1, move2, tog2, move1.reverse());
+            CCAction action = CCRepeat.action(CCSequence.actions(seq, seq.reverse()), 3);
 
 
             // Test:
             //   Also test that the reverse of Hide is Show, and vice-versa
             grossini.runAction(action);
 
-            IntervalAction move_tamara = MoveBy.action(1, 100, 0);
-            IntervalAction move_tamara2 = MoveBy.action(1, 50, 0);
-            InstantAction hide = new Hide();
-            IntervalAction seq_tamara = Sequence.actions(move_tamara, hide, move_tamara2);
-            IntervalAction seq_back = seq_tamara.reverse();
-            tamara.runAction(Sequence.actions(seq_tamara, seq_back));
+            CCIntervalAction move_tamara = CCMoveBy.action(1, CGPoint.make(100, 0));
+            CCIntervalAction move_tamara2 = CCMoveBy.action(1, CGPoint.make(50, 0));
+            CCInstantAction hide = new CCHide();
+            CCIntervalAction seq_tamara = CCSequence.actions(move_tamara, hide, move_tamara2);
+            CCIntervalAction seq_back = seq_tamara.reverse();
+            tamara.runAction(CCSequence.actions(seq_tamara, seq_back));
         }
 
         public String title() {
@@ -528,9 +527,11 @@ public class SpritesTest extends Activity {
         public void onEnter() {
             super.onEnter();
 
-            IntervalAction a1 = MoveBy.action(1, 150, 0);
-            Action action1 = Repeat.action(Sequence.actions(Place.action(60, 60), a1), 3);
-            Action action2 = RepeatForever.action(Sequence.actions(a1.copy(), a1.reverse()));
+            CGPoint pos = CGPoint.make(150, 0);
+            CCIntervalAction a1 = CCMoveBy.action(1, pos);
+            pos.x = 60; pos.y = 60;
+            CCAction action1 = CCRepeat.action(CCSequence.actions(CCPlace.action(pos), a1), 3);
+            CCAction action2 = CCRepeatForever.action(CCSequence.actions(a1.copy(), a1.reverse()));
 
             grossini.runAction(action1);
             tamara.runAction(action2);
@@ -548,9 +549,9 @@ public class SpritesTest extends Activity {
 
             tamara.setVisible(false);
 
-            IntervalAction action = Sequence.actions(
-                    MoveBy.action(2, 200, 0),
-                    CallFunc.action(this, "callback"));
+            CCIntervalAction action = CCSequence.actions(
+                    CCMoveBy.action(2, CGPoint.make(200, 0)),
+                    CCCallFunc.action(this, "callback"));
             grossini.runAction(action);
         }
 
@@ -570,13 +571,13 @@ public class SpritesTest extends Activity {
 
             centerSprites();
 
-            IntervalAction orbit1 = OrbitCamera.action(2, 1, 0, 0, 180, 0, 0);
-            IntervalAction action1 = Sequence.actions(
+            CCIntervalAction orbit1 = CCOrbitCamera.action(2, 1, 0, 0, 180, 0, 0);
+            CCIntervalAction action1 = CCSequence.actions(
                     orbit1,
                     orbit1.reverse());
 
-            IntervalAction orbit2 = OrbitCamera.action(2, 1, 0, 0, 180, -45, 0);
-            Action action2 = Sequence.actions(
+            CCIntervalAction orbit2 = CCOrbitCamera.action(2, 1, 0, 0, 180, -45, 0);
+            CCAction action2 = CCSequence.actions(
                     orbit2,
                     orbit2.reverse());
 
@@ -634,6 +635,6 @@ public class SpritesTest extends Activity {
     public void onDestroy() {
         super.onDestroy();
 
-        TextureManager.sharedTextureManager().removeAllTextures();
+        CCTextureCache.sharedTextureCache().removeAllTextures();
     }
 }

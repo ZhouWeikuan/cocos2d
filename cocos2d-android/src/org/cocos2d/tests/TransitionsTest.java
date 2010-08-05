@@ -5,7 +5,7 @@ import android.app.AlertDialog;
 import android.os.Bundle;
 import android.view.Window;
 import android.view.WindowManager;
-import org.cocos2d.layers.Layer;
+import org.cocos2d.layers.CCLayer;
 import org.cocos2d.menus.Menu;
 import org.cocos2d.menus.MenuItemImage;
 import org.cocos2d.nodes.*;
@@ -82,7 +82,7 @@ public class TransitionsTest extends Activity {
     public void onDestroy() {
         super.onDestroy();
 
-        TextureManager.sharedTextureManager().removeAllTextures();
+        CCTextureCache.sharedTextureCache().removeAllTextures();
     }
 
     static class FadeWhiteTransition extends FadeTransition {
@@ -231,7 +231,7 @@ public class TransitionsTest extends Activity {
         }
     }
 
-    static class TestLayer1 extends Layer {
+    static class TestLayer1 extends CCLayer {
 
         public TestLayer1() {
 
@@ -280,7 +280,7 @@ public class TransitionsTest extends Activity {
         }
     }
 
-    static class TestLayer2 extends Layer {
+    static class TestLayer2 extends CCLayer {
 
         public TestLayer2() {
 

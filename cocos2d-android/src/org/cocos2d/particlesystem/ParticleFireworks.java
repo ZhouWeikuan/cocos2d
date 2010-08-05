@@ -1,6 +1,6 @@
 package org.cocos2d.particlesystem;
 
-import org.cocos2d.nodes.TextureManager;
+import org.cocos2d.nodes.CCTextureCache;
 import org.cocos2d.types.CGPoint;
 
 public class ParticleFireworks extends ParticleSystem {
@@ -67,7 +67,7 @@ public class ParticleFireworks extends ParticleSystem {
         size = 8.0f;
         sizeVar = 2.0f;
 
-        texture = TextureManager.sharedTextureManager().addImage("fire.png");
+        texture = CCTextureCache.sharedTextureCache().addImage("fire.png");
 
         // additive
         blendAdditive = false;

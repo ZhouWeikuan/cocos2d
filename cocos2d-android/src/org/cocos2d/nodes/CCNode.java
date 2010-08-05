@@ -4,12 +4,12 @@ import java.util.ArrayList;
 
 import javax.microedition.khronos.opengles.GL10;
 
-import org.cocos2d.actions.ActionManager;
+import org.cocos2d.actions.CCActionManager;
 import org.cocos2d.actions.CCScheduler;
-import org.cocos2d.actions.base.Action;
+import org.cocos2d.actions.base.CCAction;
 import org.cocos2d.config.ccConfig;
 import org.cocos2d.config.ccMacros;
-import org.cocos2d.grid.GridBase;
+import org.cocos2d.grid.CCGridBase;
 import org.cocos2d.opengl.CCTexture2D;
 import org.cocos2d.opengl.CCCamera;
 import org.cocos2d.types.CGAffineTransform;
@@ -301,14 +301,14 @@ public class CCNode {
     }
 
 	// a Grid
-    private GridBase grid_;
+    private CCGridBase grid_;
 
     /** A CCGrid object that is used when applying effects */
-    public GridBase getGrid() {
+    public CCGridBase getGrid() {
         return grid_;
     }
 
-    public void setGrid(GridBase grid) {
+    public void setGrid(CCGridBase grid) {
         this.grid_ = grid;
     }
 
@@ -658,7 +658,7 @@ public class CCNode {
 
 
         if (grid_ != null && grid_.isActive()) {
-            grid_.afterDraw(gl, getCamera());
+            grid_.afterDraw(gl, this);
         }
 
         gl.glPopMatrix();
@@ -751,39 +751,39 @@ public class CCNode {
       @since v0.7.1
       @return An Action pointer
     */
-    public Action runAction(Action action) {
+    public CCAction runAction(CCAction action) {
         assert action != null : "Argument must be non-null";
 
-        ActionManager.sharedManager().addAction(action, this, !isRunning_);
+        CCActionManager.sharedManager().addAction(action, this, !isRunning_);
         return action;
     }
 
     /** Removes all actions from the running action list */
     public void stopAllActions() {
-        ActionManager.sharedManager().removeAllActions(this);
+        CCActionManager.sharedManager().removeAllActions(this);
     }
 
     /** Removes an action from the running action list */
-    public void stopAction(Action action) {
-        ActionManager.sharedManager().removeAction(action);
+    public void stopAction(CCAction action) {
+        CCActionManager.sharedManager().removeAction(action);
     }
 
     /** Removes an action from the running action list given its tag
       @since v0.7.1
     */
     public void stopAction(int tag) {    	
-        assert tag != Action.kCCActionTagInvalid : "Invalid tag_";
-        ActionManager.sharedManager().removeAction(tag, this);
+        assert tag != CCAction.kCCActionTagInvalid : "Invalid tag_";
+        CCActionManager.sharedManager().removeAction(tag, this);
     }
 
     /** Gets an action from the running action list given its tag
       @since v0.7.1
       @return the Action the with the given tag
     */
-    public Action getAction(int tag) {
-        assert tag != Action.kCCActionTagInvalid : "Invalid tag_";
+    public CCAction getAction(int tag) {
+        assert tag != CCAction.kCCActionTagInvalid : "Invalid tag_";
 
-        return ActionManager.sharedManager().getAction(tag, this);
+        return CCActionManager.sharedManager().getAction(tag, this);
     }
 
     /** Returns the numbers of actions that are running plus the ones that are schedule to run
@@ -793,7 +793,7 @@ public class CCNode {
      *    If you are running 7 Sequences of 2 actions, it will return 7.
     */
     public int numberOfRunningActions() {
-        return ActionManager.sharedManager().numberOfRunningActions(this);
+        return CCActionManager.sharedManager().numberOfRunningActions(this);
     }
 
     /** schedules the "update" method.
@@ -866,7 +866,7 @@ public class CCNode {
       */
     public void resumeSchedulerAndActions() {
 	    CCScheduler.sharedScheduler().resume(this);
-	    ActionManager.sharedManager().resume(this);
+	    CCActionManager.sharedManager().resume(this);
     }
 
     /** pauses all scheduled selectors and actions.
@@ -874,7 +874,7 @@ public class CCNode {
       */
     public void pauseSchedulerAndActions() {
     	CCScheduler.sharedScheduler().pause(this);
-    	ActionManager.sharedManager().pause(this);
+    	CCActionManager.sharedManager().pause(this);
     }
 
     // CocosNode Transform
@@ -996,7 +996,7 @@ public class CCNode {
         public float getHeight();
     }
 
-    public interface CocosNodeRGBA {
+    public interface CCRGBAProtocol {
 
         public void setColor(ccColor3B color);
 
@@ -1018,7 +1018,7 @@ public class CCNode {
      *
      * @since v0.8
      */
-    interface CocosNodeTexture {
+    interface CCTextureProtocol {
         /**
          * returns the used texture
          */
@@ -1035,7 +1035,7 @@ public class CCNode {
     }
 
 
-    public interface CocosAnimation {
+    public interface CCAnimation {
         public ArrayList<Object> frames();
 
         public float delay();
@@ -1052,9 +1052,9 @@ public class CCNode {
 
         public Object displayFrame();
 
-        public CocosAnimation animationByName(String animationName);
+        public CCAnimation animationByName(String animationName);
 
-        public void addAnimation(CocosAnimation animation);
+        public void addAnimation(CCAnimation animation);
     }
 
     // lazy allocs

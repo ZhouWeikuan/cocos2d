@@ -3,12 +3,16 @@ package org.cocos2d.nodes;
 import android.graphics.Bitmap;
 import org.cocos2d.opengl.CCTexture2D;
 import org.cocos2d.types.CGRect;
+import org.cocos2d.types.ccBlendFunc;
 
 import java.util.HashMap;
 
-public class Sprite extends TextureNode implements CCNode.CocosNodeFrames {
-    private HashMap<String, CocosAnimation> animations;
+public class Sprite extends CCTextureNode implements CCNode.CocosNodeFrames {
+    private HashMap<String, CCAnimation> animations;
     private CGRect rect_;
+	public boolean flipY;
+	public boolean flipX;
+	public ccBlendFunc blendFunc;
 
     public void setTextureRect(CGRect rect) {
         rect_ = rect;
@@ -19,13 +23,13 @@ public class Sprite extends TextureNode implements CCNode.CocosNodeFrames {
     }
 
     public static Sprite sprite(String filename) {
-        return new Sprite(TextureManager.sharedTextureManager().addImage(filename));
+        return new Sprite(CCTextureCache.sharedTextureCache().addImage(filename));
     }
 
     public static Sprite sprite(Bitmap image) {
         assert image != null : "Image must not be null";
 
-        return new Sprite(TextureManager.sharedTextureManager().addImage(image));
+        return new Sprite(CCTextureCache.sharedTextureCache().addImage(image));
     }
 
     public static Sprite sprite(CCTexture2D tex) {
@@ -43,7 +47,7 @@ public class Sprite extends TextureNode implements CCNode.CocosNodeFrames {
     }
 
     private void initAnimationDictionary() {
-        animations = new HashMap<String, CocosAnimation>(2);
+        animations = new HashMap<String, CCAnimation>(2);
     }
 
     public void setDisplayFrame(Object frame) {
@@ -54,7 +58,7 @@ public class Sprite extends TextureNode implements CCNode.CocosNodeFrames {
         if (animations == null)
             initAnimationDictionary();
 
-        CocosAnimation anim = animations.get(animationName);
+        CCAnimation anim = animations.get(animationName);
         CCTexture2D frame = (CCTexture2D) anim.frames().get(frameIndex);
         setDisplayFrame(frame);
     }
@@ -67,7 +71,7 @@ public class Sprite extends TextureNode implements CCNode.CocosNodeFrames {
         return getTexture();
     }
 
-    public void addAnimation(CocosAnimation anim) {
+    public void addAnimation(CCAnimation anim) {
         // lazy alloc
         if (animations == null)
             initAnimationDictionary();
@@ -75,9 +79,19 @@ public class Sprite extends TextureNode implements CCNode.CocosNodeFrames {
         animations.put(anim.name(), anim);
     }
 
-    public CocosAnimation animationByName(String animationName) {
+    public CCAnimation animationByName(String animationName) {
         assert animationName != null : "animationName parameter must be non null";
         return animations.get(animationName);
     }
+
+	public void setFlipX(boolean flipX) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void setFlipY(boolean flipY) {
+		// TODO Auto-generated method stub
+		
+	}
 
 }

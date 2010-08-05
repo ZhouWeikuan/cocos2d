@@ -68,6 +68,12 @@ public class ccMacros {
         return (float) Math.random();
     }
 
+    /** @def M_PI_2
+            Math.PI divided by 2
+    */
+    public static final float M_PI_2 = (float)(Math.PI / 2);
+    
+
     /** @def CC_DEGREES_TO_RADIANS
         converts degrees to radians
     */

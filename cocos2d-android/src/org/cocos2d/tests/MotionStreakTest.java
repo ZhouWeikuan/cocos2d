@@ -5,13 +5,13 @@ import android.app.AlertDialog;
 import android.os.Bundle;
 import android.view.Window;
 import android.view.WindowManager;
-import org.cocos2d.actions.base.Action;
-import org.cocos2d.actions.base.RepeatForever;
-import org.cocos2d.actions.interval.IntervalAction;
-import org.cocos2d.actions.interval.MoveBy;
-import org.cocos2d.actions.interval.RotateBy;
-import org.cocos2d.actions.interval.Sequence;
-import org.cocos2d.layers.Layer;
+import org.cocos2d.actions.base.CCAction;
+import org.cocos2d.actions.base.CCRepeatForever;
+import org.cocos2d.actions.interval.CCIntervalAction;
+import org.cocos2d.actions.interval.CCMoveBy;
+import org.cocos2d.actions.interval.CCRotateBy;
+import org.cocos2d.actions.interval.CCSequence;
+import org.cocos2d.layers.CCLayer;
 import org.cocos2d.menus.Menu;
 import org.cocos2d.menus.MenuItemImage;
 import org.cocos2d.nodes.*;
@@ -84,7 +84,7 @@ public class MotionStreakTest extends Activity {
     public void onDestroy() {
         super.onDestroy();
 
-        TextureManager.sharedTextureManager().removeAllTextures();
+        CCTextureCache.sharedTextureCache().removeAllTextures();
     }
 
     public static final int kTagLabel = 1;
@@ -98,7 +98,7 @@ public class MotionStreakTest extends Activity {
 //            Test2.class,
     };
 
-    static Layer nextAction() {
+    static CCLayer nextAction() {
 
         sceneIdx++;
         sceneIdx = sceneIdx % transitions.length;
@@ -106,7 +106,7 @@ public class MotionStreakTest extends Activity {
         return restartAction();
     }
 
-    static Layer backAction() {
+    static CCLayer backAction() {
         sceneIdx--;
         int total = transitions.length;
         if (sceneIdx < 0)
@@ -114,17 +114,17 @@ public class MotionStreakTest extends Activity {
         return restartAction();
     }
 
-    static Layer restartAction() {
+    static CCLayer restartAction() {
         try {
             Class<?> c = transitions[sceneIdx];
-            return (Layer) c.newInstance();
+            return (CCLayer) c.newInstance();
         } catch (Exception e) {
             return null;
         }
     }
 
 
-    static abstract class TestDemo extends Layer {
+    static abstract class TestDemo extends CCLayer {
         public TestDemo() {
             CGSize s = CCDirector.sharedDirector().winSize();
 
@@ -191,11 +191,11 @@ public class MotionStreakTest extends Activity {
             // schedule an update on each frame so we can syncronize the streak with the target
             schedule("onUpdate");
 
-            IntervalAction a1 = RotateBy.action(2, 360);
+            CCIntervalAction a1 = CCRotateBy.action(2, 360);
 
-            Action action1 = RepeatForever.action(a1);
-            IntervalAction motion = MoveBy.action(2, 100, 0);
-            root.runAction(RepeatForever.action(Sequence.actions(motion, motion.reverse())));
+            CCAction action1 = CCRepeatForever.action(a1);
+            CCIntervalAction motion = CCMoveBy.action(2, CGPoint.make(100, 0));
+            root.runAction(CCRepeatForever.action(CCSequence.actions(motion, motion.reverse())));
             root.runAction(action1);
         }
 

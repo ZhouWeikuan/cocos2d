@@ -15,5 +15,9 @@ public class ccGridSize {
         this.y = y;
     }
 
+    public ccGridSize(ccGridSize gs) {
+    	this.x = gs.x;
+    	this.y = gs.y;
+    }
 }
 

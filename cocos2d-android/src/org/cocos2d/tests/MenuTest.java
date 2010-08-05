@@ -1,11 +1,11 @@
 package org.cocos2d.tests;
 
-import org.cocos2d.actions.base.RepeatForever;
-import org.cocos2d.actions.interval.IntervalAction;
-import org.cocos2d.actions.interval.Sequence;
-import org.cocos2d.actions.interval.TintBy;
-import org.cocos2d.layers.Layer;
-import org.cocos2d.layers.MultiplexLayer;
+import org.cocos2d.actions.base.CCRepeatForever;
+import org.cocos2d.actions.interval.CCIntervalAction;
+import org.cocos2d.actions.interval.CCSequence;
+import org.cocos2d.actions.interval.CCTintBy;
+import org.cocos2d.layers.CCLayer;
+import org.cocos2d.layers.CCMultiplexLayer;
 import org.cocos2d.menus.Menu;
 import org.cocos2d.menus.MenuItem;
 import org.cocos2d.menus.MenuItemAtlasSprite;
@@ -14,11 +14,11 @@ import org.cocos2d.menus.MenuItemImage;
 import org.cocos2d.menus.MenuItemLabel;
 import org.cocos2d.menus.MenuItemSprite;
 import org.cocos2d.nodes.AtlasSprite;
-import org.cocos2d.nodes.AtlasSpriteManager;
+import org.cocos2d.nodes.CCSpriteFrameCache;
 import org.cocos2d.nodes.CCDirector;
 import org.cocos2d.nodes.CCLabelAtlas;
 import org.cocos2d.nodes.Scene;
-import org.cocos2d.nodes.TextureManager;
+import org.cocos2d.nodes.CCTextureCache;
 import org.cocos2d.opengl.CCGLSurfaceView;
 import org.cocos2d.types.CGPoint;
 import org.cocos2d.types.CGRect;
@@ -102,10 +102,10 @@ public class MenuTest extends Activity {
     public void onDestroy() {
         super.onDestroy();
 
-        TextureManager.sharedTextureManager().removeAllTextures();
+        CCTextureCache.sharedTextureCache().removeAllTextures();
     }
 
-    static class Layer1 extends Layer {
+    static class Layer1 extends CCLayer {
 
         public Layer1() {
             MenuItemFont.setFontSize(30);
@@ -113,7 +113,7 @@ public class MenuTest extends Activity {
 
             // Font Item
             // AtlasSprite Item
-            AtlasSpriteManager mgr = new AtlasSpriteManager("menuitemsprite.png");
+            CCSpriteFrameCache mgr = new CCSpriteFrameCache("menuitemsprite.png");
             addChild(mgr);
 
             AtlasSprite spriteNormal = AtlasSprite.sprite(CGRect.make(0, 23 * 2, 115, 23), mgr);
@@ -144,10 +144,10 @@ public class MenuTest extends Activity {
             // Font Item
             MenuItemFont item6 = MenuItemFont.item("Quit", this, "onQuit");
 
-            IntervalAction color_action = TintBy.action(0.5f, (byte) 0, (byte) 255, (byte) 255);
-            IntervalAction color_back = color_action.reverse();
-            IntervalAction seq = Sequence.actions(color_action, color_back);
-            item6.runAction(RepeatForever.action(seq));
+            CCIntervalAction color_action = CCTintBy.action(0.5f, ccColor3B.ccc3((byte) 0, (byte) 255, (byte) 255));
+            CCIntervalAction color_back = color_action.reverse();
+            CCIntervalAction seq = CCSequence.actions(color_action, color_back);
+            item6.runAction(CCRepeatForever.action(seq));
 
             Menu menu = Menu.menu(item1, item2, item3, item4, /*item5,*/ item6);
             menu.alignItemsVertically();
@@ -197,7 +197,7 @@ public class MenuTest extends Activity {
         }
 
         public void menuCallback2() {
-            ((MultiplexLayer) parent_).switchTo(2);
+            ((CCMultiplexLayer) parent_).switchTo(2);
         }
 
         public void onQuit() {
@@ -205,7 +205,7 @@ public class MenuTest extends Activity {
         }
     }
 
-    static class Layer2 extends Layer {
+    static class Layer2 extends CCLayer {
         CGPoint centeredMenu;
         boolean alignedH;
 
@@ -219,7 +219,7 @@ public class MenuTest extends Activity {
         }
     }
 
-    static class Layer3 extends Layer {
+    static class Layer3 extends CCLayer {
         MenuItem disabledItem;
 
         public void menuCallback() {
@@ -229,6 +229,6 @@ public class MenuTest extends Activity {
         }
     }
 
-    static class Layer4 extends Layer {
+    static class Layer4 extends CCLayer {
     }
 }

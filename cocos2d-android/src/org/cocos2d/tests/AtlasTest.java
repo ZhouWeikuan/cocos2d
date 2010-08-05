@@ -5,17 +5,17 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
-import org.cocos2d.actions.interval.IntervalAction;
-import org.cocos2d.actions.interval.MoveBy;
-import org.cocos2d.actions.interval.ScaleBy;
-import org.cocos2d.actions.interval.Sequence;
-import org.cocos2d.layers.Layer;
+import org.cocos2d.actions.interval.CCIntervalAction;
+import org.cocos2d.actions.interval.CCMoveBy;
+import org.cocos2d.actions.interval.CCScaleBy;
+import org.cocos2d.actions.interval.CCSequence;
+import org.cocos2d.layers.CCLayer;
 import org.cocos2d.menus.Menu;
 import org.cocos2d.menus.MenuItemImage;
 import org.cocos2d.nodes.*;
 import org.cocos2d.opengl.CCGLSurfaceView;
 import org.cocos2d.opengl.CCTexture2D;
-import org.cocos2d.opengl.TextureAtlas;
+import org.cocos2d.opengl.CCTextureAtlas;
 import org.cocos2d.types.*;
 import org.cocos2d.utils.CCFormatter;
 
@@ -83,7 +83,7 @@ public class AtlasTest extends Activity {
     public void onDestroy() {
         super.onDestroy();
 
-        TextureManager.sharedTextureManager().removeAllTextures();
+        CCTextureCache.sharedTextureCache().removeAllTextures();
     }
 
     public static final int kTagTileMap = 1;
@@ -101,7 +101,7 @@ public class AtlasTest extends Activity {
         kTagSprite8,
     }
 
-    static Layer nextAction() {
+    static CCLayer nextAction() {
 
         sceneIdx++;
         sceneIdx = sceneIdx % transitions.length;
@@ -109,7 +109,7 @@ public class AtlasTest extends Activity {
         return restartAction();
     }
 
-    static Layer backAction() {
+    static CCLayer backAction() {
         sceneIdx--;
         int total = transitions.length;
         if (sceneIdx < 0)
@@ -117,17 +117,17 @@ public class AtlasTest extends Activity {
         return restartAction();
     }
 
-    static Layer restartAction() {
+    static CCLayer restartAction() {
         try {
             Class<?> c = transitions[sceneIdx];
-            return (Layer) c.newInstance();
+            return (CCLayer) c.newInstance();
         } catch (Exception e) {
             return null;
         }
     }
 
-    static abstract class AtlasDemo extends Layer {
-        TextureAtlas atlas;
+    static abstract class AtlasDemo extends CCLayer {
+        CCTextureAtlas atlas;
 
         public AtlasDemo() {
 
@@ -172,10 +172,10 @@ public class AtlasTest extends Activity {
     }
 
     static class Atlas1 extends AtlasDemo {
-        TextureAtlas textureAtlas;
+        CCTextureAtlas textureAtlas;
 
         public Atlas1() {
-            textureAtlas = new TextureAtlas("atlastest.png", 3);
+            textureAtlas = new CCTextureAtlas("atlastest.png", 3);
 
             ccQuad2 texCoords[] = new ccQuad2[]{
                     new ccQuad2(0.0f, 0.2f, 0.5f, 0.2f, 0.0f, 0.0f, 0.5f, 0.0f),
@@ -262,12 +262,12 @@ public class AtlasTest extends Activity {
 
             tilemap.setAnchorPoint(CGPoint.make(0, 0));
 
-            IntervalAction s = ScaleBy.action(4, 0.8f);
-            IntervalAction scaleBack = s.reverse();
-            IntervalAction go = MoveBy.action(8, -1650, 0);
-            IntervalAction goBack = go.reverse();
+            CCIntervalAction s = CCScaleBy.action(4, 0.8f);
+            CCIntervalAction scaleBack = s.reverse();
+            CCIntervalAction go = CCMoveBy.action(8, CGPoint.make(-1650, 0));
+            CCIntervalAction goBack = go.reverse();
 
-            IntervalAction seq = Sequence.actions(s,
+            CCIntervalAction seq = CCSequence.actions(s,
                     go,
                     goBack,
                     scaleBack);

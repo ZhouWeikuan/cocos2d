@@ -2,15 +2,15 @@ package org.cocos2d.menus;
 
 import javax.microedition.khronos.opengles.GL10;
 
-import org.cocos2d.actions.base.Action;
-import org.cocos2d.actions.interval.ScaleTo;
+import org.cocos2d.actions.base.CCAction;
+import org.cocos2d.actions.interval.CCScaleTo;
 import org.cocos2d.nodes.CCNode;
 import org.cocos2d.nodes.CCLabel;
 import org.cocos2d.protocols.CCLabelProtocol;
 import org.cocos2d.types.CGSize;
 import org.cocos2d.types.ccColor3B;
 
-public class MenuItemLabel extends MenuItem implements CCNode.CocosNodeRGBA {
+public class MenuItemLabel extends MenuItem implements CCNode.CCRGBAProtocol {
     private CCLabelProtocol label_;
     private ccColor3B colorBackup;
     private ccColor3B disabledColor_;
@@ -32,19 +32,19 @@ public class MenuItemLabel extends MenuItem implements CCNode.CocosNodeRGBA {
     }
 
     public void setOpacity(int opacity) {
-        ((CocosNodeRGBA) label_).setOpacity(opacity);
+        ((CCRGBAProtocol) label_).setOpacity(opacity);
     }
 
     public int getOpacity() {
-        return ((CocosNodeRGBA) label_).getOpacity();
+        return ((CCRGBAProtocol) label_).getOpacity();
     }
 
     public void setColor(ccColor3B color) {
-        ((CocosNodeRGBA) label_).setColor(color);
+        ((CCRGBAProtocol) label_).setColor(color);
     }
 
     public ccColor3B getColor() {
-        return ((CocosNodeRGBA) label_).getColor();
+        return ((CCRGBAProtocol) label_).getColor();
     }
 
     public ccColor3B getDisabledColor() {
@@ -87,7 +87,7 @@ public class MenuItemLabel extends MenuItem implements CCNode.CocosNodeRGBA {
             super.selected();
 
             stopAction(kZoomActionTag);
-            Action zoomAction = ScaleTo.action(0.1f, 1.2f);
+            CCAction zoomAction = CCScaleTo.action(0.1f, 1.2f);
             zoomAction.setTag(kZoomActionTag);
             runAction(zoomAction);
         }
@@ -99,7 +99,7 @@ public class MenuItemLabel extends MenuItem implements CCNode.CocosNodeRGBA {
             super.unselected();
 
             stopAction(kZoomActionTag);
-            Action zoomAction = ScaleTo.action(0.1f, 1.0f);
+            CCAction zoomAction = CCScaleTo.action(0.1f, 1.0f);
             zoomAction.setTag(kZoomActionTag);
             runAction(zoomAction);
         }
@@ -108,10 +108,10 @@ public class MenuItemLabel extends MenuItem implements CCNode.CocosNodeRGBA {
     public void setIsEnabled(boolean enabled) {
         if (isEnabled_ != enabled) {
             if (!enabled) {
-                colorBackup = ((CocosNodeRGBA) label_).getColor();
-                ((CocosNodeRGBA) label_).setColor(disabledColor_);
+                colorBackup = ((CCRGBAProtocol) label_).getColor();
+                ((CCRGBAProtocol) label_).setColor(disabledColor_);
             } else
-                ((CocosNodeRGBA) label_).setColor(colorBackup);
+                ((CCRGBAProtocol) label_).setColor(colorBackup);
         }
 
         super.setIsEnabled(enabled);

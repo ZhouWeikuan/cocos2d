@@ -15,7 +15,7 @@ import javax.microedition.khronos.opengles.GL10;
  *
  * @since v0.8.0
  */
-public class MenuItemSprite extends MenuItem implements CCNode.CocosNodeRGBA {
+public class MenuItemSprite extends MenuItem implements CCNode.CCRGBAProtocol {
 
     protected CCNode normalImage_;
     protected CCNode selectedImage_;
@@ -59,22 +59,22 @@ public class MenuItemSprite extends MenuItem implements CCNode.CocosNodeRGBA {
     // CocosNodeRGBA protocol
 
     public void setOpacity(int opacity) {
-        ((CocosNodeRGBA) normalImage_).setOpacity(opacity);
-        ((CocosNodeRGBA) selectedImage_).setOpacity(opacity);
-        ((CocosNodeRGBA) disabledImage_).setOpacity(opacity);
+        ((CCRGBAProtocol) normalImage_).setOpacity(opacity);
+        ((CCRGBAProtocol) selectedImage_).setOpacity(opacity);
+        ((CCRGBAProtocol) disabledImage_).setOpacity(opacity);
     }
 
     public void setColor(ccColor3B color) {
-        ((CocosNodeRGBA) normalImage_).setColor(color);
-        ((CocosNodeRGBA) selectedImage_).setColor(color);
-        ((CocosNodeRGBA) disabledImage_).setColor(color);
+        ((CCRGBAProtocol) normalImage_).setColor(color);
+        ((CCRGBAProtocol) selectedImage_).setColor(color);
+        ((CCRGBAProtocol) disabledImage_).setColor(color);
     }
 
     public ccColor3B getColor() {
-        return ((CocosNodeRGBA) normalImage_).getColor();
+        return ((CCRGBAProtocol) normalImage_).getColor();
     }
 
     public int getOpacity() {
-        return ((CocosNodeRGBA) normalImage_).getOpacity();
+        return ((CCRGBAProtocol) normalImage_).getOpacity();
     }
 }

@@ -4,8 +4,8 @@ package org.cocos2d.types;
  @since v0.8
  */
 public class ccTex2F {
-    float u;
-    float v;
+    public float u;
+    public float v;
 
     public ccTex2F(float uf, float vf){
         u = uf;

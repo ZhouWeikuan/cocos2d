@@ -87,13 +87,13 @@ public class MenuItemToggle extends MenuItem {
     public void setOpacity(byte opacity) {
         // opacity_ = opacity;
         for (MenuItem item : subItems_)
-            ((CocosNodeRGBA) item).setOpacity(opacity);
+            ((CCRGBAProtocol) item).setOpacity(opacity);
     }
 
     public void setColor(ccColor3B color) {
         color_ = color;
         for (MenuItem item : subItems_)
-            ((CocosNodeRGBA) item).setColor(color);
+            ((CCRGBAProtocol) item).setColor(color);
     }
 
 }

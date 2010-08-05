@@ -7,14 +7,14 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import org.cocos2d.layers.ColorLayer;
-import org.cocos2d.layers.Layer;
+import org.cocos2d.layers.CCColorLayer;
+import org.cocos2d.layers.CCLayer;
 import org.cocos2d.menus.Menu;
 import org.cocos2d.menus.MenuItemFont;
 import org.cocos2d.nodes.CCDirector;
 import org.cocos2d.nodes.CCLabel;
 import org.cocos2d.nodes.Scene;
-import org.cocos2d.nodes.TextureManager;
+import org.cocos2d.nodes.CCTextureCache;
 import org.cocos2d.opengl.CCGLSurfaceView;
 import org.cocos2d.transitions.FlipXTransition;
 import org.cocos2d.transitions.SlideInTTransition;
@@ -42,7 +42,7 @@ public class SceneTest extends Activity {
         applicationDidFinishLaunching(this, mGLSurfaceView);
     }
 
-    static class Layer1 extends Layer {
+    static class Layer1 extends CCLayer {
 
         public Layer1() {
             MenuItemFont item1 = MenuItemFont.item("Test pushScene", this, "onPushScene");
@@ -76,7 +76,7 @@ public class SceneTest extends Activity {
         }
     }
 
-    static class Layer2 extends Layer {
+    static class Layer2 extends CCLayer {
         public Layer2() {
             MenuItemFont item1 = MenuItemFont.item("Replace Scene", this, "onReplaceScene");
             MenuItemFont item2 = MenuItemFont.item("Replace Scene Transition", this, "onReplaceSceneTransition");
@@ -105,7 +105,7 @@ public class SceneTest extends Activity {
         }
     }
 
-    static class Layer3 extends ColorLayer {
+    static class Layer3 extends CCColorLayer {
         public Layer3() {
             super(new ccColor4B(0, 0, 255, 255));
 
@@ -161,7 +161,7 @@ public class SceneTest extends Activity {
 
     // purge memroy
     public void applicationDidReceiveMemoryWarning(Context context) {
-        TextureManager.sharedTextureManager().removeAllTextures();
+        CCTextureCache.sharedTextureCache().removeAllTextures();
     }
 
     // next delta time will be zero

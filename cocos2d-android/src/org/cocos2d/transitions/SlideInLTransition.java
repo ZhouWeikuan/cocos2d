@@ -1,10 +1,10 @@
 package org.cocos2d.transitions;
 
-import org.cocos2d.actions.ease.EaseOut;
-import org.cocos2d.actions.instant.CallFunc;
-import org.cocos2d.actions.interval.IntervalAction;
-import org.cocos2d.actions.interval.Sequence;
-import org.cocos2d.actions.interval.MoveBy;
+import org.cocos2d.actions.ease.CCEaseOut;
+import org.cocos2d.actions.instant.CCCallFunc;
+import org.cocos2d.actions.interval.CCIntervalAction;
+import org.cocos2d.actions.interval.CCSequence;
+import org.cocos2d.actions.interval.CCMoveBy;
 import org.cocos2d.nodes.CCDirector;
 import org.cocos2d.nodes.Scene;
 import org.cocos2d.types.CGPoint;
@@ -31,13 +31,13 @@ public class SlideInLTransition extends TransitionScene {
 
         initScenes();
 
-        IntervalAction in = action();
-        IntervalAction out = action();
+        CCIntervalAction in = action();
+        CCIntervalAction out = action();
 
         inScene.runAction(easeAction(in));
-        outScene.runAction(Sequence.actions(
+        outScene.runAction(CCSequence.actions(
                 easeAction(out),
-                CallFunc.action(this, "finish")));
+                CCCallFunc.action(this, "finish")));
     }
 
     public void sceneOrder() {
@@ -55,14 +55,14 @@ public class SlideInLTransition extends TransitionScene {
     /**
      * returns the action that will be performed
      */
-    protected IntervalAction action() {
+    protected CCIntervalAction action() {
         CGSize s = CCDirector.sharedDirector().winSize();
-        return MoveBy.action(duration, s.width-ADJUST_FACTOR,0);
+        return CCMoveBy.action(duration, CGPoint.make(s.width-ADJUST_FACTOR,0));
     }
 
 
-    protected IntervalAction easeAction(IntervalAction action) {
-        return EaseOut.action(action, 2.0f);
+    protected CCIntervalAction easeAction(CCIntervalAction action) {
+        return CCEaseOut.action(action, 2.0f);
     }
 
 }

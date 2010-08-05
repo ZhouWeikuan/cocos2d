@@ -102,7 +102,7 @@ public class ccConfig {
       To enable set it to a value different than 0. Disabled by default.
 
     */
-    public static final int CC_TEXTURE_ATLAS_USE_TRIANGLE_STRIP  = 0;
+    public static final boolean CC_TEXTURE_ATLAS_USE_TRIANGLE_STRIP  = false;
 
     /** @def CC_TEXTURE_NPOT_SUPPORT
       If enabled, NPOT textures will be used where available. Only 3rd gen (and newer) devices support NPOT textures.
@@ -166,7 +166,6 @@ public class ccConfig {
       */
     public static final int CC_COMPATIBILITY_WITH_0_8 = 0;
 
-    
 
     /** @def CC_BLEND_SRC
       default gl blend src function. Compatible with premultiplied alpha images.

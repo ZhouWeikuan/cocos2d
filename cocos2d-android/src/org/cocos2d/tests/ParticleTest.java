@@ -1,11 +1,11 @@
 package org.cocos2d.tests;
 
-import org.cocos2d.actions.base.RepeatForever;
-import org.cocos2d.actions.interval.IntervalAction;
-import org.cocos2d.actions.interval.MoveBy;
-import org.cocos2d.actions.interval.Sequence;
-import org.cocos2d.layers.ColorLayer;
-import org.cocos2d.layers.Layer;
+import org.cocos2d.actions.base.CCRepeatForever;
+import org.cocos2d.actions.interval.CCIntervalAction;
+import org.cocos2d.actions.interval.CCMoveBy;
+import org.cocos2d.actions.interval.CCSequence;
+import org.cocos2d.layers.CCColorLayer;
+import org.cocos2d.layers.CCLayer;
 import org.cocos2d.menus.Menu;
 import org.cocos2d.menus.MenuItemImage;
 import org.cocos2d.nodes.CCDirector;
@@ -13,9 +13,9 @@ import org.cocos2d.nodes.CCLabel;
 import org.cocos2d.nodes.CCLabelAtlas;
 import org.cocos2d.nodes.Scene;
 import org.cocos2d.nodes.Sprite;
-import org.cocos2d.nodes.TextureManager;
+import org.cocos2d.nodes.CCTextureCache;
 import org.cocos2d.opengl.CCGLSurfaceView;
-import org.cocos2d.opengl.TextureAtlas;
+import org.cocos2d.opengl.CCTextureAtlas;
 import org.cocos2d.particlesystem.ParticleExplosion;
 import org.cocos2d.particlesystem.ParticleFire;
 import org.cocos2d.particlesystem.ParticleFireworks;
@@ -98,7 +98,7 @@ public class ParticleTest extends Activity {
     public void onDestroy() {
         super.onDestroy();
 
-        TextureManager.sharedTextureManager().removeAllTextures();
+        CCTextureCache.sharedTextureCache().removeAllTextures();
     }
 
     static int sceneIdx = -1;
@@ -108,31 +108,31 @@ public class ParticleTest extends Activity {
             DemoFire.class,
     };
 
-    static Layer nextAction() {
+    static CCLayer nextAction() {
         sceneIdx++;
         sceneIdx = sceneIdx % transitions.length;
         return restartAction();
     }
 
-    static Layer backAction() {
+    static CCLayer backAction() {
         sceneIdx--;
         if (sceneIdx < 0)
             sceneIdx += transitions.length;
         return restartAction();
     }
 
-    static Layer restartAction() {
+    static CCLayer restartAction() {
         try {
             Class<?> c = transitions[sceneIdx];
-            return (Layer) c.newInstance();
+            return (CCLayer) c.newInstance();
         } catch (Exception e) {
             if (DEBUG) e.printStackTrace();
             return null;
         }
     }
 
-    static abstract class ParticleDemo extends ColorLayer {
-        TextureAtlas atlas;
+    static abstract class ParticleDemo extends CCColorLayer {
+        CCTextureAtlas atlas;
         static final int kTagLabelAtlas = 1;
         ParticleSystem	emitter;
         Sprite background;
@@ -173,10 +173,10 @@ public class ParticleTest extends Activity {
             addChild(background, 5);
             background.setPosition(CGPoint.make(s.width/2, s.height-180));
 
-            IntervalAction move = MoveBy.action(4, 300, 0);
-            IntervalAction move_back = move.reverse();
-            IntervalAction seq = Sequence.actions(move, move_back);
-            background.runAction(RepeatForever.action(seq));
+            CCIntervalAction move = CCMoveBy.action(4, CGPoint.ccp(300, 0));
+            CCIntervalAction move_back = move.reverse();
+            CCIntervalAction seq = CCSequence.actions(move, move_back);
+            background.runAction(CCRepeatForever.action(seq));
 
 
             schedule("step");
@@ -239,7 +239,7 @@ public class ParticleTest extends Activity {
             emitter = ParticleExplosion.node();
             addChild(emitter, 10, kTagEmitter);
 
-            emitter.setTexture(TextureManager.sharedTextureManager().addImage("stars.png"));
+            emitter.setTexture(CCTextureCache.sharedTextureCache().addImage("stars.png"));
             setEmitterPosition();
         }
 
@@ -260,7 +260,7 @@ public class ParticleTest extends Activity {
             emitter = ParticleFireworks.node();
             addChild(emitter, 10, kTagEmitter);
 
-            emitter.setTexture(TextureManager.sharedTextureManager().addImage("stars.png"));
+            emitter.setTexture(CCTextureCache.sharedTextureCache().addImage("stars.png"));
             setEmitterPosition();
         }
 
@@ -281,7 +281,7 @@ public class ParticleTest extends Activity {
             emitter = ParticleFire.node();
             addChild(emitter, 10, kTagEmitter);
 
-            emitter.setTexture(TextureManager.sharedTextureManager().addImage("fire.png"));
+            emitter.setTexture(CCTextureCache.sharedTextureCache().addImage("fire.png"));
             setEmitterPosition();
         }
 

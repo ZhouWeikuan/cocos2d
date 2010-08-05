@@ -3,7 +3,7 @@ package org.cocos2d.nodes;
 import android.util.Log;
 
 import org.cocos2d.config.ccMacros;
-import org.cocos2d.opengl.TextureAtlas;
+import org.cocos2d.opengl.CCTextureAtlas;
 import org.cocos2d.types.*;
 import org.cocos2d.utils.CCFormatter;
 
@@ -29,10 +29,10 @@ import java.util.HashMap;
  *
  */
 
-public class AtlasSprite extends CCNode implements CCNode.CocosNodeSize, CCNode.CocosNodeFrames, CCNode.CocosNodeRGBA {
+public class AtlasSprite extends CCNode implements CCNode.CocosNodeSize, CCNode.CocosNodeFrames, CCNode.CCRGBAProtocol {
     public static final int kIndexNotInitialized = -1;
 
-    TextureAtlas textureAtlas_;
+    CCTextureAtlas textureAtlas_;
     int atlasIndex_;
 
     /**
@@ -85,11 +85,11 @@ public class AtlasSprite extends CCNode implements CCNode.CocosNodeSize, CCNode.
     }
 
 
-    public static AtlasSprite sprite(CGRect rect, AtlasSpriteManager manager) {
+    public static AtlasSprite sprite(CGRect rect, CCSpriteFrameCache manager) {
         return new AtlasSprite(rect, manager);
     }
 
-    protected AtlasSprite(CGRect rect, AtlasSpriteManager manager) {
+    protected AtlasSprite(CGRect rect, CCSpriteFrameCache manager) {
         textureAtlas_ = manager.atlas();
 
         atlasIndex_ = kIndexNotInitialized;
@@ -376,8 +376,8 @@ public class AtlasSprite extends CCNode implements CCNode.CocosNodeSize, CCNode.
 
     // TODO Remove cast
     public void setDisplayFrame(Object newFrame) {
-        if (newFrame instanceof AtlasSpriteFrame) {
-            AtlasSpriteFrame frame = (AtlasSpriteFrame) newFrame;
+        if (newFrame instanceof CCSpriteFrame) {
+            CCSpriteFrame frame = (CCSpriteFrame) newFrame;
             CGRect rect = frame.rect;
 
             setTextureRect(rect);
@@ -390,7 +390,7 @@ public class AtlasSprite extends CCNode implements CCNode.CocosNodeSize, CCNode.
             initAnimationDictionary();
 
         AtlasAnimation a = animations.get(animationName);
-        AtlasSpriteFrame frame = (AtlasSpriteFrame) a.frames.get(frameIndex);
+        CCSpriteFrame frame = (CCSpriteFrame) a.frames.get(frameIndex);
 
         assert frame != null : "AtlasSprite#setDisplayFrame. Invalid frame";
         CGRect rect = frame.rect;
@@ -401,19 +401,19 @@ public class AtlasSprite extends CCNode implements CCNode.CocosNodeSize, CCNode.
 
     // TODO Remove cast
     public boolean isFrameDisplayed(Object frame) {
-        if (frame instanceof AtlasSpriteFrame) {
-            AtlasSpriteFrame spr = (AtlasSpriteFrame) frame;
+        if (frame instanceof CCSpriteFrame) {
+            CCSpriteFrame spr = (CCSpriteFrame) frame;
             CGRect r = spr.rect;
             return CGRect.equalToRect(r, rect_);
         }
         return false;
     }
 
-    public AtlasSpriteFrame displayFrame() {
-        return new AtlasSpriteFrame(rect_);
+    public CCSpriteFrame displayFrame() {
+        return new CCSpriteFrame(rect_);
     }
 
-    public void addAnimation(CocosAnimation anim) {
+    public void addAnimation(CCAnimation anim) {
         // lazy alloc
         if (animations == null)
             initAnimationDictionary();
@@ -421,7 +421,7 @@ public class AtlasSprite extends CCNode implements CCNode.CocosNodeSize, CCNode.
         animations.put(anim.name(), (AtlasAnimation) anim);
     }
 
-    public CocosAnimation animationByName(String animationName) {
+    public CCAnimation animationByName(String animationName) {
         assert animationName != null : "animationName parameter must be non null";
         return animations.get(animationName);
     }

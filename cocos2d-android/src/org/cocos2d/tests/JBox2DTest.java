@@ -2,13 +2,13 @@ package org.cocos2d.tests;
 
 import org.cocos2d.config.ccMacros;
 import org.cocos2d.events.CCTouchDispatcher;
-import org.cocos2d.layers.Layer;
+import org.cocos2d.layers.CCLayer;
 import org.cocos2d.nodes.AtlasSprite;
-import org.cocos2d.nodes.AtlasSpriteManager;
+import org.cocos2d.nodes.CCSpriteFrameCache;
 import org.cocos2d.nodes.CCDirector;
 import org.cocos2d.nodes.CCLabel;
 import org.cocos2d.nodes.Scene;
-import org.cocos2d.nodes.TextureManager;
+import org.cocos2d.nodes.CCTextureCache;
 import org.cocos2d.opengl.CCGLSurfaceView;
 import org.cocos2d.types.ccColor3B;
 import org.cocos2d.types.CGPoint;
@@ -95,10 +95,10 @@ public class JBox2DTest extends Activity {
     public void onDestroy() {
         super.onDestroy();
 
-        TextureManager.sharedTextureManager().removeAllTextures();
+        CCTextureCache.sharedTextureCache().removeAllTextures();
     }
 
-    static class JBox2DTestLayer extends Layer {
+    static class JBox2DTestLayer extends CCLayer {
         public static final int kTagSpriteManager = 1;
     	
 		// Pixel to meters ratio. Box2D uses meters as the unit for measurement.
@@ -153,7 +153,7 @@ public class JBox2DTest extends Activity {
             bxGroundOutsideEdgeDef.addVertex(new Vec2(0f,0f));
             bxGroundBody.createShape(bxGroundOutsideEdgeDef);
             
-            AtlasSpriteManager mgr = new AtlasSpriteManager("blocks.png", 150);
+            CCSpriteFrameCache mgr = new CCSpriteFrameCache("blocks.png", 150);
             addChild(mgr, 0, kTagSpriteManager);
 
             addNewSpriteWithCoords(CGPoint.ccp(s.width / 2.0f, s.height / 2.0f));
@@ -181,7 +181,7 @@ public class JBox2DTest extends Activity {
 		}
 
 		private void addNewSpriteWithCoords(CGPoint pos) {
-            AtlasSpriteManager mgr = (AtlasSpriteManager) getChild(kTagSpriteManager);
+            CCSpriteFrameCache mgr = (CCSpriteFrameCache) getChild(kTagSpriteManager);
 
         	// We have a 64x64 sprite sheet with 4 different 32x32 images.  The following code is
         	// just randomly picking one of the images

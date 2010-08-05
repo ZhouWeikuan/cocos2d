@@ -6,7 +6,7 @@ import org.cocos2d.opengl.CCTexture2D;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class Animation implements CCNode.CocosAnimation {
+public class Animation implements CCNode.CCAnimation {
     private String name;
     private float delay;
     ArrayList<Object> frames;
@@ -34,14 +34,14 @@ public class Animation implements CCNode.CocosAnimation {
 
         if (filenames != null) {
             for (String filename : filenames) {
-                CCTexture2D tex = TextureManager.sharedTextureManager().addImage(filename);
+                CCTexture2D tex = CCTextureCache.sharedTextureCache().addImage(filename);
                 frames.add(tex);
             }
         }
     }
 
     public void addFrame(String filename) {
-        CCTexture2D tex = TextureManager.sharedTextureManager().addImage(filename);
+        CCTexture2D tex = CCTextureCache.sharedTextureCache().addImage(filename);
         frames.add(tex);
     }
 
@@ -52,14 +52,14 @@ public class Animation implements CCNode.CocosAnimation {
 
         if (images != null) {
             for (Bitmap bitmap : images) {
-                CCTexture2D tex = TextureManager.sharedTextureManager().addImage(bitmap);
+                CCTexture2D tex = CCTextureCache.sharedTextureCache().addImage(bitmap);
                 frames.add(tex);
             }
         }
     }
 
     public void addFrame(Bitmap bitmap) {
-        CCTexture2D tex = TextureManager.sharedTextureManager().addImage(bitmap);
+        CCTexture2D tex = CCTextureCache.sharedTextureCache().addImage(bitmap);
         frames.add(tex);
     }
 

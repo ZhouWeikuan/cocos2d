@@ -4,10 +4,10 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.Window;
 import android.view.WindowManager;
-import org.cocos2d.actions.base.Action;
+import org.cocos2d.actions.base.CCAction;
 import org.cocos2d.actions.interval.*;
-import org.cocos2d.layers.ColorLayer;
-import org.cocos2d.layers.Layer;
+import org.cocos2d.layers.CCColorLayer;
+import org.cocos2d.layers.CCLayer;
 import org.cocos2d.nodes.*;
 import org.cocos2d.opengl.CCGLSurfaceView;
 import org.cocos2d.types.CGPoint;
@@ -29,7 +29,7 @@ public class RotateWorldTest extends Activity {
         setContentView(mGLSurfaceView);
     }
 
-    static class SpriteLayer extends Layer {
+    static class SpriteLayer extends CCLayer {
 
         public SpriteLayer() {
             float x, y;
@@ -50,7 +50,7 @@ public class RotateWorldTest extends Activity {
             spriteSister1.setPosition(CGPoint.make(40, y / 2));
             spriteSister2.setPosition(CGPoint.make(x - 40, y / 2));
 
-            Action rot = RotateBy.action(16, -3600);
+            CCAction rot = CCRotateBy.action(16, -3600);
 
             addChild(sprite);
             addChild(spriteSister1);
@@ -58,21 +58,21 @@ public class RotateWorldTest extends Activity {
 
             sprite.runAction(rot);
 
-            IntervalAction jump1 = JumpBy.action(4, -400, 0, 100, 4);
-            IntervalAction jump2 = jump1.reverse();
+            CCIntervalAction jump1 = CCJumpBy.action(4, CGPoint.make(-400, 0), 100, 4);
+            CCIntervalAction jump2 = jump1.reverse();
 
-            IntervalAction rot1 = RotateBy.action(4, 360 * 2);
-            IntervalAction rot2 = rot1.reverse();
+            CCIntervalAction rot1 = CCRotateBy.action(4, 360 * 2);
+            CCIntervalAction rot2 = rot1.reverse();
 
-            spriteSister1.runAction(Repeat.action(Sequence.actions(jump2, jump1), 5));
-            spriteSister2.runAction(Repeat.action(Sequence.actions(jump1.copy(), jump2.copy()), 5));
+            spriteSister1.runAction(CCRepeat.action(CCSequence.actions(jump2, jump1), 5));
+            spriteSister2.runAction(CCRepeat.action(CCSequence.actions(jump1.copy(), jump2.copy()), 5));
 
-            spriteSister1.runAction(Repeat.action(Sequence.actions(rot1, rot2), 5));
-            spriteSister2.runAction(Repeat.action(Sequence.actions(rot2.copy(), rot1.copy()), 5));
+            spriteSister1.runAction(CCRepeat.action(CCSequence.actions(rot1, rot2), 5));
+            spriteSister2.runAction(CCRepeat.action(CCSequence.actions(rot2.copy(), rot1.copy()), 5));
         }
     }
 
-    static class MainLayer extends Layer {
+    static class MainLayer extends CCLayer {
 
         public MainLayer() {
             float x, y;
@@ -81,10 +81,10 @@ public class RotateWorldTest extends Activity {
             x = size.width;
             y = size.height;
 
-            CCNode blue = ColorLayer.node(new ccColor4B(0, 0, 255, 255));
-            CCNode red = ColorLayer.node(new ccColor4B(255, 0, 0, 255));
-            CCNode green = ColorLayer.node(new ccColor4B(0, 255, 0, 255));
-            CCNode white = ColorLayer.node(new ccColor4B(255, 255, 255, 255));
+            CCNode blue = CCColorLayer.node(new ccColor4B(0, 0, 255, 255));
+            CCNode red = CCColorLayer.node(new ccColor4B(255, 0, 0, 255));
+            CCNode green = CCColorLayer.node(new ccColor4B(0, 255, 0, 255));
+            CCNode white = CCColorLayer.node(new ccColor4B(255, 255, 255, 255));
 
             blue.setScale(0.5f);
             blue.setPosition(CGPoint.make(-x / 4, -y / 4));
@@ -104,7 +104,7 @@ public class RotateWorldTest extends Activity {
             addChild(green);
             addChild(red);
 
-            Action rot = RotateBy.action(8, 720);
+            CCAction rot = CCRotateBy.action(8, 720);
 
             blue.runAction(rot);
             red.runAction(rot.copy());
@@ -131,7 +131,7 @@ public class RotateWorldTest extends Activity {
 
         Scene scene = Scene.node();
         scene.addChild(new MainLayer());
-        scene.runAction(RotateBy.action(4, -360));
+        scene.runAction(CCRotateBy.action(4, -360));
 
         // Make the Scene active
         CCDirector.sharedDirector().runWithScene(scene);
@@ -156,6 +156,6 @@ public class RotateWorldTest extends Activity {
     public void onDestroy() {
         super.onDestroy();
 
-        TextureManager.sharedTextureManager().removeAllTextures();
+        CCTextureCache.sharedTextureCache().removeAllTextures();
     }
 }

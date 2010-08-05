@@ -31,6 +31,12 @@ public class ccColor3B {
     public int g;
     public int b;
 
+    public ccColor3B(ccColor3B c) {
+    	r = c.r;
+    	g = c.g;
+    	b = c.b;
+    }
+    
     public ccColor3B(int rr, int gg, int bb) {
         r = rr;
         g = gg;

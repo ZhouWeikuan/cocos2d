@@ -6,7 +6,7 @@ import org.cocos2d.types.ccQuad3;
 
 import javax.microedition.khronos.opengles.GL10;
 
-public class CCLabelAtlas extends AtlasNode 
+public class CCLabelAtlas extends CCAtlasNode 
 	implements CCLabelProtocol, CCNode.CocosNodeSize {
     /// string to render
     String string;

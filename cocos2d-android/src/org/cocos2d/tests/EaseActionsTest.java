@@ -1,41 +1,41 @@
 package org.cocos2d.tests;
 
-import org.cocos2d.actions.base.Action;
-import org.cocos2d.actions.base.RepeatForever;
-import org.cocos2d.actions.base.Speed;
-import org.cocos2d.actions.ease.EaseBackIn;
-import org.cocos2d.actions.ease.EaseBackInOut;
-import org.cocos2d.actions.ease.EaseBackOut;
-import org.cocos2d.actions.ease.EaseBounceIn;
-import org.cocos2d.actions.ease.EaseBounceInOut;
-import org.cocos2d.actions.ease.EaseBounceOut;
-import org.cocos2d.actions.ease.EaseElasticIn;
-import org.cocos2d.actions.ease.EaseElasticInOut;
-import org.cocos2d.actions.ease.EaseElasticOut;
-import org.cocos2d.actions.ease.EaseExponentialIn;
-import org.cocos2d.actions.ease.EaseExponentialInOut;
-import org.cocos2d.actions.ease.EaseExponentialOut;
-import org.cocos2d.actions.ease.EaseIn;
-import org.cocos2d.actions.ease.EaseInOut;
-import org.cocos2d.actions.ease.EaseOut;
-import org.cocos2d.actions.ease.EaseSineIn;
-import org.cocos2d.actions.ease.EaseSineInOut;
-import org.cocos2d.actions.ease.EaseSineOut;
-import org.cocos2d.actions.interval.IntervalAction;
-import org.cocos2d.actions.interval.JumpBy;
-import org.cocos2d.actions.interval.MoveBy;
-import org.cocos2d.actions.interval.RotateBy;
-import org.cocos2d.actions.interval.Sequence;
-import org.cocos2d.actions.interval.Spawn;
+import org.cocos2d.actions.base.CCAction;
+import org.cocos2d.actions.base.CCRepeatForever;
+import org.cocos2d.actions.base.CCSpeed;
+import org.cocos2d.actions.ease.CCEaseBackIn;
+import org.cocos2d.actions.ease.CCEaseBackInOut;
+import org.cocos2d.actions.ease.CCEaseBackOut;
+import org.cocos2d.actions.ease.CCEaseBounceIn;
+import org.cocos2d.actions.ease.CCEaseBounceInOut;
+import org.cocos2d.actions.ease.CCEaseBounceOut;
+import org.cocos2d.actions.ease.CCEaseElasticIn;
+import org.cocos2d.actions.ease.CCEaseElasticInOut;
+import org.cocos2d.actions.ease.CCEaseElasticOut;
+import org.cocos2d.actions.ease.CCEaseExponentialIn;
+import org.cocos2d.actions.ease.CCEaseExponentialInOut;
+import org.cocos2d.actions.ease.CCEaseExponentialOut;
+import org.cocos2d.actions.ease.CCEaseIn;
+import org.cocos2d.actions.ease.CCEaseInOut;
+import org.cocos2d.actions.ease.CCEaseOut;
+import org.cocos2d.actions.ease.CCEaseSineIn;
+import org.cocos2d.actions.ease.CCEaseSineInOut;
+import org.cocos2d.actions.ease.CCEaseSineOut;
+import org.cocos2d.actions.interval.CCIntervalAction;
+import org.cocos2d.actions.interval.CCJumpBy;
+import org.cocos2d.actions.interval.CCMoveBy;
+import org.cocos2d.actions.interval.CCRotateBy;
+import org.cocos2d.actions.interval.CCSequence;
+import org.cocos2d.actions.interval.CCSpawn;
 import org.cocos2d.config.ccMacros;
-import org.cocos2d.layers.Layer;
+import org.cocos2d.layers.CCLayer;
 import org.cocos2d.menus.Menu;
 import org.cocos2d.menus.MenuItemImage;
 import org.cocos2d.nodes.CCDirector;
 import org.cocos2d.nodes.CCLabel;
 import org.cocos2d.nodes.Scene;
 import org.cocos2d.nodes.Sprite;
-import org.cocos2d.nodes.TextureManager;
+import org.cocos2d.nodes.CCTextureCache;
 import org.cocos2d.opengl.CCGLSurfaceView;
 import org.cocos2d.opengl.CCTexture2D;
 import org.cocos2d.types.CGPoint;
@@ -122,14 +122,14 @@ public class EaseActionsTest extends Activity {
     public void onDestroy() {
         super.onDestroy();
 
-        TextureManager.sharedTextureManager().removeAllTextures();
+        CCTextureCache.sharedTextureCache().removeAllTextures();
     }
 
     static final int kTagAction1 = 1;
     static final int kTagAction2 = 2;
     static final int kTagSlider = 3;
 
-    static Layer nextAction() {
+    static CCLayer nextAction() {
 
         sceneIdx++;
         sceneIdx = sceneIdx % transitions.length;
@@ -137,7 +137,7 @@ public class EaseActionsTest extends Activity {
         return restartAction();
     }
 
-    static Layer backAction() {
+    static CCLayer backAction() {
         sceneIdx--;
         int total = transitions.length;
         if (sceneIdx < 0)
@@ -145,16 +145,16 @@ public class EaseActionsTest extends Activity {
         return restartAction();
     }
 
-    static Layer restartAction() {
+    static CCLayer restartAction() {
         try {
             Class<?> c = transitions[sceneIdx];
-            return (Layer) c.newInstance();
+            return (CCLayer) c.newInstance();
         } catch (Exception e) {
             return null;
         }
     }
 
-    static abstract class SpriteDemo extends Layer {
+    static abstract class SpriteDemo extends CCLayer {
         Sprite grossini;
         Sprite tamara;
         Sprite kathia;
@@ -163,7 +163,7 @@ public class EaseActionsTest extends Activity {
 
             // Example:
             // You can create a sprite using a CCTexture2D
-            CCTexture2D tex = TextureManager.createTextureFromFilePath("grossini.png");
+            CCTexture2D tex = CCTextureCache.createTextureFromFilePath("grossini.png");
             grossini = Sprite.sprite(tex);
 
             // Example:
@@ -233,28 +233,28 @@ public class EaseActionsTest extends Activity {
         {
             super.onEnter();
         
-            IntervalAction move = MoveBy.action(3, 250,0);
-            IntervalAction move_back = move.reverse();
+            CCIntervalAction move = CCMoveBy.action(3, CGPoint.make(250,0));
+            CCIntervalAction move_back = move.reverse();
         
-            IntervalAction move_ease_in = EaseIn.action(move.copy(), 3.0f);
-            IntervalAction move_ease_in_back = move_ease_in.reverse();
+            CCIntervalAction move_ease_in = CCEaseIn.action(move.copy(), 3.0f);
+            CCIntervalAction move_ease_in_back = move_ease_in.reverse();
         
-            IntervalAction move_ease_out = EaseOut.action(move.copy(), 3.0f);
-            IntervalAction move_ease_out_back = move_ease_out.reverse();
-        
-        
-            IntervalAction seq1 = Sequence.actions(move, move_back);
-            IntervalAction seq2 = Sequence.actions(move_ease_in, move_ease_in_back);
-            IntervalAction seq3 = Sequence.actions(move_ease_out, move_ease_out_back);
+            CCIntervalAction move_ease_out = CCEaseOut.action(move.copy(), 3.0f);
+            CCIntervalAction move_ease_out_back = move_ease_out.reverse();
         
         
-            Action a2 = grossini.runAction(RepeatForever.action(seq1));
+            CCIntervalAction seq1 = CCSequence.actions(move, move_back);
+            CCIntervalAction seq2 = CCSequence.actions(move_ease_in, move_ease_in_back);
+            CCIntervalAction seq3 = CCSequence.actions(move_ease_out, move_ease_out_back);
+        
+        
+            CCAction a2 = grossini.runAction(CCRepeatForever.action(seq1));
             a2.setTag(1);
         
-            Action a1 = tamara.runAction(RepeatForever.action(seq2));
+            CCAction a1 = tamara.runAction(CCRepeatForever.action(seq2));
             a1.setTag(1);
         
-            Action a = kathia.runAction(RepeatForever.action(seq3));
+            CCAction a = kathia.runAction(CCRepeatForever.action(seq3));
             a.setTag(1);
             
             schedule("testStopAction", 6);
@@ -279,26 +279,26 @@ public class EaseActionsTest extends Activity {
         {
             super.onEnter();
         
-            IntervalAction move = MoveBy.action(3, 250,0);
+            CCIntervalAction move = CCMoveBy.action(3, CGPoint.make(250,0));
         //	IntervalAction move_back = move.reverse();
         
-            IntervalAction move_ease_inout1 = EaseInOut.action(move.copy(), 2.0f);
-            IntervalAction move_ease_inout_back1 = move_ease_inout1.reverse();
+            CCIntervalAction move_ease_inout1 = CCEaseInOut.action(move.copy(), 2.0f);
+            CCIntervalAction move_ease_inout_back1 = move_ease_inout1.reverse();
         
-            IntervalAction move_ease_inout2 = EaseInOut.action(move.copy(), 3.0f);
-            IntervalAction move_ease_inout_back2 = move_ease_inout2.reverse();
+            CCIntervalAction move_ease_inout2 = CCEaseInOut.action(move.copy(), 3.0f);
+            CCIntervalAction move_ease_inout_back2 = move_ease_inout2.reverse();
         
-            IntervalAction move_ease_inout3 = EaseInOut.action(move.copy(), 4.0f);
-            IntervalAction move_ease_inout_back3 = move_ease_inout3.reverse();
+            CCIntervalAction move_ease_inout3 = CCEaseInOut.action(move.copy(), 4.0f);
+            CCIntervalAction move_ease_inout_back3 = move_ease_inout3.reverse();
         
         
-            IntervalAction seq1 = Sequence.actions(move_ease_inout1, move_ease_inout_back1);
-            IntervalAction seq2 = Sequence.actions(move_ease_inout2, move_ease_inout_back2);
-            IntervalAction seq3 = Sequence.actions(move_ease_inout3, move_ease_inout_back3);
+            CCIntervalAction seq1 = CCSequence.actions(move_ease_inout1, move_ease_inout_back1);
+            CCIntervalAction seq2 = CCSequence.actions(move_ease_inout2, move_ease_inout_back2);
+            CCIntervalAction seq3 = CCSequence.actions(move_ease_inout3, move_ease_inout_back3);
         
-            tamara.runAction(RepeatForever.action(seq1));
-            kathia.runAction(RepeatForever.action(seq2));
-            grossini.runAction(RepeatForever.action(seq3));
+            tamara.runAction(CCRepeatForever.action(seq1));
+            kathia.runAction(CCRepeatForever.action(seq2));
+            grossini.runAction(CCRepeatForever.action(seq3));
         }
         
         public String title()
@@ -313,24 +313,24 @@ public class EaseActionsTest extends Activity {
         {
             super.onEnter();
         
-            IntervalAction move = MoveBy.action(3, 250,0);
-            IntervalAction move_back = move.reverse();
+            CCIntervalAction move = CCMoveBy.action(3, CGPoint.make(250,0));
+            CCIntervalAction move_back = move.reverse();
         
-            IntervalAction move_ease_in = EaseSineIn.action(move.copy());
-            IntervalAction move_ease_in_back = move_ease_in.reverse();
+            CCIntervalAction move_ease_in = CCEaseSineIn.action(move.copy());
+            CCIntervalAction move_ease_in_back = move_ease_in.reverse();
         
-            IntervalAction move_ease_out = EaseSineOut.action(move.copy());
-            IntervalAction move_ease_out_back = move_ease_out.reverse();
-        
-        
-            IntervalAction seq1 = Sequence.actions(move, move_back);
-            IntervalAction seq2 = Sequence.actions(move_ease_in, move_ease_in_back);
-            IntervalAction seq3 = Sequence.actions(move_ease_out, move_ease_out_back);
+            CCIntervalAction move_ease_out = CCEaseSineOut.action(move.copy());
+            CCIntervalAction move_ease_out_back = move_ease_out.reverse();
         
         
-            grossini.runAction(RepeatForever.action(seq1));
-            tamara.runAction(RepeatForever.action(seq2));
-            kathia.runAction(RepeatForever.action(seq3));
+            CCIntervalAction seq1 = CCSequence.actions(move, move_back);
+            CCIntervalAction seq2 = CCSequence.actions(move_ease_in, move_ease_in_back);
+            CCIntervalAction seq3 = CCSequence.actions(move_ease_out, move_ease_out_back);
+        
+        
+            grossini.runAction(CCRepeatForever.action(seq1));
+            tamara.runAction(CCRepeatForever.action(seq2));
+            kathia.runAction(CCRepeatForever.action(seq3));
         }
         public String title()
         {
@@ -343,19 +343,19 @@ public class EaseActionsTest extends Activity {
         {
             super.onEnter();
         
-            IntervalAction move = MoveBy.action(3, 250,0);
-            IntervalAction move_back = move.reverse();
+            CCIntervalAction move = CCMoveBy.action(3, CGPoint.make(250,0));
+            CCIntervalAction move_back = move.reverse();
         
-            IntervalAction move_ease = EaseSineInOut.action(move.copy());
-            IntervalAction move_ease_back = move_ease.reverse();
+            CCIntervalAction move_ease = CCEaseSineInOut.action(move.copy());
+            CCIntervalAction move_ease_back = move_ease.reverse();
         
-            IntervalAction seq1 = Sequence.actions(move, move_back);
-            IntervalAction seq2 = Sequence.actions(move_ease, move_ease_back);
+            CCIntervalAction seq1 = CCSequence.actions(move, move_back);
+            CCIntervalAction seq2 = CCSequence.actions(move_ease, move_ease_back);
         
             positionForTwo();
         
-            grossini.runAction(RepeatForever.action(seq1));
-            tamara.runAction(RepeatForever.action(seq2));
+            grossini.runAction(CCRepeatForever.action(seq1));
+            tamara.runAction(CCRepeatForever.action(seq2));
         }
         
         public String title()
@@ -369,24 +369,24 @@ public class EaseActionsTest extends Activity {
         {
             super.onEnter();
         
-            IntervalAction move = MoveBy.action(3, 250,0);
-            IntervalAction move_back = move.reverse();
+            CCIntervalAction move = CCMoveBy.action(3, CGPoint.make(250,0));
+            CCIntervalAction move_back = move.reverse();
         
-            IntervalAction move_ease_in = EaseExponentialIn.action(move.copy());
-            IntervalAction move_ease_in_back = move_ease_in.reverse();
+            CCIntervalAction move_ease_in = CCEaseExponentialIn.action(move.copy());
+            CCIntervalAction move_ease_in_back = move_ease_in.reverse();
         
-            IntervalAction move_ease_out = EaseExponentialOut.action(move.copy());
-            IntervalAction move_ease_out_back = move_ease_out.reverse();
-        
-        
-            IntervalAction seq1 = Sequence.actions(move, move_back);
-            IntervalAction seq2 = Sequence.actions(move_ease_in, move_ease_in_back);
-            IntervalAction seq3 = Sequence.actions(move_ease_out, move_ease_out_back);
+            CCIntervalAction move_ease_out = CCEaseExponentialOut.action(move.copy());
+            CCIntervalAction move_ease_out_back = move_ease_out.reverse();
         
         
-            grossini.runAction(RepeatForever.action(seq1));
-            tamara.runAction(RepeatForever.action(seq2));
-            kathia.runAction(RepeatForever.action(seq3));
+            CCIntervalAction seq1 = CCSequence.actions(move, move_back);
+            CCIntervalAction seq2 = CCSequence.actions(move_ease_in, move_ease_in_back);
+            CCIntervalAction seq3 = CCSequence.actions(move_ease_out, move_ease_out_back);
+        
+        
+            grossini.runAction(CCRepeatForever.action(seq1));
+            tamara.runAction(CCRepeatForever.action(seq2));
+            kathia.runAction(CCRepeatForever.action(seq3));
         }
         public String title()
         {
@@ -399,19 +399,19 @@ public class EaseActionsTest extends Activity {
         {
             super.onEnter();
         
-            IntervalAction move = MoveBy.action(3, 250,0);
-            IntervalAction move_back = move.reverse();
+            CCIntervalAction move = CCMoveBy.action(3, CGPoint.make(250,0));
+            CCIntervalAction move_back = move.reverse();
         
-            IntervalAction move_ease = EaseExponentialInOut.action(move.copy());
-            IntervalAction move_ease_back = move_ease.reverse();
+            CCIntervalAction move_ease = CCEaseExponentialInOut.action(move.copy());
+            CCIntervalAction move_ease_back = move_ease.reverse();
         
-            IntervalAction seq1 = Sequence.actions(move, move_back);
-            IntervalAction seq2 = Sequence.actions(move_ease, move_ease_back);
+            CCIntervalAction seq1 = CCSequence.actions(move, move_back);
+            CCIntervalAction seq2 = CCSequence.actions(move_ease, move_ease_back);
         
             positionForTwo();
         
-            grossini.runAction(RepeatForever.action(seq1));
-            tamara.runAction(RepeatForever.action(seq2));
+            grossini.runAction(CCRepeatForever.action(seq1));
+            tamara.runAction(CCRepeatForever.action(seq2));
         }
         public String title()
         {
@@ -424,25 +424,25 @@ public class EaseActionsTest extends Activity {
         {
             super.onEnter();
         
-            IntervalAction move = MoveBy.action(3, 250,0);
+            CCIntervalAction move = CCMoveBy.action(3, CGPoint.make(250,0));
         
-            IntervalAction move_ease_inout1 = EaseElasticInOut.action(move.copy(), 0.3f);
-            IntervalAction move_ease_inout_back1 = move_ease_inout1.reverse();
+            CCIntervalAction move_ease_inout1 = CCEaseElasticInOut.action(move.copy(), 0.3f);
+            CCIntervalAction move_ease_inout_back1 = move_ease_inout1.reverse();
         
-            IntervalAction move_ease_inout2 = EaseElasticInOut.action(move.copy(), 0.45f);
-            IntervalAction move_ease_inout_back2 = move_ease_inout2.reverse();
+            CCIntervalAction move_ease_inout2 = CCEaseElasticInOut.action(move.copy(), 0.45f);
+            CCIntervalAction move_ease_inout_back2 = move_ease_inout2.reverse();
         
-            IntervalAction move_ease_inout3 = EaseElasticInOut.action(move.copy(), 0.6f);
-            IntervalAction move_ease_inout_back3 = move_ease_inout3.reverse();
+            CCIntervalAction move_ease_inout3 = CCEaseElasticInOut.action(move.copy(), 0.6f);
+            CCIntervalAction move_ease_inout_back3 = move_ease_inout3.reverse();
         
         
-            IntervalAction seq1 = Sequence.actions(move_ease_inout1, move_ease_inout_back1);
-            IntervalAction seq2 = Sequence.actions(move_ease_inout2, move_ease_inout_back2);
-            IntervalAction seq3 = Sequence.actions(move_ease_inout3, move_ease_inout_back3);
+            CCIntervalAction seq1 = CCSequence.actions(move_ease_inout1, move_ease_inout_back1);
+            CCIntervalAction seq2 = CCSequence.actions(move_ease_inout2, move_ease_inout_back2);
+            CCIntervalAction seq3 = CCSequence.actions(move_ease_inout3, move_ease_inout_back3);
         
-            tamara.runAction(RepeatForever.action(seq1));
-            kathia.runAction(RepeatForever.action(seq2));
-            grossini.runAction(RepeatForever.action(seq3));
+            tamara.runAction(CCRepeatForever.action(seq1));
+            kathia.runAction(CCRepeatForever.action(seq2));
+            grossini.runAction(CCRepeatForever.action(seq3));
         }
         public String title()
         {
@@ -455,22 +455,22 @@ public class EaseActionsTest extends Activity {
         {
             super.onEnter();
         
-            IntervalAction move = MoveBy.action(3, 250,0);
-            IntervalAction move_back = move.reverse();
+            CCIntervalAction move = CCMoveBy.action(3, CGPoint.make(250,0));
+            CCIntervalAction move_back = move.reverse();
         
-            IntervalAction move_ease_in = EaseElasticIn.action(move.copy());
-            IntervalAction move_ease_in_back = move_ease_in.reverse();
+            CCIntervalAction move_ease_in = CCEaseElasticIn.action(move.copy());
+            CCIntervalAction move_ease_in_back = move_ease_in.reverse();
         
-            IntervalAction move_ease_out = EaseElasticOut.action(move.copy());
-            IntervalAction move_ease_out_back = move_ease_out.reverse();
+            CCIntervalAction move_ease_out = CCEaseElasticOut.action(move.copy());
+            CCIntervalAction move_ease_out_back = move_ease_out.reverse();
         
-            IntervalAction seq1 = Sequence.actions(move, move_back);
-            IntervalAction seq2 = Sequence.actions(move_ease_in, move_ease_in_back);
-            IntervalAction seq3 = Sequence.actions(move_ease_out, move_ease_out_back);
+            CCIntervalAction seq1 = CCSequence.actions(move, move_back);
+            CCIntervalAction seq2 = CCSequence.actions(move_ease_in, move_ease_in_back);
+            CCIntervalAction seq3 = CCSequence.actions(move_ease_out, move_ease_out_back);
         
-            grossini.runAction(RepeatForever.action(seq1));
-            tamara.runAction(RepeatForever.action(seq2));
-            kathia.runAction(RepeatForever.action(seq3));
+            grossini.runAction(CCRepeatForever.action(seq1));
+            tamara.runAction(CCRepeatForever.action(seq2));
+            kathia.runAction(CCRepeatForever.action(seq3));
         }
         public String title()
         {
@@ -483,22 +483,22 @@ public class EaseActionsTest extends Activity {
         {
             super.onEnter();
         
-            IntervalAction move = MoveBy.action(3, 250,0);
-            IntervalAction move_back = move.reverse();
+            CCIntervalAction move = CCMoveBy.action(3, CGPoint.make(250,0));
+            CCIntervalAction move_back = move.reverse();
         
-            IntervalAction move_ease_in = EaseBounceIn.action(move.copy());
-            IntervalAction move_ease_in_back = move_ease_in.reverse();
+            CCIntervalAction move_ease_in = CCEaseBounceIn.action(move.copy());
+            CCIntervalAction move_ease_in_back = move_ease_in.reverse();
         
-            IntervalAction move_ease_out = EaseBounceOut.action(move.copy());
-            IntervalAction move_ease_out_back = move_ease_out.reverse();
+            CCIntervalAction move_ease_out = CCEaseBounceOut.action(move.copy());
+            CCIntervalAction move_ease_out_back = move_ease_out.reverse();
         
-            IntervalAction seq1 = Sequence.actions(move, move_back);
-            IntervalAction seq2 = Sequence.actions(move_ease_in, move_ease_in_back);
-            IntervalAction seq3 = Sequence.actions(move_ease_out, move_ease_out_back);
+            CCIntervalAction seq1 = CCSequence.actions(move, move_back);
+            CCIntervalAction seq2 = CCSequence.actions(move_ease_in, move_ease_in_back);
+            CCIntervalAction seq3 = CCSequence.actions(move_ease_out, move_ease_out_back);
         
-            grossini.runAction(RepeatForever.action(seq1));
-            tamara.runAction(RepeatForever.action(seq2));
-            kathia.runAction(RepeatForever.action(seq3));
+            grossini.runAction(CCRepeatForever.action(seq1));
+            tamara.runAction(CCRepeatForever.action(seq2));
+            kathia.runAction(CCRepeatForever.action(seq3));
         }
         public String title()
         {
@@ -511,19 +511,19 @@ public class EaseActionsTest extends Activity {
         {
             super.onEnter();
         
-            IntervalAction move = MoveBy.action(3, 250,0);
-            IntervalAction move_back = move.reverse();
+            CCIntervalAction move = CCMoveBy.action(3, CGPoint.make(250,0));
+            CCIntervalAction move_back = move.reverse();
         
-            IntervalAction move_ease = EaseBounceInOut.action(move.copy());
-            IntervalAction move_ease_back = move_ease.reverse();
+            CCIntervalAction move_ease = CCEaseBounceInOut.action(move.copy());
+            CCIntervalAction move_ease_back = move_ease.reverse();
         
-            IntervalAction seq1 = Sequence.actions(move, move_back);
-            IntervalAction seq2 = Sequence.actions(move_ease, move_ease_back);
+            CCIntervalAction seq1 = CCSequence.actions(move, move_back);
+            CCIntervalAction seq2 = CCSequence.actions(move_ease, move_ease_back);
         
             positionForTwo();
         
-            grossini.runAction(RepeatForever.action(seq1));
-            tamara.runAction(RepeatForever.action(seq2));
+            grossini.runAction(CCRepeatForever.action(seq1));
+            tamara.runAction(CCRepeatForever.action(seq2));
         }
         public String title()
         {
@@ -536,22 +536,22 @@ public class EaseActionsTest extends Activity {
         {
             super.onEnter();
         
-            IntervalAction move = MoveBy.action(3, 250,0);
-            IntervalAction move_back = move.reverse();
+            CCIntervalAction move = CCMoveBy.action(3, CGPoint.make(250,0));
+            CCIntervalAction move_back = move.reverse();
         
-            IntervalAction move_ease_in = EaseBackIn.action(move.copy());
-            IntervalAction move_ease_in_back = move_ease_in.reverse();
+            CCIntervalAction move_ease_in = CCEaseBackIn.action(move.copy());
+            CCIntervalAction move_ease_in_back = move_ease_in.reverse();
         
-            IntervalAction move_ease_out = EaseBackOut.action(move.copy());
-            IntervalAction move_ease_out_back = move_ease_out.reverse();
+            CCIntervalAction move_ease_out = CCEaseBackOut.action(move.copy());
+            CCIntervalAction move_ease_out_back = move_ease_out.reverse();
         
-            IntervalAction seq1 = Sequence.actions(move, move_back);
-            IntervalAction seq2 = Sequence.actions(move_ease_in, move_ease_in_back);
-            IntervalAction seq3 = Sequence.actions(move_ease_out, move_ease_out_back);
+            CCIntervalAction seq1 = CCSequence.actions(move, move_back);
+            CCIntervalAction seq2 = CCSequence.actions(move_ease_in, move_ease_in_back);
+            CCIntervalAction seq3 = CCSequence.actions(move_ease_out, move_ease_out_back);
         
-            grossini.runAction(RepeatForever.action(seq1));
-            tamara.runAction(RepeatForever.action(seq2));
-            kathia.runAction(RepeatForever.action(seq3));
+            grossini.runAction(CCRepeatForever.action(seq1));
+            tamara.runAction(CCRepeatForever.action(seq2));
+            kathia.runAction(CCRepeatForever.action(seq3));
         }
         public String title()
         {
@@ -564,19 +564,19 @@ public class EaseActionsTest extends Activity {
         {
             super.onEnter();
         
-            IntervalAction move = MoveBy.action(3, 250,0);
-            IntervalAction move_back = move.reverse();
+            CCIntervalAction move = CCMoveBy.action(3, CGPoint.make(250,0));
+            CCIntervalAction move_back = move.reverse();
         
-            IntervalAction move_ease = EaseBackInOut.action(move.copy());
-            IntervalAction move_ease_back = move_ease.reverse();
+            CCIntervalAction move_ease = CCEaseBackInOut.action(move.copy());
+            CCIntervalAction move_ease_back = move_ease.reverse();
         
-            IntervalAction seq1 = Sequence.actions(move, move_back);
-            IntervalAction seq2 = Sequence.actions(move_ease, move_ease_back);
+            CCIntervalAction seq1 = CCSequence.actions(move, move_back);
+            CCIntervalAction seq2 = CCSequence.actions(move_ease, move_ease_back);
         
             positionForTwo();
         
-            grossini.runAction(RepeatForever.action(seq1));
-            tamara.runAction(RepeatForever.action(seq2));
+            grossini.runAction(CCRepeatForever.action(seq1));
+            tamara.runAction(CCRepeatForever.action(seq2));
         }
         public String title()
         {
@@ -592,19 +592,19 @@ public class EaseActionsTest extends Activity {
         
         
             // rotate and jump
-            IntervalAction jump1 = JumpBy.action(4, -400,0, 100, 4);
-            IntervalAction jump2 = jump1.reverse();
-            IntervalAction rot1 = RotateBy.action(4, 360*2);
-            IntervalAction rot2 = rot1.reverse();
+            CCIntervalAction jump1 = CCJumpBy.action(4, CGPoint.make(-400,0), 100, 4);
+            CCIntervalAction jump2 = jump1.reverse();
+            CCIntervalAction rot1 = CCRotateBy.action(4, 360*2);
+            CCIntervalAction rot2 = rot1.reverse();
         
-            IntervalAction seq3_1 = Sequence.actions(jump2, jump1);
-            IntervalAction seq3_2 = Sequence.actions(rot1, rot2);
-            IntervalAction spawn = Spawn.actions(seq3_1, seq3_2);
-            Action action = Speed.action(RepeatForever.action(spawn), 1.0f);
+            CCIntervalAction seq3_1 = CCSequence.actions(jump2, jump1);
+            CCIntervalAction seq3_2 = CCSequence.actions(rot1, rot2);
+            CCIntervalAction spawn = CCSpawn.actions(seq3_1, seq3_2);
+            CCAction action = CCSpeed.action(spawn, 1.0f);
             action.setTag(kTagAction1);
         
-            Action action2 = action.copy();
-            Action action3 = action.copy();
+            CCAction action2 = action.copy();
+            CCAction action3 = action.copy();
         
             action2.setTag(kTagAction1);
             action3.setTag(kTagAction1);
@@ -619,9 +619,9 @@ public class EaseActionsTest extends Activity {
         
         public void altertime(float dt)
         {
-            Speed action1 = (Speed)grossini.getAction(kTagAction1);
-            Speed action2 = (Speed)tamara.getAction(kTagAction1);
-            Speed action3 = (Speed)kathia.getAction(kTagAction1);
+            CCSpeed action1 = (CCSpeed)grossini.getAction(kTagAction1);
+            CCSpeed action2 = (CCSpeed)tamara.getAction(kTagAction1);
+            CCSpeed action3 = (CCSpeed)kathia.getAction(kTagAction1);
         
             action1.setSpeed(ccMacros.CCRANDOM_0_1() * 2);
             action2.setSpeed(ccMacros.CCRANDOM_0_1() * 2);

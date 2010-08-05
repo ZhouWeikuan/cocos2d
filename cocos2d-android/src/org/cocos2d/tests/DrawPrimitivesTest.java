@@ -4,14 +4,14 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.Window;
 import android.view.WindowManager;
-import org.cocos2d.actions.interval.RotateBy;
+import org.cocos2d.actions.interval.CCRotateBy;
 import org.cocos2d.config.ccMacros;
-import org.cocos2d.layers.Layer;
+import org.cocos2d.layers.CCLayer;
 import org.cocos2d.menus.Menu;
 import org.cocos2d.menus.MenuItemImage;
 import org.cocos2d.nodes.CCDirector;
 import org.cocos2d.nodes.Scene;
-import org.cocos2d.nodes.TextureManager;
+import org.cocos2d.nodes.CCTextureCache;
 import org.cocos2d.opengl.CCGLSurfaceView;
 import org.cocos2d.opengl.Primitives;
 import org.cocos2d.types.CGPoint;
@@ -53,7 +53,7 @@ public class DrawPrimitivesTest extends Activity {
 
         Scene scene = Scene.node();
         scene.addChild(nextAction());
-        scene.runAction(RotateBy.action(4, -360));
+        scene.runAction(CCRotateBy.action(4, -360));
 
         // Make the Scene active
         CCDirector.sharedDirector().runWithScene(scene);
@@ -78,7 +78,7 @@ public class DrawPrimitivesTest extends Activity {
     public void onDestroy() {
         super.onDestroy();
 
-        TextureManager.sharedTextureManager().removeAllTextures();
+        CCTextureCache.sharedTextureCache().removeAllTextures();
     }
 
     static int sceneIdx = -1;
@@ -86,7 +86,7 @@ public class DrawPrimitivesTest extends Activity {
             Test1.class,
     };
 
-    public static Layer nextAction() {
+    public static CCLayer nextAction() {
 
         sceneIdx++;
         sceneIdx = sceneIdx % transitions.length;
@@ -94,7 +94,7 @@ public class DrawPrimitivesTest extends Activity {
         return restartAction();
     }
 
-    public static Layer backAction() {
+    public static CCLayer backAction() {
         sceneIdx--;
         int total = transitions.length;
         if (sceneIdx < 0)
@@ -103,16 +103,16 @@ public class DrawPrimitivesTest extends Activity {
         return restartAction();
     }
 
-    public static Layer restartAction() {
+    public static CCLayer restartAction() {
         try {
             Class<?> c = transitions[sceneIdx];
-            return (Layer) c.newInstance();
+            return (CCLayer) c.newInstance();
         } catch (Exception e) {
             return null;
         }
     }
 
-    public static class TestDemo extends Layer {
+    public static class TestDemo extends CCLayer {
         public TestDemo() {
             CGSize s = CCDirector.sharedDirector().winSize();
 
@@ -162,7 +162,7 @@ public class DrawPrimitivesTest extends Activity {
     }
 
     public static class Test1 extends TestDemo {
-        public static Layer node() {
+        public static CCLayer node() {
             return new Test1();
         }
 

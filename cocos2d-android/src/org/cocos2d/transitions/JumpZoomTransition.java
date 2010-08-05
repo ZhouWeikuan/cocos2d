@@ -1,6 +1,6 @@
 package org.cocos2d.transitions;
 
-import org.cocos2d.actions.instant.CallFunc;
+import org.cocos2d.actions.instant.CCCallFunc;
 import org.cocos2d.actions.interval.*;
 import org.cocos2d.nodes.CCDirector;
 import org.cocos2d.nodes.Scene;
@@ -34,17 +34,17 @@ public class JumpZoomTransition extends TransitionScene {
         inScene.setAnchorPoint(CGPoint.make(0.5f, 0.5f));
         outScene.setAnchorPoint(CGPoint.make(0.5f, 0.5f));
 
-        IntervalAction jump = JumpBy.action(duration / 4, -width, 0, width / 4, 2);
-        IntervalAction scaleIn = ScaleTo.action(duration / 4, 1.0f);
-        IntervalAction scaleOut = ScaleTo.action(duration / 4, 0.5f);
+        CCIntervalAction jump = CCJumpBy.action(duration / 4, CGPoint.make(-width, 0), width / 4, 2);
+        CCIntervalAction scaleIn = CCScaleTo.action(duration / 4, 1.0f);
+        CCIntervalAction scaleOut = CCScaleTo.action(duration / 4, 0.5f);
 
-        IntervalAction jumpZoomOut = Sequence.actions(scaleOut, jump);
-        IntervalAction jumpZoomIn = Sequence.actions(jump, scaleIn);
+        CCIntervalAction jumpZoomOut = CCSequence.actions(scaleOut, jump);
+        CCIntervalAction jumpZoomIn = CCSequence.actions(jump, scaleIn);
 
-        IntervalAction delay = DelayTime.action(duration / 2);
+        CCIntervalAction delay = CCDelayTime.action(duration / 2);
 
         outScene.runAction(jumpZoomOut);
-        inScene.runAction(Sequence.actions(delay, jumpZoomIn,
-                CallFunc.action(this, "finish")));
+        inScene.runAction(CCSequence.actions(delay, jumpZoomIn,
+                CCCallFunc.action(this, "finish")));
     }
 }

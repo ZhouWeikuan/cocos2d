@@ -185,7 +185,7 @@ public class Ribbon extends CCNode {
          */
         blendFunc_ = new ccBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
 
-        texture_ = TextureManager.sharedTextureManager().addImage(path);
+        texture_ = CCTextureCache.sharedTextureCache().addImage(path);
 
         /* default texture parameter */
         CCTexParams params = new CCTexParams(GL10.GL_LINEAR, GL10.GL_LINEAR, GL10.GL_REPEAT, GL10.GL_REPEAT);

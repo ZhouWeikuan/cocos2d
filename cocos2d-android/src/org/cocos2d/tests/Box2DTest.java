@@ -1,6 +1,6 @@
 package org.cocos2d.tests;
 
-import org.cocos2d.layers.Layer;
+import org.cocos2d.layers.CCLayer;
 import org.cocos2d.opengl.CCGLSurfaceView;
 import org.cocos2d.nodes.*;
 import org.cocos2d.types.*;
@@ -87,11 +87,11 @@ public class Box2DTest extends Activity {
     public void onDestroy() {
         super.onDestroy();
 
-        TextureManager.sharedTextureManager().removeAllTextures();
+        CCTextureCache.sharedTextureCache().removeAllTextures();
     }
 
 
-    static class Box2DTestLayer extends Layer {
+    static class Box2DTestLayer extends CCLayer {
         BBWorld world;
         GLESDebugDraw m_debugDraw;
 
@@ -169,7 +169,7 @@ public class Box2DTest extends Activity {
 
             //set up sprite
 
-            AtlasSpriteManager mgr = new AtlasSpriteManager("blocks.png", 150);
+            CCSpriteFrameCache mgr = new CCSpriteFrameCache("blocks.png", 150);
             addChild(mgr, 0, kTagSpriteManager);
 
             addNewSprite(screenSize.width/2, screenSize.height/2);
@@ -193,7 +193,7 @@ public class Box2DTest extends Activity {
         private void addNewSprite(float x, float y)
         {
             //Log.w("Add sprite %0.2f x %02.f", x, y);
-            AtlasSpriteManager mgr = (AtlasSpriteManager)getChild(kTagSpriteManager);
+            CCSpriteFrameCache mgr = (CCSpriteFrameCache)getChild(kTagSpriteManager);
 
             //We have a 64x64 sprite sheet with 4 different 32x32 images.  The following code is
             //just randomly picking one of the images

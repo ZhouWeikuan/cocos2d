@@ -1,11 +1,11 @@
 package org.cocos2d.transitions;
 
-import org.cocos2d.actions.instant.CallFunc;
-import org.cocos2d.actions.interval.FadeIn;
-import org.cocos2d.actions.interval.FadeOut;
-import org.cocos2d.actions.interval.IntervalAction;
-import org.cocos2d.actions.interval.Sequence;
-import org.cocos2d.layers.ColorLayer;
+import org.cocos2d.actions.instant.CCCallFunc;
+import org.cocos2d.actions.interval.CCFadeIn;
+import org.cocos2d.actions.interval.CCFadeOut;
+import org.cocos2d.actions.interval.CCIntervalAction;
+import org.cocos2d.actions.interval.CCSequence;
+import org.cocos2d.layers.CCColorLayer;
 import org.cocos2d.nodes.CCNode;
 import org.cocos2d.nodes.Scene;
 import org.cocos2d.types.ccColor3B;
@@ -43,7 +43,7 @@ public class FadeTransition extends TransitionScene {
     public void onEnter() {
         super.onEnter();
 
-        ColorLayer l = ColorLayer.node(RGBA);
+        CCColorLayer l = CCColorLayer.node(RGBA);
         inScene.setVisible(false);
 
         addChild(l, 2, kSceneFade);
@@ -51,11 +51,11 @@ public class FadeTransition extends TransitionScene {
 
         CCNode f = getChild(kSceneFade);
 
-        IntervalAction a = Sequence.actions(
-                FadeIn.action(duration / 2),
-                CallFunc.action(this, "hideOutShowIn"),
-                FadeOut.action(duration / 2),
-                CallFunc.action(this, "finish"));
+        CCIntervalAction a = CCSequence.actions(
+                CCFadeIn.action(duration / 2),
+                CCCallFunc.action(this, "hideOutShowIn"),
+                CCFadeOut.action(duration / 2),
+                CCCallFunc.action(this, "finish"));
         f.runAction(a);
     }
 

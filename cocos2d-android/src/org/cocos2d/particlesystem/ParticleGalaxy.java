@@ -1,6 +1,6 @@
 package org.cocos2d.particlesystem;
 
-import org.cocos2d.nodes.TextureManager;
+import org.cocos2d.nodes.CCTextureCache;
 import org.cocos2d.types.CGPoint;
 
 public class ParticleGalaxy extends ParticleSystem {
@@ -73,7 +73,7 @@ public class ParticleGalaxy extends ParticleSystem {
         endColorVar.b = 0.0f;
         endColorVar.a = 0.0f;
 
-        texture = TextureManager.sharedTextureManager().addImage("fire.png");
+        texture = CCTextureCache.sharedTextureCache().addImage("fire.png");
 
         // additive
         blendAdditive = true;

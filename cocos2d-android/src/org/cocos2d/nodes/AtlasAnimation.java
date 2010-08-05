@@ -5,7 +5,7 @@ import org.cocos2d.types.CGRect;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class AtlasAnimation implements CCNode.CocosAnimation {
+public class AtlasAnimation implements CCNode.CCAnimation {
     String name;
     float delay;
     ArrayList<Object> frames;
@@ -24,12 +24,12 @@ public class AtlasAnimation implements CCNode.CocosAnimation {
     }
 
     public AtlasAnimation(String n, float d) {
-        this(n, d, new AtlasSpriteFrame[]{});
+        this(n, d, new CCSpriteFrame[]{});
     }
 
 
     /* initializes an AtlasAnimation with an AtlasSpriteManager, a name, and the frames from AtlasSpriteFrames */
-    public AtlasAnimation(String t, float d, AtlasSpriteFrame... f) {
+    public AtlasAnimation(String t, float d, CCSpriteFrame... f) {
         name = t;
         frames = new ArrayList<Object>();
         delay = d;
@@ -38,7 +38,7 @@ public class AtlasAnimation implements CCNode.CocosAnimation {
     }
 
     public void addFrame(CGRect rect) {
-        AtlasSpriteFrame frame = new AtlasSpriteFrame(rect);
+        CCSpriteFrame frame = new CCSpriteFrame(rect);
         frames.add(frame);
     }
 

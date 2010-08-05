@@ -19,7 +19,7 @@ import java.util.HashMap;
  * <p/>
  * All features from AtlasNode are valid in TileMapAtlas
  */
-public class TileMapAtlas extends AtlasNode {
+public class TileMapAtlas extends CCAtlasNode {
     /// info about the map file
     public TGA.ImageTGA tgaInfo;
 

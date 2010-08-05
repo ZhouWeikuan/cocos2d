@@ -5,5 +5,13 @@ package org.cocos2d.types;
  */
 public class ccVertex2F {
     CGPoint pnt;
+    
+    public ccVertex2F() {
+    	pnt = CGPoint.zero();
+    }
+    
+    public void setCGPoint(CGPoint p) {
+    	pnt = CGPoint.make(p.x, p.y);
+    }
 }
 

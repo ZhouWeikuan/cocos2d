@@ -1,6 +1,6 @@
 package org.cocos2d.transitions;
 
-import org.cocos2d.actions.interval.IntervalAction;
+import org.cocos2d.actions.interval.CCIntervalAction;
 import org.cocos2d.nodes.CCDirector;
 import org.cocos2d.nodes.Scene;
 import org.cocos2d.types.CGSize;
@@ -41,7 +41,7 @@ public class PageTurnTransition extends TransitionScene {
             x=12;y=16;
         }
 
-        IntervalAction action  = action(x,y);
+        CCIntervalAction action  = action(x,y);
 
         if(! back_ )
         {
@@ -63,7 +63,7 @@ public class PageTurnTransition extends TransitionScene {
 
     }
 
-    public IntervalAction action(float x, float y)
+    public CCIntervalAction action(float x, float y)
     {
         if( back_ )
         {

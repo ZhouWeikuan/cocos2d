@@ -99,7 +99,7 @@ public class CCDirector implements GLSurfaceView.Renderer {
         return projection_;
     }
 
-    public void setProjection(GL10 gl, int p) {
+    public void setProjection(int p) {
         CGSize size = surfaceSize_;
         switch (p) {
             case kCCDirectorProjection2D:
@@ -399,7 +399,7 @@ public class CCDirector implements GLSurfaceView.Renderer {
                 this.updateContentScaleFactor();
 
             // update projection
-            setProjection(gl, projection_);
+            setProjection(projection_);
         }
     }
 
@@ -566,7 +566,7 @@ public class CCDirector implements GLSurfaceView.Renderer {
 
         setAlphaBlending(gl, true);
         setDepthTest(gl, true);
-        setProjection(gl, kCCDirectorProjectionDefault);
+        setProjection(kCCDirectorProjectionDefault);
 
         // set other opengl default values
         gl.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -595,14 +595,14 @@ public class CCDirector implements GLSurfaceView.Renderer {
         _sharedDirector = null;
     }
 
-    public void onSurfaceChanged(GL10 gl, int width, int height) {
+    public void onSurfaceChanged(GL10 gl, int width, int height) {    	
         surfaceSize_ = CGSize.make(width, height);
         gl.glViewport(0, 0, width, height);
         setDefaultProjection(gl);
     }
 
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
-
+    	CCDirector.gl = gl;
         /*
          * By default, OpenGL enables features that improve quality
          * but reduce performance. One might want to tweak that
@@ -1314,5 +1314,6 @@ public class CCDirector implements GLSurfaceView.Renderer {
 
     private boolean mTranslucentBackground = false;
 
+    public static GL10 gl;
 }
 

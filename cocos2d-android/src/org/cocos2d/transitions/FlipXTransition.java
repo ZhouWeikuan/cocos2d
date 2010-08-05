@@ -1,12 +1,12 @@
 package org.cocos2d.transitions;
 
-import org.cocos2d.actions.camera.OrbitCamera;
-import org.cocos2d.actions.instant.CallFunc;
-import org.cocos2d.actions.instant.Hide;
-import org.cocos2d.actions.instant.Show;
-import org.cocos2d.actions.interval.DelayTime;
-import org.cocos2d.actions.interval.IntervalAction;
-import org.cocos2d.actions.interval.Sequence;
+import org.cocos2d.actions.camera.CCOrbitCamera;
+import org.cocos2d.actions.instant.CCCallFunc;
+import org.cocos2d.actions.instant.CCHide;
+import org.cocos2d.actions.instant.CCShow;
+import org.cocos2d.actions.interval.CCDelayTime;
+import org.cocos2d.actions.interval.CCIntervalAction;
+import org.cocos2d.actions.interval.CCSequence;
 import org.cocos2d.nodes.Scene;
 
 /**
@@ -27,7 +27,7 @@ public class FlipXTransition extends OrientedTransitionScene {
     public void onEnter() {
         super.onEnter();
 
-        IntervalAction inA, outA;
+        CCIntervalAction inA, outA;
         inScene.setVisible(false);
 
         float inDeltaZ, inAngleZ;
@@ -45,12 +45,12 @@ public class FlipXTransition extends OrientedTransitionScene {
             outAngleZ = 0;
         }
 
-        inA = Sequence.actions(DelayTime.action(duration / 2), Show.action(),
-                OrbitCamera.action(duration / 2, 1, 0, inAngleZ, inDeltaZ, 0, 0),
-                CallFunc.action(this, "finish"));
-        outA = Sequence.actions(
-                OrbitCamera.action(duration / 2, 1, 0, outAngleZ, outDeltaZ, 0, 0),
-                Hide.action(), DelayTime.action(duration / 2));
+        inA = CCSequence.actions(CCDelayTime.action(duration / 2), CCShow.action(),
+                CCOrbitCamera.action(duration / 2, 1, 0, inAngleZ, inDeltaZ, 0, 0),
+                CCCallFunc.action(this, "finish"));
+        outA = CCSequence.actions(
+                CCOrbitCamera.action(duration / 2, 1, 0, outAngleZ, outDeltaZ, 0, 0),
+                CCHide.action(), CCDelayTime.action(duration / 2));
 
         inScene.runAction(inA);
         outScene.runAction(outA);

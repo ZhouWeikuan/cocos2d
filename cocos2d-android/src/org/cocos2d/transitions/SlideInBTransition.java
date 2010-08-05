@@ -2,8 +2,8 @@ package org.cocos2d.transitions;
 
 import org.cocos2d.nodes.CCDirector;
 import org.cocos2d.nodes.Scene;
-import org.cocos2d.actions.interval.IntervalAction;
-import org.cocos2d.actions.interval.MoveBy;
+import org.cocos2d.actions.interval.CCIntervalAction;
+import org.cocos2d.actions.interval.CCMoveBy;
 import org.cocos2d.types.CGPoint;
 import org.cocos2d.types.CGSize;
 
@@ -33,9 +33,9 @@ public class SlideInBTransition extends SlideInLTransition {
         inScene.setPosition(CGPoint.make(0,-(s.height-ADJUST_FACTOR)));
     }
 
-    protected IntervalAction action() {
+    protected CCIntervalAction action() {
         CGSize s = CCDirector.sharedDirector().winSize();
-        return MoveBy.action(duration, 0,s.height-ADJUST_FACTOR);
+        return CCMoveBy.action(duration, CGPoint.make(0,s.height-ADJUST_FACTOR));
     }
 
 }

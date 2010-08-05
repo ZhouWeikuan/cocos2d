@@ -3,8 +3,8 @@ package org.cocos2d.transitions;
 import org.cocos2d.nodes.CCDirector;
 import org.cocos2d.nodes.Scene;
 import org.cocos2d.types.CGSize;
-import org.cocos2d.actions.interval.IntervalAction;
-import org.cocos2d.actions.ease.EaseOut;
+import org.cocos2d.actions.interval.CCIntervalAction;
+import org.cocos2d.actions.ease.CCEaseOut;
 
 /**
  * TurnOffTiles Transition.
@@ -41,7 +41,7 @@ public class TurnOffTilesTransition extends TransitionScene {
 
     }
 
-    protected IntervalAction easeAction(IntervalAction action) {
+    protected CCIntervalAction easeAction(CCIntervalAction action) {
         return action;
 //        return EaseOut.action(action, 2.0f);
     }

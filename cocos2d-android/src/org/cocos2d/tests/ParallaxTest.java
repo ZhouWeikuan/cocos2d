@@ -5,14 +5,14 @@ import android.os.Bundle;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.MotionEvent;
-import org.cocos2d.actions.base.RepeatForever;
+import org.cocos2d.actions.base.CCRepeatForever;
 import org.cocos2d.actions.interval.*;
-import org.cocos2d.layers.Layer;
+import org.cocos2d.layers.CCLayer;
 import org.cocos2d.menus.Menu;
 import org.cocos2d.menus.MenuItemImage;
 import org.cocos2d.nodes.*;
 import org.cocos2d.opengl.CCGLSurfaceView;
-import org.cocos2d.opengl.TextureAtlas;
+import org.cocos2d.opengl.CCTextureAtlas;
 import org.cocos2d.types.*;
 import org.cocos2d.events.CCTouchDispatcher;
 
@@ -76,7 +76,7 @@ public class ParallaxTest extends Activity {
     public void onDestroy() {
         super.onDestroy();
 
-        TextureManager.sharedTextureManager().removeAllTextures();
+        CCTextureCache.sharedTextureCache().removeAllTextures();
     }
 
     static int sceneIdx = -1;
@@ -85,31 +85,31 @@ public class ParallaxTest extends Activity {
             Parallax2.class,
     };
 
-    static Layer nextAction() {
+    static CCLayer nextAction() {
         sceneIdx++;
         sceneIdx = sceneIdx % transitions.length;
         return restartAction();
     }
 
-    static Layer backAction() {
+    static CCLayer backAction() {
         sceneIdx--;
         if (sceneIdx < 0)
             sceneIdx += transitions.length;
         return restartAction();
     }
 
-    static Layer restartAction() {
+    static CCLayer restartAction() {
         try {
             Class<?> c = transitions[sceneIdx];
-            return (Layer) c.newInstance();
+            return (CCLayer) c.newInstance();
         } catch (Exception e) {
             if (DEBUG) e.printStackTrace();
             return null;
         }
     }
 
-    static abstract class ParallaxDemo extends Layer {
-        TextureAtlas atlas;
+    static abstract class ParallaxDemo extends CCLayer {
+        CCTextureAtlas atlas;
 
         static final int kTagNode = 1;
         static final int kTagGrossini = 2;
@@ -202,16 +202,16 @@ public class ParallaxTest extends Activity {
             // now create some actions that will move the 'void' node
             // and the children of the 'void' node will move at different
             // speed, thus, simulation the 3D environment
-            IntervalAction goUp = MoveBy.action(4, 0,-500);
-            IntervalAction goDown = goUp.reverse();
-            IntervalAction go = MoveBy.action(8, -1000, 0);
-            IntervalAction goBack = go.reverse();
-            IntervalAction seq = Sequence.actions(
+            CCIntervalAction goUp = CCMoveBy.action(4, CGPoint.make(0,-500));
+            CCIntervalAction goDown = goUp.reverse();
+            CCIntervalAction go = CCMoveBy.action(8, CGPoint.make(-1000, 0));
+            CCIntervalAction goBack = go.reverse();
+            CCIntervalAction seq = CCSequence.actions(
                       goUp,
                       go,
                       goDown,
                       goBack);
-            voidNode.runAction(RepeatForever.action(seq));
+            voidNode.runAction(CCRepeatForever.action(seq));
 
             addChild(voidNode);
 
