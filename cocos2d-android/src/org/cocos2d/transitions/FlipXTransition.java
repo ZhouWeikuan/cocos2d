@@ -7,7 +7,7 @@ import org.cocos2d.actions.instant.CCShow;
 import org.cocos2d.actions.interval.CCDelayTime;
 import org.cocos2d.actions.interval.CCIntervalAction;
 import org.cocos2d.actions.interval.CCSequence;
-import org.cocos2d.nodes.Scene;
+import org.cocos2d.layers.CCScene;
 
 /**
  * FlipX Transition.
@@ -16,11 +16,11 @@ import org.cocos2d.nodes.Scene;
  */
 public class FlipXTransition extends OrientedTransitionScene {
 
-    public static FlipXTransition transition(float t, Scene s, int orientation) {
+    public static FlipXTransition transition(float t, CCScene s, int orientation) {
         return new FlipXTransition(t, s, orientation);
     }
 
-    public FlipXTransition(float t, Scene s, int orientation) {
+    public FlipXTransition(float t, CCScene s, int orientation) {
         super(t, s, orientation);
     }
 

@@ -6,8 +6,9 @@ import android.os.Bundle;
 import android.view.Window;
 import android.view.WindowManager;
 import org.cocos2d.layers.CCLayer;
-import org.cocos2d.menus.Menu;
-import org.cocos2d.menus.MenuItemImage;
+import org.cocos2d.layers.CCScene;
+import org.cocos2d.menus.CCMenu;
+import org.cocos2d.menus.CCMenuItemImage;
 import org.cocos2d.nodes.*;
 import org.cocos2d.opengl.CCGLSurfaceView;
 import org.cocos2d.transitions.*;
@@ -57,7 +58,7 @@ public class TransitionsTest extends Activity {
         // frames per second
         CCDirector.sharedDirector().setAnimationInterval(1.0f / 60);
 
-        Scene scene = Scene.node();
+        CCScene scene = CCScene.node();
         scene.addChild(new TestLayer1());
         // Make the Scene active
         CCDirector.sharedDirector().runWithScene(scene);
@@ -86,79 +87,79 @@ public class TransitionsTest extends Activity {
     }
 
     static class FadeWhiteTransition extends FadeTransition {
-        public FadeWhiteTransition(float t, Scene s) {
+        public FadeWhiteTransition(float t, CCScene s) {
             super(t, s, new ccColor3B(255, 255, 255));
         }
     }
 
     static class FlipXLeftOverTransition extends FlipXTransition {
-        public FlipXLeftOverTransition(float t, Scene s) {
+        public FlipXLeftOverTransition(float t, CCScene s) {
             super(t, s, Orientation.kOrientationLeftOver);
         }
     }
 
     static class FlipXRightOverTransition extends FlipXTransition {
-        public FlipXRightOverTransition(float t, Scene s) {
+        public FlipXRightOverTransition(float t, CCScene s) {
             super(t, s, Orientation.kOrientationRightOver);
         }
     }
 
     static class FlipYUpOverTransition extends FlipYTransition {
-        public FlipYUpOverTransition(float t, Scene s) {
+        public FlipYUpOverTransition(float t, CCScene s) {
             super(t, s, Orientation.kOrientationUpOver);
         }
     }
 
     static class FlipYDownOverTransition extends FlipYTransition {
-        public FlipYDownOverTransition(float t, Scene s) {
+        public FlipYDownOverTransition(float t, CCScene s) {
             super(t, s, Orientation.kOrientationDownOver);
         }
     }
 
     static class FlipAngularLeftOverTransition extends FlipAngularTransition {
-        public FlipAngularLeftOverTransition(float t, Scene s) {
+        public FlipAngularLeftOverTransition(float t, CCScene s) {
             super(t, s, Orientation.kOrientationLeftOver);
         }
     }
 
     static class FlipAngularRightOverTransition extends FlipAngularTransition {
-        public FlipAngularRightOverTransition(float t, Scene s) {
+        public FlipAngularRightOverTransition(float t, CCScene s) {
             super(t, s, Orientation.kOrientationRightOver);
         }
     }
 
     static class ZoomFlipXLeftOverTransition extends ZoomFlipXTransition {
-        public ZoomFlipXLeftOverTransition(float t, Scene s) {
+        public ZoomFlipXLeftOverTransition(float t, CCScene s) {
             super(t, s, Orientation.kOrientationLeftOver);
         }
     }
 
     static class ZoomFlipXRightOverTransition extends ZoomFlipXTransition {
-        public ZoomFlipXRightOverTransition(float t, Scene s) {
+        public ZoomFlipXRightOverTransition(float t, CCScene s) {
             super(t, s, Orientation.kOrientationRightOver);
         }
     }
 
     static class ZoomFlipYUpOverTransition extends ZoomFlipYTransition {
-        public ZoomFlipYUpOverTransition(float t, Scene s) {
+        public ZoomFlipYUpOverTransition(float t, CCScene s) {
             super(t, s, Orientation.kOrientationUpOver);
         }
     }
 
     static class ZoomFlipYDownOverTransition extends ZoomFlipYTransition {
-        public ZoomFlipYDownOverTransition(float t, Scene s) {
+        public ZoomFlipYDownOverTransition(float t, CCScene s) {
             super(t, s, Orientation.kOrientationDownOver);
         }
     }
 
     static class ZoomFlipAngularLeftOverTransition extends ZoomFlipAngularTransition {
-        public ZoomFlipAngularLeftOverTransition(float t, Scene s) {
+        public ZoomFlipAngularLeftOverTransition(float t, CCScene s) {
             super(t, s, Orientation.kOrientationLeftOver);
         }
     }
 
     static class ZoomFlipAngularRightOverTransition extends ZoomFlipAngularTransition {
-        public ZoomFlipAngularRightOverTransition(float t, Scene s) {
+        public ZoomFlipAngularRightOverTransition(float t, CCScene s) {
             super(t, s, Orientation.kOrientationRightOver);
         }
     }
@@ -199,14 +200,14 @@ public class TransitionsTest extends Activity {
             SlideInBTransition.class,
     };
 
-    static TransitionScene nextTransition(float d, Scene s) {
+    static TransitionScene nextTransition(float d, CCScene s) {
         sceneIdx++;
         sceneIdx = sceneIdx % transitions.length;
 
         return restartTransition(d, s);
     }
 
-    static TransitionScene backTransition(float d, Scene s) {
+    static TransitionScene backTransition(float d, CCScene s) {
         sceneIdx--;
         int total = transitions.length;
         if (sceneIdx < 0)
@@ -215,7 +216,7 @@ public class TransitionsTest extends Activity {
         return restartTransition(d, s);
     }
 
-    static TransitionScene restartTransition(float d, Scene s) {
+    static TransitionScene restartTransition(float d, CCScene s) {
         try {
             Class<?> c = transitions[sceneIdx];
             Class<?> partypes[] = new Class[2];
@@ -249,11 +250,11 @@ public class TransitionsTest extends Activity {
             addChild(label);
 
             // menu
-            MenuItemImage item1 = MenuItemImage.item("b1.png", "b2.png", this, "backCallback");
-            MenuItemImage item2 = MenuItemImage.item("r1.png", "r2.png", this, "restartCallback");
-            MenuItemImage item3 = MenuItemImage.item("f1.png", "f2.png", this, "nextCallback");
+            CCMenuItemImage item1 = CCMenuItemImage.item("b1.png", "b2.png", this, "backCallback");
+            CCMenuItemImage item2 = CCMenuItemImage.item("r1.png", "r2.png", this, "restartCallback");
+            CCMenuItemImage item3 = CCMenuItemImage.item("f1.png", "f2.png", this, "nextCallback");
 
-            Menu menu = Menu.menu(item1, item2, item3);
+            CCMenu menu = CCMenu.menu(item1, item2, item3);
             menu.setPosition(CGPoint.make(0, 0));
             item1.setPosition(CGPoint.make(s.width / 2 - 100, 30));
             item2.setPosition(CGPoint.make(s.width / 2, 30));
@@ -262,19 +263,19 @@ public class TransitionsTest extends Activity {
         }
 
         public void nextCallback() {
-            Scene scene = Scene.node();
+            CCScene scene = CCScene.node();
             scene.addChild(new TestLayer2());
             CCDirector.sharedDirector().replaceScene(nextTransition(TRANSITION_DURATION, scene));
         }
 
         public void backCallback() {
-            Scene scene = Scene.node();
+            CCScene scene = CCScene.node();
             scene.addChild(new TestLayer2());
             CCDirector.sharedDirector().replaceScene(backTransition(TRANSITION_DURATION, scene));
         }
 
         public void restartCallback() {
-            Scene scene = Scene.node();
+            CCScene scene = CCScene.node();
             scene.addChild(new TestLayer2());
             CCDirector.sharedDirector().replaceScene(restartTransition(TRANSITION_DURATION, scene));
         }
@@ -298,11 +299,11 @@ public class TransitionsTest extends Activity {
             addChild(label);
 
             // menu
-            MenuItemImage item1 = MenuItemImage.item("b1.png", "b2.png", this, "backCallback");
-            MenuItemImage item2 = MenuItemImage.item("r1.png", "r2.png", this, "restartCallback");
-            MenuItemImage item3 = MenuItemImage.item("f1.png", "f2.png", this, "nextCallback");
+            CCMenuItemImage item1 = CCMenuItemImage.item("b1.png", "b2.png", this, "backCallback");
+            CCMenuItemImage item2 = CCMenuItemImage.item("r1.png", "r2.png", this, "restartCallback");
+            CCMenuItemImage item3 = CCMenuItemImage.item("f1.png", "f2.png", this, "nextCallback");
 
-            Menu menu = Menu.menu(item1, item2, item3);
+            CCMenu menu = CCMenu.menu(item1, item2, item3);
             menu.setPosition(CGPoint.make(0, 0));
             item1.setPosition(CGPoint.make(s.width / 2 - 100, 30));
             item2.setPosition(CGPoint.make(s.width / 2, 30));
@@ -312,19 +313,19 @@ public class TransitionsTest extends Activity {
         }
 
         public void nextCallback() {
-            Scene scene = Scene.node();
+            CCScene scene = CCScene.node();
             scene.addChild(new TestLayer1());
             CCDirector.sharedDirector().replaceScene(nextTransition(TRANSITION_DURATION, scene));
         }
 
         public void backCallback() {
-            Scene scene = Scene.node();
+            CCScene scene = CCScene.node();
             scene.addChild(new TestLayer1());
             CCDirector.sharedDirector().replaceScene(backTransition(TRANSITION_DURATION, scene));
         }
 
         public void restartCallback() {
-            Scene scene = Scene.node();
+            CCScene scene = CCScene.node();
             scene.addChild(new TestLayer1());
             CCDirector.sharedDirector().replaceScene(restartTransition(TRANSITION_DURATION, scene));
 

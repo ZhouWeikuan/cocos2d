@@ -1,19 +1,13 @@
 package org.cocos2d.tests;
 
-import android.app.Activity;
-import android.content.Context;
-import android.os.Bundle;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
+import org.cocos2d.events.CCTouchDispatcher;
 import org.cocos2d.layers.CCColorLayer;
 import org.cocos2d.layers.CCLayer;
-import org.cocos2d.menus.Menu;
-import org.cocos2d.menus.MenuItemFont;
+import org.cocos2d.layers.CCScene;
+import org.cocos2d.menus.CCMenu;
+import org.cocos2d.menus.CCMenuItemFont;
 import org.cocos2d.nodes.CCDirector;
 import org.cocos2d.nodes.CCLabel;
-import org.cocos2d.nodes.Scene;
 import org.cocos2d.nodes.CCTextureCache;
 import org.cocos2d.opengl.CCGLSurfaceView;
 import org.cocos2d.transitions.FlipXTransition;
@@ -21,7 +15,14 @@ import org.cocos2d.transitions.SlideInTTransition;
 import org.cocos2d.transitions.TransitionScene;
 import org.cocos2d.types.CGPoint;
 import org.cocos2d.types.ccColor4B;
-import org.cocos2d.events.CCTouchDispatcher;
+
+import android.app.Activity;
+import android.content.Context;
+import android.os.Bundle;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 
 
 public class SceneTest extends Activity {
@@ -45,24 +46,24 @@ public class SceneTest extends Activity {
     static class Layer1 extends CCLayer {
 
         public Layer1() {
-            MenuItemFont item1 = MenuItemFont.item("Test pushScene", this, "onPushScene");
-            MenuItemFont item2 = MenuItemFont.item("Test pushScene w/transition", this, "onPushSceneTran");
-            MenuItemFont item3 = MenuItemFont.item("Quit", this, "onQuit");
+            CCMenuItemFont item1 = CCMenuItemFont.item("Test pushScene", this, "onPushScene");
+            CCMenuItemFont item2 = CCMenuItemFont.item("Test pushScene w/transition", this, "onPushSceneTran");
+            CCMenuItemFont item3 = CCMenuItemFont.item("Quit", this, "onQuit");
 
-            Menu menu = Menu.menu(item1, item2, item3);
+            CCMenu menu = CCMenu.menu(item1, item2, item3);
             menu.alignItemsVertically();
 
             addChild(menu);
         }
 
         public void onPushScene() {
-            Scene scene = Scene.node();
+            CCScene scene = CCScene.node();
             scene.addChild(new Layer2(), 0);
             CCDirector.sharedDirector().pushScene(scene);
         }
 
         public void onPushSceneTran() {
-            Scene scene = Scene.node();
+            CCScene scene = CCScene.node();
             scene.addChild(new Layer2(), 0);
             CCDirector.sharedDirector().pushScene(SlideInTTransition.transition(1, scene));
         }
@@ -78,11 +79,11 @@ public class SceneTest extends Activity {
 
     static class Layer2 extends CCLayer {
         public Layer2() {
-            MenuItemFont item1 = MenuItemFont.item("Replace Scene", this, "onReplaceScene");
-            MenuItemFont item2 = MenuItemFont.item("Replace Scene Transition", this, "onReplaceSceneTransition");
-            MenuItemFont item3 = MenuItemFont.item("Go Back", this, "onGoBack");
+            CCMenuItemFont item1 = CCMenuItemFont.item("Replace Scene", this, "onReplaceScene");
+            CCMenuItemFont item2 = CCMenuItemFont.item("Replace Scene Transition", this, "onReplaceSceneTransition");
+            CCMenuItemFont item3 = CCMenuItemFont.item("Go Back", this, "onGoBack");
 
-            Menu menu = Menu.menu(item1, item2, item3);
+            CCMenu menu = CCMenu.menu(item1, item2, item3);
             menu.alignItemsVertically();
 
             addChild(menu);
@@ -93,13 +94,13 @@ public class SceneTest extends Activity {
         }
 
         public void onReplaceScene() {
-            Scene scene = Scene.node();
+            CCScene scene = CCScene.node();
             scene.addChild(new Layer3(), 0);
             CCDirector.sharedDirector().replaceScene(scene);
         }
 
         public void onReplaceSceneTransition() {
-            Scene s = Scene.node();
+            CCScene s = CCScene.node();
             s.addChild(new Layer3(), 0);
             CCDirector.sharedDirector().replaceScene(FlipXTransition.transition(2.0f, s, TransitionScene.Orientation.kOrientationLeftOver));
         }
@@ -141,7 +142,7 @@ public class SceneTest extends Activity {
         // frames per second
         CCDirector.sharedDirector().setAnimationInterval(1.0f / 60);
 
-        Scene scene = Scene.node();
+        CCScene scene = CCScene.node();
         scene.addChild(new Layer1(), 0);
 
         // Make the Scene active

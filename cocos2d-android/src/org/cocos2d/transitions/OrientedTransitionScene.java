@@ -1,6 +1,6 @@
 package org.cocos2d.transitions;
 
-import org.cocos2d.nodes.Scene;
+import org.cocos2d.layers.CCScene;
 
 /**
  * A Transition that supports orientation like.
@@ -12,7 +12,7 @@ public abstract class OrientedTransitionScene extends TransitionScene {
     /**
      * initializes a transition with duration and incoming scene
      */
-    protected OrientedTransitionScene(float t, Scene s, int o) {
+    protected OrientedTransitionScene(float t, CCScene s, int o) {
         super(t, s);
         orientation = o;
     }

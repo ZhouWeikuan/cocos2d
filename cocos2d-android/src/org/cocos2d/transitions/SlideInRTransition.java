@@ -1,11 +1,11 @@
 package org.cocos2d.transitions;
 
-import org.cocos2d.nodes.CCDirector;
-import org.cocos2d.nodes.Scene;
-import org.cocos2d.types.CGPoint;
-import org.cocos2d.types.CGSize;
 import org.cocos2d.actions.interval.CCIntervalAction;
 import org.cocos2d.actions.interval.CCMoveBy;
+import org.cocos2d.layers.CCScene;
+import org.cocos2d.nodes.CCDirector;
+import org.cocos2d.types.CGPoint;
+import org.cocos2d.types.CGSize;
 
 /**
  * SlideInR Transition.
@@ -13,11 +13,11 @@ import org.cocos2d.actions.interval.CCMoveBy;
  */
 public class SlideInRTransition extends SlideInLTransition {
 
-    public static SlideInRTransition transition(float t, Scene s) {
+    public static SlideInRTransition transition(float t, CCScene s) {
         return new SlideInRTransition(t, s);
     }
 
-    public SlideInRTransition(float t, Scene s) {
+    public SlideInRTransition(float t, CCScene s) {
         super(t, s);
     }
 

@@ -5,8 +5,8 @@ import org.cocos2d.actions.instant.CCCallFunc;
 import org.cocos2d.actions.interval.CCIntervalAction;
 import org.cocos2d.actions.interval.CCMoveTo;
 import org.cocos2d.actions.interval.CCSequence;
+import org.cocos2d.layers.CCScene;
 import org.cocos2d.nodes.CCDirector;
-import org.cocos2d.nodes.Scene;
 import org.cocos2d.types.CGPoint;
 import org.cocos2d.types.CGSize;
 
@@ -16,11 +16,11 @@ import org.cocos2d.types.CGSize;
  */
 public class MoveInLTransition extends TransitionScene {
 
-    public static MoveInLTransition transition(float t, Scene s) {
+    public static MoveInLTransition transition(float t, CCScene s) {
         return new MoveInLTransition(t, s);
     }
 
-    public MoveInLTransition(float t, Scene s) {
+    public MoveInLTransition(float t, CCScene s) {
         super(t, s);
     }
 

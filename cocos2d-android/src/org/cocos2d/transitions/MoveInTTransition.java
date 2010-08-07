@@ -1,7 +1,7 @@
 package org.cocos2d.transitions;
 
+import org.cocos2d.layers.CCScene;
 import org.cocos2d.nodes.CCDirector;
-import org.cocos2d.nodes.Scene;
 import org.cocos2d.types.CGPoint;
 
 /**
@@ -10,11 +10,11 @@ import org.cocos2d.types.CGPoint;
  */
 public class MoveInTTransition extends MoveInLTransition {
 
-    public static MoveInTTransition transition(float t, Scene s) {
+    public static MoveInTTransition transition(float t, CCScene s) {
         return new MoveInTTransition(t, s);
     }
 
-    public MoveInTTransition(float t, Scene s) {
+    public MoveInTTransition(float t, CCScene s) {
         super(t, s);
     }
 

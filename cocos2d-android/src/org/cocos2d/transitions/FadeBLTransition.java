@@ -1,6 +1,6 @@
 package org.cocos2d.transitions;
 
-import org.cocos2d.nodes.Scene;
+import org.cocos2d.layers.CCScene;
 
 /**
  * FadeBLTransition.
@@ -8,7 +8,7 @@ import org.cocos2d.nodes.Scene;
  */
 public class FadeBLTransition extends FadeTRTransition {
 
-    public FadeBLTransition(float t, Scene s) {
+    public FadeBLTransition(float t, CCScene s) {
         super(t, s);
     }
 

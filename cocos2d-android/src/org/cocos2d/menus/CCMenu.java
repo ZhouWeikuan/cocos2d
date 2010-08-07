@@ -3,32 +3,44 @@ package org.cocos2d.menus;
 import android.view.MotionEvent;
 import org.cocos2d.layers.CCLayer;
 import org.cocos2d.nodes.CCDirector;
+import org.cocos2d.nodes.CCNode;
 import org.cocos2d.types.CGPoint;
 import org.cocos2d.types.CGRect;
 import org.cocos2d.types.CGSize;
+import org.cocos2d.types.ccColor3B;
 import org.cocos2d.config.ccMacros;
 import org.cocos2d.events.CCTouchDispatcher;
 
 import java.util.ArrayList;
 
-public class Menu extends CCLayer {
-
-    public static final int kDefaultPadding = 5;
-
-    private MenuItem selectedItem;
-
-    private MenuState state;
-
+/** A CCMenu
+ * 
+ * Features and Limitation:
+ *  - You can add MenuItem objects in runtime using addChild:
+ *  - But the only accecpted children are MenuItem objects
+ */
+public class CCMenu extends CCLayer {
     enum MenuState {
         kMenuStateWaiting,
         kMenuStateTrackingTouch
     }
 
-    public MenuItem getSelectedItem() {
+    public static final int kDefaultPadding = 5;
+
+    private CCMenuItem  selectedItem;
+
+    private MenuState   state;
+
+    /** conforms to CCRGBAProtocol protocol */
+    private byte        opacity_;
+    /** conforms to CCRGBAProtocol protocol */
+    private ccColor3B   color_;
+
+    public CCMenuItem getSelectedItem() {
         return selectedItem;
     }
 
-    public void setSelectedItem(MenuItem selectedItem) {
+    public void setSelectedItem(CCMenuItem selectedItem) {
         this.selectedItem = selectedItem;
     }
 
@@ -38,54 +50,62 @@ public class Menu extends CCLayer {
     }
 
     
-    /**
-     * creates a menu with its items
-     */
-    public static Menu menu(MenuItem... items) {
-        return new Menu(items);
+    /** creates a menu with its items */
+    public static CCMenu menu(CCMenuItem... items) {
+        return new CCMenu(items);
     }
 
-    protected Menu(MenuItem... items) {
+    /** initializes a CCMenu with it's items */
+    protected CCMenu(CCMenuItem... items) {
+        isTouchEnabled_ = true;
+
         // menu in the center of the screen
         CGSize s = CCDirector.sharedDirector().winSize();
-
-//        CCRect r = [[UIApplication sharedApplication] statusBarFrame];
-//        if(Director.sharedDirector().landscape())
-//            s.height -= r.size.width;
-//        else
-//            s.height -= r.size.height;
-        setPosition(CGPoint.make(s.width / 2, s.height / 2));
 
         setRelativeAnchorPoint(false);
         setAnchorPoint(CGPoint.make(0.5f, 0.5f));
         setContentSize(s);
+		setPosition(CGPoint.ccp(s.width/2, s.height/2));
 
-
-        isTouchEnabled_ = true;
-
-        int z = 0;
         for (int i = 0; i < items.length; i++) {
-            MenuItem item = items[i];
-            addChild(item, z);
-            z++;
+            CCMenuItem item = items[i];
+            addChild(item, i);
         }
-//	    alignItemsVertically();
 
         selectedItem = null;
         state = MenuState.kMenuStateWaiting;
+    }
 
+    /*
+     * override add:
+     */
+    public CCNode addChild(CCMenuItem child, int z, int aTag) {
+        return super.addChild(child, z, aTag);
+    }
+
+    /** Override synthesized setOpacity to recurse items */
+    public void setOpacity(byte newOpacity) {
+        opacity_ = newOpacity;
+        for (CCNode item: children_) {
+        	
+            ((CCRGBAProtocol)item).setOpacity(opacity_);
+        }
+    }
+
+    public void setColor(ccColor3B color) {
+        color_ = color;
+        for (CCNode item: children_) {
+            ((CCRGBAProtocol)item).setColor(color_);
+        }
     }
 
     // Menu - Events
-
     @Override
     public boolean ccTouchesBegan(MotionEvent event) {
-
-        if (state != MenuState.kMenuStateWaiting)
+        if (state != MenuState.kMenuStateWaiting || ! visible_)
             return CCTouchDispatcher.kEventIgnored;
 
         selectedItem = itemForTouch(event);
-
         if (selectedItem != null) {
             selectedItem.selected();
             state = MenuState.kMenuStateTrackingTouch;
@@ -127,7 +147,7 @@ public class Menu extends CCLayer {
     @Override
     public boolean ccTouchesMoved(MotionEvent event) {
         if (state == MenuState.kMenuStateTrackingTouch) {
-            MenuItem currentItem = itemForTouch(event);
+            CCMenuItem currentItem = itemForTouch(event);
 
             if (currentItem != selectedItem) {
                 if (selectedItem != null) {
@@ -144,7 +164,6 @@ public class Menu extends CCLayer {
         return CCTouchDispatcher.kEventIgnored;
     }
 
-
     // Menu - Alignment
 
     /**
@@ -159,14 +178,13 @@ public class Menu extends CCLayer {
      */
     public void alignItemsVertically(float padding) {
         float height = -padding;
-        for (int i = 0; i < children_.size(); i++) {
-            MenuItem item = (MenuItem) children_.get(i);
+        for (CCNode item : children_) {
             height += item.getContentSize().height * item.getScaleY() + padding;
         }
 
         float y = height / 2.0f;
         for (int i = 0; i < children_.size(); i++) {
-            MenuItem item = (MenuItem) children_.get(i);
+            CCMenuItem item = (CCMenuItem) children_.get(i);
             item.setPosition(CGPoint.make(0, y - item.getContentSize().height * item.getScaleY() / 2.0f));
             y -= item.getContentSize().height * item.getScaleY() + padding;
         }
@@ -183,17 +201,14 @@ public class Menu extends CCLayer {
      * align items horizontally with padding
      */
     public void alignItemsHorizontally(float padding) {
-
         float width = -padding;
-        for (int i = 0; i < children_.size(); i++) {
-            MenuItem item = (MenuItem) children_.get(i);
+        for (CCNode item: children_) {
             width += item.getContentSize().width * item.getScaleX() + padding;
         }
 
-        float x = width / 2.0f;
-        for (int i = 0; i < children_.size(); i++) {
-            MenuItem item = (MenuItem) children_.get(i);
-            item.setPosition(CGPoint.make(x - item.getContentSize().width * item.getScaleX() / 2.0f, 0));
+        float x = -width / 2.0f;
+        for (CCNode item : children_) {
+            item.setPosition(CGPoint.make(x + item.getContentSize().width * item.getScaleX() / 2.0f, 0));
             x -= item.getContentSize().width * item.getScaleX() + padding;
         }
     }
@@ -210,7 +225,7 @@ public class Menu extends CCLayer {
         int height = -5;
         int row = 0, rowHeight = 0, columnsOccupied = 0, rowColumns;
         for (int i = 0; i < children_.size(); i++) {
-            MenuItem item = (MenuItem) children_.get(i);
+            CCMenuItem item = (CCMenuItem) children_.get(i);
             assert row < rows.size() : "Too many menu items for the amount of rows/columns.";
 
             rowColumns = rows.get(row);
@@ -237,7 +252,7 @@ public class Menu extends CCLayer {
         rowColumns = 0;
         float w = 0, x = 0, y = height / 2;
         for (int i = 0; i < children_.size(); i++) {
-            MenuItem item = (MenuItem) children_.get(i);
+            CCMenuItem item = (CCMenuItem) children_.get(i);
             if (rowColumns == 0) {
                 rowColumns = rows.get(row);
                 w = winSize.width / (1 + rowColumns);
@@ -264,7 +279,6 @@ public class Menu extends CCLayer {
     /**
      * align items in columns of rows
      */
-
     public void alignItemsInRows(int rows[]) {
         ArrayList<Integer> columns = new ArrayList<Integer>();
         for (int i = 0; i < rows.length; i++) {
@@ -277,7 +291,7 @@ public class Menu extends CCLayer {
         int width = -10, columnHeight = -5;
         int column = 0, columnWidth = 0, rowsOccupied = 0, columnRows;
         for (int i = 0; i < children_.size(); i++) {
-            MenuItem item = (MenuItem) children_.get(i);
+            CCMenuItem item = (CCMenuItem) children_.get(i);
             assert column < columns.size() : "Too many menu items for the amount of rows/columns.";
 
             columnRows = columns.get(column);
@@ -308,7 +322,7 @@ public class Menu extends CCLayer {
         columnRows = 0;
         float x = -width / 2, y = 0;
         for (int i = 0; i < children_.size(); i++) {
-            MenuItem item = (MenuItem) children_.get(i);
+            CCMenuItem item = (CCMenuItem) children_.get(i);
             if (columnRows == 0) {
                 columnRows = columns.get(column);
                 y = columnHeights.get(column) + winSize.height / 2;
@@ -331,7 +345,7 @@ public class Menu extends CCLayer {
         }
     }
 
-    private MenuItem itemForTouch(MotionEvent event) {
+    private CCMenuItem itemForTouch(MotionEvent event) {
     	CGPoint touchLocation =
     		CCDirector.sharedDirector().convertCoordinate(event.getX(), event.getY());
     	CGPoint pnt = getPosition();
@@ -339,14 +353,28 @@ public class Menu extends CCLayer {
     	float menuY = pnt.y;
 
     	for (int i = 0; i < children_.size(); i++) {
-    		MenuItem item = (MenuItem) children_.get(i);
-    		CGRect r = item.rect();
-    		r.origin.x += menuX;
-    		r.origin.y += menuY;
-    		if (CGRect.containsPoint(r, touchLocation)) {
-    			return item;
-    		}
+    		CCMenuItem item = (CCMenuItem) children_.get(i);
+            if (item.getVisible() && item.isEnabled()){
+                CGRect r = item.rect();
+                r.origin.x += menuX;
+                r.origin.y += menuY;
+                if (CGRect.containsPoint(r, touchLocation)) {
+                    return item;
+                }
+            }
     	}
     	return null;
     }
+    /*
+	CCARRAY_FOREACH(children_, item){
+		// ignore invisible and disabled items: issue #779, #866
+		if ( [item visible] && [item isEnabled] ) {
+			CGPoint local = [item convertToNodeSpace:touchLocation];
+			CGRect r = [item rect];
+			r.origin = CGPointZero;
+			if( CGRectContainsPoint( r, local ) )
+				return item;
+		}
+	}
+    */
 }

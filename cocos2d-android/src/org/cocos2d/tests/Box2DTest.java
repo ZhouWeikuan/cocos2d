@@ -1,6 +1,7 @@
 package org.cocos2d.tests;
 
 import org.cocos2d.layers.CCLayer;
+import org.cocos2d.layers.CCScene;
 import org.cocos2d.opengl.CCGLSurfaceView;
 import org.cocos2d.nodes.*;
 import org.cocos2d.types.*;
@@ -61,7 +62,7 @@ public class Box2DTest extends Activity {
         // frames per second
         CCDirector.sharedDirector().setAnimationInterval(1.0f / 60);
 
-        Scene scene = Scene.node();
+        CCScene scene = CCScene.node();
         scene.addChild(new Box2DTestLayer(), 0);
 
         // Make the Scene active

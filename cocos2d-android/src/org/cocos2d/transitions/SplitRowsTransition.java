@@ -1,6 +1,6 @@
 package org.cocos2d.transitions;
 
-import org.cocos2d.nodes.Scene;
+import org.cocos2d.layers.CCScene;
 
 /**
  * SplitRows Transition.
@@ -8,7 +8,7 @@ import org.cocos2d.nodes.Scene;
  */
 public class SplitRowsTransition extends SplitColsTransition {
 
-    public SplitRowsTransition(float t, Scene s) {
+    public SplitRowsTransition(float t, CCScene s) {
         super(t, s);
     }
 

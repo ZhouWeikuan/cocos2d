@@ -6,8 +6,8 @@ import org.cocos2d.actions.interval.CCFadeOut;
 import org.cocos2d.actions.interval.CCIntervalAction;
 import org.cocos2d.actions.interval.CCSequence;
 import org.cocos2d.layers.CCColorLayer;
+import org.cocos2d.layers.CCScene;
 import org.cocos2d.nodes.CCNode;
-import org.cocos2d.nodes.Scene;
 import org.cocos2d.types.ccColor3B;
 import org.cocos2d.types.ccColor4B;
 
@@ -21,14 +21,14 @@ public class FadeTransition extends TransitionScene {
     /**
      * creates the transition with a duration and with an RGB color
      */
-    public static FadeTransition transition(float t, Scene s, ccColor3B rgb) {
+    public static FadeTransition transition(float t, CCScene s, ccColor3B rgb) {
         return new FadeTransition(t, s, rgb);
     }
 
     /**
      * initializes the transition with a duration and with an RGB color
      */
-    public FadeTransition(float d, Scene s, ccColor3B rgb) {
+    public FadeTransition(float d, CCScene s, ccColor3B rgb) {
         super(d, s);
         RGBA = new ccColor4B(rgb.r, rgb.g, rgb.b, 0);
     }
@@ -36,7 +36,7 @@ public class FadeTransition extends TransitionScene {
     /**
      * initializes the transition with a duration
      */
-    public FadeTransition(float d, Scene s) {
+    public FadeTransition(float d, CCScene s) {
         this(d, s, new ccColor3B(0, 0, 0));
     }
 

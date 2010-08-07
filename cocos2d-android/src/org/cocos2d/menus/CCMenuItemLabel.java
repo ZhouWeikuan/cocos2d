@@ -4,28 +4,43 @@ import javax.microedition.khronos.opengles.GL10;
 
 import org.cocos2d.actions.base.CCAction;
 import org.cocos2d.actions.interval.CCScaleTo;
-import org.cocos2d.nodes.CCNode;
 import org.cocos2d.nodes.CCLabel;
+import org.cocos2d.nodes.CCNode;
 import org.cocos2d.protocols.CCLabelProtocol;
-import org.cocos2d.types.CGSize;
 import org.cocos2d.types.ccColor3B;
 
-public class MenuItemLabel extends MenuItem implements CCNode.CCRGBAProtocol {
+
+/** An abstract class for "label" CCMenuItemLabel items 
+ Any CCNode that supports the CCLabelProtocol protocol can be added.
+ Supported nodes:
+   - CCBitmapFontAtlas
+   - CCLabelAtlas
+   - CCLabel
+ */
+
+public class CCMenuItemLabel extends CCMenuItem implements CCNode.CCRGBAProtocol {
+    /** Label that is rendered. It can be any CCNode that implements the CCLabelProtocol */
     private CCLabelProtocol label_;
     private ccColor3B colorBackup;
-    private ccColor3B disabledColor_;
 
-    public static MenuItemLabel item(CCLabelProtocol label, CCNode target, String selector) {
-        return new MenuItemLabel(label, target, selector);
+    /** the color that will be used to disable the item */
+    private ccColor3B disabledColor_;
+	private float originalScale_;
+
+    /** creates a CCMenuItemLabel with a Label, target and selector */
+    public static CCMenuItemLabel item(CCLabelProtocol label, CCNode target, String selector) {
+        return new CCMenuItemLabel(label, target, selector);
     }
     
-    public static MenuItemLabel item(String text, CCNode target, String selector) {
+    public static CCMenuItemLabel item(String text, CCNode target, String selector) {
     	CCLabel lbl = CCLabel.makeLabel(text, "DroidSansMono", 30);
-        return new MenuItemLabel(lbl, target, selector);
+        return new CCMenuItemLabel(lbl, target, selector);
     }
 
-    protected MenuItemLabel(CCLabelProtocol label, CCNode target, String selector) {
+    /** initializes a CCMenuItemLabel with a Label, target and selector */
+    protected CCMenuItemLabel(CCLabelProtocol label, CCNode target, String selector) {
         super(target, selector);
+        originalScale_ = 1.0f;
         setLabel(label);
         colorBackup = new ccColor3B(255, 255, 255);
         disabledColor_ = new ccColor3B(126, 126, 126);
@@ -63,19 +78,20 @@ public class MenuItemLabel extends MenuItem implements CCNode.CCRGBAProtocol {
 
     public void setLabel(CCLabelProtocol label) {
         label_ = label;
-        setContentSize(CGSize.make(((CocosNodeSize) label_).getWidth(), ((CocosNodeSize) label_).getHeight()));
+        setContentSize(((CCNode)label_).getContentSize());
     }
 
+    /** sets a new string to the inner label */
     public void setString(String string) {
         label_.setString(string);
-        setContentSize(CGSize.make(((CocosNodeSize) label_).getWidth(), ((CocosNodeSize) label_).getHeight()));
+        setContentSize(((CCNode)label_).getContentSize());
     }
 
     public void activate() {
         if (isEnabled_) {
             stopAllActions();
 
-            setScale(1.0f);
+            setScale(originalScale_);
 
             super.activate();
         }
@@ -87,7 +103,8 @@ public class MenuItemLabel extends MenuItem implements CCNode.CCRGBAProtocol {
             super.selected();
 
             stopAction(kZoomActionTag);
-            CCAction zoomAction = CCScaleTo.action(0.1f, 1.2f);
+            originalScale_ = getScale();
+            CCAction zoomAction = CCScaleTo.action(0.1f, 1.2f * originalScale_);
             zoomAction.setTag(kZoomActionTag);
             runAction(zoomAction);
         }
@@ -99,19 +116,23 @@ public class MenuItemLabel extends MenuItem implements CCNode.CCRGBAProtocol {
             super.unselected();
 
             stopAction(kZoomActionTag);
-            CCAction zoomAction = CCScaleTo.action(0.1f, 1.0f);
+            CCAction zoomAction = CCScaleTo.action(0.1f, originalScale_);
             zoomAction.setTag(kZoomActionTag);
             runAction(zoomAction);
         }
     }
 
+    /** Enable or disabled the CCMenuItemFont
+     @warning setIsEnabled changes the RGB color of the font
+    */
     public void setIsEnabled(boolean enabled) {
         if (isEnabled_ != enabled) {
             if (!enabled) {
                 colorBackup = ((CCRGBAProtocol) label_).getColor();
                 ((CCRGBAProtocol) label_).setColor(disabledColor_);
-            } else
+            } else {
                 ((CCRGBAProtocol) label_).setColor(colorBackup);
+            }
         }
 
         super.setIsEnabled(enabled);
@@ -121,5 +142,5 @@ public class MenuItemLabel extends MenuItem implements CCNode.CCRGBAProtocol {
         ((CCNode)label_).draw(gl);
     }
 
-
 }
+

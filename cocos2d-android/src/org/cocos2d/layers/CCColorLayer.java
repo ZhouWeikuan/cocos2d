@@ -1,38 +1,63 @@
 package org.cocos2d.layers;
 
-import org.cocos2d.config.ccConfig;
-import org.cocos2d.config.ccMacros;
-import org.cocos2d.nodes.CCNode;
-import org.cocos2d.nodes.CCDirector;
-import org.cocos2d.types.CGSize;
-import org.cocos2d.types.ccColor3B;
-import org.cocos2d.types.ccColor4B;
-
-import javax.microedition.khronos.opengles.GL10;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
-public class CCColorLayer extends CCLayer implements CCNode.CCRGBAProtocol, CCNode.CocosNodeSize {
+import javax.microedition.khronos.opengles.GL10;
+
+import org.cocos2d.config.ccConfig;
+import org.cocos2d.nodes.CCDirector;
+import org.cocos2d.nodes.CCNode;
+import org.cocos2d.types.CGSize;
+import org.cocos2d.types.ccBlendFunc;
+import org.cocos2d.types.ccColor3B;
+import org.cocos2d.types.ccColor4B;
+
+//
+// CCColorLayer
+//
+/** CCColorLayer is a subclass of CCLayer that implements the CCRGBAProtocol protocol.
+ 
+ All features from CCLayer are valid, plus the following new features:
+ - opacity
+ - RGB colors
+ */
+public class CCColorLayer extends CCLayer 
+        implements CCNode.CCRGBAProtocol, CCNode.CocosNodeSize {
+    /** Opacity: conforms to CCRGBAProtocol protocol */
     protected ccColor3B color_;
+    /** Opacity: conforms to CCRGBAProtocol protocol */
     protected int opacity_;
+    /** BlendFunction. Conforms to CCBlendProtocol protocol */
+	protected ccBlendFunc	blendFunc_;
 
     private FloatBuffer squareVertices_;
     private ByteBuffer squareColors_;
 
+    /** creates a CCLayer with color. Width and height are the window size. */
     public static CCColorLayer node(ccColor4B color) {
-        return new CCColorLayer(color, CCDirector.sharedDirector().winSize().width, CCDirector.sharedDirector().winSize().height);
+        CGSize size = CCDirector.sharedDirector().winSize();
+        return new CCColorLayer(color, size.width, size.height);
     }
 
+    /** creates a CCLayer with color, width and height */
     public static CCColorLayer node(ccColor4B color, float w, float h) {
         return new CCColorLayer(color, w, h);
     }
 
+    /** initializes a CCLayer with color. Width and height are the window size. */
     protected CCColorLayer(ccColor4B color) {
-        this(color, CCDirector.sharedDirector().winSize().width, CCDirector.sharedDirector().winSize().height);
+        CGSize s = CCDirector.sharedDirector().winSize();
+        init(color, s.width, s.height);
     }
 
+    /** initializes a CCLayer with color, width and height */
     protected CCColorLayer(ccColor4B color, float w, float h) {
+    	init(color, w, h);
+    }
+    
+    protected void init(ccColor4B color, float w, float h) {
         ByteBuffer vbb = ByteBuffer.allocateDirect(4 * 2 * 4);
         vbb.order(ByteOrder.nativeOrder());
         squareVertices_ = vbb.asFloatBuffer();
@@ -41,6 +66,7 @@ public class CCColorLayer extends CCLayer implements CCNode.CCRGBAProtocol, CCNo
 
         color_ = new ccColor3B(color.r, color.g, color.b);
         opacity_ = color.a;
+		blendFunc_ = new ccBlendFunc(ccConfig.CC_BLEND_SRC, ccConfig.CC_BLEND_DST);
 
         for (int i = 0; i < (4 * 2); i++) {
             squareVertices_.put(i, 0);
@@ -72,47 +98,45 @@ public class CCColorLayer extends CCLayer implements CCNode.CCRGBAProtocol, CCNo
 
     @Override
     public void draw(GL10 gl) {
-
-        gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
-        gl.glEnableClientState(GL10.GL_COLOR_ARRAY);
-
+        // Default GL states: GL_TEXTURE_2D, GL_VERTEX_ARRAY, GL_COLOR_ARRAY, GL_TEXTURE_COORD_ARRAY
+        // Needed states: GL_VERTEX_ARRAY, GL_COLOR_ARRAY
+        // Unneeded states: GL_TEXTURE_2D, GL_TEXTURE_COORD_ARRAY
+        gl.glDisableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
+        gl.glDisable(GL10.GL_TEXTURE_2D);
 
         gl.glVertexPointer(2, GL10.GL_FLOAT, 0, squareVertices_);
-        gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
-
         gl.glColorPointer(4, GL10.GL_UNSIGNED_BYTE, 0, squareColors_);
-        gl.glEnableClientState(GL10.GL_COLOR_ARRAY);
 
-        if (opacity_ != 255)
+        boolean newBlend = false;
+        if (blendFunc_.src != ccConfig.CC_BLEND_SRC || blendFunc_.dst != ccConfig.CC_BLEND_DST) {
+            newBlend = true;
+            gl.glBlendFunc(blendFunc_.src, blendFunc_.dst);
+        } else if (opacity_ != 255) {
+            newBlend = true;
             gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
-
+        }
 
         gl.glDrawArrays(GL10.GL_TRIANGLE_STRIP, 0, 4);
 
-        if (opacity_ != 255)
+        if (newBlend)
             gl.glBlendFunc(ccConfig.CC_BLEND_SRC, ccConfig.CC_BLEND_DST);
 
-        // Clear the vertex and color arrays
-        gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
-        gl.glDisableClientState(GL10.GL_COLOR_ARRAY);
-
+        // restore default GL state
+        gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
+        gl.glEnable(GL10.GL_TEXTURE_2D);
     }
 
-
     public ccColor3B getColor() {
-        return new ccColor3B(color_.r, color_.g, color_.b);
+        return ccColor3B.ccc3(color_.r, color_.g, color_.b);
     }
 
     // Color Protocol
     public void setColor(ccColor3B color) {
-        color_.r = color.r;
-        color_.g = color.g;
-        color_.b = color.b;
+        color_ = ccColor3B.ccc3(color.r, color.g, color.b);
         updateColor();
     }
 
     // Opacity Protocol
-
     public void setOpacity(int o) {
         opacity_ = o;
         updateColor();
@@ -148,17 +172,20 @@ public class CCColorLayer extends CCLayer implements CCNode.CCRGBAProtocol, CCNo
         super.setContentSize(size);
     }
 
+    /** change width and height 
+     * @since v0.8 */
     public void changeWidthAndHeight(float w, float h) {
         setContentSize(CGSize.make(w, h));
     }
 
+    /** change width */
     public void changeWidth(float w) {
         setContentSize(CGSize.make(w, getHeight()));
     }
 
+    /** change height */
     public void changeHeight(float h) {
         setContentSize(CGSize.make(getWidth(), h));
     }
-
 }
 

@@ -179,6 +179,6 @@ public class ccConfig {
     */
     // default gl blend dst function
     public static final int CC_BLEND_DST = GL10.GL_ONE_MINUS_SRC_ALPHA;
-    
+
 }
 

@@ -1,20 +1,20 @@
 package org.cocos2d.transitions;
 
 import org.cocos2d.actions.interval.CCIntervalAction;
+import org.cocos2d.layers.CCScene;
 import org.cocos2d.nodes.CCDirector;
-import org.cocos2d.nodes.Scene;
 import org.cocos2d.types.CGSize;
 
 public class PageTurnTransition extends TransitionScene {
     private boolean back_;
 
     /** creates a base transition with duration and incoming scene */
-    public static PageTurnTransition transition(float t, Scene s, boolean back) {
+    public static PageTurnTransition transition(float t, CCScene s, boolean back) {
         return new PageTurnTransition(t, s, back);
     }
 
     /** initializes a transition with duration and incoming scene */
-    public PageTurnTransition(float t, Scene s, boolean back) {
+    public PageTurnTransition(float t, CCScene s, boolean back) {
         super(t, s);
         back_ = back;
     }

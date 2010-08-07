@@ -13,6 +13,7 @@ import org.cocos2d.actions.CCScheduler;
 import org.cocos2d.config.ccConfig;
 import org.cocos2d.config.ccMacros;
 import org.cocos2d.events.CCTouchDispatcher;
+import org.cocos2d.layers.CCScene;
 import org.cocos2d.nodes.CCLabel.TextAlignment;
 import org.cocos2d.opengl.CCTexture2D;
 import org.cocos2d.opengl.CCCamera;
@@ -307,26 +308,26 @@ public class CCDirector implements GLSurfaceView.Renderer {
         return isPaused;
     }
 
-    /* The running scene */
-    private Scene runningScene_;
+    /* The running CCScene */
+    private CCScene runningCCScene_;
 
-    /* will be the next 'runningScene' in the next frame */
-    private Scene nextScene_;
+    /* will be the next 'runningCCScene' in the next frame */
+    private CCScene nextCCScene_;
 
-	/* If YES, then "old" scene will receive the cleanup message */
-    private boolean	sendCleanupToScene_;
+	/* If YES, then "old" CCScene will receive the cleanup message */
+    private boolean	sendCleanupToCCScene_;
 
-    /** Whether or not the replaced scene will receive the cleanup message.
-      If the new scene is pushed, then the old scene won't receive the "cleanup" message.
-      If the new scene replaces the old one, the it will receive the "cleanup" message.
+    /** Whether or not the replaced CCScene will receive the cleanup message.
+      If the new CCScene is pushed, then the old CCScene won't receive the "cleanup" message.
+      If the new CCScene replaces the old one, the it will receive the "cleanup" message.
       @since v0.99.0
     */
     public boolean getSendCleanupToScene() {
-        return sendCleanupToScene_;
+        return sendCleanupToCCScene_;
     }
 
-    /* scheduled scenes */
-    private ArrayList<Scene> scenesStack_;
+    /* scheduled CCScenes */
+    private ArrayList<CCScene> CCScenesStack_;
 
     /* last time the main loop was updated */
     private long lastUpdate_;
@@ -413,11 +414,11 @@ public class CCDirector implements GLSurfaceView.Renderer {
 	private float accumDtForProfiler_;
 
     /**
-     * The current running Scene. Director can only run one Scene at the time
+     * The current running CCScene. Director can only run one CCScene at the time
      */
 
-    public Scene getRunningScene() {
-        return runningScene_;
+    public CCScene getRunningScene() {
+        return runningCCScene_;
     }
 
     /**
@@ -535,12 +536,12 @@ public class CCDirector implements GLSurfaceView.Renderer {
 
             //Create a full-screen window
 
-            // scenes
-            runningScene_ = null;
-            nextScene_ = null;
+            // CCScenes
+            runningCCScene_ = null;
+            nextCCScene_ = null;
 	
             oldAnimationInterval_ = animationInterval_ = 1.0 / kDefaultFPS;
-            scenesStack_ = new ArrayList<Scene>(10);
+            CCScenesStack_ = new ArrayList<CCScene>(10);
 
             // landscape
             deviceOrientation_ = kCCDeviceOrientationPortrait;
@@ -589,8 +590,8 @@ public class CCDirector implements GLSurfaceView.Renderer {
             FPSLabel_ = null;
         }
 
-        runningScene_ = null;
-        scenesStack_ = null;
+        runningCCScene_ = null;
+        CCScenesStack_ = null;
 
         _sharedDirector = null;
     }
@@ -625,13 +626,13 @@ public class CCDirector implements GLSurfaceView.Renderer {
         }
         Thread.yield();
         
-        drawScene(gl);
+        drawCCScene(gl);
     }    
 
-    /** Draw the scene.
+    /** Draw the CCScene.
       This method is called every frame. Don't call it manually.
       */
-    public void drawScene (GL10 gl) {
+    public void drawCCScene (GL10 gl) {
         /* calculate "global" dt */
         calculateDeltaTime();
         
@@ -642,9 +643,9 @@ public class CCDirector implements GLSurfaceView.Renderer {
 
         gl.glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
-        /* to avoid flickr, nextScene MUST be here: after tick and before draw.
+        /* to avoid flickr, nextCCScene MUST be here: after tick and before draw.
          XXX: Which bug is this one. It seems that it can't be reproduced with v0.9 */
-        if( nextScene_ != null)
+        if( nextCCScene_ != null)
             setNextScene();
         
         gl.glPushMatrix();
@@ -654,8 +655,8 @@ public class CCDirector implements GLSurfaceView.Renderer {
         // By default enable VertexArray, ColorArray, TextureCoordArray and Texture2D
         ccMacros.CC_ENABLE_DEFAULT_GL_STATES(gl);
 
-        /* draw the scene */
-        runningScene_.visit(gl);
+        /* draw the CCScene */
+        runningCCScene_.visit(gl);
         if( displayFPS )
             showFPS(gl);
 
@@ -996,63 +997,63 @@ public class CCDirector implements GLSurfaceView.Renderer {
         return uiPoint;
     }
 
-    // Director Scene Management
+    // Director CCScene Management
 
-    /**Enters the Director's main loop with the given Scene. 
-     * Call it to run only your FIRST scene.
-     * Don't call it if there is already a running scene.
+    /**Enters the Director's main loop with the given CCScene. 
+     * Call it to run only your FIRST CCScene.
+     * Don't call it if there is already a running CCScene.
     */
-    public void runWithScene(Scene scene) {
-        assert scene != null : "Argument must be non-null";
-        assert runningScene_ == null : "You can't run a scene if another scene is running. Use replaceScene or pushScene instead";
+    public void runWithScene(CCScene CCScene) {
+        assert CCScene != null : "Argument must be non-null";
+        assert runningCCScene_ == null : "You can't run a CCScene if another CCScene is running. Use replaceCCScene or pushCCScene instead";
 
-        pushScene(scene);
+        pushScene(CCScene);
         startAnimation();
     }
 
-    /** Replaces the running scene with a new one. The running scene is terminated.
-     * ONLY call it if there is a running scene.
+    /** Replaces the running CCScene with a new one. The running CCScene is terminated.
+     * ONLY call it if there is a running CCScene.
     */
-    public void replaceScene(Scene scene) {
-        assert scene != null : "Argument must be non-null";
+    public void replaceScene(CCScene CCScene) {
+        assert CCScene != null : "Argument must be non-null";
 
-        int index = scenesStack_.size();
+        int index = CCScenesStack_.size();
 
-	    sendCleanupToScene_ = true;
-        scenesStack_.set(index - 1, scene);
-        nextScene_ = scene;
+	    sendCleanupToCCScene_ = true;
+        CCScenesStack_.set(index - 1, CCScene);
+        nextCCScene_ = CCScene;
     }
 
-    /**Suspends the execution of the running scene, pushing it on the stack of suspended scenes.
-     * The new scene will be executed.
-     * Try to avoid big stacks of pushed scenes to reduce memory allocation. 
-     * ONLY call it if there is a running scene.
+    /**Suspends the execution of the running CCScene, pushing it on the stack of suspended CCScenes.
+     * The new CCScene will be executed.
+     * Try to avoid big stacks of pushed CCScenes to reduce memory allocation. 
+     * ONLY call it if there is a running CCScene.
     */
-    public void pushScene(Scene scene) {
-        assert scene != null : "Argument must be non-null";
+    public void pushScene(CCScene CCScene) {
+        assert CCScene != null : "Argument must be non-null";
 
-	    sendCleanupToScene_ = false;
+	    sendCleanupToCCScene_ = false;
 
-        scenesStack_.add(scene);
-        nextScene_ = scene;
+        CCScenesStack_.add(CCScene);
+        nextCCScene_ = CCScene;
     }
 
-    /**Pops out a scene from the queue.
-     * This scene will replace the running one.
-     * The running scene will be deleted.
-     *   If there are no more scenes in the stack the execution is terminated.
-     * ONLY call it if there is a running scene.
+    /**Pops out a CCScene from the queue.
+     * This CCScene will replace the running one.
+     * The running CCScene will be deleted.
+     *   If there are no more CCScenes in the stack the execution is terminated.
+     * ONLY call it if there is a running CCScene.
      */
     public void popScene() {
-        assert runningScene_ != null : "A running scene is needed";
+        assert runningCCScene_ != null : "A running CCScene is needed";
 
-        scenesStack_.remove(scenesStack_.size() - 1);
-        int c = scenesStack_.size();
+        CCScenesStack_.remove(CCScenesStack_.size() - 1);
+        int c = CCScenesStack_.size();
 
         if (c == 0) {
             end();
         } else {
-            nextScene_ = scenesStack_.get(c - 1);
+            nextCCScene_ = CCScenesStack_.get(c - 1);
         }
     }
 
@@ -1067,18 +1068,18 @@ public class CCDirector implements GLSurfaceView.Renderer {
         CCTextureCache.purgeSharedTextureCache();
     }*/
 
-    /** Ends the execution, releases the running scene.
+    /** Ends the execution, releases the running CCScene.
       It doesn't remove the OpenGL view from its parent. You have to do it manually.
     */
     public void end() {
-        runningScene_.onExit();
-        runningScene_.cleanup();
-        runningScene_ = null;
-        nextScene_ = null;
+        runningCCScene_.onExit();
+        runningCCScene_.cleanup();
+        runningCCScene_ = null;
+        nextCCScene_ = null;
 
         // remove all objects.
-        // runWithScene might be executed after 'end'.
-        scenesStack_.clear();
+        // runWithCCScene might be executed after 'end'.
+        CCScenesStack_.clear();
 
         // don't release the event handlers
         // They are needed in case the director is run again
@@ -1105,30 +1106,30 @@ public class CCDirector implements GLSurfaceView.Renderer {
     }
 
     public void setNextScene() {
-        boolean runningIsTransition = runningScene_ instanceof TransitionScene;
-        boolean newIsTransition = nextScene_ instanceof TransitionScene;
+        boolean runningIsTransition = runningCCScene_ instanceof TransitionScene;
+        boolean newIsTransition = nextCCScene_ instanceof TransitionScene;
 
         // If it is not a transition, call onExit
-        if( runningScene_ != null && ! newIsTransition ) {
-            runningScene_.onExit();
+        if( runningCCScene_ != null && ! newIsTransition ) {
+            runningCCScene_.onExit();
 
-            // issue #709. the root node (scene) should receive the cleanup message too
+            // issue #709. the root node (CCScene) should receive the cleanup message too
             // otherwise it might be leaked.
-            if( sendCleanupToScene_ )
-                runningScene_.cleanup();
+            if( sendCleanupToCCScene_ )
+                runningCCScene_.cleanup();
         }
 
-        runningScene_ = nextScene_;
-        nextScene_ = null;
+        runningCCScene_ = nextCCScene_;
+        nextCCScene_ = null;
 
         if( ! runningIsTransition ) {
-            runningScene_.onEnter();
-            runningScene_.onEnterTransitionDidFinish();
+            runningCCScene_.onEnter();
+            runningCCScene_.onEnterTransitionDidFinish();
         }
     }
 
-    /** Pauses the running scene.
-      The running scene will be _drawed_ but all scheduled timers will be paused
+    /** Pauses the running CCScene.
+      The running CCScene will be _drawed_ but all scheduled timers will be paused
       While paused, the draw rate will be 4 FPS to reduce CPU consuption
     */
     public void pause() {
@@ -1142,7 +1143,7 @@ public class CCDirector implements GLSurfaceView.Renderer {
         isPaused = true;
     }
 
-    /** Resumes the paused scene
+    /** Resumes the paused CCScene
       The scheduled timers will be activated again.
       The "delta time" will be 0 (as if the game wasn't paused)
     */
@@ -1160,7 +1161,7 @@ public class CCDirector implements GLSurfaceView.Renderer {
 
     /** The main loop is triggered again.
       Call this function only if [stopAnimation] was called earlier
-      @warning Dont' call this function to start the main loop. To run the main loop call runWithScene
+      @warning Dont' call this function to start the main loop. To run the main loop call runWithCCScene
     */
     public void startAnimation() {
         assert animationTimer_ != null : "AnimationTimer must be null. Calling startAnimation twice?";

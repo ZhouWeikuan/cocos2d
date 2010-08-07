@@ -15,25 +15,44 @@ import android.hardware.SensorManager;
 import android.util.Log;
 import android.view.MotionEvent;
 
-public class CCLayer extends CCNode implements CCTouchDelegateProtocol, SensorEventListener {
-	
-    // used to control registration of Touch events
+
+//
+// CCLayer
+//
+/** CCLayer is a subclass of CCNode that implements the TouchEventsDelegate protocol.
+ 
+ All features from CCNode are valid, plus the following new features:
+ - It can receive iPhone Touches
+ - It can receive Accelerometer input
+*/
+public class CCLayer extends CCNode 
+    implements CCTouchDelegateProtocol, SensorEventListener {
+
+    /** whether or not it will receive Touch events. 
+     * You can enable / disable touch events with this property. 
+     * Only the touches of this node will be affected. 
+     * This "method" is not propagated to it's children. 
+     * @since v0.8.1
+     */
     protected boolean isTouchEnabled_;
 
-    // used to control registration of Accelerometer events
+    /** 
+     * whether or not it will receive Accelerometer events 
+     * You can enable / disable accelerometer events with this property.
+     * @since v0.8.1
+     */
     protected boolean isAccelerometerEnabled_;
+
     protected int accelerometerUpdateRate = SensorManager.SENSOR_DELAY_GAME;
 
     protected final SensorManager sensorManager;
     protected final Sensor accelerometer;
     
-    public boolean isTouchEnabled()
-    {
+    public boolean isTouchEnabled() {
         return isTouchEnabled_;
     }
 
-    public void setIsTouchEnabled(boolean enabled)
-    {
+    public void setIsTouchEnabled(boolean enabled) {
         if( isTouchEnabled_ != enabled ) {
             isTouchEnabled_ = enabled;
             if( isRunning() ) {
@@ -45,13 +64,11 @@ public class CCLayer extends CCNode implements CCTouchDelegateProtocol, SensorEv
         }
     }
 
-    public boolean isAccelerometerEnabled()
-    {
+    public boolean isAccelerometerEnabled() {
         return isAccelerometerEnabled_;
     }
 
-    public void setIsAccelerometerEnabled(boolean enabled)
-    {
+    public void setIsAccelerometerEnabled(boolean enabled) {
         if( isAccelerometerEnabled_ != enabled ) {
         	isAccelerometerEnabled_ = enabled;
             if( isRunning() ) {
@@ -88,12 +105,17 @@ public class CCLayer extends CCNode implements CCTouchDelegateProtocol, SensorEv
         isAccelerometerEnabled_ = false;
     }
 
+    /**
+     * If isTouchEnabled, this method is called onEnter. Override it to change the
+          way CCLayer receives touch events.
+          ( Default: [[TouchDispatcher sharedDispatcher] addStandardDelegate:self priority:0] )
+        @since v0.8.0
+    */
     protected void registerWithTouchDispatcher() {
         CCTouchDispatcher.sharedDispatcher().addDelegate(this, 0);
     }
     
-    protected void registerWithAccelerometer()
-    {
+    protected void registerWithAccelerometer() {
     	if (accelerometer != null) {
     		boolean registered = sensorManager.registerListener(this, accelerometer, accelerometerUpdateRate);
     		if (!registered) {
@@ -102,8 +124,7 @@ public class CCLayer extends CCNode implements CCTouchDelegateProtocol, SensorEv
     	}
     }
 
-    protected void unregisterWithAccelerometer()
-    {
+    protected void unregisterWithAccelerometer() {
     	if (accelerometer != null) {
     		sensorManager.unregisterListener(this, accelerometer);
     	}
@@ -137,6 +158,7 @@ public class CCLayer extends CCNode implements CCTouchDelegateProtocol, SensorEv
     }
 
     public boolean ccTouchesBegan(MotionEvent event) {
+	    assert false:"Layer#ccTouchBegan override me";
         return CCTouchDispatcher.kEventHandled;  // TODO Auto-generated method stub
     }
 
@@ -169,3 +191,4 @@ public class CCLayer extends CCNode implements CCTouchDelegateProtocol, SensorEv
 		}
 	}
 }
+

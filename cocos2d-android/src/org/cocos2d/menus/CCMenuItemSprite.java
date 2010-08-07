@@ -15,21 +15,32 @@ import javax.microedition.khronos.opengles.GL10;
  *
  * @since v0.8.0
  */
-public class MenuItemSprite extends MenuItem implements CCNode.CCRGBAProtocol {
 
+public class CCMenuItemSprite extends CCMenuItem implements CCNode.CCRGBAProtocol {
+    /** the image used when the item is not selected */
     protected CCNode normalImage_;
+    /** the image used when the item is selected */
     protected CCNode selectedImage_;
+    /** the image used when the item is disabled */
     protected CCNode disabledImage_;
 
-    public static MenuItemSprite item(CCNode normalSprite, CCNode selectedSprite, CCNode disabledSprite) {
-        return new MenuItemSprite(normalSprite, selectedSprite, disabledSprite, null, null);
+    /** creates a menu item with a normal and selected image*/
+    public static CCMenuItemSprite item(CCNode normalSprite, CCNode selectedSprite) {
+        return new CCMenuItemSprite(normalSprite, selectedSprite, null, null, null);
     }
 
-    public static MenuItemSprite item(CCNode normalSprite, CCNode selectedSprite, CCNode disabledSprite, CCNode target, String selector) {
-        return new MenuItemSprite(normalSprite, selectedSprite, disabledSprite, target, selector);
+    /** creates a menu item with a normal and selected image with target/selector */
+    public static CCMenuItemSprite item(CCNode normalSprite, CCNode selectedSprite, CCNode target, String selector) {
+        return new CCMenuItemSprite(normalSprite, selectedSprite, null, target, selector);
     }
 
-    protected MenuItemSprite(CCNode normalSprite, CCNode selectedSprite, CCNode disabledSprite, CCNode target, String selector) {
+    /** creates a menu item with a normal,selected  and disabled image with target/selector */
+    public static CCMenuItemSprite item(CCNode normalSprite, CCNode selectedSprite, CCNode disabledSprite, CCNode target, String selector) {
+        return new CCMenuItemSprite(normalSprite, selectedSprite, disabledSprite, target, selector);
+    }
+
+    /** initializes a menu item with a normal, selected  and disabled image with target/selector */
+    protected CCMenuItemSprite(CCNode normalSprite, CCNode selectedSprite, CCNode disabledSprite, CCNode target, String selector) {
         super(target, selector);
         normalImage_ = normalSprite;
         selectedImage_ = selectedSprite;
@@ -57,17 +68,18 @@ public class MenuItemSprite extends MenuItem implements CCNode.CCRGBAProtocol {
     }
 
     // CocosNodeRGBA protocol
-
     public void setOpacity(int opacity) {
         ((CCRGBAProtocol) normalImage_).setOpacity(opacity);
         ((CCRGBAProtocol) selectedImage_).setOpacity(opacity);
-        ((CCRGBAProtocol) disabledImage_).setOpacity(opacity);
+        if (disabledImage_ != null)
+            ((CCRGBAProtocol) disabledImage_).setOpacity(opacity);
     }
 
     public void setColor(ccColor3B color) {
         ((CCRGBAProtocol) normalImage_).setColor(color);
         ((CCRGBAProtocol) selectedImage_).setColor(color);
-        ((CCRGBAProtocol) disabledImage_).setColor(color);
+        if (disabledImage_ != null)
+            ((CCRGBAProtocol) disabledImage_).setColor(color);
     }
 
     public ccColor3B getColor() {
@@ -78,3 +90,4 @@ public class MenuItemSprite extends MenuItem implements CCNode.CCRGBAProtocol {
         return ((CCRGBAProtocol) normalImage_).getOpacity();
     }
 }
+

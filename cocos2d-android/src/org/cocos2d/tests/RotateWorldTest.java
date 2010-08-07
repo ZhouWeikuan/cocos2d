@@ -8,6 +8,7 @@ import org.cocos2d.actions.base.CCAction;
 import org.cocos2d.actions.interval.*;
 import org.cocos2d.layers.CCColorLayer;
 import org.cocos2d.layers.CCLayer;
+import org.cocos2d.layers.CCScene;
 import org.cocos2d.nodes.*;
 import org.cocos2d.opengl.CCGLSurfaceView;
 import org.cocos2d.types.CGPoint;
@@ -129,7 +130,7 @@ public class RotateWorldTest extends Activity {
         // frames per second
         CCDirector.sharedDirector().setAnimationInterval(1.0f / 60);
 
-        Scene scene = Scene.node();
+        CCScene scene = CCScene.node();
         scene.addChild(new MainLayer());
         scene.runAction(CCRotateBy.action(4, -360));
 

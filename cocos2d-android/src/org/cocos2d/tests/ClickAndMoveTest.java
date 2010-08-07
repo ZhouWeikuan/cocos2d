@@ -12,6 +12,7 @@ import org.cocos2d.actions.interval.*;
 import org.cocos2d.config.ccMacros;
 import org.cocos2d.layers.CCColorLayer;
 import org.cocos2d.layers.CCLayer;
+import org.cocos2d.layers.CCScene;
 import org.cocos2d.nodes.*;
 import org.cocos2d.opengl.CCGLSurfaceView;
 import org.cocos2d.types.ccColor4B;
@@ -60,7 +61,7 @@ public class ClickAndMoveTest extends Activity {
         // frames per second
         CCDirector.sharedDirector().setAnimationInterval(1.0f / 60);
 
-        Scene scene = Scene.node();
+        CCScene scene = CCScene.node();
         scene.addChild(new MainLayer(), 2);
 
         // Make the Scene active

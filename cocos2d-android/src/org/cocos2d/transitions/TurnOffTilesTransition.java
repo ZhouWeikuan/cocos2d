@@ -1,10 +1,9 @@
 package org.cocos2d.transitions;
 
-import org.cocos2d.nodes.CCDirector;
-import org.cocos2d.nodes.Scene;
-import org.cocos2d.types.CGSize;
 import org.cocos2d.actions.interval.CCIntervalAction;
-import org.cocos2d.actions.ease.CCEaseOut;
+import org.cocos2d.layers.CCScene;
+import org.cocos2d.nodes.CCDirector;
+import org.cocos2d.types.CGSize;
 
 /**
  * TurnOffTiles Transition.
@@ -12,11 +11,11 @@ import org.cocos2d.actions.ease.CCEaseOut;
  */
 public class TurnOffTilesTransition extends TransitionScene {
     
-    public static TransitionScene transition(float t, Scene s) {
+    public static TransitionScene transition(float t, CCScene s) {
         return new TurnOffTilesTransition(t, s);
     }
 
-    public TurnOffTilesTransition(float t, Scene s) {
+    public TurnOffTilesTransition(float t, CCScene s) {
         super(t, s);
     }
 

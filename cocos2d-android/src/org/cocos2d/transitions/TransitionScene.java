@@ -1,13 +1,13 @@
 package org.cocos2d.transitions;
 
 import org.cocos2d.nodes.CCDirector;
-import org.cocos2d.nodes.Scene;
+import org.cocos2d.layers.CCScene;
 import org.cocos2d.types.CGPoint;
 import org.cocos2d.events.CCTouchDispatcher;
 
 import javax.microedition.khronos.opengles.GL10;
 
-public class TransitionScene extends Scene {
+public class TransitionScene extends CCScene {
 
     protected static final int kSceneFade = 0xFADEFADE;
 
@@ -29,22 +29,22 @@ public class TransitionScene extends Scene {
     /**
      * Base class for Transition scenes
      */
-    protected Scene inScene;
-    protected Scene outScene;
+    protected CCScene inScene;
+    protected CCScene outScene;
     protected float duration;
     protected boolean inSceneOnTop;
 
     /**
      * creates a base transition with duration and incoming scene
      */
-    public static TransitionScene transition(float t, Scene s) {
+    public static TransitionScene transition(float t, CCScene s) {
         return new TransitionScene(t, s);
     }
 
     /**
      * initializes a transition with duration and incoming scene
      */
-    protected TransitionScene(float t, Scene s) {
+    protected TransitionScene(float t, CCScene s) {
         assert s != null : "Argument scene must be non-null";
 
         duration = t;
@@ -147,7 +147,12 @@ public class TransitionScene extends Scene {
 
     
     static class TransitionWithInvalidSceneException extends RuntimeException {
-        public TransitionWithInvalidSceneException(String reason) {
+        /**
+		 * 
+		 */
+		private static final long serialVersionUID = -1743490059348093939L;
+
+		public TransitionWithInvalidSceneException(String reason) {
             super(reason);
         }
     }

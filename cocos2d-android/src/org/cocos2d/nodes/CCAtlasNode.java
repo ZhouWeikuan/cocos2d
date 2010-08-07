@@ -30,7 +30,8 @@ import org.cocos2d.types.ccColor3B;
  All features from CCNode are valid, plus the following features:
  - opacity and RGB colors
  */
-public abstract class CCAtlasNode extends CCNode implements CCNode.CCRGBAProtocol, CCNode.CCTextureProtocol {
+public abstract class CCAtlasNode extends CCNode
+        implements CCNode.CCRGBAProtocol, CCNode.CCTextureProtocol {
     /// texture atlas
     protected CCTextureAtlas textureAtlas_;
     /// chars per row
@@ -191,3 +192,4 @@ public abstract class CCAtlasNode extends CCNode implements CCNode.CCRGBAProtoco
     	opacityModifyRGB_ = textureAtlas_.getTexture().hasPremultipliedAlpha();
     }
 }
+

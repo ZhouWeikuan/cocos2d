@@ -6,18 +6,17 @@ import org.cocos2d.actions.interval.CCSequence;
 import org.cocos2d.actions.interval.CCTintBy;
 import org.cocos2d.layers.CCLayer;
 import org.cocos2d.layers.CCMultiplexLayer;
-import org.cocos2d.menus.Menu;
-import org.cocos2d.menus.MenuItem;
-import org.cocos2d.menus.MenuItemAtlasSprite;
-import org.cocos2d.menus.MenuItemFont;
-import org.cocos2d.menus.MenuItemImage;
-import org.cocos2d.menus.MenuItemLabel;
-import org.cocos2d.menus.MenuItemSprite;
+import org.cocos2d.layers.CCScene;
+import org.cocos2d.menus.CCMenu;
+import org.cocos2d.menus.CCMenuItem;
+import org.cocos2d.menus.CCMenuItemFont;
+import org.cocos2d.menus.CCMenuItemImage;
+import org.cocos2d.menus.CCMenuItemLabel;
+import org.cocos2d.menus.CCMenuItemSprite;
 import org.cocos2d.nodes.AtlasSprite;
-import org.cocos2d.nodes.CCSpriteFrameCache;
 import org.cocos2d.nodes.CCDirector;
 import org.cocos2d.nodes.CCLabelAtlas;
-import org.cocos2d.nodes.Scene;
+import org.cocos2d.nodes.CCSpriteFrameCache;
 import org.cocos2d.nodes.CCTextureCache;
 import org.cocos2d.opengl.CCGLSurfaceView;
 import org.cocos2d.types.CGPoint;
@@ -76,7 +75,7 @@ public class MenuTest extends Activity {
         // frames per second
         CCDirector.sharedDirector().setAnimationInterval(1.0f / 60);
 
-        Scene scene = Scene.node();
+        CCScene scene = CCScene.node();
         scene.addChild(new Layer1());
 
         // Make the Scene active
@@ -108,8 +107,8 @@ public class MenuTest extends Activity {
     static class Layer1 extends CCLayer {
 
         public Layer1() {
-            MenuItemFont.setFontSize(30);
-            MenuItemFont.setFontName("DroidSansMono");
+            CCMenuItemFont.setFontSize(30);
+            CCMenuItemFont.setFontName("DroidSansMono");
 
             // Font Item
             // AtlasSprite Item
@@ -122,34 +121,34 @@ public class MenuTest extends Activity {
             mgr.addChild(spriteNormal);
             mgr.addChild(spriteSelected);
             mgr.addChild(spriteDisabled);
-            MenuItemSprite item1 = MenuItemAtlasSprite.item(spriteNormal, spriteSelected, spriteDisabled, this, "menuCallback");
+            CCMenuItemSprite item1 = CCMenuItemSprite.item(spriteNormal, spriteSelected, spriteDisabled, this, "menuCallback");
 
             // Image Item
-            MenuItem item2 = MenuItemImage.item("SendScoreButton.png", "SendScoreButtonPressed.png", this, "menuCallback2");
+            CCMenuItem item2 = CCMenuItemImage.item("SendScoreButton.png", "SendScoreButtonPressed.png", this, "menuCallback2");
 
             // Label Item (LabelAtlas)
             CCLabelAtlas labelAtlas = CCLabelAtlas.label("0123456789", "fps_images.png", 16, 24, '.');
-            MenuItemLabel item3 = MenuItemLabel.item(labelAtlas, this, "menuCallbackDisabled");
+            CCMenuItemLabel item3 = CCMenuItemLabel.item(labelAtlas, this, "menuCallbackDisabled");
             item3.setDisabledColor(new ccColor3B(32, 32, 64));
             item3.setColor(new ccColor3B(200, 200, 255));
 
 
             // Font Item
-            toggleItem = MenuItemLabel.item("I toggle enable items", this, "menuCallbackEnable");
-            MenuItem item4 = toggleItem;
+            toggleItem = CCMenuItemLabel.item("I toggle enable items", this, "menuCallbackEnable");
+            CCMenuItem item4 = toggleItem;
             // Label Item (BitmapFontAtlas)
 //            BitmapFontAtlas label = new BitmapFontAtlas("configuration", "bitmapFontTest3.fnt");
 //            MenuItemLabel item5 = new MenuItemLabel(label, this, "menuCallbackConfig");
 
             // Font Item
-            MenuItemFont item6 = MenuItemFont.item("Quit", this, "onQuit");
+            CCMenuItemFont item6 = CCMenuItemFont.item("Quit", this, "onQuit");
 
             CCIntervalAction color_action = CCTintBy.action(0.5f, ccColor3B.ccc3((byte) 0, (byte) 255, (byte) 255));
             CCIntervalAction color_back = color_action.reverse();
             CCIntervalAction seq = CCSequence.actions(color_action, color_back);
             item6.runAction(CCRepeatForever.action(seq));
 
-            Menu menu = Menu.menu(item1, item2, item3, item4, /*item5,*/ item6);
+            CCMenu menu = CCMenu.menu(item1, item2, item3, item4, /*item5,*/ item6);
             menu.alignItemsVertically();
 
 
@@ -178,8 +177,8 @@ public class MenuTest extends Activity {
 
         }
 
-        MenuItem disabledItem;
-        MenuItemLabel toggleItem;
+        CCMenuItem disabledItem;
+        CCMenuItemLabel toggleItem;
 
         public void menuCallbackDisabled() {
         }
@@ -220,7 +219,7 @@ public class MenuTest extends Activity {
     }
 
     static class Layer3 extends CCLayer {
-        MenuItem disabledItem;
+        CCMenuItem disabledItem;
 
         public void menuCallback() {
         }

@@ -3,17 +3,17 @@ package org.cocos2d.tests;
 import org.cocos2d.config.ccMacros;
 import org.cocos2d.events.CCTouchDispatcher;
 import org.cocos2d.layers.CCLayer;
+import org.cocos2d.layers.CCScene;
 import org.cocos2d.nodes.AtlasSprite;
-import org.cocos2d.nodes.CCSpriteFrameCache;
 import org.cocos2d.nodes.CCDirector;
 import org.cocos2d.nodes.CCLabel;
-import org.cocos2d.nodes.Scene;
+import org.cocos2d.nodes.CCSpriteFrameCache;
 import org.cocos2d.nodes.CCTextureCache;
 import org.cocos2d.opengl.CCGLSurfaceView;
-import org.cocos2d.types.ccColor3B;
 import org.cocos2d.types.CGPoint;
 import org.cocos2d.types.CGRect;
 import org.cocos2d.types.CGSize;
+import org.cocos2d.types.ccColor3B;
 import org.jbox2d.collision.AABB;
 import org.jbox2d.collision.shapes.EdgeChainDef;
 import org.jbox2d.collision.shapes.PolygonDef;
@@ -70,7 +70,7 @@ public class JBox2DTest extends Activity {
         // frames per second
         CCDirector.sharedDirector().setAnimationInterval(1.0f / 60.0f);
 
-        Scene scene = Scene.node();
+        CCScene scene = CCScene.node();
         scene.addChild(new JBox2DTestLayer());
 
         // Make the Scene active

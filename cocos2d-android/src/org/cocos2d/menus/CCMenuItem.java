@@ -4,10 +4,15 @@ import org.cocos2d.nodes.CCNode;
 import org.cocos2d.types.CGPoint;
 import org.cocos2d.types.CGRect;
 import org.cocos2d.types.CGSize;
-
 import java.lang.reflect.Method;
 
-public abstract class MenuItem extends CCNode {
+
+/** CCMenuItem base class
+ *
+ *  Subclass CCMenuItem (or any subclass) to create your custom CCMenuItem objects.
+ */
+
+public class CCMenuItem extends CCNode {
     public static final int kItemSize = 32;
 
     static int _fontSize = kItemSize;
@@ -18,6 +23,7 @@ public abstract class MenuItem extends CCNode {
     public static final int kZoomActionTag = 0xc0c05002;
 
     protected boolean isEnabled_;
+    /** returns whether or not the item is selected @since v0.8.2 */
     protected boolean isSelected_;
 
     protected Object targetCallback;
@@ -25,10 +31,16 @@ public abstract class MenuItem extends CCNode {
 
     private Method invocation;
 
+
+    /** Creates a CCMenuItem with a target/selector */
+    public CCMenuItem item(Object target, String selector) {
+        return new CCMenuItem(target, selector);
+    }
+
     /**
      * Initializes a menu item with a target/selector
      */
-    protected MenuItem(Object rec, String cb) {
+    protected CCMenuItem(Object rec, String cb) {
         targetCallback = rec;
         selector = cb;
 
@@ -83,7 +95,6 @@ public abstract class MenuItem extends CCNode {
         isEnabled_ = enabled;
     }
 
-
     /**
      * Returns whether or not the MenuItem is enabled
      */
@@ -103,5 +114,6 @@ public abstract class MenuItem extends CCNode {
                 size.width, size.height);
     }
 
-
 }
+
+

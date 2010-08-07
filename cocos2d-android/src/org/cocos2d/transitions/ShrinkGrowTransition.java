@@ -5,21 +5,19 @@ import org.cocos2d.actions.instant.CCCallFunc;
 import org.cocos2d.actions.interval.CCIntervalAction;
 import org.cocos2d.actions.interval.CCScaleTo;
 import org.cocos2d.actions.interval.CCSequence;
-import org.cocos2d.nodes.CCDirector;
-import org.cocos2d.nodes.Scene;
+import org.cocos2d.layers.CCScene;
 import org.cocos2d.types.CGPoint;
-import org.cocos2d.types.CGSize;
 
 /**
  * Shrink the outgoing scene while grow the incoming scene
  */
 public class ShrinkGrowTransition extends TransitionScene {
 
-    public static ShrinkGrowTransition transition(float t, Scene s) {
+    public static ShrinkGrowTransition transition(float t, CCScene s) {
         return new ShrinkGrowTransition(t, s);
     }
 
-    public ShrinkGrowTransition(float t, Scene s) {
+    public ShrinkGrowTransition(float t, CCScene s) {
         super(t, s);
     }
 

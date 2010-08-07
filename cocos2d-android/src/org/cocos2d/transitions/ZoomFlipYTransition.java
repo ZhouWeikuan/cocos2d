@@ -7,7 +7,7 @@ import org.cocos2d.actions.instant.CCShow;
 import org.cocos2d.actions.interval.CCDelayTime;
 import org.cocos2d.actions.interval.CCIntervalAction;
 import org.cocos2d.actions.interval.CCSequence;
-import org.cocos2d.nodes.Scene;
+import org.cocos2d.layers.CCScene;
 
 // TODO
 /**
@@ -17,11 +17,11 @@ import org.cocos2d.nodes.Scene;
  */
 public class ZoomFlipYTransition extends OrientedTransitionScene {
 
-    public static ZoomFlipYTransition transition(float t, Scene s, int orientation) {
+    public static ZoomFlipYTransition transition(float t, CCScene s, int orientation) {
         return new ZoomFlipYTransition(t, s, orientation);
     }
 
-    public ZoomFlipYTransition(float t, Scene s, int orientation) {
+    public ZoomFlipYTransition(float t, CCScene s, int orientation) {
         super(t, s, orientation);
     }
 

@@ -8,27 +8,39 @@ import org.cocos2d.types.ccColor3B;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class MenuItemToggle extends MenuItem {
+
+/** A CCMenuItemToggle
+ A simple container class that "toggles" it's inner items
+ The inner itmes can be any MenuItem
+ */
+
+public class CCMenuItemToggle extends CCMenuItem {
+    /** returns the selected item */
     private int selectedIndex_;
-    private ArrayList<MenuItem> subItems_;
-    // private byte opacity_;
+    /** NSMutableArray that contains the subitems. You can add/remove items in runtime, and you can replace the array with a new one.
+      @since v0.7.2
+    */
+    private ArrayList<CCMenuItem> subItems_;
+    /** conforms with CCRGBAProtocol protocol */
+    private byte opacity_;
+    /** conforms with CCRGBAProtocol protocol */
     ccColor3B color_;
 
-    public static MenuItemToggle item(CCNode target, String selector, MenuItem... items) {
-        return new MenuItemToggle(target, selector, items);
+    /** creates a menu item from a list of items with a target/selector */
+    public static CCMenuItemToggle item(CCNode target, String selector, CCMenuItem... items) {
+        return new CCMenuItemToggle(target, selector, items);
     }
 
-    protected MenuItemToggle(CCNode t, String sel, MenuItem... items) {
+    /** initializes a menu item from a list of items with a target selector */
+    protected CCMenuItemToggle(CCNode t, String sel, CCMenuItem... items) {
         super(t, sel);
 
-        subItems_ = new ArrayList<MenuItem>(items.length);
+        subItems_ = new ArrayList<CCMenuItem>(items.length);
 
         subItems_.addAll(Arrays.asList(items));
 
-
         selectedIndex_ = Integer.MAX_VALUE;
         setSelectedIndex(0);
-
     }
 
     public void setSelectedIndex(int index) {
@@ -36,14 +48,12 @@ public class MenuItemToggle extends MenuItem {
             selectedIndex_ = index;
             removeChild(kCurrentItem, false);
 
-            MenuItem item = subItems_.get(selectedIndex_);
+            CCMenuItem item = subItems_.get(selectedIndex_);
             addChild(item, 0, kCurrentItem);
 
-            float width = item.getContentSize().width;
-            float height = item.getContentSize().height;
-
-            setContentSize(CGSize.make(width, height));
-            item.setPosition(CGPoint.make(width / 2, height / 2));
+            CGSize s = item.getContentSize();
+            setContentSize(s);
+            item.setPosition(CGPoint.make(s.width / 2, s.height / 2));
         }
     }
 
@@ -53,11 +63,13 @@ public class MenuItemToggle extends MenuItem {
 
     @Override
     public void selected() {
+        super.selected();
         subItems_.get(selectedIndex_).selected();
     }
 
     @Override
     public void unselected() {
+        super.unselected();
         subItems_.get(selectedIndex_).unselected();
     }
 
@@ -76,24 +88,29 @@ public class MenuItemToggle extends MenuItem {
     @Override
     public void setIsEnabled(boolean enabled) {
         super.setIsEnabled(enabled);
-        for (MenuItem item : subItems_)
+        for (CCMenuItem item : subItems_)
             item.setIsEnabled(enabled);
     }
 
-    public MenuItem selectedItem() {
+    /** return the selected item */
+    public CCMenuItem selectedItem() {
         return subItems_.get(selectedIndex_);
     }
 
     public void setOpacity(byte opacity) {
-        // opacity_ = opacity;
-        for (MenuItem item : subItems_)
+        opacity_ = opacity;
+        for (CCMenuItem item : subItems_)
             ((CCRGBAProtocol) item).setOpacity(opacity);
+    }
+    
+    public byte getOpacity() {
+    	return opacity_;
     }
 
     public void setColor(ccColor3B color) {
         color_ = color;
-        for (MenuItem item : subItems_)
+        for (CCMenuItem item : subItems_)
             ((CCRGBAProtocol) item).setColor(color);
     }
-
 }
+

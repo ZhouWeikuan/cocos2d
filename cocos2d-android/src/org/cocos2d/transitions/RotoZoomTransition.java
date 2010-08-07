@@ -7,7 +7,7 @@ import org.cocos2d.actions.interval.CCRotateBy;
 import org.cocos2d.actions.interval.CCScaleBy;
 import org.cocos2d.actions.interval.CCSequence;
 import org.cocos2d.actions.interval.CCSpawn;
-import org.cocos2d.nodes.Scene;
+import org.cocos2d.layers.CCScene;
 import org.cocos2d.types.CGPoint;
 
 /**
@@ -16,11 +16,11 @@ import org.cocos2d.types.CGPoint;
  */
 public class RotoZoomTransition extends TransitionScene {
 
-    public static RotoZoomTransition transition(float t, Scene s) {
+    public static RotoZoomTransition transition(float t, CCScene s) {
         return new RotoZoomTransition(t, s);
     }
 
-    public RotoZoomTransition(float t, Scene s) {
+    public RotoZoomTransition(float t, CCScene s) {
         super(t, s);
     }
 

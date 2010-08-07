@@ -1,27 +1,44 @@
 package org.cocos2d.nodes;
 
+import org.cocos2d.config.ccConfig;
 import org.cocos2d.protocols.CCLabelProtocol;
+import org.cocos2d.types.CGSize;
 import org.cocos2d.types.ccQuad2;
 import org.cocos2d.types.ccQuad3;
 
 import javax.microedition.khronos.opengles.GL10;
 
+/** CCLabelAtlas is a subclass of CCAtlasNode.
+ 
+ It can be as a replacement of CCLabel since it is MUCH faster.
+ 
+ CCLabelAtlas versus CCLabel:
+ - CCLabelAtlas is MUCH faster than CCLabel
+ - CCLabelAtlas "characters" have a fixed height and width
+ - CCLabelAtlas "characters" can be anything you want since they are taken from an image file
+ 
+ A more flexible class is CCBitmapFontAtlas. It supports variable width characters and it also has a nice editor.
+ */
 public class CCLabelAtlas extends CCAtlasNode 
-	implements CCLabelProtocol, CCNode.CocosNodeSize {
+	    implements CCLabelProtocol, CCNode.CocosNodeSize {
     /// string to render
-    String string;
+    String string_;
 
     /// the first char in the charmap
     char mapStartChar;
 
+    /** creates the CCLabelAtlas with a string,
+     * a char map file(the atlas), the width and height of each element
+     * and the starting char of the atlas */
     public static CCLabelAtlas label(String theString, String charmapfile, int w, int h, char c) {
         return new CCLabelAtlas(theString, charmapfile, w, h, c);
     }
 
+    /** initializes the CCLabelAtlas with a string, a char map file(the atlas), the width and height of each element and the starting char of the atlas */
     protected CCLabelAtlas(String theString, String charmapfile, int w, int h, char c) {
         super(charmapfile, w, h, theString.length());
 
-        string = theString;
+        string_ = theString;
         mapStartChar = c;
 
         updateAtlasValues();
@@ -29,15 +46,13 @@ public class CCLabelAtlas extends CCAtlasNode
 
     @Override
     public void updateAtlasValues() {
-        int n = string.length();
+        int n = string_.length();
 
         ccQuad2 texCoord = new ccQuad2();
         ccQuad3 vertex = new ccQuad3();
 
-        String s = string;
-
+        String s = string_;
         for (int i = 0; i < n; i++) {
-
             int a = s.charAt(i) - mapStartChar;
             float row = (a % itemsPerRow) * texStepX;
             float col = (a / itemsPerRow) * texStepY;
@@ -72,34 +87,50 @@ public class CCLabelAtlas extends CCAtlasNode
         if (newString.length() > textureAtlas_.getTotalQuads())
             textureAtlas_.resizeCapacity(newString.length());
 
-        string = newString;
+        string_ = newString;
         updateAtlasValues();
+
+        CGSize s = CGSize.make(string_.length() * itemWidth, itemHeight);
+        setContentSize(s);
     }
 
     @Override
     public void draw(GL10 gl) {
-        gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
-        gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
+        // Default GL states: GL_TEXTURE_2D, GL_VERTEX_ARRAY, GL_COLOR_ARRAY, GL_TEXTURE_COORD_ARRAY
+        // Needed states: GL_TEXTURE_2D, GL_VERTEX_ARRAY, GL_TEXTURE_COORD_ARRAY
+        // Unneeded states: GL_COLOR_ARRAY
+        gl.glDisableClientState(GL10.GL_COLOR_ARRAY);
+	    gl.glColor4f(color_.r/255.f, color_.g/255.f, color_.b/255.f, opacity_/255.f);
 
-        gl.glEnable(GL10.GL_TEXTURE_2D);
+        boolean newBlend = false;
+        if( blendFunc_.src != ccConfig.CC_BLEND_SRC || blendFunc_.dst != ccConfig.CC_BLEND_DST ) {
+            newBlend = true;
+            gl.glBlendFunc( blendFunc_.src, blendFunc_.dst );
+        }
 
-        //fixed bug that can't show text on G1 by zt
-        //gl.glColor4f(color_.r / 255f, color_.g / 255f, color_.b / 255f, opacity_ / 255f);
+        textureAtlas_.draw(gl, string_.length());
+	
+	    if( newBlend )
+		    gl.glBlendFunc(ccConfig.CC_BLEND_SRC, ccConfig.CC_BLEND_DST);
+	
+	    // Restore Default GL state. Enable GL_COLOR_ARRAY
+	    gl.glEnableClientState(GL10.GL_COLOR_ARRAY);
 
-        textureAtlas_.draw(gl, string.length());
-
-        // is this chepear than saving/restoring color state ?
-        //gl.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-
-        gl.glDisable(GL10.GL_TEXTURE_2D);
-
-        gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
-        gl.glDisableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
+        /*
+        if (ccConfig.CC_LABELATLAS_DEBUG_DRAW) {
+            CGSize s = [self contentSize];
+            CGPoint vertices[4]={
+                ccp(0,0),ccp(s.width,0),
+                ccp(s.width,s.height),ccp(0,s.height),
+            };
+            ccDrawPoly(vertices, 4, YES);
+        } // CC_LABELATLAS_DEBUG_DRAW
+        */
     }
 
     @Override
     public float getWidth() {
-        return string.length() * itemWidth;
+        return string_.length() * itemWidth;
     }
 
     @Override
@@ -107,3 +138,4 @@ public class CCLabelAtlas extends CCAtlasNode
         return itemHeight;
     }
 }
+

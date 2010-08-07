@@ -1,7 +1,7 @@
 package org.cocos2d.transitions;
 
+import org.cocos2d.layers.CCScene;
 import org.cocos2d.nodes.CCDirector;
-import org.cocos2d.nodes.Scene;
 import org.cocos2d.types.CGPoint;
 import org.cocos2d.types.CGSize;
 
@@ -11,11 +11,11 @@ import org.cocos2d.types.CGSize;
  */
 public class MoveInBTransition extends MoveInLTransition {
 
-    public static MoveInBTransition transition(float t, Scene s) {
+    public static MoveInBTransition transition(float t, CCScene s) {
         return new MoveInBTransition(t, s);
     }
 
-    public MoveInBTransition(float t, Scene s) {
+    public MoveInBTransition(float t, CCScene s) {
         super(t, s);
     }
 

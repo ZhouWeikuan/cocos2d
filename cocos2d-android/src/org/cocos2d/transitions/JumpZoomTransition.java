@@ -1,9 +1,13 @@
 package org.cocos2d.transitions;
 
 import org.cocos2d.actions.instant.CCCallFunc;
-import org.cocos2d.actions.interval.*;
+import org.cocos2d.actions.interval.CCDelayTime;
+import org.cocos2d.actions.interval.CCIntervalAction;
+import org.cocos2d.actions.interval.CCJumpBy;
+import org.cocos2d.actions.interval.CCScaleTo;
+import org.cocos2d.actions.interval.CCSequence;
+import org.cocos2d.layers.CCScene;
 import org.cocos2d.nodes.CCDirector;
-import org.cocos2d.nodes.Scene;
 import org.cocos2d.types.CGPoint;
 import org.cocos2d.types.CGSize;
 
@@ -13,11 +17,11 @@ import org.cocos2d.types.CGSize;
  */
 public class JumpZoomTransition extends TransitionScene {
 
-    public static JumpZoomTransition transition(float t, Scene s) {
+    public static JumpZoomTransition transition(float t, CCScene s) {
         return new JumpZoomTransition(t, s);
     }
 
-    public JumpZoomTransition(float t, Scene s) {
+    public JumpZoomTransition(float t, CCScene s) {
         super(t, s);
     }
 

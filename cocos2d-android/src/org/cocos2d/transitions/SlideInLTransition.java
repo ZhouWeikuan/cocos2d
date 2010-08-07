@@ -3,10 +3,10 @@ package org.cocos2d.transitions;
 import org.cocos2d.actions.ease.CCEaseOut;
 import org.cocos2d.actions.instant.CCCallFunc;
 import org.cocos2d.actions.interval.CCIntervalAction;
-import org.cocos2d.actions.interval.CCSequence;
 import org.cocos2d.actions.interval.CCMoveBy;
+import org.cocos2d.actions.interval.CCSequence;
+import org.cocos2d.layers.CCScene;
 import org.cocos2d.nodes.CCDirector;
-import org.cocos2d.nodes.Scene;
 import org.cocos2d.types.CGPoint;
 import org.cocos2d.types.CGSize;
 
@@ -18,11 +18,11 @@ public class SlideInLTransition extends TransitionScene {
 
     protected static final float ADJUST_FACTOR = 0.5f;
 
-    public static SlideInLTransition transition(float t, Scene s) {
+    public static SlideInLTransition transition(float t, CCScene s) {
         return new SlideInLTransition(t, s);
     }
 
-    public SlideInLTransition(float t, Scene s) {
+    public SlideInLTransition(float t, CCScene s) {
         super(t, s);
     }
 

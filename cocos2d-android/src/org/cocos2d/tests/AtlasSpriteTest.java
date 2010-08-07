@@ -10,8 +10,9 @@ import org.cocos2d.actions.base.CCRepeatForever;
 import org.cocos2d.actions.interval.*;
 import org.cocos2d.config.ccMacros;
 import org.cocos2d.layers.CCLayer;
-import org.cocos2d.menus.Menu;
-import org.cocos2d.menus.MenuItemImage;
+import org.cocos2d.layers.CCScene;
+import org.cocos2d.menus.CCMenu;
+import org.cocos2d.menus.CCMenuItemImage;
 import org.cocos2d.nodes.*;
 import org.cocos2d.opengl.CCGLSurfaceView;
 import org.cocos2d.opengl.CCTexture2D;
@@ -52,7 +53,7 @@ public class AtlasSpriteTest extends Activity {
         // frames per second
         CCDirector.sharedDirector().setAnimationInterval(1.0f / 60);
 
-        Scene scene = Scene.node();
+        CCScene scene = CCScene.node();
         scene.addChild(nextAction());
 
         // Make the Scene active
@@ -136,11 +137,11 @@ public class AtlasSpriteTest extends Activity {
             label.setPosition(CGPoint.make(s.width / 2, s.height - 30));
             addChild(label);
 
-            MenuItemImage item1 = MenuItemImage.item("b1.png", "b2.png", this, "backCallback");
-            MenuItemImage item2 = MenuItemImage.item("r1.png", "r2.png", this, "restartCallback");
-            MenuItemImage item3 = MenuItemImage.item("f1.png", "f2.png", this, "nextCallback");
+            CCMenuItemImage item1 = CCMenuItemImage.item("b1.png", "b2.png", this, "backCallback");
+            CCMenuItemImage item2 = CCMenuItemImage.item("r1.png", "r2.png", this, "restartCallback");
+            CCMenuItemImage item3 = CCMenuItemImage.item("f1.png", "f2.png", this, "nextCallback");
 
-            Menu menu = Menu.menu(item1, item2, item3);
+            CCMenu menu = CCMenu.menu(item1, item2, item3);
             menu.setPosition(CGPoint.zero());
             item1.setPosition(CGPoint.make(s.width / 2 - 100, 30));
             item2.setPosition(CGPoint.make(s.width / 2, 30));
@@ -149,19 +150,19 @@ public class AtlasSpriteTest extends Activity {
         }
 
         public static void restartCallback() {
-            Scene s = Scene.node();
+            CCScene s = CCScene.node();
             s.addChild(restartAction());
             CCDirector.sharedDirector().replaceScene(s);
         }
 
         public void nextCallback() {
-            Scene s = Scene.node();
+            CCScene s = CCScene.node();
             s.addChild(nextAction());
             CCDirector.sharedDirector().replaceScene(s);
         }
 
         public void backCallback() {
-            Scene s = Scene.node();
+            CCScene s = CCScene.node();
             s.addChild(backAction());
             CCDirector.sharedDirector().replaceScene(s);
         }

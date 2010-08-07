@@ -3,15 +3,26 @@ package org.cocos2d.layers;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+/** CCMultipleLayer is a CCLayer with the ability to multiplex it's children.
+ Features:
+   - It supports one or more children
+   - Only one children will be active a time
+ */
 public class CCMultiplexLayer extends CCLayer {
     private ArrayList<CCLayer> layers;
 
     private int enabledLayer;
 
+    /** creates a CCMultiplexLayer with one or more layers
+     * using a variable argument list.
+    */ 
     public CCMultiplexLayer node(CCLayer... params) {
         return new CCMultiplexLayer(params);
     }
 
+    /** initializes a MultiplexLayer with one or more layers
+     * using a variable argument list.
+    */
     protected CCMultiplexLayer(CCLayer... params) {
         layers = new ArrayList<CCLayer>();
 
@@ -21,22 +32,27 @@ public class CCMultiplexLayer extends CCLayer {
         addChild(layers.get(enabledLayer));
     }
 
+    /** switches to a certain layer indexed by n.
+     * The current (old) layer will be removed from it's parent with 'cleanup:YES'.
+    */
     public void switchTo(int n) {
-        if (n >= layers.size()) {
-            throw new MultiplexLayerInvalidIndex("Invalid index passed to MultiplexLayer.switchTo");
-        }
+        assert n < layers.size(): "Invalid index passed to MultiplexLayer.switchTo";
 
-        removeChild(layers.get(enabledLayer), false);
-
+        removeChild(layers.get(enabledLayer), true);
         enabledLayer = n;
-
         addChild(layers.get(enabledLayer));
     }
 
-    static class MultiplexLayerInvalidIndex extends RuntimeException {
-        public MultiplexLayerInvalidIndex(String reason) {
-            super(reason);
-        }
+    /** release the current layer and switches to another layer indexed by n.
+      The current (old) layer will be removed from it's parent with 'cleanup:YES'.
+      */
+    public void switchToAndReleaseMe(int n) {
+
+        assert n < layers.size() : "Invalid index in MultiplexLayer switchTo message" ;
+        removeChild(layers.get(enabledLayer), true);
+        layers.add(enabledLayer, null);
+        enabledLayer = n;
+        addChild(layers.get(n));		
     }
 }
 
