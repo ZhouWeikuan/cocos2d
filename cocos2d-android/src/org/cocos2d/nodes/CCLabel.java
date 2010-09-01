@@ -11,7 +11,7 @@ import org.cocos2d.types.CGSize;
  *
  * CCLabel objects are slow. Consider using CCLabelAtlas or CCBitmapFontAtlas instead.
  */
-public class CCLabel extends Sprite implements CCLabelProtocol {
+public class CCLabel extends CCSprite implements CCLabelProtocol {
 
     public enum TextAlignment {
         LEFT,
@@ -43,6 +43,7 @@ public class CCLabel extends Sprite implements CCLabelProtocol {
     /** initializes the CCLabel with a font name, alignment, dimension and font size */
     protected CCLabel(String string, final CGSize dimensions, TextAlignment alignment,
                         String name, float size) {
+    	super(string);
         _dimensions = dimensions;
         _alignment = alignment;
         _fontName = name;

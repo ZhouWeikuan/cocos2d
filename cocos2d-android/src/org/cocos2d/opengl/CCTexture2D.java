@@ -448,5 +448,6 @@ public class CCTexture2D {
         gl.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_GENERATE_MIPMAP, GL11.GL_TRUE);
         GLUtils.texImage2D(GL10.GL_TEXTURE_2D, 0, mBitmap, 0);
     }
+    
 }
 

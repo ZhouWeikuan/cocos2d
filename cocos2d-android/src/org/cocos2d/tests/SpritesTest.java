@@ -90,8 +90,8 @@ public class SpritesTest extends Activity {
 
     static abstract class SpriteDemo extends CCLayer {
 
-        Sprite grossini;
-        Sprite tamara;
+        CCSprite grossini;
+        CCSprite tamara;
 
         public SpriteDemo() {
             CGSize s = CCDirector.sharedDirector().winSize();
@@ -104,12 +104,12 @@ public class SpritesTest extends Activity {
             // Example:
             // You can create a sprite using a Texture2D
 //            Texture2D tex = new Texture2D("grossini.png");
-            grossini = Sprite.sprite("grossini.png");
+            grossini = CCSprite.sprite("grossini.png");
 
 
             // Example:
             // Or you can create an sprite using a filename. PNG, JPEG and BMP files are supported. Probably TIFF too
-            tamara = Sprite.sprite("grossinis_sister1.png");
+            tamara = CCSprite.sprite("grossinis_sister1.png");
 
             addChild(grossini, 1);
             addChild(tamara, 2);
@@ -375,14 +375,14 @@ public class SpritesTest extends Activity {
 
             tamara.setVisible(false);
 
-            Animation animation = new Animation("dance", 0.2f);
+            CCAnimation animation = CCAnimation.animation("dance", 0.2f);
             for (int i = 1; i < 15; i++) {
                 animation.addFrame(new CCFormatter().format("grossini_dance_%02d.png", i));
             }
 
-            CCIntervalAction action = CCAnimate.action(animation);
+            // CCIntervalAction action = CCAnimate.action(animation);
 
-            grossini.runAction(action);
+            // grossini.runAction(action);
         }
 
         public String title() {

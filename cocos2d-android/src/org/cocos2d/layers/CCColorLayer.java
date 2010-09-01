@@ -9,6 +9,7 @@ import javax.microedition.khronos.opengles.GL10;
 import org.cocos2d.config.ccConfig;
 import org.cocos2d.nodes.CCDirector;
 import org.cocos2d.nodes.CCNode;
+import org.cocos2d.protocols.CCRGBAProtocol;
 import org.cocos2d.types.CGSize;
 import org.cocos2d.types.ccBlendFunc;
 import org.cocos2d.types.ccColor3B;
@@ -24,7 +25,7 @@ import org.cocos2d.types.ccColor4B;
  - RGB colors
  */
 public class CCColorLayer extends CCLayer 
-        implements CCNode.CCRGBAProtocol, CCNode.CocosNodeSize {
+        implements CCRGBAProtocol, CCNode.CocosNodeSize {
     /** Opacity: conforms to CCRGBAProtocol protocol */
     protected ccColor3B color_;
     /** Opacity: conforms to CCRGBAProtocol protocol */
@@ -187,5 +188,17 @@ public class CCColorLayer extends CCLayer
     public void changeHeight(float h) {
         setContentSize(CGSize.make(getWidth(), h));
     }
+
+	@Override
+	public boolean doesOpacityModifyRGB() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void setOpacityModifyRGB(boolean b) {
+		// TODO Auto-generated method stub
+		
+	}
 }
 

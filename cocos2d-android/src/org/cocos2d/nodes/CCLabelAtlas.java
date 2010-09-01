@@ -3,6 +3,7 @@ package org.cocos2d.nodes;
 import org.cocos2d.config.ccConfig;
 import org.cocos2d.protocols.CCLabelProtocol;
 import org.cocos2d.types.CGSize;
+import org.cocos2d.types.ccBlendFunc;
 import org.cocos2d.types.ccQuad2;
 import org.cocos2d.types.ccQuad3;
 
@@ -137,5 +138,17 @@ public class CCLabelAtlas extends CCAtlasNode
     public float getHeight() {
         return itemHeight;
     }
+
+	@Override
+	public ccBlendFunc getBlendFunc() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setBlendFunc(ccBlendFunc blendFunc) {
+		// TODO Auto-generated method stub
+		
+	}
 }
 

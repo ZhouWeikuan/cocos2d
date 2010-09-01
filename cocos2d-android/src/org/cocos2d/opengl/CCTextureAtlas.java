@@ -36,7 +36,15 @@ public class CCTextureAtlas {
 
     /** buffers that are going to be rendered */
     private FloatBuffer textureCoordinates;
+    public FloatBuffer getTexCoordsBuffer() {
+    	return textureCoordinates;
+    }
+    
     private FloatBuffer vertexCoordinates;
+    public FloatBuffer getVertexBuffer() {
+    	return vertexCoordinates;
+    }
+    
     private ByteBuffer colors;
     private ShortBuffer indices;
 
@@ -370,7 +378,7 @@ public class CCTextureAtlas {
         return quadT;
     }
 
-    private void putTexCoords(FloatBuffer dst, float[] quadT, int index) {
+    public void putTexCoords(FloatBuffer dst, float[] quadT, int index) {
         for (int i = 0; i < ccQuad2.size; i++) {
             dst.put(index * ccQuad2.size + i, quadT[i]);
         }
@@ -384,7 +392,7 @@ public class CCTextureAtlas {
         return quadV;
     }
 
-    private void putVertex(FloatBuffer dst, float[] quadV, int index) {
+    public void putVertex(FloatBuffer dst, float[] quadV, int index) {
         for (int i = 0; i < ccQuad3.size; i++) {
             dst.put(index * ccQuad3.size + i, quadV[i]);
         }

@@ -437,7 +437,7 @@ public class AtlasSpriteTest extends Activity {
                 sprite.setPosition(CGPoint.make(60 + i * 100, s.height / 2));
 
 
-                Sprite point = Sprite.sprite("r1.png");
+                CCSprite point = CCSprite.sprite("r1.png");
                 point.setScale(0.25f);
                 point.setPosition(sprite.getPosition());
                 addChild(point, 1);

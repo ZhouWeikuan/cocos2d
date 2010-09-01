@@ -1,7 +1,7 @@
 package org.cocos2d.menus;
 
 import org.cocos2d.nodes.CCNode;
-import org.cocos2d.nodes.Sprite;
+import org.cocos2d.nodes.CCSprite;
 
 
 /** CCMenuItemImage accepts images as items.
@@ -31,12 +31,12 @@ public class CCMenuItemImage extends CCMenuItemSprite {
     /** creates a menu item with a normal,selected  and disabled image with target/selector */
     public static CCMenuItemImage item(String normalI, String selectedI, String disabledI,
             CCNode t, String sel) {
-        return new CCMenuItemImage(Sprite.sprite(normalI), Sprite.sprite(selectedI),
-                         (disabledI == null) ? null : Sprite.sprite(disabledI), t, sel);
+        return new CCMenuItemImage(CCSprite.sprite(normalI), CCSprite.sprite(selectedI),
+                         (disabledI == null) ? null : CCSprite.sprite(disabledI), t, sel);
     }
 
     /** initializes a menu item with a normal, selected  and disabled image with target/selector */
-    protected CCMenuItemImage(Sprite normal, Sprite selected, Sprite disabled, CCNode t, String sel) {
+    protected CCMenuItemImage(CCSprite normal, CCSprite selected, CCSprite disabled, CCNode t, String sel) {
         super(normal, selected, disabled, t, sel);
     }
 }

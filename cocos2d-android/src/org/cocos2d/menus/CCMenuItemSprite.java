@@ -1,6 +1,7 @@
 package org.cocos2d.menus;
 
 import org.cocos2d.nodes.CCNode;
+import org.cocos2d.protocols.CCRGBAProtocol;
 import org.cocos2d.types.CGSize;
 import org.cocos2d.types.ccColor3B;
 
@@ -16,7 +17,7 @@ import javax.microedition.khronos.opengles.GL10;
  * @since v0.8.0
  */
 
-public class CCMenuItemSprite extends CCMenuItem implements CCNode.CCRGBAProtocol {
+public class CCMenuItemSprite extends CCMenuItem implements CCRGBAProtocol {
     /** the image used when the item is not selected */
     protected CCNode normalImage_;
     /** the image used when the item is selected */
@@ -89,5 +90,17 @@ public class CCMenuItemSprite extends CCMenuItem implements CCNode.CCRGBAProtoco
     public int getOpacity() {
         return ((CCRGBAProtocol) normalImage_).getOpacity();
     }
+
+	@Override
+	public boolean doesOpacityModifyRGB() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void setOpacityModifyRGB(boolean b) {
+		// TODO Auto-generated method stub
+		
+	}
 }
 

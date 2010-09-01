@@ -7,6 +7,7 @@ import org.cocos2d.actions.interval.CCScaleTo;
 import org.cocos2d.nodes.CCLabel;
 import org.cocos2d.nodes.CCNode;
 import org.cocos2d.protocols.CCLabelProtocol;
+import org.cocos2d.protocols.CCRGBAProtocol;
 import org.cocos2d.types.ccColor3B;
 
 
@@ -18,7 +19,7 @@ import org.cocos2d.types.ccColor3B;
    - CCLabel
  */
 
-public class CCMenuItemLabel extends CCMenuItem implements CCNode.CCRGBAProtocol {
+public class CCMenuItemLabel extends CCMenuItem implements CCRGBAProtocol {
     /** Label that is rendered. It can be any CCNode that implements the CCLabelProtocol */
     private CCLabelProtocol label_;
     private ccColor3B colorBackup;
@@ -141,6 +142,18 @@ public class CCMenuItemLabel extends CCMenuItem implements CCNode.CCRGBAProtocol
     public void draw(GL10 gl) {
         ((CCNode)label_).draw(gl);
     }
+
+	@Override
+	public boolean doesOpacityModifyRGB() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void setOpacityModifyRGB(boolean b) {
+		// TODO Auto-generated method stub
+		
+	}
 
 }
 

@@ -172,12 +172,12 @@ public class CocosNodeTest extends Activity {
 
             CGSize s = CCDirector.sharedDirector().winSize();
 
-            Sprite sp0 = Sprite.sprite("grossini.png");
-            Sprite sp1 = Sprite.sprite("grossinis_sister1.png");
-            Sprite sp2 = Sprite.sprite("grossinis_sister2.png");
-            Sprite point0 = Sprite.sprite("r1.png");
-            Sprite point1 = Sprite.sprite("r1.png");
-            Sprite point2 = Sprite.sprite("r1.png");
+            CCSprite sp0 = CCSprite.sprite("grossini.png");
+            CCSprite sp1 = CCSprite.sprite("grossinis_sister1.png");
+            CCSprite sp2 = CCSprite.sprite("grossinis_sister2.png");
+            CCSprite point0 = CCSprite.sprite("r1.png");
+            CCSprite point1 = CCSprite.sprite("r1.png");
+            CCSprite point2 = CCSprite.sprite("r1.png");
 
             point0.setScale(0.25f);
             point1.setScale(0.25f);
@@ -228,10 +228,10 @@ public class CocosNodeTest extends Activity {
 
             CGSize s = CCDirector.sharedDirector().winSize();
 
-            Sprite sp1 = Sprite.sprite("grossinis_sister1.png");
-            Sprite sp2 = Sprite.sprite("grossinis_sister2.png");
-            Sprite sp3 = Sprite.sprite("grossinis_sister1.png");
-            Sprite sp4 = Sprite.sprite("grossinis_sister2.png");
+            CCSprite sp1 = CCSprite.sprite("grossinis_sister1.png");
+            CCSprite sp2 = CCSprite.sprite("grossinis_sister2.png");
+            CCSprite sp3 = CCSprite.sprite("grossinis_sister1.png");
+            CCSprite sp4 = CCSprite.sprite("grossinis_sister2.png");
 
             sp1.setPosition(CGPoint.make(100, s.height / 2));
             sp2.setPosition(CGPoint.make(s.width - 100, s.height / 2));
@@ -268,9 +268,9 @@ public class CocosNodeTest extends Activity {
 
             CGSize s = CCDirector.sharedDirector().winSize();
 
-            Sprite sp1 = Sprite.sprite("grossinis_sister1.png");
-            Sprite sp2 = Sprite.sprite("grossinis_sister2.png");
-            Sprite sp3 = Sprite.sprite("grossini.png");
+            CCSprite sp1 = CCSprite.sprite("grossinis_sister1.png");
+            CCSprite sp2 = CCSprite.sprite("grossinis_sister2.png");
+            CCSprite sp3 = CCSprite.sprite("grossini.png");
 
             sp1.setPosition(CGPoint.make(20, 80));
             sp2.setPosition(CGPoint.make(70, 50));
@@ -312,8 +312,8 @@ public class CocosNodeTest extends Activity {
 
             CGSize s = CCDirector.sharedDirector().winSize();
 
-            Sprite sp1 = Sprite.sprite("grossinis_sister1.png");
-            Sprite sp2 = Sprite.sprite("grossinis_sister2.png");
+            CCSprite sp1 = CCSprite.sprite("grossinis_sister1.png");
+            CCSprite sp2 = CCSprite.sprite("grossinis_sister2.png");
 
             sp1.setPosition(CGPoint.make(100, s.height / 2));
             sp2.setPosition(CGPoint.make(s.width - 100, s.height / 2));
@@ -347,8 +347,8 @@ public class CocosNodeTest extends Activity {
         public Test5() {
             CGSize s = CCDirector.sharedDirector().winSize();
 
-            Sprite sp1 = Sprite.sprite("grossinis_sister1.png");
-            Sprite sp2 = Sprite.sprite("grossinis_sister2.png");
+            CCSprite sp1 = CCSprite.sprite("grossinis_sister1.png");
+            CCSprite sp2 = CCSprite.sprite("grossinis_sister2.png");
 
             sp1.setPosition(CGPoint.make(100, s.height / 2));
             sp2.setPosition(CGPoint.make(s.width - 100, s.height / 2));
@@ -389,11 +389,11 @@ public class CocosNodeTest extends Activity {
         public Test6() {
             CGSize s = CCDirector.sharedDirector().winSize();
 
-            Sprite sp1 = Sprite.sprite("grossinis_sister1.png");
-            Sprite sp11 = Sprite.sprite("grossinis_sister1.png");
+            CCSprite sp1 = CCSprite.sprite("grossinis_sister1.png");
+            CCSprite sp11 = CCSprite.sprite("grossinis_sister1.png");
 
-            Sprite sp2 = Sprite.sprite("grossinis_sister2.png");
-            Sprite sp21 = Sprite.sprite("grossinis_sister2.png");
+            CCSprite sp2 = CCSprite.sprite("grossinis_sister2.png");
+            CCSprite sp21 = CCSprite.sprite("grossinis_sister2.png");
 
             sp1.setPosition(CGPoint.make(100, s.height / 2));
             sp2.setPosition(CGPoint.make(s.width - 100, s.height / 2));
@@ -443,7 +443,7 @@ public class CocosNodeTest extends Activity {
         public Test7() {
             CGSize s = CCDirector.sharedDirector().winSize();
 
-            Sprite sp1 = Sprite.sprite("grossinis_sister1.png");
+            CCSprite sp1 = CCSprite.sprite("grossinis_sister1.png");
             addChild(sp1, 0, kTagSprite1);
 
             sp1.setPosition(CGPoint.make(s.width / 2, s.height / 2));

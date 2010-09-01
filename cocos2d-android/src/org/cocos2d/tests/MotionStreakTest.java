@@ -169,7 +169,7 @@ public class MotionStreakTest extends Activity {
     static class Test1 extends TestDemo {
         CCNode root;
         CCNode target;
-        MotionStreak streak;
+        CCMotionStreak streak;
 
         public void onEnter() {
             super.onEnter();
@@ -177,17 +177,17 @@ public class MotionStreakTest extends Activity {
             CGSize s = CCDirector.sharedDirector().winSize();
 
             // the root object just rotates around
-            root = Sprite.sprite("r1.png");
+            root = CCSprite.sprite("r1.png");
             addChild(root, 1);
             root.setPosition(CGPoint.make(s.width / 2, s.height / 2));
 
             // the target object is offset from root, and the streak is moved to follow it
-            target = Sprite.sprite("r1.png");
+            target = CCSprite.sprite("r1.png");
             root.addChild(target);
             target.setPosition(CGPoint.make(100, 0));
 
             // create the streak object and add it to the scene
-            streak = new MotionStreak(2, 3, "streak.png", 32, 32, new ccColor4B(0, 255, 0, 255));
+            streak = new CCMotionStreak(2, 3, "streak.png", 32, 32, new ccColor4B(0, 255, 0, 255));
             addChild(streak);
             // schedule an update on each frame so we can syncronize the streak with the target
             schedule("onUpdate");

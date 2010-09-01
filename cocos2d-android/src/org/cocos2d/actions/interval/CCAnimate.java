@@ -1,21 +1,23 @@
 package org.cocos2d.actions.interval;
 
+import org.cocos2d.nodes.CCAnimation;
 import org.cocos2d.nodes.CCNode;
-import org.cocos2d.nodes.Sprite;
+import org.cocos2d.nodes.CCSprite;
+import org.cocos2d.nodes.CCSpriteFrame;
 
 /** Animates a sprite given the name of an Animation */
 public class CCAnimate extends CCIntervalAction {
 
-    private CCNode.CCAnimation animation;
-    private Object origFrame;
+    private CCAnimation animation;
+    private CCSpriteFrame origFrame;
     private boolean restoreOriginalFrame;
 
     /** animation used for the animage */
-    public CCNode.CCAnimation getAnimation() {
+    public CCAnimation getAnimation() {
     	return animation;
     }
     
-    public void setAnimation(CCNode.CCAnimation anim) {
+    public void setAnimation(CCAnimation anim) {
     	animation = anim;
     }
 
@@ -23,19 +25,19 @@ public class CCAnimate extends CCIntervalAction {
      The 'delay' parameter of the animation will be overrided by the duration parameter.
      @since v0.99.0
      */
-    public static CCAnimate action(float duration, CCNode.CCAnimation anim, boolean restore) {
+    public static CCAnimate action(float duration, CCAnimation anim, boolean restore) {
     	assert anim!=null:"Animate: argument anim must be non-null";
     	return new CCAnimate(duration, anim, restore);
     }
 
     /** creates the action with an Animation and will restore the original frame when the animation is over */
-    public static CCAnimate action(CCNode.CCAnimation anim) {
+    public static CCAnimate action(CCAnimation anim) {
         assert anim != null : "Animate: argument Animation must be non-null";
         return new CCAnimate(anim, true);
     }
 
     /** creates the action with an Animation */
-    public static CCAnimate action(CCNode.CCAnimation anim, boolean restore) {
+    public static CCAnimate action(CCAnimation anim, boolean restore) {
         assert anim != null : "Animate: argument Animation must be non-null";
         return new CCAnimate(anim, restore);
     }
@@ -43,7 +45,7 @@ public class CCAnimate extends CCIntervalAction {
     /** initializes the action with an Animation 
      * 	and indicate whether restore the original frame
      * 	 	when the animtion is over */
-    protected CCAnimate(CCNode.CCAnimation anim, boolean restore) {
+    protected CCAnimate(CCAnimation anim, boolean restore) {
         super(anim.frames().size() * anim.delay());
 
         restoreOriginalFrame = restore;
@@ -55,7 +57,7 @@ public class CCAnimate extends CCIntervalAction {
      The 'delay' parameter of the animation will be overrided by the duration parameter.
      @since v0.99.0
      */
-    protected CCAnimate(float duration, CCNode.CCAnimation anim, boolean restore) {
+    protected CCAnimate(float duration, CCAnimation anim, boolean restore) {
     	super(duration);
     	assert anim != null : "Animate: argument Animation must be non-null";
     	restoreOriginalFrame = restore;
@@ -71,17 +73,17 @@ public class CCAnimate extends CCIntervalAction {
     @Override
     public void start(CCNode aTarget) {
         super.start(aTarget);
-        Sprite sprite = (Sprite) target;
+        CCSprite sprite = (CCSprite) target;
 
         origFrame = null;
         if (restoreOriginalFrame)
-        	origFrame = sprite.displayFrame();
+        	origFrame = sprite.displayedFrame();
     }
 
     @Override
     public void stop() {
         if (restoreOriginalFrame) {
-            Sprite sprite = (Sprite) target;
+            CCSprite sprite = (CCSprite) target;
             sprite.setDisplayFrame(origFrame);
         }
 
@@ -97,7 +99,7 @@ public class CCAnimate extends CCIntervalAction {
             idx = numberOfFrames - 1;
         }
 
-        Sprite sprite = (Sprite) target;
+        CCSprite sprite = (CCSprite) target;
         if (!sprite.isFrameDisplayed(animation.frames().get(idx))) {
             sprite.setDisplayFrame(animation.frames().get(idx));
         }

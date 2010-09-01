@@ -160,7 +160,7 @@ public class ParallaxTest extends Activity {
         public Parallax1() {
 
             // Top Layer, a simple image
-            Sprite cocosImage = Sprite.sprite("powered.png");
+            CCSprite cocosImage = CCSprite.sprite("powered.png");
             // scale the image (optional)
             cocosImage.setScale(2.5f);
             // change the transform anchor point to 0,0 (optional)
@@ -168,7 +168,7 @@ public class ParallaxTest extends Activity {
 
 
             // Middle layer: a Tile map atlas
-            TileMapAtlas tilemap = TileMapAtlas.tilemap("tiles.png", "levelmap.tga", 16, 16);
+            CCTileMapAtlas tilemap = CCTileMapAtlas.tilemap("tiles.png", "levelmap.tga", 16, 16);
 
             // change the transform anchor to 0,0 (optional)
             tilemap.setAnchorPoint(CGPoint.make(0, 0));
@@ -178,7 +178,7 @@ public class ParallaxTest extends Activity {
 
 
             // background layer: another image
-            Sprite background = Sprite.sprite("background.png");
+            CCSprite background = CCSprite.sprite("background.png");
             // scale the image (optional)
             background.setScale(1.5f);
             // change the transform anchor point (optional)
@@ -186,7 +186,7 @@ public class ParallaxTest extends Activity {
 
 
             // create a void node, a parent node
-            ParallaxNode voidNode = ParallaxNode.node();
+            CCParallaxNode voidNode = CCParallaxNode.node();
 
             // NOW add the 3 layers to the 'void' node
 
@@ -231,7 +231,7 @@ public class ParallaxTest extends Activity {
             setIsTouchEnabled(true);
 
             // Top Layer, a simple image
-            Sprite cocosImage = Sprite.sprite("powered.png");
+            CCSprite cocosImage = CCSprite.sprite("powered.png");
             // scale the image (optional)
             cocosImage.setScale(2.5f);
             // change the transform anchor point to 0,0 (optional)
@@ -239,7 +239,7 @@ public class ParallaxTest extends Activity {
 
 
             // Middle layer: a Tile map atlas
-            TileMapAtlas tilemap = TileMapAtlas.tilemap("tiles.png", "levelmap.tga", 16, 16);
+            CCTileMapAtlas tilemap = CCTileMapAtlas.tilemap("tiles.png", "levelmap.tga", 16, 16);
 
             // change the transform anchor to 0,0 (optional)
             tilemap.setAnchorPoint(CGPoint.make(0, 0));
@@ -249,7 +249,7 @@ public class ParallaxTest extends Activity {
 
 
             // background layer: another image
-            Sprite background = Sprite.sprite("background.png");
+            CCSprite background = CCSprite.sprite("background.png");
             // scale the image (optional)
             background.setScale(1.5f);
             // change the transform anchor point (optional)
@@ -257,7 +257,7 @@ public class ParallaxTest extends Activity {
 
 
             // create a void node, a parent node
-            ParallaxNode voidNode = ParallaxNode.node();
+            CCParallaxNode voidNode = CCParallaxNode.node();
 
             // NOW add the 3 layers to the 'void' node
 

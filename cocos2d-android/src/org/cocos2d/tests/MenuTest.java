@@ -13,7 +13,6 @@ import org.cocos2d.menus.CCMenuItemFont;
 import org.cocos2d.menus.CCMenuItemImage;
 import org.cocos2d.menus.CCMenuItemLabel;
 import org.cocos2d.menus.CCMenuItemSprite;
-import org.cocos2d.nodes.AtlasSprite;
 import org.cocos2d.nodes.CCDirector;
 import org.cocos2d.nodes.CCLabelAtlas;
 import org.cocos2d.nodes.CCSpriteFrameCache;

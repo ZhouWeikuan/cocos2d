@@ -77,3 +77,84 @@ public class ParticleSmoke extends ParticleSystem {
     }
 
 }
+
+
+//
+// ParticleSmoke
+//
+@implementation CCParticleSmoke
+-(id) init
+{
+	return [self initWithTotalParticles:200];
+}
+
+-(id) initWithTotalParticles:(int) p
+{
+	if( (self=[super initWithTotalParticles:p]) ) {
+	
+		// duration
+		duration = kCCParticleDurationInfinity;
+		
+		// Emitter mode: Gravity Mode
+		self.emitterMode = kCCParticleModeGravity;
+		
+		// Gravity Mode: gravity
+		self.gravity = ccp(0,0);
+
+		// Gravity Mode: radial acceleration
+		self.radialAccel = 0;
+		self.radialAccelVar = 0;
+		
+		// Gravity Mode: speed of particles
+		self.speed = 25;
+		self.speedVar = 10;
+		
+		// angle
+		angle = 90;
+		angleVar = 5;
+		
+		// emitter position
+		CGSize winSize = [[CCDirector sharedDirector] winSize];
+		self.position = ccp(winSize.width/2, 0);
+		posVar = ccp(20, 0);
+		
+		// life of particles
+		life = 4;
+		lifeVar = 1;
+		
+		// size, in pixels
+		startSize = 60.0f;
+		startSizeVar = 10.0f;
+		endSize = kCCParticleStartSizeEqualToEndSize;
+
+		// emits per frame
+		emissionRate = totalParticles/life;
+		
+		// color of particles
+		startColor.r = 0.8f;
+		startColor.g = 0.8f;
+		startColor.b = 0.8f;
+		startColor.a = 1.0f;
+		startColorVar.r = 0.02f;
+		startColorVar.g = 0.02f;
+		startColorVar.b = 0.02f;
+		startColorVar.a = 0.0f;
+		endColor.r = 0.0f;
+		endColor.g = 0.0f;
+		endColor.b = 0.0f;
+		endColor.a = 1.0f;
+		endColorVar.r = 0.0f;
+		endColorVar.g = 0.0f;
+		endColorVar.b = 0.0f;
+		endColorVar.a = 0.0f;
+		
+		self.texture = [[CCTextureCache sharedTextureCache] addImage: @"fire.png"];
+		
+		// additive
+		self.blendAdditive = NO;
+	}
+	
+	return self;
+}
+@end
+

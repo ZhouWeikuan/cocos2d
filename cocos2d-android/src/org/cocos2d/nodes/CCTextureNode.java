@@ -8,13 +8,14 @@ import javax.microedition.khronos.opengles.GL10;
 
 import org.cocos2d.config.ccConfig;
 import org.cocos2d.opengl.CCTexture2D;
+import org.cocos2d.protocols.CCRGBAProtocol;
 import org.cocos2d.types.CGPoint;
 import org.cocos2d.types.CGSize;
 import org.cocos2d.types.ccBlendFunc;
 import org.cocos2d.types.ccColor3B;
 
 
-public class CCTextureNode extends CCNode implements CCNode.CCRGBAProtocol, CCNode.CocosNodeSize {
+public class CCTextureNode extends CCNode implements CCRGBAProtocol, CCNode.CocosNodeSize {
 
     /**
      * The texture that is rendered
@@ -29,7 +30,6 @@ public class CCTextureNode extends CCNode implements CCNode.CCRGBAProtocol, CCNo
     private ccColor3B color_;
 
     boolean opacityModifyRGB_;
-
 
     public CCTexture2D getTexture() {
         return texture_;
@@ -114,4 +114,14 @@ public class CCTextureNode extends CCNode implements CCNode.CCRGBAProtocol, CCNo
     public float getHeight() {
         return texture_.getHeight();
     }
+
+	@Override
+	public boolean doesOpacityModifyRGB() {
+		return opacityModifyRGB_;
+	}
+
+	@Override
+	public void setOpacityModifyRGB(boolean b) {
+		opacityModifyRGB_ = b;
+	}
 }

@@ -35,7 +35,7 @@ import org.cocos2d.menus.CCMenuItemImage;
 import org.cocos2d.nodes.CCDirector;
 import org.cocos2d.nodes.CCLabel;
 import org.cocos2d.nodes.CCTextureCache;
-import org.cocos2d.nodes.Sprite;
+import org.cocos2d.nodes.CCSprite;
 import org.cocos2d.opengl.CCGLSurfaceView;
 import org.cocos2d.opengl.CCTexture2D;
 import org.cocos2d.types.CGPoint;
@@ -155,21 +155,21 @@ public class EaseActionsTest extends Activity {
     }
 
     static abstract class SpriteDemo extends CCLayer {
-        Sprite grossini;
-        Sprite tamara;
-        Sprite kathia;
+        CCSprite grossini;
+        CCSprite tamara;
+        CCSprite kathia;
          
         public SpriteDemo() {
 
             // Example:
             // You can create a sprite using a CCTexture2D
             CCTexture2D tex = CCTextureCache.createTextureFromFilePath("grossini.png");
-            grossini = Sprite.sprite(tex);
+            grossini = CCSprite.sprite(tex);
 
             // Example:
             // Or you can create an sprite using a filename. PNG and BMP files are supported. Probably TIFF too
-            tamara = Sprite.sprite("grossinis_sister1.png");
-            kathia = Sprite.sprite("grossinis_sister2.png");
+            tamara = CCSprite.sprite("grossinis_sister1.png");
+            kathia = CCSprite.sprite("grossinis_sister2.png");
 
             addChild(grossini, 3);
             addChild(kathia, 2);

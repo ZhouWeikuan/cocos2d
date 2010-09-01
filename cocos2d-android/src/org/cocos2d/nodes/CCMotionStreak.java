@@ -6,44 +6,49 @@ import org.cocos2d.types.ccColor4B;
 import org.cocos2d.types.CGPoint;
 
 /**
- * Motion Streak manages a Ribbon based on it's motion in absolute space.
+ * CCMotionStreak manages a Ribbon based on it's motion in absolute space.
  * You construct it with a fadeTime, minimum segment size, texture path, texture
  * length and color. The fadeTime controls how long it takes each vertex in
  * the streak to fade out, the minimum segment size it how many pixels the
  * streak will move before adding a new ribbon segement, and the texture
  * length is the how many pixels the texture is stretched across. The texture
- * is vertically aligned along the streak segemnts.
- * <p/>
+ * is vertically aligned along the streak segemnts. 
+ *
  * Limitations:
- * MotionStreak, by default, will use the GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA blending function.
- * This blending function might not be the correct one for certain textures.
- * But you can change it by using:
- * [obj setBlendFunc: (ccBlendFunc) {new_src_blend_func, new_dst_blend_func}];
+ *   CCMotionStreak, by default, will use the GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA blending function.
+ *   This blending function might not be the correct one for certain textures.
+ *   But you can change it by using:
+ *     [obj setBlendFunc: (ccBlendfunc) {new_src_blend_func, new_dst_blend_func}];
  *
  * @since v0.8.1
  */
-
-public class MotionStreak extends CCNode /*implements CocosNodeTexture*/ {
-    Ribbon ribbon_;
-    float mSegThreshold;
-    float mWidth;
-    CGPoint mLastLocation;
+public class CCMotionStreak extends CCNode /*implements CocosNodeTexture*/ {
+    CCRibbon ribbon_;
+    float segThreshold_;
+    float width_;
+    CGPoint lastLocation_;
 
     /**
      * Ribbon used by MotionStreak (weak reference)
      */
-    public Ribbon getRibbon() {
+    public CCRibbon getRibbon() {
         return ribbon_;
     }
 
     /**
      * creates the a MotionStreak. The image will be loaded using the TextureMgr.
      */
-    public MotionStreak(float fade, float seg, String path, float width, float length, ccColor4B color) {
-        mSegThreshold = seg;
-        mWidth = width;
-        mLastLocation = CGPoint.make(0, 0);
-        ribbon_ = new Ribbon(mWidth, path, length, color, fade);
+    public CCMotionStreak streak(float fade, float seg,
+    	String path, float width, float length, ccColor4B color) {
+    	return new CCMotionStreak(fade, seg, path, width, length, color);
+    }    
+
+    /** initializes a MotionStreak. The file will be loaded using the TextureMgr. */
+    public CCMotionStreak(float fade, float seg, String path, float width, float length, ccColor4B color) {
+        segThreshold_ = seg;
+        width_ = width;
+        lastLocation_ = CGPoint.make(0, 0);
+        ribbon_ = new CCRibbon(width_, path, length, color, fade);
         addChild(ribbon_);
 
         // update ribbon position
@@ -56,16 +61,15 @@ public class MotionStreak extends CCNode /*implements CocosNodeTexture*/ {
     public void update(float delta) {
         CGPoint location = convertToWorldSpace(0, 0);
         ribbon_.setPosition(CGPoint.make(-1 * location.x, -1 * location.y));
-        float len = (float)Math.sqrt((float) Math.pow(mLastLocation.x - location.x, 2) + (float) Math.pow(mLastLocation.y - location.y, 2));
-        if (len > mSegThreshold) {
-            ribbon_.addPoint(location, mWidth);
-            mLastLocation = location;
+        float len = (float)Math.sqrt((float) Math.pow(lastLocation_.x - location.x, 2) + (float) Math.pow(lastLocation_.y - location.y, 2));
+        if (len > segThreshold_) {
+            ribbon_.addPoint(location, width_);
+            lastLocation_ = location;
         }
         ribbon_.update(delta);
     }
 
     // CocosNodeTexture protocol
-
     public void setTexture(CCTexture2D texture) {
         ribbon_.setTexture(texture);
     }

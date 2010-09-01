@@ -5,7 +5,7 @@ import javax.microedition.khronos.opengles.GL10;
 import org.cocos2d.config.ccConfig;
 import org.cocos2d.nodes.CCNode;
 import org.cocos2d.nodes.CCTextureCache;
-import org.cocos2d.nodes.Sprite;
+import org.cocos2d.nodes.CCSprite;
 import org.cocos2d.opengl.CCTexture2D;
 import org.cocos2d.types.CGPoint;
 import org.cocos2d.types.CGSize;
@@ -60,8 +60,8 @@ public class CCProgressTimer extends CCNode {
 
     /** The image to show the progress percentage */
     // @property (nonatomic, readwrite, retain) CCSprite *sprite;
-	Sprite			sprite_;
-    public Sprite  getSprite() {
+	CCSprite			sprite_;
+    public CCSprite  getSprite() {
         return sprite_;
     }
 
@@ -90,7 +90,7 @@ public class CCProgressTimer extends CCNode {
     /** Creates a progress timer with the texture as the shape the timer goes through */
     protected CCProgressTimer (CCTexture2D texture) {
         super();
-        sprite_ = Sprite.sprite(texture);
+        sprite_ = CCSprite.sprite(texture);
         percentage_ = 0.f;
         vertexData_ = null;
         vertexDataCount_ = 0;
@@ -112,7 +112,7 @@ public class CCProgressTimer extends CCNode {
         }
     }
 
-    public void setSprite(Sprite newSprite) {
+    public void setSprite(CCSprite newSprite) {
         if(sprite_ != newSprite){
             sprite_ = newSprite;
 
@@ -321,12 +321,12 @@ public class CCProgressTimer extends CCNode {
             }
 
             //	Flip the texture coordinates if set
-            if (sprite_.flipY || sprite_.flipX) {
+            if (sprite_.flipY_ || sprite_.flipX_) {
                 for(int i = 0; i < vertexDataCount_ - 1; ++i){
-                    if (sprite_.flipX) {
+                    if (sprite_.flipX_) {
                         vertexData_[i].texCoords.u = tMax.x - vertexData_[i].texCoords.u;
                     }
-                    if(sprite_.flipY){
+                    if(sprite_.flipY_){
                         vertexData_[i].texCoords.v = tMax.y - vertexData_[i].texCoords.v;
                     }
                 }
@@ -337,11 +337,11 @@ public class CCProgressTimer extends CCNode {
         vertexData_[vertexDataCount_ - 1].texCoords = new ccTex2F(hit.x, hit.y);
         vertexData_[vertexDataCount_ - 1].vertices  = (vertexFromTexCoord(hit));
 
-        if (sprite_.flipY || sprite_.flipX) {
-            if (sprite_.flipX) {
+        if (sprite_.flipY_ || sprite_.flipX_) {
+            if (sprite_.flipX_) {
                 vertexData_[vertexDataCount_ - 1].texCoords.u = tMax.x - vertexData_[vertexDataCount_ - 1].texCoords.u;
             }
-            if(sprite_.flipY){
+            if(sprite_.flipY_){
                 vertexData_[vertexDataCount_ - 1].texCoords.v = tMax.y - vertexData_[vertexDataCount_ - 1].texCoords.v;
             }
         }
@@ -392,14 +392,14 @@ public class CCProgressTimer extends CCNode {
             index = vIndexes[1];
             vertexData_[index].vertices = vertexFromTexCoord(CGPoint.ccp(vertexData_[index].texCoords.u, vertexData_[index].texCoords.v));
 
-            if (sprite_.flipY || sprite_.flipX) {
-                if (sprite_.flipX) {
+            if (sprite_.flipY_ || sprite_.flipX_) {
+                if (sprite_.flipX_) {
                     char index1 = vIndexes[0];
                     vertexData_[index1].texCoords.u = tMax.x - vertexData_[index1].texCoords.u;
                     index1 = vIndexes[1];
                     vertexData_[index1].texCoords.u = tMax.x - vertexData_[index1].texCoords.u;
                 }
-                if(sprite_.flipY){
+                if(sprite_.flipY_){
                     char index2 = vIndexes[0];
                     vertexData_[index2].texCoords.v = tMax.y - vertexData_[index2].texCoords.v;
                     index2 = vIndexes[1];
@@ -429,14 +429,14 @@ public class CCProgressTimer extends CCNode {
         index = vIndexes[1];
         vertexData_[index].vertices = vertexFromTexCoord(CGPoint.ccp(vertexData_[index].texCoords.u, vertexData_[index].texCoords.v));
 
-        if (sprite_.flipY || sprite_.flipX) {
-            if (sprite_.flipX) {
+        if (sprite_.flipY_ || sprite_.flipX_) {
+            if (sprite_.flipX_) {
                 char index1 = vIndexes[0];
                 vertexData_[index1].texCoords.u = tMax.x - vertexData_[index1].texCoords.u;
                 index1 = vIndexes[1];
                 vertexData_[index1].texCoords.u = tMax.x - vertexData_[index1].texCoords.u;
             }
-            if(sprite_.flipY){
+            if(sprite_.flipY_){
                 char index2 = vIndexes[0];
                 vertexData_[index2].texCoords.v = tMax.y - vertexData_[index2].texCoords.v;
                 index2 = vIndexes[1];
@@ -467,9 +467,9 @@ public class CCProgressTimer extends CCNode {
         if(sprite_==null)
         	return;
         boolean newBlend = false;
-        if( sprite_.blendFunc.src != ccConfig.CC_BLEND_SRC || sprite_.blendFunc.dst != ccConfig.CC_BLEND_DST ) {
+        if( sprite_.getBlendFunc().src != ccConfig.CC_BLEND_SRC || sprite_.getBlendFunc().dst != ccConfig.CC_BLEND_DST ) {
             newBlend = true;
-            gl.glBlendFunc( sprite_.blendFunc.src, sprite_.blendFunc.dst );
+            gl.glBlendFunc( sprite_.getBlendFunc().src, sprite_.getBlendFunc().dst );
         }
 
         ///	========================================================================

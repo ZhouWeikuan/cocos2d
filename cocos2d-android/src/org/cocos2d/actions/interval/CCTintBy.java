@@ -1,6 +1,7 @@
 package org.cocos2d.actions.interval;
 
 import org.cocos2d.nodes.CCNode;
+import org.cocos2d.protocols.CCRGBAProtocol;
 import org.cocos2d.types.ccColor3B;
 
 /** Tints a CCNode that implements the CCNodeRGB protocol from current tint to a custom one.
@@ -30,13 +31,13 @@ public class CCTintBy extends CCIntervalAction {
     public void start(CCNode aTarget) {
         super.start(aTarget);
 
-        ccColor3B c = ((CCNode.CCRGBAProtocol) target).getColor();
+        ccColor3B c = ((CCRGBAProtocol) target).getColor();
         from = new ccColor3B(c);
     }
 
     @Override
     public void update(float t) {
-        CCNode.CCRGBAProtocol tn = (CCNode.CCRGBAProtocol) target;
+        CCRGBAProtocol tn = (CCRGBAProtocol) target;
         tn.setColor(new ccColor3B((int) (from.r + delta.r * t), 
                     (int) (from.g + delta.g * t),
                     (int) (from.b + delta.b * t)));

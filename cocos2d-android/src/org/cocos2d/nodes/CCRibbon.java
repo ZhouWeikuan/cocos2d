@@ -1,15 +1,18 @@
 package org.cocos2d.nodes;
 
-import org.cocos2d.config.ccConfig;
-import org.cocos2d.config.ccMacros;
-import org.cocos2d.opengl.CCTexture2D;
-import org.cocos2d.types.*;
-
-import javax.microedition.khronos.opengles.GL10;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
+
+import javax.microedition.khronos.opengles.GL10;
+
+import org.cocos2d.config.ccConfig;
+import org.cocos2d.opengl.CCTexture2D;
+import org.cocos2d.types.CCTexParams;
+import org.cocos2d.types.CGPoint;
+import org.cocos2d.types.ccBlendFunc;
+import org.cocos2d.types.ccColor4B;
 
 /**
  * A ribbon is a dynamically generated list of polygons drawn as a single or series
@@ -26,12 +29,9 @@ import java.util.ArrayList;
  *
  * @since v0.8.1
  */
-public class Ribbon extends CCNode {
-
-    /**
-     * object to hold ribbon segment data
-     */
-    public static class RibbonSegment {
+public class CCRibbon extends CCNode {
+    /** object to hold ribbon segment data */
+    public static class CCRibbonSegment {
 
         private static final int COUNT = 50;
 
@@ -43,15 +43,11 @@ public class Ribbon extends CCNode {
         int end;
         int begin;
 
-
         FloatBuffer mVertices;
         FloatBuffer mCoordinates;
         ByteBuffer mColors;
 
-
-        public RibbonSegment() {
-            reset();
-
+        public CCRibbonSegment() {
             ByteBuffer vfb = ByteBuffer.allocateDirect(COUNT * 3 * 2 * 4);
             vfb.order(ByteOrder.nativeOrder());
             mVertices = vfb.asFloatBuffer();
@@ -63,6 +59,7 @@ public class Ribbon extends CCNode {
             ByteBuffer cbb = ByteBuffer.allocateDirect(COUNT * 4 * 2 * 1);
             mColors = cbb;
 
+            reset();
         }
 
         public void reset() {
@@ -77,7 +74,7 @@ public class Ribbon extends CCNode {
             int b = color.b;
             int a = color.a;
 
-            if (begin < 50) {
+            if (begin < COUNT) {
                 // the motion streak class will call update and cause time to change, thus, if mCurTime != 0
                 // we have to generate alpha for the ribbon each frame.
                 if (curTime == 0) {
@@ -128,55 +125,58 @@ public class Ribbon extends CCNode {
 
     }
 
-    ArrayList<RibbonSegment> mSegments;
-    ArrayList<RibbonSegment> dSegments;
+    ArrayList<CCRibbonSegment> segments_;
+    ArrayList<CCRibbonSegment> deletedSegments_;
 
-    CGPoint mLastPoint1;
-    CGPoint mLastPoint2;
-    CGPoint mLastLocation;
-    int mVertCount;
-    float mTexVPos;
-    float mCurTime;
-    float mFadeTime;
-    float mDelta;
-    float mLastWidth;
-    float mLastSign;
-    boolean mPastFirstPoint;
+    CGPoint lastPoint1_;
+    CGPoint lastPoint2_;
+    CGPoint lastLocation_;
+    int vertCount_;
+    float texVPos_;
+    float curTime_;
+    float fadeTime_;
+    float delta_;
+    float lastWidth_;
+    float lastSign_;
+    boolean pastFirstPoint_;
 
-    // Texture used
+    /** Texture used by the ribbon. Conforms to CCTextureProtocol protocol */
     CCTexture2D texture_;
 
-    // texture lenght
+    /** Texture lenghts in pixels */
     float textureLength_;
 
-    // RGBA protocol
+    /** color used by the Ribbon (RGBA) */
     ccColor4B color_;
 
-    // blend func
+    /** GL blendind function */
     ccBlendFunc blendFunc_;
 
-    /**
-     * creates the ribbon
-     */
-    public Ribbon(float w, String path, float l, ccColor4B color, float fade) {
+    /** creates the ribbon */
+    public static CCRibbon node(float w, String path, float l, ccColor4B color, float fade) {
+        return new CCRibbon(w, path, l, color, fade);
+    }
 
-        mSegments = new ArrayList<RibbonSegment>();
-        dSegments = new ArrayList<RibbonSegment>();
+    /** init the ribbon */
+    protected CCRibbon(float w, String path, float l, ccColor4B color, float fade) {
+
+        segments_ = new ArrayList<CCRibbonSegment>();
+        deletedSegments_ = new ArrayList<CCRibbonSegment>();
 
         /* 1 initial segment */
-        RibbonSegment seg = new RibbonSegment();
-        mSegments.add(seg);
+        CCRibbonSegment seg = new CCRibbonSegment();
+        segments_.add(seg);
 
         textureLength_ = l;
 
         color_ = color;
-        mFadeTime = fade;
-        mLastLocation = CGPoint.make(0, 0);
-        mLastWidth = w / 2;
-        mTexVPos = 0.0f;
+        fadeTime_ = fade;
+        lastLocation_ = CGPoint.make(0, 0);
+        lastWidth_ = w / 2;
+        texVPos_ = 0.0f;
 
-        mCurTime = 0;
-        mPastFirstPoint = false;
+        curTime_ = 0;
+        pastFirstPoint_ = false;
 
         /* XXX:
          Ribbon, by default uses this blend function, which might not be correct
@@ -189,7 +189,7 @@ public class Ribbon extends CCNode {
 
         /* default texture parameter */
         CCTexParams params = new CCTexParams(GL10.GL_LINEAR, GL10.GL_LINEAR, GL10.GL_REPEAT, GL10.GL_REPEAT);
-        texture_.setTexParameters(params);
+        CCTexture2D.setTexParameters(params);
     }
 
     // rotates a point around 0, 0
@@ -206,47 +206,48 @@ public class Ribbon extends CCNode {
     public void addPoint(CGPoint location, float w) {
         w = w * 0.5f;
         // if this is the first point added, cache it and return
-        if (!mPastFirstPoint) {
-            mLastWidth = w;
-            mLastLocation = location;
-            mPastFirstPoint = true;
+        if (!pastFirstPoint_) {
+            lastWidth_ = w;
+            lastLocation_ = location;
+            pastFirstPoint_ = true;
             return;
         }
 
-        CGPoint sub = CGPoint.ccpSub(mLastLocation, location);
+        CGPoint sub = CGPoint.ccpSub(lastLocation_, location);
         float r = CGPoint.ccpToAngle(sub) + (float) Math.PI * 2;
         CGPoint p1 = CGPoint.ccpAdd(rotatePoint(CGPoint.ccp(-w, 0), r), location);
         CGPoint p2 = CGPoint.ccpAdd(rotatePoint(CGPoint.ccp(w, 0), r), location);
-        float len = (float) Math.sqrt((float) Math.pow(mLastLocation.x - location.x, 2) + (float) Math.pow(mLastLocation.y - location.y, 2));
-        float tend = mTexVPos + len / textureLength_;
-        RibbonSegment seg;
+        float len = (float) Math.sqrt((float) Math.pow(lastLocation_.x - location.x, 2) + (float) Math.pow(lastLocation_.y - location.y, 2));
+        float tend = texVPos_ + len / textureLength_;
+        CCRibbonSegment seg;
         // grab last segment
-        seg = mSegments.get(mSegments.size() - 1);
+        seg = segments_.get(segments_.size() - 1);
         // lets kill old segments
-        for (RibbonSegment seg2 : mSegments) {
+        for (CCRibbonSegment seg2 : segments_) {
             if (seg2 != seg && seg2.finished) {
-                dSegments.add(seg2);
+                deletedSegments_.add(seg2);
             }
         }
-        mSegments.removeAll(dSegments);
+        segments_.removeAll(deletedSegments_);
+
         // is the segment full?
         if (seg.end >= 50)
-            mSegments.removeAll(dSegments);
+            segments_.removeAll(deletedSegments_);
         // grab last segment and appent to it if it's not full
-        seg = mSegments.get(mSegments.size() - 1);
+        seg = segments_.get(segments_.size() - 1);
+
         // is the segment full?
         if (seg.end >= 50) {
-            RibbonSegment newSeg;
+            CCRibbonSegment newSeg;
             // grab it from the cache if we can
-            if (dSegments.size() > 0) {
-                newSeg = dSegments.get(0);
-                dSegments.remove(newSeg);
+            if (deletedSegments_.size() > 0) {
+                newSeg = deletedSegments_.get(0);
+                deletedSegments_.remove(newSeg);
                 newSeg.reset();
             } else {
-                newSeg = new RibbonSegment();
+                newSeg = new CCRibbonSegment();
             }
 
-            newSeg.creationTime[0] = seg.creationTime[seg.end - 1];
             int v = (seg.end - 1) * 6;
             int c = (seg.end - 1) * 4;
             newSeg.verts[0] = seg.verts[v];
@@ -262,13 +263,14 @@ public class Ribbon extends CCNode {
             newSeg.coords[3] = seg.coords[c + 3];
             newSeg.end++;
             seg = newSeg;
-            mSegments.add(seg);
+            segments_.add(seg);
         }
+
         if (seg.end == 0) {
             // first edge has to get rotation from the first real polygon
-            CGPoint lp1 = CGPoint.ccpAdd(rotatePoint(CGPoint.ccp(-mLastWidth, 0), r), mLastLocation);
-            CGPoint lp2 = CGPoint.ccpAdd(rotatePoint(CGPoint.ccp(+mLastWidth, 0), r), mLastLocation);
-            seg.creationTime[0] = mCurTime - mDelta;
+            CGPoint lp1 = CGPoint.ccpAdd(rotatePoint(CGPoint.ccp(-lastWidth_, 0), r), lastLocation_);
+            CGPoint lp2 = CGPoint.ccpAdd(rotatePoint(CGPoint.ccp(+lastWidth_, 0), r), lastLocation_);
+            seg.creationTime[0] = curTime_ - delta_;
             seg.verts[0] = lp1.x;
             seg.verts[1] = lp1.y;
             seg.verts[2] = 0.0f;
@@ -276,16 +278,16 @@ public class Ribbon extends CCNode {
             seg.verts[4] = lp2.y;
             seg.verts[5] = 0.0f;
             seg.coords[0] = 0.0f;
-            seg.coords[1] = mTexVPos;
+            seg.coords[1] = texVPos_;
             seg.coords[2] = 1.0f;
-            seg.coords[3] = mTexVPos;
+            seg.coords[3] = texVPos_;
             seg.end++;
         }
 
         int v = seg.end * 6;
         int c = seg.end * 4;
         // add new vertex
-        seg.creationTime[seg.end] = mCurTime;
+        seg.creationTime[seg.end] = curTime_;
         seg.verts[v] = p1.x;
         seg.verts[v + 1] = p1.y;
         seg.verts[v + 2] = 0.0f;
@@ -293,31 +295,26 @@ public class Ribbon extends CCNode {
         seg.verts[v + 4] = p2.y;
         seg.verts[v + 5] = 0.0f;
 
-
         seg.coords[c] = 0.0f;
         seg.coords[c + 1] = tend;
         seg.coords[c + 2] = 1.0f;
         seg.coords[c + 3] = tend;
 
-        mTexVPos = tend;
-        mLastLocation = location;
-        mLastPoint1 = p1;
-        mLastPoint2 = p2;
-        mLastWidth = w;
+        texVPos_ = tend;
+        lastLocation_ = location;
+        lastPoint1_ = p1;
+        lastPoint2_ = p2;
+        lastWidth_ = w;
         seg.end++;
     }
 
-    /**
-     * polling function
-     */
+    /** polling function */
     public void update(float delta) {
-        mCurTime += delta;
-        mDelta = delta;
+        curTime_ += delta;
+        delta_ = delta;
     }
 
-    /**
-     * determine side of line
-     */
+    /** determine side of line */
     public float sideOfLine(CGPoint p, CGPoint l1, CGPoint l2) {
         CGPoint vp = CGPoint.ccpPerp(CGPoint.ccpSub(l1, l2));
         CGPoint vx = CGPoint.ccpSub(p, l1);
@@ -326,10 +323,11 @@ public class Ribbon extends CCNode {
 
     @Override
     public void draw(GL10 gl) {
-        if (mSegments.size() > 0) {
-            gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
-            gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
-            gl.glEnable(GL10.GL_TEXTURE_2D);
+        if (segments_.size() > 0) {
+            // Default GL states: GL_TEXTURE_2D, GL_VERTEX_ARRAY, GL_COLOR_ARRAY, GL_TEXTURE_COORD_ARRAY
+            // Needed states: GL_TEXTURE_2D, GL_VERTEX_ARRAY, GL_TEXTURE_COORD_ARRAY
+            // Unneeded states: GL_COLOR_ARRAY
+            gl.glDisableClientState(GL10.GL_COLOR_ARRAY);
             gl.glBindTexture(GL10.GL_TEXTURE_2D, texture_.name());
 
             boolean newBlend = false;
@@ -338,16 +336,13 @@ public class Ribbon extends CCNode {
                 gl.glBlendFunc(blendFunc_.src, blendFunc_.dst);
             }
 
-            for (RibbonSegment seg : mSegments)
-                seg.draw(gl, mCurTime, mFadeTime, color_);
+            for (CCRibbonSegment seg : segments_)
+                seg.draw(gl, curTime_, fadeTime_, color_);
 
             if (newBlend)
                 gl.glBlendFunc(ccConfig.CC_BLEND_SRC, ccConfig.CC_BLEND_DST);
 
-            gl.glDisable(GL10.GL_TEXTURE_2D);
-            gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
-            gl.glDisableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
-            gl.glDisableClientState(GL10.GL_COLOR_ARRAY);
+            gl.glEnableClientState(GL10.GL_COLOR_ARRAY);
         }
     }
 
@@ -359,11 +354,11 @@ public class Ribbon extends CCNode {
         blendFunc_ = blendFunc;
     }
 
-
     // CocosNodeTexture protocol
 
     public void setTexture(CCTexture2D texture) {
-        setContentSize(CGSize.make(texture.getWidth(), texture.getHeight()));
+        texture_ = texture;
+        setContentSize(texture.getContentSize());
         /* XXX Don't update blending function in Ribbons */
     }
 
@@ -371,5 +366,5 @@ public class Ribbon extends CCNode {
         return texture_;
     }
 
-
 }
+

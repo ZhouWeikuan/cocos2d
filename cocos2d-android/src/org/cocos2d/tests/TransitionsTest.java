@@ -240,7 +240,7 @@ public class TransitionsTest extends Activity {
             float x = s.width;
             float y = s.height;
 
-            Sprite bg1 = Sprite.sprite("background1.jpg");
+            CCSprite bg1 = CCSprite.sprite("background1.jpg");
             bg1.setAnchorPoint(CGPoint.make(0, 0));
             addChild(bg1, -1);
 
@@ -289,7 +289,7 @@ public class TransitionsTest extends Activity {
             float x = s.width;
             float y = s.height;
 
-            Sprite bg2 = Sprite.sprite("background2.jpg");
+            CCSprite bg2 = CCSprite.sprite("background2.jpg");
             bg2.setAnchorPoint(CGPoint.make(0, 0));
             addChild(bg2, -1);
 

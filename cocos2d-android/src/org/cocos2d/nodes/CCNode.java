@@ -10,13 +10,11 @@ import org.cocos2d.actions.base.CCAction;
 import org.cocos2d.config.ccConfig;
 import org.cocos2d.config.ccMacros;
 import org.cocos2d.grid.CCGridBase;
-import org.cocos2d.opengl.CCTexture2D;
 import org.cocos2d.opengl.CCCamera;
 import org.cocos2d.types.CGAffineTransform;
 import org.cocos2d.types.CGPoint;
 import org.cocos2d.types.CGRect;
 import org.cocos2d.types.CGSize;
-import org.cocos2d.types.ccColor3B;
 
 import android.util.Log;
 import android.view.MotionEvent;
@@ -84,7 +82,7 @@ public class CCNode {
     public static final int kCCNodeTagInvalid = -1;
 
 	// rotation angle
-    private float rotation_;
+    protected float rotation_;
 
     /** The rotation (angle) of the node in degrees.
      0 is the default rotation angle. Positive values rotate node CW.
@@ -103,8 +101,8 @@ public class CCNode {
     }
 
 	// scaling factors
-    private float scaleX_;
-    private float scaleY_;
+    protected float scaleX_;
+    protected float scaleY_;
 
     /** The scale factor of the node. 
        1.0 is the default scale factor. It only modifies the X scale factor.
@@ -157,7 +155,7 @@ public class CCNode {
     }
 
 	// anchor point in pixels
-	private CGPoint anchorPointInPixels_;	
+	protected CGPoint anchorPointInPixels_;	
 
     /** The anchorPoint in absolute pixels.
       Since v0.8 you can only read it. If you wish to modify it, use anchorPoint instead
@@ -188,7 +186,7 @@ public class CCNode {
     }
 
 	// anchor point normalized
-    private CGPoint anchorPoint_;
+    protected CGPoint anchorPoint_;
 
 	// untransformed size of the node
     private CGSize contentSize_;
@@ -264,7 +262,7 @@ public class CCNode {
     }
 
 	// position of the node
-    private CGPoint position_;
+    protected CGPoint position_;
 
     /** Position (x,y) of the node in OpenGL coordinates.
       (0,0) is the left-bottom corner.
@@ -301,7 +299,7 @@ public class CCNode {
     }
 
 	// a Grid
-    private CCGridBase grid_;
+    protected CCGridBase grid_;
 
     /** A CCGrid object that is used when applying effects */
     public CCGridBase getGrid() {
@@ -349,7 +347,7 @@ public class CCNode {
     }
 
 	// openGL real Z vertex
-    private float vertexZ_;
+    protected float vertexZ_;
 
     /** The real openGL Z vertex.
      Differences between openGL Z vertex and cocos2d Z order:
@@ -994,53 +992,6 @@ public class CCNode {
         public float getWidth();
 
         public float getHeight();
-    }
-
-    public interface CCRGBAProtocol {
-
-        public void setColor(ccColor3B color);
-
-        public ccColor3B getColor();
-
-        public int getOpacity();
-
-        public void setOpacity(int opacity);
-    }
-
-    /**
-     * CocosNodes that uses a CCTexture2D to render the images.
-     * The texture can have a blending function.
-     * If the texture has alpha premultiplied the default blending function is:
-     * src=GL_ONE dst= GL_ONE_MINUS_SRC_ALPHA
-     * else
-     * src=GL_SRC_ALPHA dst= GL_ONE_MINUS_SRC_ALPHA
-     * But you can change the blending funtion at any time.
-     *
-     * @since v0.8
-     */
-    interface CCTextureProtocol {
-        /**
-         * returns the used texture
-         */
-        public CCTexture2D getTexture();
-
-        /**
-         * sets a new texture. it will be retained
-         */
-        public void setTexture(CCTexture2D texture);
-        /** set the source blending function for the texture */
-//        public void setBlendFunc(CCBlendFunc blendFunc);
-        /** returns the blending function used for the texture */
-//        public CCBlendFunc blendFunc();
-    }
-
-
-    public interface CCAnimation {
-        public ArrayList<Object> frames();
-
-        public float delay();
-
-        public String name();
     }
 
     public interface CocosNodeFrames {

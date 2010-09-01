@@ -127,7 +127,7 @@ public class TGA {
             // do we need to skip reading this pixel?
             if (!skip) {
                 // no, read in the pixel data
-                if (f.read(aux, 0, 2 * mode) != mode)
+                if (f.read(aux, 0, mode) != mode)
                     return;
 
                 // mode=3 or 4 implies that the image is RGB(A). However TGA
@@ -285,3 +285,4 @@ public class TGA {
     }
 
 }
+

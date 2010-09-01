@@ -39,9 +39,9 @@ public class RotateWorldTest extends Activity {
             x = size.width;
             y = size.height;
 
-            Sprite sprite = Sprite.sprite("grossini.png");
-            Sprite spriteSister1 = Sprite.sprite("grossinis_sister1.png");
-            Sprite spriteSister2 = Sprite.sprite("grossinis_sister2.png");
+            CCSprite sprite = CCSprite.sprite("grossini.png");
+            CCSprite spriteSister1 = CCSprite.sprite("grossinis_sister1.png");
+            CCSprite spriteSister2 = CCSprite.sprite("grossinis_sister2.png");
 
             sprite.setScale(1.5f);
             spriteSister1.setScale(1.5f);

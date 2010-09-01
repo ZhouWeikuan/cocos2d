@@ -98,7 +98,7 @@ public class ClickAndMoveTest extends Activity {
 
             isTouchEnabled_ = true;
 
-            Sprite sprite = Sprite.sprite("grossini.png");
+            CCSprite sprite = CCSprite.sprite("grossini.png");
 
             CCLayer layer = CCColorLayer.node(new ccColor4B(255, 255, 0, 255));
             addChild(layer, -1);

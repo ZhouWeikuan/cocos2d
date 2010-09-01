@@ -255,7 +255,7 @@ public class AtlasTest extends Activity {
             CCTexture2D.saveTexParameters();
             CCTexture2D.setAliasTexParameters();
 
-            TileMapAtlas tilemap = TileMapAtlas.tilemap("tiles.png", "levelmap.tga", 16, 16);
+            CCTileMapAtlas tilemap = CCTileMapAtlas.tilemap("tiles.png", "levelmap.tga", 16, 16);
 
             CCTexture2D.restoreTexParameters();
 
@@ -291,7 +291,7 @@ public class AtlasTest extends Activity {
             CCTexture2D.saveTexParameters();
             CCTexture2D.setAliasTexParameters();
 
-            TileMapAtlas tilemap = TileMapAtlas.tilemap("tiles.png", "levelmap.tga", 16, 16);
+            CCTileMapAtlas tilemap = CCTileMapAtlas.tilemap("tiles.png", "levelmap.tga", 16, 16);
 
             CCTexture2D.restoreTexParameters();
 
@@ -314,7 +314,7 @@ public class AtlasTest extends Activity {
             //   The only limitation is that you cannot change an empty, or assign an empty tile to a tile
             //   The value 0 is not rendered so don't assign or change a tile with value 0
 
-            TileMapAtlas tilemap = (TileMapAtlas) getChild(kTagTileMap);
+            CCTileMapAtlas tilemap = (CCTileMapAtlas) getChild(kTagTileMap);
 
             // For example you can iterate over all the tiles
             // using this code, but try to avoid the iteration

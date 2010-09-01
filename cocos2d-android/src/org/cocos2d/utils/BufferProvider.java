@@ -3,17 +3,17 @@ package org.cocos2d.utils;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
+import java.nio.ShortBuffer;
 
 import javax.microedition.khronos.opengles.GL10;
 
-public class FloatBufferProvider {
+public class BufferProvider {
 	// 64k is big enough for most objects
 	private static final int ALLOCATION_SIZE = 64 * 1024;
 	private ByteBuffer currentBuffer = null;
-	private static FloatBufferProvider global_synced = new FloatBufferProvider();
+	private static BufferProvider global_synced = new BufferProvider();
 	
-	public ByteBuffer allocate(int size)
-	{
+	public ByteBuffer allocate(int size) {
 		if(size >= ALLOCATION_SIZE)
 			return ByteBuffer.allocateDirect(size);
 
@@ -28,10 +28,8 @@ public class FloatBufferProvider {
 		return result;
 	}
 
-	public static ByteBuffer allocateDirect(int size)
-	{
-		synchronized(global_synced)
-		{
+	public static ByteBuffer allocateDirect(int size) {
+		synchronized(global_synced) {
 			return global_synced.allocate(size);
 		}
 	}
@@ -56,7 +54,7 @@ public class FloatBufferProvider {
     }
 
     public static FloatBuffer makeFloatBuffer(float[] arr) {
-        ByteBuffer bb = FloatBufferProvider.allocateDirect(arr.length * 4);
+        ByteBuffer bb = BufferProvider.allocateDirect(arr.length * 4);
         bb.order(ByteOrder.nativeOrder());
         FloatBuffer fb = bb.asFloatBuffer();
         fb.put(arr);
@@ -64,9 +62,23 @@ public class FloatBufferProvider {
     }
 
     public static FloatBuffer createFloatBuffer(int arrayElementCount) {
-        ByteBuffer temp = FloatBufferProvider.allocateDirect(4 * arrayElementCount);
+        ByteBuffer temp = BufferProvider.allocateDirect(4 * arrayElementCount);
         temp.order(ByteOrder.nativeOrder());
         
         return temp.asFloatBuffer();
+    }
+    
+    public static ByteBuffer createByteBuffer(int arrayElementCount) {
+        ByteBuffer temp = BufferProvider.allocateDirect(arrayElementCount);
+        temp.order(ByteOrder.nativeOrder());
+        
+        return temp;
+    }
+    
+    public static ShortBuffer createShortBuffer(int arrayElementCount) {
+        ByteBuffer temp = BufferProvider.allocateDirect(2 * arrayElementCount);
+        temp.order(ByteOrder.nativeOrder());
+        
+        return temp.asShortBuffer();
     }
 }

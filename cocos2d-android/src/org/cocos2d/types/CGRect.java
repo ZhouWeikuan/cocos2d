@@ -19,6 +19,10 @@ public class CGRect {
     public static CGRect make(float x, float y, float w, float h) {
         return new CGRect(x, y, w, h);
     }
+    
+    public static CGRect make(CGRect r) {
+    	return new CGRect(r.origin, r.size);
+    }
 
     private CGRect(float x, float y, float w, float h) {
         origin = CGPoint.ccp(x, y);

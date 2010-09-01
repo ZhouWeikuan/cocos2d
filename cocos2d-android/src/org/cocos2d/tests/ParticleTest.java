@@ -13,7 +13,7 @@ import org.cocos2d.nodes.CCDirector;
 import org.cocos2d.nodes.CCLabel;
 import org.cocos2d.nodes.CCLabelAtlas;
 import org.cocos2d.nodes.CCTextureCache;
-import org.cocos2d.nodes.Sprite;
+import org.cocos2d.nodes.CCSprite;
 import org.cocos2d.opengl.CCGLSurfaceView;
 import org.cocos2d.opengl.CCTextureAtlas;
 import org.cocos2d.particlesystem.ParticleExplosion;
@@ -135,7 +135,7 @@ public class ParticleTest extends Activity {
         CCTextureAtlas atlas;
         static final int kTagLabelAtlas = 1;
         ParticleSystem	emitter;
-        Sprite background;
+        CCSprite background;
 
 
         public ParticleDemo() {
@@ -169,7 +169,7 @@ public class ParticleTest extends Activity {
             labelAtlas.setPosition(CGPoint.make(254,50));
 
             // moving background
-            background = Sprite.sprite("background3.png");
+            background = CCSprite.sprite("background3.png");
             addChild(background, 5);
             background.setPosition(CGPoint.make(s.width/2, s.height-180));
 

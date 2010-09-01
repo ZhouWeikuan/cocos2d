@@ -130,7 +130,7 @@ public class ccConfig {
 
       To enable set it to a value different than 0. Disabled by default.
       */
-    public static final int CC_SPRITESHEET_DEBUG_DRAW  = 0;
+    public static final boolean CC_SPRITESHEET_DEBUG_DRAW  = false;
 
     /** @def CC_BITMAPFONTATLAS_DEBUG_DRAW
       If enabled, all subclasses of BitmapFontAtlas will draw a bounding box

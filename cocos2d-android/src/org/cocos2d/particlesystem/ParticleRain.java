@@ -17,29 +17,29 @@ public class ParticleRain extends ParticleSystem {
     protected ParticleRain(int p) {
         super(p);
 
+		// duration
+		duration = kCCParticleDurationInfinity;
+		
+		emitterMode = kCCParticleModeGravity;
 
-        // duration
-        duration = -1;
+		// Gravity Mode: gravity
+		setGravity(ccp(10,-10));
+		
+		// Gravity Mode: radial
+		radialAccel = 0;
+		radialAccelVar = 1;
+		
+		// Gravity Mode: tagential
+		tangentialAccel = 0;
+		tangentialAccelVar = 1;
 
-        // gravity
-        gravity.x = 10;
-        gravity.y = -10;
-
-        // angle
-        angle = -90;
-        angleVar = 5;
-
-        // speed of particles
-        speed = 130;
-        speedVar = 30;
-
-        // radial
-        radialAccel = 0;
-        radialAccelVar = 1;
-
-        // tagential
-        tangentialAccel = 0;
-        tangentialAccelVar = 1;
+		// Gravity Mode: speed of particles
+		speed = 130;
+		speedVar = 30;
+		
+		// angle
+		angle = -90;
+		angleVar = 5;
 
         // emitter position
         setPosition(CGPoint.make(CCDirector.sharedDirector().winSize().width / 2,
@@ -55,8 +55,13 @@ public class ParticleRain extends ParticleSystem {
         size = 4.0f;
         sizeVar = 2.0f;
 
-        // emits per second
-        emissionRate = 20;
+		// size, in pixels
+		startSize = 4.0f;
+		startSizeVar = 2.0f;
+		endSize = kCCParticleStartSizeEqualToEndSize;
+
+		// emits per second
+		emissionRate = 20;
 
         // color of particles
         startColor.r = 0.7f;
@@ -83,3 +88,4 @@ public class ParticleRain extends ParticleSystem {
     }
 
 }
+

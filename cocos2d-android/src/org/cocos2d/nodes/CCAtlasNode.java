@@ -5,6 +5,8 @@ import javax.microedition.khronos.opengles.GL10;
 import org.cocos2d.config.ccConfig;
 import org.cocos2d.opengl.CCTexture2D;
 import org.cocos2d.opengl.CCTextureAtlas;
+import org.cocos2d.protocols.CCRGBAProtocol;
+import org.cocos2d.protocols.CCTextureProtocol;
 import org.cocos2d.types.CGSize;
 import org.cocos2d.types.ccBlendFunc;
 import org.cocos2d.types.ccColor3B;
@@ -31,7 +33,7 @@ import org.cocos2d.types.ccColor3B;
  - opacity and RGB colors
  */
 public abstract class CCAtlasNode extends CCNode
-        implements CCNode.CCRGBAProtocol, CCNode.CCTextureProtocol {
+        implements CCRGBAProtocol, CCTextureProtocol {
     /// texture atlas
     protected CCTextureAtlas textureAtlas_;
     /// chars per row

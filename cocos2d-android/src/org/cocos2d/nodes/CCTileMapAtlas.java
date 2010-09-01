@@ -8,19 +8,23 @@ import org.cocos2d.utils.CCFormatter;
 import java.io.IOException;
 import java.util.HashMap;
 
-/**
- * TileMapAtlas is a subclass of AtlasNode.
- * <p/>
- * It knows how to render a map based of tiles.
- * The tiles must be in a .PNG format while the map must be a .TGA file.
- * <p/>
- * For more information regarding the format, please see this post:
- * http://blog.sapusmedia.com/2008/12/how-to-use-tilemap-editor-for-cocos2d.html
- * <p/>
- * All features from AtlasNode are valid in TileMapAtlas
+/** CCTileMapAtlas is a subclass of CCAtlasNode.
+ 
+ It knows how to render a map based of tiles.
+ The tiles must be in a .PNG format while the map must be a .TGA file.
+ 
+ For more information regarding the format, please see this post:
+ http://www.cocos2d-iphone.org/archives/27
+ 
+ All features from CCAtlasNode are valid in CCTileMapAtlas
+ 
+ IMPORTANT:
+ This class is deprecated. It is maintained for compatibility reasons only.
+ You SHOULD not use this class.
+ Instead, use the newer TMX file format: CCTMXTiledMap
  */
-public class TileMapAtlas extends CCAtlasNode {
-    /// info about the map file
+public class CCTileMapAtlas extends CCAtlasNode {
+    /** TileMap info */
     public TGA.ImageTGA tgaInfo;
 
     /// x,y to altas dicctionary
@@ -36,14 +40,18 @@ public class TileMapAtlas extends CCAtlasNode {
         return tgaInfo;
     }
 
-
-    public static TileMapAtlas tilemap(String tile, String map, int w, int h) {
-        return new TileMapAtlas(tile, map, w, h);
+    /** creates a CCTileMap with a tile file (atlas) with a map file and the width and height of each tile.
+      The tile file will be loaded using the TextureMgr.
+    */
+    public static CCTileMapAtlas tilemap(String tile, String map, int w, int h) {
+        return new CCTileMapAtlas(tile, map, w, h);
     }
-    /**
-     * initializes the TileMap with a tile file (atlas) with a map file and the width and height of each tile
+
+    /** initializes a CCTileMap with a tile file (atlas)
+     * with a map file and the width and height of each tile.
+     * The file will be loaded using the TextureMgr.
      */
-    protected TileMapAtlas(String tile, String map, int w, int h) {
+    protected CCTileMapAtlas(String tile, String map, int w, int h) {
         super(tile, w, h, 0);
 
         loadTGAfile(map);
@@ -54,11 +62,8 @@ public class TileMapAtlas extends CCAtlasNode {
         textureAtlas_.resizeCapacity(itemsToRender);
 
         posToAtlasIndex = new HashMap<String, Integer>(itemsToRender);
-
         updateAtlasValues();
-
         setContentSize(CGSize.make(tgaInfo.width * itemWidth, tgaInfo.height * itemHeight));
-
     }
 
     private void calculateItemsToRender() {
@@ -67,9 +72,10 @@ public class TileMapAtlas extends CCAtlasNode {
         itemsToRender = 0;
         for (int x = 0; x < tgaInfo.width; x++) {
             for (int y = 0; y < tgaInfo.height; y++) {
-                CCRGBB value = new CCRGBB(tgaInfo.imageData[x + 0 + y * tgaInfo.width],
-                        tgaInfo.imageData[x + 1 + y * tgaInfo.width],
-                        tgaInfo.imageData[x + 2 + y * tgaInfo.width]);
+            	int p = x + y * tgaInfo.width;
+                CCRGBB value = new CCRGBB(tgaInfo.imageData[p + 0],
+                        tgaInfo.imageData[p + 1],
+                        tgaInfo.imageData[p + 2]);
                 if (value.r != 0)
                     itemsToRender++;
             }
@@ -95,13 +101,18 @@ public class TileMapAtlas extends CCAtlasNode {
         assert pos.x < tgaInfo.width : "Invalid position.x";
         assert pos.y < tgaInfo.height : "Invalid position.y";
 
+        /*
+        ccColor3B *ptr = (ccColor3B*) tgaInfo->imageData;
+        ccColor3B value = ptr[pos.x + pos.y * tgaInfo->width];
+        */
+
         CCRGBB value = new CCRGBB(tgaInfo.imageData[pos.x + 0 + pos.y * tgaInfo.width],
                 tgaInfo.imageData[pos.x + 1 + pos.y * tgaInfo.width],
                 tgaInfo.imageData[pos.x + 2 + pos.y * tgaInfo.width]);
 
         return value;
     }
-
+    
     /**
      * sets a tile at position x,y.
      * For the moment only channel R is used
@@ -130,7 +141,7 @@ public class TileMapAtlas extends CCAtlasNode {
             updateAtlas(pos, tile, num);
         }
     }
-
+    
     private void updateAtlas(ccGridSize pos, CCRGBB value, int idx) {
         ccQuad2 texCoord = new ccQuad2();
         ccQuad3 vertex = new ccQuad3();
@@ -163,10 +174,9 @@ public class TileMapAtlas extends CCAtlasNode {
 
         textureAtlas_.updateQuad(texCoord, vertex, idx);
     }
-
+    
     public void updateAtlasValues() {
         assert tgaInfo != null : "tgaInfo must be non-nil";
-
 
         int total = 0;
 
@@ -200,7 +210,32 @@ public class TileMapAtlas extends CCAtlasNode {
         tgaInfo = null;
 
         posToAtlasIndex = null;
-
     }
+    
+    @Override
+    public void finalize() {
+    	if( tgaInfo != null )
+    		TGA.destroy(tgaInfo);
+    	tgaInfo = null;
+    	posToAtlasIndex = null;
+    	try {
+			super.finalize();
+		} catch (Throwable e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    }
+
+	@Override
+	public ccBlendFunc getBlendFunc() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setBlendFunc(ccBlendFunc blendFunc) {
+		// TODO Auto-generated method stub
+		
+	}
 
 }

@@ -1,7 +1,7 @@
 package org.cocos2d.actions.instant;
 
 import org.cocos2d.nodes.CCNode;
-import org.cocos2d.nodes.Sprite;
+import org.cocos2d.nodes.CCSprite;
 
 /** Flips the sprite vertically
  @since v0.99.0
@@ -27,7 +27,7 @@ public class CCFlipY extends CCInstantAction {
     @Override
     public void start(CCNode aTarget) {
         super.start(aTarget);
-        Sprite sprite = (Sprite)aTarget;
+        CCSprite sprite = (CCSprite)aTarget;
         sprite.setFlipY(flipY);
     }
 
