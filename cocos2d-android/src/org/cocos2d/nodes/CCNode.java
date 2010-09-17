@@ -668,7 +668,7 @@ public class CCNode {
     public void transform(GL10 gl) {	
         // transformations
 
-        if (ccConfig.CC_NODE_TRANSFORM_USING_AFFINE_MATRIX) {
+        if ( ccConfig.CC_NODE_TRANSFORM_USING_AFFINE_MATRIX ) {
             // BEGIN alternative -- using cached transform
             //
             if( isTransformGLDirty_ ) {
@@ -677,7 +677,8 @@ public class CCNode {
                 isTransformGLDirty_ = false;
             }
 
-            gl.glMultMatrixf(transformGL_, transformGL_.length);
+            // gl.glMultMatrixf(transformGL_, transformGL_.length);
+            gl.glMultMatrixf(transformGL_, 0);
             
             if( vertexZ_ != 0)
                 gl.glTranslatef(0, 0, vertexZ_);
@@ -881,17 +882,24 @@ public class CCNode {
     */
     private CGAffineTransform nodeToParentTransform() {
         if (isTransformDirty_) {
-
+        	CGPoint zero = CGPoint.zero();
             transform_ = CGAffineTransform.identity();
 
-            if (!isRelativeAnchorPoint_) {
-                transform_.getTransformTranslate((int) anchorPointInPixels_.x, (int) anchorPointInPixels_.y);
+            if (!isRelativeAnchorPoint_ && !CGPoint.equalToPoint(anchorPointInPixels_, zero)) {
+                transform_ = transform_.getTransformTranslate(anchorPointInPixels_.x, anchorPointInPixels_.y);
             }
 
-            transform_ = transform_.getTransformTranslate((int) position_.x, (int) position_.y);
-            transform_ = transform_.getTransformRotate(-ccMacros.CC_DEGREES_TO_RADIANS(rotation_));
-            transform_ = transform_.getTransformScale(scaleX_, scaleY_);
-            transform_ = transform_.getTransformTranslate(-(int) anchorPointInPixels_.x, -(int) anchorPointInPixels_.y);
+            if (!CGPoint.equalToPoint(position_, zero))
+            	transform_ = transform_.getTransformTranslate(position_.x, position_.y);
+            
+            if (rotation_ != 0)
+            	transform_ = transform_.getTransformRotate(-ccMacros.CC_DEGREES_TO_RADIANS(rotation_));
+            
+            if( ! (scaleX_ == 1 && scaleY_ == 1) ) 
+            	transform_ = transform_.getTransformScale(scaleX_, scaleY_);
+           
+            if (!CGPoint.equalToPoint(anchorPointInPixels_, zero))
+            	transform_ = transform_.getTransformTranslate(-anchorPointInPixels_.x, -anchorPointInPixels_.y);
 
             isTransformDirty_ = false;
         }
@@ -992,20 +1000,6 @@ public class CCNode {
         public float getWidth();
 
         public float getHeight();
-    }
-
-    public interface CocosNodeFrames {
-        public void setDisplayFrame(Object newFrame);
-
-        public void setDisplayFrame(String animationName, int frameIndex);
-
-        public boolean isFrameDisplayed(Object frame);
-
-        public Object displayFrame();
-
-        public CCAnimation animationByName(String animationName);
-
-        public void addAnimation(CCAnimation animation);
     }
 
     // lazy allocs

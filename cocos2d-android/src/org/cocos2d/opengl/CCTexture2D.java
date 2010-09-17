@@ -2,9 +2,12 @@ package org.cocos2d.opengl;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.opengl.GLUtils;
+
+import org.cocos2d.nodes.CCDirector;
 import org.cocos2d.nodes.CCLabel;
 import org.cocos2d.types.CGAffineTransform;
 import org.cocos2d.types.CGPoint;
@@ -63,6 +66,7 @@ public class CCTexture2D {
 
     /** texture name */
     public int name() {
+        this.loadTexture(CCDirector.gl);
         return _name;
     }
 
@@ -180,7 +184,7 @@ public class CCTexture2D {
         ByteBuffer tfb = ByteBuffer.allocateDirect(4 * 2 * 4);
         tfb.order(ByteOrder.nativeOrder());
         mCoordinates = tfb.asFloatBuffer();
-
+        
 //        ByteBuffer isb = ByteBuffer.allocateDirect(6 * 2);
 //        isb.order(ByteOrder.nativeOrder());
 //        mIndices = isb.asShortBuffer();
@@ -242,7 +246,7 @@ public class CCTexture2D {
         Bitmap.Config config = Bitmap.Config.ALPHA_8;
         Bitmap bitmap = Bitmap.createBitmap(width, height, config);
         Canvas canvas = new Canvas(bitmap);
-        bitmap.eraseColor(0);
+        bitmap.eraseColor(Color.TRANSPARENT);
 
         int centerOffsetHeight = ((int) dimensions.height - textHeight) / 2;
         int centerOffsetWidth = ((int) dimensions.width - textWidth) / 2;

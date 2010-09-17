@@ -21,6 +21,10 @@ public class ccColor4B {
     public byte[] toByteArray() {
         return new byte[]{(byte) r, (byte) g, (byte) b, (byte) a};
     }
+    
+    public float[] toFloatArray() {
+    	return new float[] {r/255f, g/255f, b/255f, a/255f};
+    }
 
     //! helper macro that creates an ccColor4B type
     public static ccColor4B ccc4(final int r, final int g, final int b, final int a) {

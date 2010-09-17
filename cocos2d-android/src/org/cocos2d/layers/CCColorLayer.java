@@ -34,7 +34,7 @@ public class CCColorLayer extends CCLayer
 	protected ccBlendFunc	blendFunc_;
 
     private FloatBuffer squareVertices_;
-    private ByteBuffer squareColors_;
+    private FloatBuffer squareColors_;
 
     /** creates a CCLayer with color. Width and height are the window size. */
     public static CCColorLayer node(ccColor4B color) {
@@ -63,7 +63,9 @@ public class CCColorLayer extends CCLayer
         vbb.order(ByteOrder.nativeOrder());
         squareVertices_ = vbb.asFloatBuffer();
 
-        squareColors_ = ByteBuffer.allocateDirect(4 * 4);
+        ByteBuffer sbb = ByteBuffer.allocateDirect(4 * 4 * 4);
+        sbb.order(ByteOrder.nativeOrder());
+        squareColors_ = sbb.asFloatBuffer();
 
         color_ = new ccColor3B(color.r, color.g, color.b);
         opacity_ = color.a;
@@ -82,16 +84,16 @@ public class CCColorLayer extends CCLayer
         for (int i = 0; i < squareColors_.limit(); i++) {
             switch (i % 4) {
                 case 0:
-                    squareColors_.put(i, (byte) color_.r);
+                    squareColors_.put(i, color_.r / 255f);
                     break;
                 case 1:
-                    squareColors_.put(i, (byte) color_.g);
+                    squareColors_.put(i, color_.g / 255f);
                     break;
                 case 2:
-                    squareColors_.put(i, (byte) color_.b);
+                    squareColors_.put(i, color_.b / 255f);
                     break;
                 default:
-                    squareColors_.put(i, (byte) opacity_);
+                    squareColors_.put(i, opacity_ / 255f);
             }
             squareColors_.position(0);
         }
@@ -106,7 +108,7 @@ public class CCColorLayer extends CCLayer
         gl.glDisable(GL10.GL_TEXTURE_2D);
 
         gl.glVertexPointer(2, GL10.GL_FLOAT, 0, squareVertices_);
-        gl.glColorPointer(4, GL10.GL_UNSIGNED_BYTE, 0, squareColors_);
+        gl.glColorPointer(4, GL10.GL_FLOAT, 0, squareColors_);
 
         boolean newBlend = false;
         if (blendFunc_.src != ccConfig.CC_BLEND_SRC || blendFunc_.dst != ccConfig.CC_BLEND_DST) {

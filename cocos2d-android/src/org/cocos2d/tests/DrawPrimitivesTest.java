@@ -10,8 +10,8 @@ import org.cocos2d.menus.CCMenu;
 import org.cocos2d.menus.CCMenuItemImage;
 import org.cocos2d.nodes.CCDirector;
 import org.cocos2d.nodes.CCTextureCache;
+import org.cocos2d.opengl.CCDrawingPrimitives;
 import org.cocos2d.opengl.CCGLSurfaceView;
-import org.cocos2d.opengl.Primitives;
 import org.cocos2d.types.CGPoint;
 import org.cocos2d.types.CGSize;
 
@@ -197,7 +197,7 @@ public class DrawPrimitivesTest extends Activity {
             // Anti-Aliased
             gl.glEnable(GL10.GL_LINE_SMOOTH);
             
-            Primitives.drawLine(gl, CGPoint.ccp(0, 0), CGPoint.ccp(s.width, s.height));
+            CCDrawingPrimitives.ccDrawLine(gl, CGPoint.ccp(0, 0), CGPoint.ccp(s.width, s.height));
 
             // line: color, width, aliased
             // glLineWidth > 1 and GL_LINE_SMOOTH are not compatible
@@ -205,7 +205,7 @@ public class DrawPrimitivesTest extends Activity {
             gl.glDisable(GL10.GL_LINE_SMOOTH);
             gl.glLineWidth(5.0f);
             gl.glColor4f(1.0f, 0.0f, 0.0f, 1.0f);
-            Primitives.drawLine(gl, CGPoint.ccp(0, s.height), CGPoint.ccp(s.width, 0));
+            CCDrawingPrimitives.ccDrawLine(gl, CGPoint.ccp(0, s.height), CGPoint.ccp(s.width, 0));
 
             // TIP:
             // If you are going to use always the same color or width, you don't
@@ -216,42 +216,42 @@ public class DrawPrimitivesTest extends Activity {
             // draw big point in the center
             gl.glPointSize(64);
             gl.glColor4f(0.0f, 0.0f, 1.0f, 0.5f);
-            Primitives.drawPoint(gl, s.width / 2, s.height / 2);
+            CCDrawingPrimitives.ccDrawPoint(gl, CGPoint.make(s.width / 2, s.height / 2));
 
             // draw 4 small points
             CGPoint points[] = {CGPoint.ccp(60, 60), CGPoint.ccp(70, 70), CGPoint.ccp(60, 70), CGPoint.ccp(70, 60)};
             gl.glPointSize(4);
             gl.glColor4f(0.0f, 1.0f, 1.0f, 1.0f);
-            Primitives.drawPoints(gl, points, 4);
+            CCDrawingPrimitives.ccDrawPoints(gl, points, 4);
 
             // draw a green circle with 10 segments
             gl.glLineWidth(16);
             gl.glColor4f(0.0f, 1.0f, 0.0f, 1.0f);
-            Primitives.drawCircle(gl, s.width / 2, s.height / 2, 100, 0, 10, false);
+            CCDrawingPrimitives.ccDrawCircle(gl, CGPoint.make(s.width / 2, s.height / 2), 100, 0, 10, false);
 
             // draw a green circle with 50 segments with line to center
             gl.glLineWidth(2);
             gl.glColor4f(0.0f, 1.0f, 1.0f, 1.0f);
-            Primitives.drawCircle(gl, s.width / 2, s.height / 2, 50, ccMacros.CC_DEGREES_TO_RADIANS(90), 50, true);
+            CCDrawingPrimitives.ccDrawCircle(gl, CGPoint.make(s.width / 2, s.height / 2), 50, ccMacros.CC_DEGREES_TO_RADIANS(90), 50, true);
 
             // open yellow poly
             gl.glColor4f(1.0f, 1.0f, 0.0f, 1.0f);
             gl.glLineWidth(10);
             CGPoint vertices[] = {CGPoint.ccp(0, 0), CGPoint.ccp(50, 50), CGPoint.ccp(100, 50), CGPoint.ccp(100, 100), CGPoint.ccp(50, 100)};
-            Primitives.drawPoly(gl, vertices, 5, false);
+            CCDrawingPrimitives.ccDrawPoly(gl, vertices, 5, false);
 
             // closed purple poly
             gl.glColor4f(1.0f, 0.0f, 1.0f, 1.0f);
             gl.glLineWidth(2);
             CGPoint vertices2[] = {CGPoint.ccp(30, 130), CGPoint.ccp(30, 230), CGPoint.ccp(50, 200)};
-            Primitives.drawPoly(gl, vertices2, 3, true);
+            CCDrawingPrimitives.ccDrawPoly(gl, vertices2, 3, true);
 
             // draw quad bezier path
-            Primitives.drawQuadBezier(gl, 0,s.height, s.width/2,s.height/2, s.width, s.height, 50);
+            CCDrawingPrimitives.ccDrawQuadBezier(gl, CGPoint.make(0,s.height), CGPoint.make(s.width/2,s.height/2), CGPoint.make(s.width, s.height), 50);
 
             // draw cubic bezier path
-            Primitives.drawCubicBezier(gl, s.width/2, s.height/2, s.width/2+30, s.height/2+50,
-                    s.width/2+60, s.height/2-50, s.width, s.height/2,100);
+            CCDrawingPrimitives.ccDrawCubicBezier(gl, CGPoint.make(s.width/2, s.height/2), CGPoint.make(s.width/2+30, s.height/2+50),
+                    CGPoint.make(s.width/2+60, s.height/2-50), CGPoint.make(s.width, s.height/2),100);
 
 
             // restore original values

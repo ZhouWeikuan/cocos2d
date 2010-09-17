@@ -45,7 +45,7 @@ public class CCTextureAtlas {
     	return vertexCoordinates;
     }
     
-    private ByteBuffer colors;
+    private FloatBuffer colors;
     private ShortBuffer indices;
 
     private boolean withColorArray_;
@@ -129,10 +129,11 @@ public class CCTextureAtlas {
         if (!withColorArray_) {
             // default color: 255,255,255,255
         	// modify by zt: A Texture in TextureAtlas need four colors for four vertices
-            ByteBuffer cbb = ByteBuffer.allocateDirect(4 * capacity_ *ccColor4B.size* 1);
-            colors = cbb;
+            ByteBuffer cbb = ByteBuffer.allocateDirect(4 * capacity_ *ccColor4B.size * 4);
+            cbb.order(ByteOrder.nativeOrder());
+            colors = cbb.asFloatBuffer();
             for (int i = 0; i < 4 * ccColor4B.size * capacity_ * 1; i++) {
-                colors.put(i, (byte) 0xff);
+                colors.put(i, 1.0f);
             }
             colors.position(0);
 
@@ -185,7 +186,7 @@ public class CCTextureAtlas {
             initColorArray();
 
         if (withColorArray_)
-            putColor(colors, color.toByteArray(), index);
+            putColor(colors, color.toFloatArray(), index);
     }
 
 
@@ -249,7 +250,7 @@ public class CCTextureAtlas {
 
         // colors_
         if (withColorArray_) {
-            byte[] colorsBackup = getColor(colors, from);
+            float[] colorsBackup = getColor(colors, from);
             arraycopyColor(colors, src, colors, dst, size);
             putColor(colors, colorsBackup, to);
         }
@@ -330,8 +331,9 @@ public class CCTextureAtlas {
         initIndices();
 
         if (withColorArray_) {
-            ByteBuffer cbb = ByteBuffer.allocateDirect(4*ccColor4B.size * newCapacity * 1);
-            ByteBuffer tmpColors = cbb;
+            ByteBuffer cbb = ByteBuffer.allocateDirect(4*ccColor4B.size * newCapacity * 4);
+            cbb.order(ByteOrder.nativeOrder());
+            FloatBuffer tmpColors = cbb.asFloatBuffer();
             tmpColors.put(colors);
             colors = tmpColors;
             colors.position(0);
@@ -360,7 +362,7 @@ public class CCTextureAtlas {
         gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, textureCoordinates);
 
         if (withColorArray_)
-            gl.glColorPointer(4, GL10.GL_UNSIGNED_BYTE, 0, colors);
+            gl.glColorPointer(4, GL10.GL_FLOAT, 0, colors);
 
         if (ccConfig.CC_TEXTURE_ATLAS_USE_TRIANGLE_STRIP) {
         	gl.glDrawElements(GL10.GL_TRIANGLE_STRIP, n * 6, GL10.GL_UNSIGNED_SHORT, indices);
@@ -398,10 +400,9 @@ public class CCTextureAtlas {
         }
     }
 
-    private byte[] getColor(ByteBuffer src, int index) {
-        byte[] color = new byte[ccColor4B.size * 4];
-        for(int j=0; j<4; ++j)
-        {
+    private float[] getColor(FloatBuffer src, int index) {
+        float[] color = new float[ccColor4B.size * 4];
+        for(int j=0; j<4; ++j) {
             for (int i = 0; i < ccColor4B.size; ++i) {
                 color[i] = src.get(index * ccColor4B.size *4 + 4*j + i);
             }        	
@@ -410,11 +411,9 @@ public class CCTextureAtlas {
         return color;
     }
 
-    private void putColor(ByteBuffer dst, byte[] color, int index) {
-    	for(int j=0; j<4; ++j)
-    	{
-    		for (int i = 0; i < ccColor4B.size; ++i)
-    		{
+    private void putColor(FloatBuffer dst, float[] color, int index) {
+    	for(int j=0; j<4; ++j) {
+    		for (int i = 0; i < ccColor4B.size; ++i) {
         		dst.put(index * ccColor4B.size * 4 + 4*j + i, color[i]);
         	}
         }
@@ -436,11 +435,11 @@ public class CCTextureAtlas {
         }
     }
 
-    private void arraycopyColor(ByteBuffer src, int srcPos, ByteBuffer dst, int dstPos, int length) {
+    private void arraycopyColor(FloatBuffer src, int srcPos, FloatBuffer dst, int dstPos, int length) {
         if (src == dst) {
-            memmoveByte(src, srcPos * ccColor4B.size * 4, dst, dstPos * ccColor4B.size*4, length * ccColor4B.size * 4);
+            memmoveFloat(src, srcPos * ccColor4B.size * 4, dst, dstPos * ccColor4B.size*4, length * ccColor4B.size * 4);
         } else {
-            memcopyByte(src, srcPos * ccColor4B.size * 4, dst, dstPos * ccColor4B.size*4, length * ccColor4B.size * 4);
+            memcopyFloat(src, srcPos * ccColor4B.size * 4, dst, dstPos * ccColor4B.size*4, length * ccColor4B.size * 4);
         }
     }
 

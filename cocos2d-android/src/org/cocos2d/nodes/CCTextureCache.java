@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory;
 
 import org.cocos2d.opengl.CCTexture2D;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 
 
@@ -128,8 +129,10 @@ public class CCTextureCache {
 
     public static CCTexture2D createTextureFromFilePath(String path) {
         try {
-            Bitmap bmp = BitmapFactory.decodeStream(CCDirector.sharedDirector().getActivity().getAssets().open(path));
-            return createTextureFromBitmap(bmp);
+        	InputStream is = CCDirector.sharedDirector().getActivity().getAssets().open(path);
+            Bitmap bmp = BitmapFactory.decodeStream(is);
+            is.close();
+            return createTextureFromBitmap(bmp);            
         } catch (IOException e) {
             e.printStackTrace();
             return null;

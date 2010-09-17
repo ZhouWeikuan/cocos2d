@@ -1,7 +1,4 @@
-
-#import "CCParticleSystem.h"
-
-@class CCSpriteFrame;
+package org.cocos2d.particlesystem;
 
 /** CCQuadParticleSystem is a subclass of CCParticleSystem
 
@@ -17,10 +14,9 @@
   - It supports subrects
  @since v0.8
  */
-@interface CCQuadParticleSystem : CCParticleSystem
-{
-	ccV2F_C4F_T2F_Quad	*quads;		// quads to be rendered
-	GLushort			*indices;	// indices
+public class CCQuadParticleSystem extends CCParticleSystem {
+	ccV2F_C4F_T2F_Quad	quads;		// quads to be rendered
+	GLushort			indices;	// indices
 	GLuint				quadsID;	// VBO id
 }
 

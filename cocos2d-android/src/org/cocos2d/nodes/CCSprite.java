@@ -202,7 +202,7 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
     	return vertexes.array();
     }
     
-    private ByteBuffer colors;
+    private FloatBuffer colors;
 
 	// whether or not it's parent is a CCSpriteSheet
     /** whether or not the Sprite is rendered using a CCSpriteSheet */
@@ -346,6 +346,10 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
         }
     }
 
+    protected CCSprite() {
+    	init();
+    }
+    
     /** Initializes an sprite with an image filename, and a rect.
       The offset will be (0,0).
       */
@@ -419,10 +423,11 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
         float x2 = x1 + rect_.size.width;
         float y2 = y1 + rect_.size.height;
 
-        vertexes.put(new float[]{ x1, y2, 0 }, 0, 3);
-        vertexes.put(new float[]{ x1, y1, 0 }, 3, 3);
-        vertexes.put(new float[]{ x2, y2, 0 }, 6, 3);
-        vertexes.put(new float[]{ x2, y1, 0 }, 6, 3);
+        vertexes.put(new float[]{ x1, y2, 0 });
+        vertexes.put(new float[]{ x1, y1, 0 });
+        vertexes.put(new float[]{ x2, y2, 0 });
+        vertexes.put(new float[]{ x2, y1, 0 });
+        vertexes.position(0);
     }
 
     /** tell the sprite to use sprite sheet render.
@@ -437,10 +442,14 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
     protected void init() {
         texCoords = BufferProvider.createFloatBuffer(4 * 2);
         vertexes  = BufferProvider.createFloatBuffer(4 * 3);
-        colors    = BufferProvider.createByteBuffer(4 * 4);
+        colors    = BufferProvider.createFloatBuffer(4 * 4);
     	
 		dirty_ = false;
         recursiveDirty_ = false;
+		
+		// zwoptex default values
+		offsetPosition_ = CGPoint.zero();
+        rect_ = CGRect.make(0, 0, 1, 1);
 		
 		// by default use "Self Render".
 		// if the sprite is added to an SpriteSheet,
@@ -452,18 +461,11 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
 		color_                      = ccColor3B.ccWHITE;
         colorUnmodified_	        = ccColor3B.ccWHITE;
 		
-		blendFunc_.src = ccConfig.CC_BLEND_SRC;
-		blendFunc_.dst = ccConfig.CC_BLEND_DST;
+		blendFunc_ = new ccBlendFunc(ccConfig.CC_BLEND_SRC, ccConfig.CC_BLEND_DST);
 		
 		// update texture (calls updateBlendFunc)
 		setTexture(null);
 		
-		// clean the Quad
-		// bzero(&quad_, sizeof(quad_));
-	    texCoords   = null;
-        vertexes    = null;
-        colors      = null;
-
 		flipY_ = flipX_ = false;
 		
 		// lazy alloc
@@ -472,18 +474,17 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
 		// default transform anchor: center
 		anchorPoint_ =  CGPoint.ccp(0.5f, 0.5f);
 		
-		// zwoptex default values
-		offsetPosition_ = CGPoint.zero();
 		
 		honorParentTransform_ = CC_HONOR_PARENT_TRANSFORM_ALL;
 		hasChildren_ = false;
 		
 		// Atlas: Color
-		byte[] tmpColor = new byte[]{ (byte)255, (byte)255, (byte)255, (byte)255 };
-		colors.put(tmpColor, 0, 4);
-		colors.put(tmpColor, 4, 4);
-		colors.put(tmpColor, 8, 4);
-		colors.put(tmpColor, 12, 4);
+		float[] tmpColor = new float[]{ 1.0f, 1.0f, 1.0f, 1.0f };
+		colors.put(tmpColor);
+		colors.put(tmpColor);
+		colors.put(tmpColor);
+		colors.put(tmpColor);
+		colors.position(0);
 		
 		// Atlas: Vertex		
 		// updated in "useSelfRender"		
@@ -647,7 +648,10 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
         updateTextureCoords(rect_);
 
         CGPoint relativeOffset = unflippedOffsetPositionFromCenter_;
-
+        if (relativeOffset == null) {
+        	relativeOffset = CGPoint.zero();
+        }
+        
         // issue #732
         if( flipX_ )
             relativeOffset.x = - relativeOffset.x;
@@ -669,10 +673,11 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
             float y2 = y1 + rect.size.height;
 
             // Don't update Z.
-            vertexes.put(new float[]{ x1, y2, 0 }, 0, 3);
-            vertexes.put(new float[]{ x1, y1, 0 }, 0, 3);
-            vertexes.put(new float[]{ x2, y2, 0 }, 0, 3);
-            vertexes.put(new float[]{ x2, y1, 0 }, 0, 3);
+            vertexes.put(new float[]{ x1, y2, 0 });
+            vertexes.put(new float[]{ x1, y1, 0 });
+            vertexes.put(new float[]{ x2, y2, 0 });
+            vertexes.put(new float[]{ x2, y1, 0 });
+            vertexes.position(0);
         }
     }
 
@@ -795,56 +800,61 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
     }
 
     public void draw(GL10 gl) {	
-        /*
-           NSAssert(!usesSpriteSheet_, @"If CCSprite is being rendered by CCSpriteSheet, CCSprite#draw SHOULD NOT be called");
+        assert !usesSpriteSheet_:"If CCSprite is being rendered by CCSpriteSheet, CCSprite#draw SHOULD NOT be called";
 
         // Default GL states: GL_TEXTURE_2D, GL_VERTEX_ARRAY, GL_COLOR_ARRAY, GL_TEXTURE_COORD_ARRAY
         // Needed states: GL_TEXTURE_2D, GL_VERTEX_ARRAY, GL_COLOR_ARRAY, GL_TEXTURE_COORD_ARRAY
         // Unneeded states: -
 
-        BOOL newBlend = NO;
-        if( blendFunc_.src != CC_BLEND_SRC || blendFunc_.dst != CC_BLEND_DST ) {
-            newBlend = YES;
-            glBlendFunc( blendFunc_.src, blendFunc_.dst );
+        boolean newBlend = false;
+        if( blendFunc_.src != ccConfig.CC_BLEND_SRC || blendFunc_.dst != ccConfig.CC_BLEND_DST ) {
+            newBlend = true;
+            gl.glBlendFunc( blendFunc_.src, blendFunc_.dst );
         }
 
-    #define kQuadSize sizeof(quad_.bl)
-        glBindTexture(GL_TEXTURE_2D, [texture_ name]);
+        // #define kQuadSize sizeof(quad_.bl)
+        gl.glBindTexture(GL10.GL_TEXTURE_2D, texture_.name());
 
-        int offset = (int)&quad_;
+        // int offset = (int)&quad_;
 
         // vertex
-        int diff = offsetof( ccV3F_C4B_T2F, vertices);
-        glVertexPointer(3, GL_FLOAT, kQuadSize, (void*) (offset + diff) );
+        // int diff = offsetof( ccV3F_C4B_T2F, vertices);
+        gl.glVertexPointer(3, GL10.GL_FLOAT, 0 , vertexes);
 
         // color
-        diff = offsetof( ccV3F_C4B_T2F, colors);
-        glColorPointer(4, GL_UNSIGNED_BYTE, kQuadSize, (void*)(offset + diff));
+        // diff = offsetof( ccV3F_C4B_T2F, colors);
+        gl.glColorPointer(4, GL10.GL_FLOAT, 0, colors);
 
         // tex coords
-        diff = offsetof( ccV3F_C4B_T2F, texCoords);
-        glTexCoordPointer(2, GL_FLOAT, kQuadSize, (void*)(offset + diff));
+        // diff = offsetof( ccV3F_C4B_T2F, texCoords);
+        gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, texCoords);
 
-        glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+        gl.glDrawArrays(GL10.GL_TRIANGLE_STRIP, 0, 4);
 
         if( newBlend )
-        glBlendFunc(CC_BLEND_SRC, CC_BLEND_DST);
+            gl.glBlendFunc(ccConfig.CC_BLEND_SRC, ccConfig.CC_BLEND_DST);
 
+        /*
         if (ccConfig.CC_SPRITE_DEBUG_DRAW) {
-            CGSize s = [self contentSize];
-            CGPoint vertices[4]={
-            ccp(0,0),ccp(s.width,0),
-            ccp(s.width,s.height),ccp(0,s.height),
-        };
-        ccDrawPoly(vertices, 4, YES);
+            CGSize s = this.contentSize();
+            CGPoint vertices[]= new CGPoint [] {
+                CGPoint.ccp(0,0),   CGPoint.ccp(s.width,0),
+                CGPoint.ccp(s.width,s.height),  CGPoint.ccp(0,s.height)
+            };
+            ccDrawingPrimitives.ccDrawPoly(vertices, 4, true);
         } // CC_TEXTURENODE_DEBUG_DRAW
         */
     }
 
-    private void updateTextureCoords(CGRect rect) {
-        float atlasWidth = texture_.pixelsWide();
-        float atlasHeight = texture_.pixelsHigh();
+    private void updateTextureCoords(CGRect rect) {    	
+        float atlasWidth = 1;
+        float atlasHeight = 1;
 
+        if (texture_ != null) {
+        	 atlasWidth = texture_.pixelsWide();
+        	 atlasHeight = texture_.pixelsHigh();
+        }
+        
         float left = rect.origin.x / atlasWidth;
         float right = (rect.origin.x + rect.size.width) / atlasWidth;
         float top = rect.origin.y / atlasHeight;
@@ -870,6 +880,7 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
         texCoords.put(5, top);
         texCoords.put(6, right);
         texCoords.put(7, bottom);
+        texCoords.position(0);
     }
 
     /** updates the quad according the the rotation, position, scale values.

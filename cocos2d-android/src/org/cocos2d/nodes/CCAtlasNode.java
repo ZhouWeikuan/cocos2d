@@ -66,7 +66,7 @@ public abstract class CCAtlasNode extends CCNode
     	
         itemWidth = w;
         itemHeight = h;
-        opacity_ = (byte) 255;
+        opacity_ = 255;
         color_ = ccColor3B.ccWHITE;
         colorUnmodified_ = ccColor3B.ccWHITE;
         opacityModifyRGB_ = true;

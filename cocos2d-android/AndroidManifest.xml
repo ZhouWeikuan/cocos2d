@@ -19,16 +19,6 @@
         <!-- Activity Samples -->
         <!--  android:configChanges="orientation" android:screenOrientation="landscape" -->
 
-        <activity android:name=".tests.Box2DTest"
-                  android:debuggable="true"
-                  android:launchMode="singleInstance"
-                  android:label="@string/activity_box2dtest">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.TEST"/>
-            </intent-filter>
-        </activity>
-
         <activity android:name=".tests.EaseActionsTest"
                   android:debuggable="true"
                   android:launchMode="singleInstance"
@@ -49,26 +39,6 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".tests.ParticleTest"
-                  android:debuggable="true"
-                  android:launchMode="singleInstance"
-                  android:label="@string/activity_particletest">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.TEST"/>
-            </intent-filter>
-        </activity>
-
-        <activity android:name=".tests.MenuTest"
-                  android:debuggable="true"
-                  android:launchMode="singleInstance"
-                  android:label="@string/activity_menutest">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.TEST"/>
-            </intent-filter>
-        </activity>
-
         <activity android:name=".tests.ParallaxTest"
                   android:debuggable="true"
                   android:launchMode="singleInstance"
@@ -83,26 +53,6 @@
                   android:debuggable="true"
                   android:launchMode="singleInstance"
                   android:label="@string/activity_atlastest">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.TEST"/>
-            </intent-filter>
-        </activity>
-
-        <activity android:name=".tests.AtlasSpriteTest"
-                  android:debuggable="true"
-                  android:launchMode="singleInstance"
-                  android:label="@string/activity_atlasspritetest">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.TEST"/>
-            </intent-filter>
-        </activity>
-
-        <activity android:name=".tests.JBox2DTest"
-                  android:debuggable="true"
-                  android:launchMode="singleInstance"
-                  android:label="@string/activity_jbox2dtest" android:configChanges="keyboardHidden|orientation" android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.TEST"/>

@@ -1,6 +1,20 @@
 package org.cocos2d.nodes;
 
-import static javax.microedition.khronos.opengles.GL10.*;
+import static javax.microedition.khronos.opengles.GL10.GL_BLEND;
+import static javax.microedition.khronos.opengles.GL10.GL_COLOR_ARRAY;
+import static javax.microedition.khronos.opengles.GL10.GL_COLOR_BUFFER_BIT;
+import static javax.microedition.khronos.opengles.GL10.GL_DEPTH_BUFFER_BIT;
+import static javax.microedition.khronos.opengles.GL10.GL_DEPTH_TEST;
+import static javax.microedition.khronos.opengles.GL10.GL_DITHER;
+import static javax.microedition.khronos.opengles.GL10.GL_FASTEST;
+import static javax.microedition.khronos.opengles.GL10.GL_LEQUAL;
+import static javax.microedition.khronos.opengles.GL10.GL_MODELVIEW;
+import static javax.microedition.khronos.opengles.GL10.GL_NICEST;
+import static javax.microedition.khronos.opengles.GL10.GL_ONE_MINUS_SRC_ALPHA;
+import static javax.microedition.khronos.opengles.GL10.GL_PERSPECTIVE_CORRECTION_HINT;
+import static javax.microedition.khronos.opengles.GL10.GL_PROJECTION;
+import static javax.microedition.khronos.opengles.GL10.GL_SRC_ALPHA;
+import static javax.microedition.khronos.opengles.GL10.GL_TEXTURE_2D;
 
 import java.util.ArrayList;
 import java.util.Timer;
@@ -15,8 +29,8 @@ import org.cocos2d.config.ccMacros;
 import org.cocos2d.events.CCTouchDispatcher;
 import org.cocos2d.layers.CCScene;
 import org.cocos2d.nodes.CCLabel.TextAlignment;
+import org.cocos2d.opengl.CCDrawingPrimitives;
 import org.cocos2d.opengl.CCTexture2D;
-import org.cocos2d.opengl.CCCamera;
 import org.cocos2d.transitions.TransitionScene;
 import org.cocos2d.types.CGPoint;
 import org.cocos2d.types.CGRect;
@@ -134,6 +148,7 @@ public class CCDirector implements GLSurfaceView.Renderer {
         }
         projection_ = p;
     }
+   
 
     /** @typedef ccDirectorType
       Possible Director Types.
@@ -596,10 +611,11 @@ public class CCDirector implements GLSurfaceView.Renderer {
         _sharedDirector = null;
     }
 
-    public void onSurfaceChanged(GL10 gl, int width, int height) {    	
+    public void onSurfaceChanged(GL10 gl, int width, int height) {
+    	CCDirector.gl = gl;
         surfaceSize_ = CGSize.make(width, height);
         gl.glViewport(0, 0, width, height);
-        setDefaultProjection(gl);
+        setProjection(CCDirector.kCCDirectorProjectionDefault);
     }
 
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
@@ -633,6 +649,7 @@ public class CCDirector implements GLSurfaceView.Renderer {
       This method is called every frame. Don't call it manually.
       */
     public void drawCCScene (GL10 gl) {
+    	
         /* calculate "global" dt */
         calculateDeltaTime();
         
@@ -646,28 +663,41 @@ public class CCDirector implements GLSurfaceView.Renderer {
         /* to avoid flickr, nextCCScene MUST be here: after tick and before draw.
          XXX: Which bug is this one. It seems that it can't be reproduced with v0.9 */
         if( nextCCScene_ != null)
-            setNextScene();
+        	setNextScene();
         
         gl.glPushMatrix();
-        
+
         applyOrientation(gl);
         
         // By default enable VertexArray, ColorArray, TextureCoordArray and Texture2D
         ccMacros.CC_ENABLE_DEFAULT_GL_STATES(gl);
-
+        /*
+        CCLabelAtlas label = CCLabelAtlas.label("1314521", "fps_images.png", 16, 24, '.');
+        label.setPosition(CGPoint.make(80, 130));
+        label.visit(gl);
+        */
+        /*
+        CCSprite sprite = CCSprite.sprite("grossini.png");
+        sprite.setPosition(CGPoint.make(winSize().width/2, winSize().height/2));
+        sprite.visit(gl);*/
+        
         /* draw the CCScene */
         runningCCScene_.visit(gl);
         if( displayFPS )
-            showFPS(gl);
+        	showFPS(gl);
 
         if (ccConfig.CC_ENABLE_PROFILERS) {
-            showProfilers();
+        //    showProfilers();
         }
         
+        // gl.glLineWidth(3.0f);
+        // gl.glColor4f(1.0f, 0.5f, 0.8f, 1.0f);
+        // CCDrawingPrimitives.ccDrawLine(gl, CGPoint.make(0, 0), CGPoint.make(200, 200));
+                
         ccMacros.CC_DISABLE_DEFAULT_GL_STATES(gl);
         
         gl.glPopMatrix();
-        
+    	
         /* swap buffers */
         // openGLView_.swapBuffers();
     }
@@ -686,51 +716,7 @@ public class CCDirector implements GLSurfaceView.Renderer {
 
         lastUpdate_ = now;
     }
-                 
-    private void setDefaultProjection(GL10 gl) {
-        setprojection(gl, kCCDirectorProjectionDefault);
-    }
-
-    private void setprojection(GL10 gl, int projection) {
-        switch (projection) {
-            case kCCDirectorProjection2D:
-                gl.glMatrixMode(GL_PROJECTION);
-                gl.glLoadIdentity();
-                gl.glOrthof(0, surfaceSize_.width, 0, surfaceSize_.height, -1, 1);
-
-//                gl.glTranslatef(0, height_, 0);
-//                gl.glScalef(1.0f, -1.0f, 1.0f);
-
-                gl.glMatrixMode(GL10.GL_MODELVIEW);
-                gl.glLoadIdentity();
-                break;
-
-            case kCCDirectorProjection3D:
-                gl.glViewport(0, 0, (int)surfaceSize_.width, (int)surfaceSize_.height);
-                gl.glMatrixMode(GL_PROJECTION);
-                gl.glLoadIdentity();
-                GLU.gluPerspective(gl, 60, surfaceSize_.height, 0.5f, 1500.0f);
-
-                gl.glMatrixMode(GL_MODELVIEW);
-                gl.glLoadIdentity();
-                GLU.gluLookAt(gl, surfaceSize_.width / 2, surfaceSize_.height / 2, CCCamera.getZEye(),
-                		surfaceSize_.width / 2, surfaceSize_.height / 2, 0, 0.0f, 1.0f, 0.0f);
-                break;
-
-            case kCCDirectorProjectionCustom:
-                // if custom, ignore it.
-                // The user is responsible for setting the correct projection
-                break;
-
-            default:
-                Log.w(LOG_TAG, "cocos2d: Director: Unrecognized projection");
-                break;
-        }
-
-        projection_ = projection;
-
-    }
-
+    
     /** returns the size of the OpenGL view in pixels, according to the landspace */
     public CGSize winSize() {
         CGSize s = CGSize.make(surfaceSize_.width, surfaceSize_.height);

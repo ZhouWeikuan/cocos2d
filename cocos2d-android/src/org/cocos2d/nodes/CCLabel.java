@@ -43,7 +43,7 @@ public class CCLabel extends CCSprite implements CCLabelProtocol {
     /** initializes the CCLabel with a font name, alignment, dimension and font size */
     protected CCLabel(String string, final CGSize dimensions, TextAlignment alignment,
                         String name, float size) {
-    	super(string);
+    	super();
         _dimensions = dimensions;
         _alignment = alignment;
         _fontName = name;

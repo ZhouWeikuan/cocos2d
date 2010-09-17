@@ -1,9 +1,5 @@
 package org.cocos2d.tests;
 
-import android.app.Activity;
-import android.os.Bundle;
-import android.view.Window;
-import android.view.WindowManager;
 import org.cocos2d.actions.base.CCAction;
 import org.cocos2d.actions.base.CCRepeatForever;
 import org.cocos2d.actions.instant.CCCallFuncN;
@@ -15,11 +11,21 @@ import org.cocos2d.layers.CCLayer;
 import org.cocos2d.layers.CCScene;
 import org.cocos2d.menus.CCMenu;
 import org.cocos2d.menus.CCMenuItemImage;
-import org.cocos2d.nodes.*;
+import org.cocos2d.nodes.CCDirector;
+import org.cocos2d.nodes.CCLabel;
+import org.cocos2d.nodes.CCLabelAtlas;
+import org.cocos2d.nodes.CCNode;
+import org.cocos2d.nodes.CCSprite;
+import org.cocos2d.nodes.CCTextureCache;
 import org.cocos2d.opengl.CCGLSurfaceView;
-import org.cocos2d.particlesystem.ParticleSun;
+import org.cocos2d.particlesystem.CCParticleSun;
 import org.cocos2d.types.CGPoint;
 import org.cocos2d.types.CGSize;
+
+import android.app.Activity;
+import android.os.Bundle;
+import android.view.Window;
+import android.view.WindowManager;
 
 public class CocosNodeTest extends Activity {
     // private static final String LOG_TAG = CocosNodeTest.class.getSimpleName();
@@ -37,7 +43,8 @@ public class CocosNodeTest extends Activity {
         setContentView(mGLSurfaceView);
     }
 
-    @Override
+    @SuppressWarnings("deprecation")
+	@Override
     public void onStart() {
         super.onStart();
 
@@ -51,7 +58,7 @@ public class CocosNodeTest extends Activity {
         CCDirector.sharedDirector().setDisplayFPS(true);
 
         // frames per second
-        CCDirector.sharedDirector().setAnimationInterval(1.0f / 60);
+        CCDirector.sharedDirector().setAnimationInterval(1.0f / 30);
 
         CCScene scene = CCScene.node();
         scene.addChild(nextAction());
@@ -115,12 +122,17 @@ public class CocosNodeTest extends Activity {
     }
 
     static CCLayer restartAction() {
+        Class<?> c = transitions[sceneIdx];
         try {
-            Class<?> c = transitions[sceneIdx];
             return (CCLayer) c.newInstance();
-        } catch (Exception e) {
-            return null;
+        } catch (IllegalAccessException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         }
+        return null; 
     }
 
 
@@ -128,20 +140,20 @@ public class CocosNodeTest extends Activity {
         public TestDemo() {
             CGSize s = CCDirector.sharedDirector().winSize();
 
-            CCLabel label = CCLabel.makeLabel(title(), "DroidSans", 18);
+            CCLabelAtlas label = CCLabelAtlas.label("0", "fps_images.png", 16, 24, '.');
             label.setPosition(CGPoint.make(s.width / 2, s.height - 30));
             addChild(label);
 
-            CCMenuItemImage item1 = CCMenuItemImage.item("b1.png", "b2.png", this, "backCallback");
-            CCMenuItemImage item2 = CCMenuItemImage.item("r1.png", "r2.png", this, "restartCallback");
-            CCMenuItemImage item3 = CCMenuItemImage.item("f1.png", "f2.png", this, "nextCallback");
+            // CCMenuItemImage item1 = CCMenuItemImage.item("b1.png", "b2.png", this, "backCallback");
+            // CCMenuItemImage item2 = CCMenuItemImage.item("r1.png", "r2.png", this, "restartCallback");
+            // CCMenuItemImage item3 = CCMenuItemImage.item("f1.png", "f2.png", this, "nextCallback");
 
-            CCMenu menu = CCMenu.menu(item1, item2, item3);
-            menu.setPosition(CGPoint.zero());
-            item1.setPosition(CGPoint.make(s.width / 2 - 100, 30));
-            item2.setPosition(CGPoint.make(s.width / 2, 30));
-            item3.setPosition(CGPoint.make(s.width / 2 + 100, 30));
-            addChild(menu, -1);
+            // CCMenu menu = CCMenu.menu(item1, item2, item3);
+            // menu.setPosition(CGPoint.zero());
+            // item1.setPosition(CGPoint.make(s.width / 2 - 100, 30));
+            // item2.setPosition(CGPoint.make(s.width / 2, 30));
+            // item3.setPosition(CGPoint.make(s.width / 2 + 100, 30));
+            // addChild(menu, -1);
         }
 
         public static void restartCallback() {
@@ -170,6 +182,7 @@ public class CocosNodeTest extends Activity {
         public void onEnter() {
             super.onEnter();
 
+            /*
             CGSize s = CCDirector.sharedDirector().winSize();
 
             CCSprite sp0 = CCSprite.sprite("grossini.png");
@@ -214,6 +227,7 @@ public class CocosNodeTest extends Activity {
             sp0.runAction(action0);
             sp1.runAction(action1);
             sp2.runAction(action2);
+            */
         }
 
         public String title() {
@@ -457,7 +471,7 @@ public class CocosNodeTest extends Activity {
             CGSize s = CCDirector.sharedDirector().winSize();
 
             // if the node has timers, it crashes
-            CCNode explosion = ParticleSun.node();
+            CCNode explosion = CCParticleSun.node();
 
             // if it doesn't, it works Ok.
             //	CocosNode explosion = Sprite.sprite("grossinis_sister2.png");

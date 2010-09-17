@@ -3,18 +3,19 @@ package org.cocos2d.particlesystem;
 import org.cocos2d.nodes.CCDirector;
 import org.cocos2d.nodes.CCTextureCache;
 import org.cocos2d.types.CGPoint;
+import org.cocos2d.types.ccBlendFunc;
 
-public class ParticleRain extends ParticleSystem {
+public class CCParticleRain extends CCParticleSystem {
 
-    public static ParticleSystem node() {
-        return new ParticleRain();
+    public static CCParticleSystem node() {
+        return new CCParticleRain();
     }
 
-    protected ParticleRain() {
+    protected CCParticleRain() {
         this(1000);
     }
 
-    protected ParticleRain(int p) {
+    protected CCParticleRain(int p) {
         super(p);
 
 		// duration
@@ -23,7 +24,7 @@ public class ParticleRain extends ParticleSystem {
 		emitterMode = kCCParticleModeGravity;
 
 		// Gravity Mode: gravity
-		setGravity(ccp(10,-10));
+		setGravity(CGPoint.ccp(10,-10));
 		
 		// Gravity Mode: radial
 		radialAccel = 0;
@@ -86,6 +87,18 @@ public class ParticleRain extends ParticleSystem {
         // additive
         blendAdditive = false;
     }
+
+	@Override
+	public ccBlendFunc getBlendFunc() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setBlendFunc(ccBlendFunc blendFunc) {
+		// TODO Auto-generated method stub
+		
+	}
 
 }
 

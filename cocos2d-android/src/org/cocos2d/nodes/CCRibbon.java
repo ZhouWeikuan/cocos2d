@@ -37,7 +37,7 @@ public class CCRibbon extends CCNode {
 
         float[] verts = new float[COUNT * 3 * 2];
         float[] coords = new float[COUNT * 2 * 2];
-        byte[] colors = new byte[COUNT * 4 * 2];
+        float[] colors = new float[COUNT * 4 * 2];
         float[] creationTime = new float[COUNT];
         boolean finished;
         int end;
@@ -45,7 +45,7 @@ public class CCRibbon extends CCNode {
 
         FloatBuffer mVertices;
         FloatBuffer mCoordinates;
-        ByteBuffer mColors;
+        FloatBuffer mColors;
 
         public CCRibbonSegment() {
             ByteBuffer vfb = ByteBuffer.allocateDirect(COUNT * 3 * 2 * 4);
@@ -56,8 +56,9 @@ public class CCRibbon extends CCNode {
             tfb.order(ByteOrder.nativeOrder());
             mCoordinates = tfb.asFloatBuffer();
 
-            ByteBuffer cbb = ByteBuffer.allocateDirect(COUNT * 4 * 2 * 1);
-            mColors = cbb;
+            ByteBuffer cbb = ByteBuffer.allocateDirect(COUNT * 4 * 2 * 4);
+            cbb.order(ByteOrder.nativeOrder());
+            mColors = cbb.asFloatBuffer();
 
             reset();
         }
@@ -86,19 +87,19 @@ public class CCRibbon extends CCNode {
                     int i = begin;
                     for (; i < end; ++i) {
                         int idx = i * 8;
-                        colors[idx + 0] = (byte) r;
-                        colors[idx + 1] = (byte) g;
-                        colors[idx + 2] = (byte) b;
-                        colors[idx + 4] = (byte) r;
-                        colors[idx + 5] = (byte) g;
-                        colors[idx + 6] = (byte) b;
+                        colors[idx + 0] = r / 255f;
+                        colors[idx + 1] = g / 255f;
+                        colors[idx + 2] = b / 255f;
+                        colors[idx + 4] = r / 255f;
+                        colors[idx + 5] = g / 255f;
+                        colors[idx + 6] = b / 255f;
                         float alive = ((curTime - creationTime[i]) / fadeTime);
                         if (alive > 1) {
                             begin++;
                             colors[idx + 3] = 0;
                             colors[idx + 7] = 0;
                         } else {
-                            byte o = (byte) (255.f - (alive * 255.f));
+                            float o = 1.0f - alive;
                             colors[idx + 3] = o;
                             colors[idx + 7] = o;
                         }
@@ -106,7 +107,7 @@ public class CCRibbon extends CCNode {
                     mColors.put(colors, begin * 4 * 2, (end - begin) * 4 * 2);
                     mColors.position(0);
 
-                    gl.glColorPointer(4, GL10.GL_UNSIGNED_BYTE, 0, mColors);
+                    gl.glColorPointer(4, GL10.GL_FLOAT, 0, mColors);
                 }
 
                 mVertices.put(verts, begin * 3 * 2, (end - begin) * 3 * 2);
