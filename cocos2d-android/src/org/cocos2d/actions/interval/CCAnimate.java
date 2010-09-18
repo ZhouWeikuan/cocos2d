@@ -1,5 +1,7 @@
 package org.cocos2d.actions.interval;
 
+import java.util.ArrayList;
+
 import org.cocos2d.nodes.CCAnimation;
 import org.cocos2d.nodes.CCNode;
 import org.cocos2d.nodes.CCSprite;
@@ -105,16 +107,15 @@ public class CCAnimate extends CCIntervalAction {
         }
     }
     
-    /*
     @Override
     public CCAnimate reverse() {
-    	ArrayList<Object> ao = new ArrayList<Object>();
-    	for (Object o: animation.frames()) {
+    	ArrayList<CCSpriteFrame> ao = new ArrayList<CCSpriteFrame>();
+    	for (CCSpriteFrame o: animation.frames()) {
     		ao.add(0, o);
     	}
     	
-    	CCAnimation *newAnim = [CCAnimation animationWithName:animation_.name delay:animation_.delay frames:newArray];
-    	return [[self class] actionWithDuration:duration animation:newAnim restoreOriginalFrame:restoreOriginalFrame];
-    }*/
+    	CCAnimation newAnim = CCAnimation.animation(animation.name(), animation.delay(), ao);
+    	return CCAnimate.action(duration, newAnim, restoreOriginalFrame);
+    }
 
 }

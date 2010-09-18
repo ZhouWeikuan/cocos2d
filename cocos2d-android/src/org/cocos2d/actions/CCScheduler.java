@@ -94,7 +94,7 @@ public class CCScheduler {
     /** purges the shared scheduler. It releases the retained instance.
       @since v0.99.0
       */
-    public void purgeSharedScheduler() {
+    public static void purgeSharedScheduler() {
         _sharedScheduler = null;
     }
 
@@ -172,6 +172,7 @@ public class CCScheduler {
         }
         
         // Iterate all over the  custome selectors
+        ArrayList<tHashSelectorEntry> toBeRemoved = new ArrayList<tHashSelectorEntry>(); 
         for (tHashSelectorEntry elt: hashForSelectors.values()) {
             currentTarget = elt;
             currentTargetSalvaged = false;
@@ -206,9 +207,14 @@ public class CCScheduler {
             
             // only delete currentTarget if no actions were scheduled during the cycle (issue #481)
             if( currentTargetSalvaged && currentTarget.timers.isEmpty()) {
-            	this.removeHashElement(elt.target, elt);
+            	toBeRemoved.add(elt);
+            	// this.removeHashElement(elt.target, elt);
                 // [self removeHashElement:currentTarget];
             }
+        }
+        
+        for (tHashSelectorEntry e: toBeRemoved) {
+        	this.removeHashElement(e.target, e);
         }
         
         currentTarget = null;

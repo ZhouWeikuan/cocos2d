@@ -57,7 +57,7 @@ public class CCAnimation {
       @since v0.99.3
       */
     protected CCAnimation(String name) {
-        this(name, null);
+        this(name, (ArrayList<CCSpriteFrame>)null);
     }
 
 
@@ -70,7 +70,7 @@ public class CCAnimation {
 
     /** Initializes a CCAnimation with a name and delay between frames. */
     protected CCAnimation(String name, float delay) {
-        this(name, delay, (Bitmap)null);
+        this(name, delay, (ArrayList<CCSpriteFrame>)null);
     }
 
     /** Initializes a CCAnimation with a name, delay and an array of CCSpriteFrames. */
@@ -78,7 +78,8 @@ public class CCAnimation {
         delay_ = delay;
         name_ = name;
         frames_ = new ArrayList<CCSpriteFrame>();
-        frames_.addAll(frames);
+        if (frames != null)
+        	frames_.addAll(frames);
     }
 
     /*

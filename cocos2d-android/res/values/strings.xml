@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Cocos2D</string>
+    <string name="app_name"> Cocos2D </string>
+    <string name="activity_actionmanagertest"> Action Manager Test </string>
+    <string name="activity_actionstest"> Actions Test </string>
     <string name="activity_box2dtest">Box2D Test</string>
     <string name="activity_easeactionstest">Ease Actions Test</string>
     <string name="activity_particletest">Particle Test</string>

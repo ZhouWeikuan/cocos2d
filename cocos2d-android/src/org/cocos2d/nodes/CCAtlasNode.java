@@ -183,7 +183,7 @@ public abstract class CCAtlasNode extends CCNode
     }
     
     public void setOpacityModifyRGB(boolean modify) {
-    	opacityModifyRGB_	= modify;
+    	opacityModifyRGB_ = modify;
     }
 
     public boolean doesOpacityModifyRGB() {

@@ -183,6 +183,7 @@ public class MotionStreakTest extends Activity {
 
             // the target object is offset from root, and the streak is moved to follow it
             target = CCSprite.sprite("r1.png");
+
             root.addChild(target);
             target.setPosition(CGPoint.make(100, 0));
 

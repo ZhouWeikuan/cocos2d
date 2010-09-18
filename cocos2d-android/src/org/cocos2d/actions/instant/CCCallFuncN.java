@@ -21,7 +21,7 @@ public class CCCallFuncN extends CCCallFunc {
 
         try {
             Class<?> cls = targetCallback.getClass();
-            Class<?> partypes[] = new Class[] { CCNode.class };
+            Class<?> partypes[] = new Class[] { Object.class };
             invocation = cls.getMethod(selector, partypes);
         } catch (NoSuchMethodException e) {
         }

@@ -33,8 +33,11 @@ public class CCSpriteFrameCache {
 
     /** Purges the cache. It releases all the Sprite Frames and the retained instance.
     */
-    public void purgeSharedSpriteFrameCache() {
-        sharedSpriteFrameCache_ = null;
+    public static void purgeSharedSpriteFrameCache() {
+    	if (sharedSpriteFrameCache_ != null) {
+    		sharedSpriteFrameCache_.removeAllSpriteFrames();
+    		sharedSpriteFrameCache_ = null;
+    	}
     }
 
 
@@ -155,8 +158,9 @@ public class CCSpriteFrameCache {
      * Sprite Frames that have a retain count of 1 will be deleted.
      * It is convinient to call this method after when starting a new Scene.
      */
-    public void removeUnusedSpriteFrames() {
+    public void removeAllSpriteFrames() {
         // Don't know what to do here.
+    	spriteFrames.clear();
     }
 
     /** Deletes an sprite frame from the sprite frame cache.

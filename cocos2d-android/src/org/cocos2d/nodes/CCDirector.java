@@ -23,6 +23,7 @@ import javax.microedition.khronos.egl.EGL10;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
+import org.cocos2d.actions.CCActionManager;
 import org.cocos2d.actions.CCScheduler;
 import org.cocos2d.config.ccConfig;
 import org.cocos2d.config.ccMacros;
@@ -301,9 +302,9 @@ public class CCDirector implements GLSurfaceView.Renderer {
                 // nothing
                 break;
             case kCCDeviceOrientationLandscapeLeft:
-                gl.glTranslatef(w, h, 0);
-                gl.glRotatef(-90, 0, 0, 1);
-                gl.glTranslatef(-h, -w, 0);
+                // gl.glTranslatef(w, h, 0);
+                // gl.glRotatef(-90, 0, 0, 1);
+                // gl.glTranslatef(-h, -w, 0);
                 break;
         }
     }
@@ -598,6 +599,7 @@ public class CCDirector implements GLSurfaceView.Renderer {
         }	// CC_DIRECTOR_FAST_FPS
     }
 
+    /*
     public void finalize() {
         ccMacros.CCLOG(LOG_TAG, "cocos2d: deallocing " + this);
 
@@ -609,7 +611,7 @@ public class CCDirector implements GLSurfaceView.Renderer {
         CCScenesStack_ = null;
 
         _sharedDirector = null;
-    }
+    }*/
 
     public void onSurfaceChanged(GL10 gl, int width, int height) {
     	CCDirector.gl = gl;
@@ -638,11 +640,10 @@ public class CCDirector implements GLSurfaceView.Renderer {
 
     public void onDrawFrame(GL10 gl) {
         synchronized (this) {
-            this.notify();
+            if (_sharedDirector == null)
+            	return;
+            drawCCScene(gl);
         }
-        Thread.yield();
-        
-        drawCCScene(gl);
     }    
 
     /** Draw the CCScene.
@@ -720,12 +721,12 @@ public class CCDirector implements GLSurfaceView.Renderer {
     /** returns the size of the OpenGL view in pixels, according to the landspace */
     public CGSize winSize() {
         CGSize s = CGSize.make(surfaceSize_.width, surfaceSize_.height);
-        if( deviceOrientation_ == kCCDeviceOrientationLandscapeLeft) {
+        /*if( deviceOrientation_ == kCCDeviceOrientationLandscapeLeft) {
             // swap x,y in landscape mode
             float t = s.width;
             s.width = s.height;
             s.height = t;
-        }
+        }*/
 
         return s;
     }
@@ -792,9 +793,8 @@ public class CCDirector implements GLSurfaceView.Renderer {
     /** attach in UIView using the full frame.
       It will create a EAGLView.
 
-      @deprecated set setOpenGLView instead. Will be removed in v1.0
+      deprecated set setOpenGLView instead. Will be removed in v1.0
     */
-    @Deprecated
     public boolean attachInView(View view) {
 
 //        CCRect rect = new CCRect(view.getScrollX(), view.getScrollY(), view.getWidth(), view.getHeight());
@@ -834,6 +834,7 @@ public class CCDirector implements GLSurfaceView.Renderer {
 
     private boolean initOpenGLViewWithView(View view, CGRect rect) {
         surfaceSize_ = rect.size;
+        screenSize_ = CGSize.make(surfaceSize_.getWidth(), surfaceSize_.getHeight());
         
 //        try {
         openGLView_ = (GLSurfaceView) view;
@@ -947,7 +948,8 @@ public class CCDirector implements GLSurfaceView.Renderer {
                 break;
 
             case kCCDeviceOrientationLandscapeLeft:
-                ret = CGPoint.ccp(uiPoint.y, uiPoint.x);
+                // ret = CGPoint.ccp(uiPoint.y, uiPoint.x);
+            	ret = CGPoint.ccp(uiPoint.x, newY);
                 break;
 
             default:
@@ -973,7 +975,8 @@ public class CCDirector implements GLSurfaceView.Renderer {
                 break;
 
             case kCCDeviceOrientationLandscapeLeft:
-                uiPoint = CGPoint.ccp(glPoint.y, glPoint.x);
+                // uiPoint = CGPoint.ccp(glPoint.y, glPoint.x);
+            	uiPoint = CGPoint.ccp(glPoint.x, oppositeY);
                 break;
             default:
                 return null;
@@ -1047,48 +1050,58 @@ public class CCDirector implements GLSurfaceView.Renderer {
       It will purge the CCTextureCache, CCSpriteFrameCache, CCBitmapFont cache
       @since v0.99.3
       */
-    /*
+    
     public void purgeCachedData() {
-        CCBitmapFontAtlas.purgeCachedData();
+        //CCBitmapFontAtlas .purgeCachedData();
         CCSpriteFrameCache.purgeSharedSpriteFrameCache();
         CCTextureCache.purgeSharedTextureCache();
-    }*/
+        
+    }
 
     /** Ends the execution, releases the running CCScene.
       It doesn't remove the OpenGL view from its parent. You have to do it manually.
     */
     public void end() {
-        runningCCScene_.onExit();
-        runningCCScene_.cleanup();
-        runningCCScene_ = null;
-        nextCCScene_ = null;
+    	synchronized(this) {
+    		if (_sharedDirector == null) {
+    			return;
+    		}
+    		if (runningCCScene_ != null) {
+    			runningCCScene_.onExit();
+    			runningCCScene_.cleanup();
+    			runningCCScene_ = null;
+    		}
+    		nextCCScene_ = null;
 
-        // remove all objects.
-        // runWithCCScene might be executed after 'end'.
-        CCScenesStack_.clear();
+    		// remove all objects.
+    		// runWithCCScene might be executed after 'end'.
+    		CCScenesStack_.clear();
 
-        // don't release the event handlers
-        // They are needed in case the director is run again
-        CCTouchDispatcher.sharedDispatcher().removeAllDelegates();
+    		// don't release the event handlers
+    		// They are needed in case the director is run again
+    		CCTouchDispatcher.sharedDispatcher().removeAllDelegates();
 
-        stopAnimation();
-        // detach();
+    		stopAnimation();
+    		// detach();
 
-        if (ccConfig.CC_DIRECTOR_FAST_FPS) {
-            FPSLabel_ = null;
-        }
-/*
-        // Purge bitmap cache
-        CCBitmapFontAtlas.purgeCachedData();
+    		if (ccConfig.CC_DIRECTOR_FAST_FPS) {
+    			FPSLabel_ = null;
+    		}
 
-        // Purge all managers
-        CCSpriteFrameCache.purgeSharedSpriteFrameCache();
-        CCScheduler.purgeSharedScheduler();
-        CCActionManager.purgeSharedManager();
-        CCTextureCache.purgeSharedTextureCache();
-	*/
-        // OpenGL view
-        openGLView_ = null;
+    		// Purge bitmap cache
+    		// CCBitmapFontAtlas.purgeCachedData();
+
+    		// Purge all managers
+    		CCSpriteFrameCache.purgeSharedSpriteFrameCache();
+    		// CCScheduler.purgeSharedScheduler();
+    		// CCActionManager.purgeSharedManager();
+    		CCTextureCache.purgeSharedTextureCache();
+
+    		// OpenGL view
+    		openGLView_ = null;
+
+    		_sharedDirector = null;
+    	}
     }
 
     public void setNextScene() {

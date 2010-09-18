@@ -31,8 +31,11 @@ public class CCTextureCache {
     /** purges the cache. It releases the retained instance.
      @since v0.99.0
      */
-    public void purgeSharedTextureCache () {
-        _sharedTextureCache = null;
+    public static void purgeSharedTextureCache () {
+    	if (_sharedTextureCache != null) {
+    		_sharedTextureCache.removeAllTextures();
+    		_sharedTextureCache = null;
+    	}
     }
 
     private CCTextureCache() {
@@ -87,7 +90,11 @@ public class CCTextureCache {
      * In the long term: it will be the same
     */
     public void removeAllTextures() {
-        textures.clear();
+    	/* Do nothing, or do all.*/
+    	for (CCTexture2D tex : textures.values()) {
+    		tex.releaseTexture(CCDirector.gl);    		
+    	}
+    	textures.clear();
     }
 
     /** Removes unused textures

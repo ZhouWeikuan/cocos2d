@@ -316,7 +316,9 @@ public class CCActionManager {
     @since v0.99.0
     */
 	public static void purgeSharedManager() {
-		CCScheduler.sharedScheduler().unscheduleUpdate(_sharedManager);
-		_sharedManager = null;
+		if (_sharedManager != null) {
+			CCScheduler.sharedScheduler().unscheduleUpdate(_sharedManager);
+			_sharedManager = null;
+		}
 	}
 }

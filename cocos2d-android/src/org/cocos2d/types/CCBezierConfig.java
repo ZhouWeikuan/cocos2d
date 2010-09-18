@@ -9,6 +9,10 @@ public class CCBezierConfig {
     public CGPoint controlPoint_1;
     //! Bezier control point 2
     public CGPoint controlPoint_2;
+    
+    public CCBezierConfig() {
+    	
+    }
 
     // Bezier cubic formula:
     // 	((1 - t) + t)3 = 1 
