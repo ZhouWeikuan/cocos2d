@@ -81,8 +81,11 @@ public class CCSpriteSheet extends CCNode implements CCTextureProtocol {
       The capacity will be increased in 33% in runtime if it run out of space.
       */
     protected CCSpriteSheet(CCTexture2D tex, int capacity) {
-        blendFunc_.src = ccConfig.CC_BLEND_SRC;
-        blendFunc_.dst = ccConfig.CC_BLEND_DST;
+        
+
+        blendFunc_ = new ccBlendFunc(ccConfig.CC_BLEND_SRC, ccConfig.CC_BLEND_DST);
+
+    	
         textureAtlas_ = new CCTextureAtlas(tex, capacity);
 
         updateBlendFunc();

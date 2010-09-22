@@ -528,7 +528,8 @@ public class ActionsTest extends Activity {
 				animation.addFrame(String.format("grossini_dance_%02d.png", i));
 
 			CCAnimate action = CCAnimate.action(3, animation, false);
-			CCAnimate action_back = action.reverse();
+			
+			CCIntervalAction action_back = action.reverse();
 
 			grossini.runAction(CCSequence.actions(action, action_back));
 		}
