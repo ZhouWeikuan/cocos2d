@@ -70,7 +70,7 @@ public abstract class CCAction implements Copyable {
     //! called after the action has finished. It will set the 'target' to nil.
     //! IMPORTANT: You should never call "[action stop]" manually. Instead, use: "[target stopAction:action];"
     public void stop() {
-        target = null;
+        // target = null;
     }
 
     //! return YES if the action has finished

@@ -16,7 +16,27 @@ import org.cocos2d.actions.instant.CCHide;
 import org.cocos2d.actions.instant.CCPlace;
 import org.cocos2d.actions.instant.CCShow;
 import org.cocos2d.actions.instant.CCToggleVisibility;
-import org.cocos2d.actions.interval.*;
+import org.cocos2d.actions.interval.CCAnimate;
+import org.cocos2d.actions.interval.CCBezierBy;
+import org.cocos2d.actions.interval.CCBezierTo;
+import org.cocos2d.actions.interval.CCBlink;
+import org.cocos2d.actions.interval.CCDelayTime;
+import org.cocos2d.actions.interval.CCFadeIn;
+import org.cocos2d.actions.interval.CCFadeOut;
+import org.cocos2d.actions.interval.CCJumpBy;
+import org.cocos2d.actions.interval.CCJumpTo;
+import org.cocos2d.actions.interval.CCMoveBy;
+import org.cocos2d.actions.interval.CCMoveTo;
+import org.cocos2d.actions.interval.CCPropertyAction;
+import org.cocos2d.actions.interval.CCRepeat;
+import org.cocos2d.actions.interval.CCRotateBy;
+import org.cocos2d.actions.interval.CCRotateTo;
+import org.cocos2d.actions.interval.CCScaleBy;
+import org.cocos2d.actions.interval.CCScaleTo;
+import org.cocos2d.actions.interval.CCSequence;
+import org.cocos2d.actions.interval.CCSpawn;
+import org.cocos2d.actions.interval.CCTintBy;
+import org.cocos2d.actions.interval.CCTintTo;
 import org.cocos2d.config.ccMacros;
 import org.cocos2d.layers.CCLayer;
 import org.cocos2d.layers.CCScene;
@@ -27,7 +47,6 @@ import org.cocos2d.nodes.CCDirector;
 import org.cocos2d.nodes.CCLabel;
 import org.cocos2d.nodes.CCNode;
 import org.cocos2d.nodes.CCSprite;
-import org.cocos2d.nodes.CCTextureCache;
 import org.cocos2d.opengl.CCDrawingPrimitives;
 import org.cocos2d.opengl.CCGLSurfaceView;
 import org.cocos2d.opengl.CCTexture2D;
@@ -63,7 +82,7 @@ public class ActionsTest extends Activity {
 		mGLSurfaceView = new CCGLSurfaceView(this);
 		CCDirector director = CCDirector.sharedDirector();
 		director.attachInView(mGLSurfaceView);
-		director.setDeviceOrientation(CCDirector.kCCDeviceOrientationPortrait);
+		director.setDeviceOrientation(CCDirector.kCCDeviceOrientationLandscapeLeft);
 		setContentView(mGLSurfaceView);
 	}
 
@@ -993,15 +1012,15 @@ public class ActionsTest extends Activity {
 
 			centerSprites(3);
 
-			CCPropertyAction rot = CCPropertyAction.action(2, "rotation", 0, -270);
+			CCPropertyAction rot = CCPropertyAction.action(2, "setRotation", 0, -270);
 			CCPropertyAction rot_back = rot.reverse();
 			CCSequence rot_seq = CCSequence.actions(rot, rot_back);
 
-			CCPropertyAction scale = CCPropertyAction.action(2, "scale", 1, 3);
+			CCPropertyAction scale = CCPropertyAction.action(2, "setScale", 1, 3);
 			CCPropertyAction scale_back = scale.reverse();
 			CCSequence scale_seq = CCSequence.actions(scale, scale_back);
 
-			CCPropertyAction opacity = CCPropertyAction.action(2, "opacity", 255, 0);
+			CCPropertyAction opacity = CCPropertyAction.action(2, "setOpacity", 255, 0);
 			CCPropertyAction opacity_back = opacity.reverse();
 			CCSequence opacity_seq = CCSequence.actions(opacity, opacity_back);
 

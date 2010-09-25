@@ -86,79 +86,79 @@ public class TransitionsTest extends Activity {
         CCTextureCache.sharedTextureCache().removeAllTextures();
     }
 
-    static class FadeWhiteTransition extends FadeTransition {
+    static class FadeWhiteTransition extends CCFadeTransition {
         public FadeWhiteTransition(float t, CCScene s) {
             super(t, s, new ccColor3B(255, 255, 255));
         }
     }
 
-    static class FlipXLeftOverTransition extends FlipXTransition {
+    static class FlipXLeftOverTransition extends CCFlipXTransition {
         public FlipXLeftOverTransition(float t, CCScene s) {
             super(t, s, Orientation.kOrientationLeftOver);
         }
     }
 
-    static class FlipXRightOverTransition extends FlipXTransition {
+    static class FlipXRightOverTransition extends CCFlipXTransition {
         public FlipXRightOverTransition(float t, CCScene s) {
             super(t, s, Orientation.kOrientationRightOver);
         }
     }
 
-    static class FlipYUpOverTransition extends FlipYTransition {
+    static class FlipYUpOverTransition extends CCFlipYTransition {
         public FlipYUpOverTransition(float t, CCScene s) {
             super(t, s, Orientation.kOrientationUpOver);
         }
     }
 
-    static class FlipYDownOverTransition extends FlipYTransition {
+    static class FlipYDownOverTransition extends CCFlipYTransition {
         public FlipYDownOverTransition(float t, CCScene s) {
             super(t, s, Orientation.kOrientationDownOver);
         }
     }
 
-    static class FlipAngularLeftOverTransition extends FlipAngularTransition {
+    static class FlipAngularLeftOverTransition extends CCFlipAngularTransition {
         public FlipAngularLeftOverTransition(float t, CCScene s) {
             super(t, s, Orientation.kOrientationLeftOver);
         }
     }
 
-    static class FlipAngularRightOverTransition extends FlipAngularTransition {
+    static class FlipAngularRightOverTransition extends CCFlipAngularTransition {
         public FlipAngularRightOverTransition(float t, CCScene s) {
             super(t, s, Orientation.kOrientationRightOver);
         }
     }
 
-    static class ZoomFlipXLeftOverTransition extends ZoomFlipXTransition {
+    static class ZoomFlipXLeftOverTransition extends CCZoomFlipXTransition {
         public ZoomFlipXLeftOverTransition(float t, CCScene s) {
             super(t, s, Orientation.kOrientationLeftOver);
         }
     }
 
-    static class ZoomFlipXRightOverTransition extends ZoomFlipXTransition {
+    static class ZoomFlipXRightOverTransition extends CCZoomFlipXTransition {
         public ZoomFlipXRightOverTransition(float t, CCScene s) {
             super(t, s, Orientation.kOrientationRightOver);
         }
     }
 
-    static class ZoomFlipYUpOverTransition extends ZoomFlipYTransition {
+    static class ZoomFlipYUpOverTransition extends CCZoomFlipYTransition {
         public ZoomFlipYUpOverTransition(float t, CCScene s) {
             super(t, s, Orientation.kOrientationUpOver);
         }
     }
 
-    static class ZoomFlipYDownOverTransition extends ZoomFlipYTransition {
+    static class ZoomFlipYDownOverTransition extends CCZoomFlipYTransition {
         public ZoomFlipYDownOverTransition(float t, CCScene s) {
             super(t, s, Orientation.kOrientationDownOver);
         }
     }
 
-    static class ZoomFlipAngularLeftOverTransition extends ZoomFlipAngularTransition {
+    static class ZoomFlipAngularLeftOverTransition extends CCZoomFlipAngularTransition {
         public ZoomFlipAngularLeftOverTransition(float t, CCScene s) {
             super(t, s, Orientation.kOrientationLeftOver);
         }
     }
 
-    static class ZoomFlipAngularRightOverTransition extends ZoomFlipAngularTransition {
+    static class ZoomFlipAngularRightOverTransition extends CCZoomFlipAngularTransition {
         public ZoomFlipAngularRightOverTransition(float t, CCScene s) {
             super(t, s, Orientation.kOrientationRightOver);
         }
@@ -166,7 +166,7 @@ public class TransitionsTest extends Activity {
 
     static int sceneIdx = 0;
     static Class<?> transitions[] = {
-            JumpZoomTransition.class,
+            CCJumpZoomTransition.class,
 //            FadeTRTransition.class,
 //            FadeBLTransition.class,
 //            FadeUpTransition.class,
@@ -174,7 +174,7 @@ public class TransitionsTest extends Activity {
 //            TurnOffTilesTransition.class,
 //            SplitRowsTransition.class,
 //            SplitColsTransition.class,
-            FadeTransition.class,
+            CCFadeTransition.class,
             FadeWhiteTransition.class,
             FlipXLeftOverTransition.class,
             FlipXRightOverTransition.class,
@@ -188,26 +188,26 @@ public class TransitionsTest extends Activity {
             ZoomFlipYDownOverTransition.class,
             ZoomFlipAngularLeftOverTransition.class,
             ZoomFlipAngularRightOverTransition.class,
-            ShrinkGrowTransition.class,
-            RotoZoomTransition.class,
-            MoveInLTransition.class,
-            MoveInRTransition.class,
-            MoveInTTransition.class,
-            MoveInBTransition.class,
-            SlideInLTransition.class,
-            SlideInRTransition.class,
-            SlideInTTransition.class,
-            SlideInBTransition.class,
+            CCShrinkGrowTransition.class,
+            CCRotoZoomTransition.class,
+            CCMoveInLTransition.class,
+            CCMoveInRTransition.class,
+            CCMoveInTTransition.class,
+            CCMoveInBTransition.class,
+            CCSlideInLTransition.class,
+            CCSlideInRTransition.class,
+            CCSlideInTTransition.class,
+            CCSlideInBTransition.class,
     };
 
-    static TransitionScene nextTransition(float d, CCScene s) {
+    static CCTransitionScene nextTransition(float d, CCScene s) {
         sceneIdx++;
         sceneIdx = sceneIdx % transitions.length;
 
         return restartTransition(d, s);
     }
 
-    static TransitionScene backTransition(float d, CCScene s) {
+    static CCTransitionScene backTransition(float d, CCScene s) {
         sceneIdx--;
         int total = transitions.length;
         if (sceneIdx < 0)
@@ -216,7 +216,7 @@ public class TransitionsTest extends Activity {
         return restartTransition(d, s);
     }
 
-    static TransitionScene restartTransition(float d, CCScene s) {
+    static CCTransitionScene restartTransition(float d, CCScene s) {
         try {
             Class<?> c = transitions[sceneIdx];
             Class<?> partypes[] = new Class[2];
@@ -226,7 +226,7 @@ public class TransitionsTest extends Activity {
             Object arglist[] = new Object[2];
             arglist[0] = d;
             arglist[1] = s;
-            return (TransitionScene) ctor.newInstance(arglist);
+            return (CCTransitionScene) ctor.newInstance(arglist);
         } catch (Exception e) {
             return null;
         }

@@ -177,7 +177,7 @@ public class CCTextureAtlas {
         putVertex(vertexCoordinates, quadV.toFloatArray(), index);
     }
 
-    public void updateColor(ccColor4B color, int index) {
+    public void updateColor(ccColor4B[] color, int index) {
         assert (index >= 0 && index < capacity_) : "update color with quad color: Invalid index";
 
         totalQuads_ = Math.max(index + 1, totalQuads_);
@@ -186,7 +186,7 @@ public class CCTextureAtlas {
             initColorArray();
 
         if (withColorArray_)
-            putColor(colors, color.toFloatArray(), index);
+            putColor(colors, color, index);
     }
 
 
@@ -250,7 +250,7 @@ public class CCTextureAtlas {
 
         // colors_
         if (withColorArray_) {
-            float[] colorsBackup = getColor(colors, from);
+            ccColor4B [] colorsBackup = getColor(colors, from);
             arraycopyColor(colors, src, colors, dst, size);
             putColor(colors, colorsBackup, to);
         }
@@ -374,49 +374,59 @@ public class CCTextureAtlas {
     
     private float[] getTexCoords(FloatBuffer src, int index) {
         float[] quadT = new float[ccQuad2.size];
+        final int base = index * ccQuad2.size;
         for (int i = 0; i < ccQuad2.size; i++) {
-            quadT[i] = src.get(index * ccQuad2.size + i);
+            quadT[i] = src.get(base + i);
         }
         return quadT;
     }
 
     public void putTexCoords(FloatBuffer dst, float[] quadT, int index) {
+    	final int base = index * ccQuad2.size;
         for (int i = 0; i < ccQuad2.size; i++) {
-            dst.put(index * ccQuad2.size + i, quadT[i]);
+            dst.put(base + i, quadT[i]);
         }
+        dst.position(0);
     }
 
     private float[] getVertex(FloatBuffer src, int index) {
         float[] quadV = new float[ccQuad3.size];
+        final int base = index * ccQuad3.size;
         for (int i = 0; i < ccQuad3.size; i++) {
-            quadV[i] = src.get(index * ccQuad3.size + i);
+            quadV[i] = src.get(base + i);
         }
         return quadV;
     }
 
     public void putVertex(FloatBuffer dst, float[] quadV, int index) {
+    	final int base = index * ccQuad3.size;
         for (int i = 0; i < ccQuad3.size; i++) {
-            dst.put(index * ccQuad3.size + i, quadV[i]);
+            dst.put(base +i, quadV[i]);
         }
+        dst.position(0);
     }
 
-    private float[] getColor(FloatBuffer src, int index) {
-        float[] color = new float[ccColor4B.size * 4];
+    private ccColor4B [] getColor(FloatBuffer src, int index) {
+    	ccColor4B [] color = new ccColor4B[4];
+        
         for(int j=0; j<4; ++j) {
-            for (int i = 0; i < ccColor4B.size; ++i) {
-                color[i] = src.get(index * ccColor4B.size *4 + 4*j + i);
-            }        	
+            color[j].r = (int)(255 * src.get(index * ccColor4B.size *4 + 4*j + 0));
+            color[j].g = (int)(255 * src.get(index * ccColor4B.size *4 + 4*j + 1));
+            color[j].b = (int)(255 * src.get(index * ccColor4B.size *4 + 4*j + 2));
+            color[j].a = (int)(255 * src.get(index * ccColor4B.size *4 + 4*j + 3));
         }
 
         return color;
     }
 
-    private void putColor(FloatBuffer dst, float[] color, int index) {
+    private void putColor(FloatBuffer dst, ccColor4B color[], int index) {
     	for(int j=0; j<4; ++j) {
-    		for (int i = 0; i < ccColor4B.size; ++i) {
-        		dst.put(index * ccColor4B.size * 4 + 4*j + i, color[i]);
-        	}
+    		dst.put(index * ccColor4B.size * 4 + 4*j + 0, color[j].r/255.f);
+    		dst.put(index * ccColor4B.size * 4 + 4*j + 1, color[j].g/255.f);
+    		dst.put(index * ccColor4B.size * 4 + 4*j + 2, color[j].b/255.f);
+    		dst.put(index * ccColor4B.size * 4 + 4*j + 3, color[j].a/255.f);
         }
+    	dst.position(0);
     }
 
     private void arraycopyTexture(FloatBuffer src, int srcPos, FloatBuffer dst, int dstPos, int length) {

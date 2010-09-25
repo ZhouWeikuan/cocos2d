@@ -14,14 +14,14 @@ public class CCSpawn extends CCIntervalAction {
     private CCFiniteTimeAction two;
 
     /** helper constructor to create an array of spawned actions */
-    public static CCIntervalAction actions(CCFiniteTimeAction action1, CCFiniteTimeAction... params) {
+    public static CCSpawn actions(CCFiniteTimeAction action1, CCFiniteTimeAction... params) {
         CCFiniteTimeAction prev = action1;
 
         if (action1 != null) {
             for (CCFiniteTimeAction now : params)
                 prev = new CCSpawn(prev, now);
         }
-        return (CCIntervalAction) prev;
+        return (CCSpawn) prev;
     }
     
     /** initializes the Spawn action with the 2 actions to spawn */

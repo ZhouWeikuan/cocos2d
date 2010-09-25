@@ -1,13 +1,11 @@
 package org.cocos2d.opengl;
 
-import org.cocos2d.types.CGSize;
-import org.cocos2d.utils.CCFormatter;
+import javax.microedition.khronos.opengles.GL10;
+
 import org.cocos2d.config.ccMacros;
-import org.cocos2d.nodes.CCDirector;
+import org.cocos2d.utils.CCFormatter;
 
 import android.opengl.GLU;
-
-import javax.microedition.khronos.opengles.GL10;
 
 /** 
     A Camera is used in every CocosNode.

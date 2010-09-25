@@ -3,12 +3,13 @@
     <string name="app_name"> Cocos2D </string>
     <string name="activity_actionmanagertest"> Action Manager Test </string>
     <string name="activity_actionstest"> Actions Test </string>
-    <string name="activity_box2dtest">Box2D Test</string>
+    <string name="activity_atlastest"> Atlas Test </string>
+    <string name="activity_box2dtest"> Box2D Test </string>
+    
     <string name="activity_easeactionstest">Ease Actions Test</string>
     <string name="activity_particletest">Particle Test</string>
     <string name="activity_motionstreaktest">Motion Streak Test</string>
     <string name="activity_menutest">Menu Test</string>
-    <string name="activity_atlastest">Atlas Test</string>
     <string name="activity_atlasspritetest">Atlas Sprite Test</string>
     <string name="activity_jbox2dtest">JBox2D Test</string>    
     <string name="activity_clickandmovetest">Click And Move Test</string>

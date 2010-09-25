@@ -2,7 +2,7 @@ package org.cocos2d.actions;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.cocos2d.config.ccConfig;
 
@@ -50,8 +50,8 @@ public class CCScheduler {
 	ArrayList<tListEntry>    updatesPos;	// list priority > 0
 		
 	// Used for "selectors with interval"
-    HashMap<Object, tHashSelectorEntry>  hashForSelectors;
-    HashMap<Object, tHashSelectorEntry>  hashForUpdates;
+    ConcurrentHashMap<Object, tHashSelectorEntry>  hashForSelectors;
+    ConcurrentHashMap<Object, tHashSelectorEntry>  hashForUpdates;
 	tHashSelectorEntry	                currentTarget;
 	boolean						        currentTargetSalvaged;
 	
@@ -113,8 +113,8 @@ public class CCScheduler {
         updates0 = new ArrayList<tListEntry>();
         updatesNeg = new ArrayList<tListEntry>();
         updatesPos = new ArrayList<tListEntry>();
-        hashForUpdates = new HashMap<Object, tHashSelectorEntry>();
-        hashForSelectors = new HashMap<Object, tHashSelectorEntry>();
+        hashForUpdates = new ConcurrentHashMap<Object, tHashSelectorEntry>();
+        hashForSelectors = new ConcurrentHashMap<Object, tHashSelectorEntry>();
 
         // selectors with interval
         currentTarget = null;

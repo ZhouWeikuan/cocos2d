@@ -1,6 +1,7 @@
 package org.cocos2d.nodes;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.microedition.khronos.opengles.GL10;
 
@@ -33,7 +34,7 @@ public class CCSpriteSheet extends CCNode implements CCTextureProtocol {
     public static final int defaultCapacity = 29;
 
     /** returns the TextureAtlas that is used */
-    CCTextureAtlas	textureAtlas_;
+    protected CCTextureAtlas	textureAtlas_;
     public CCTextureAtlas getTextureAtlas() {
         return textureAtlas_;
     }
@@ -81,8 +82,7 @@ public class CCSpriteSheet extends CCNode implements CCTextureProtocol {
       The capacity will be increased in 33% in runtime if it run out of space.
       */
     protected CCSpriteSheet(CCTexture2D tex, int capacity) {
-        blendFunc_.src = ccConfig.CC_BLEND_SRC;
-        blendFunc_.dst = ccConfig.CC_BLEND_DST;
+    	blendFunc_ = new ccBlendFunc(ccConfig.CC_BLEND_SRC, ccConfig.CC_BLEND_DST);
         textureAtlas_ = new CCTextureAtlas(tex, capacity);
 
         updateBlendFunc();
@@ -303,7 +303,10 @@ public class CCSpriteSheet extends CCNode implements CCTextureProtocol {
     }
 
     public int highestAtlasIndexInChild(CCSprite sprite) {
-        ArrayList<CCNode> array = sprite.getChildren();
+        List<CCNode> array = sprite.getChildren();
+        if (array == null)
+        	return sprite.atlasIndex_;
+        
         int count = array.size();
         if( count == 0 )
             return sprite.atlasIndex_;
@@ -312,7 +315,7 @@ public class CCSpriteSheet extends CCNode implements CCTextureProtocol {
     }
 
     public int lowestAtlasIndexInChild(CCSprite sprite) {
-        ArrayList<CCNode> array = sprite.getChildren();
+        List<CCNode> array = sprite.getChildren();
         int count = array.size();
         if( count == 0 )
             return sprite.atlasIndex_;
@@ -322,7 +325,7 @@ public class CCSpriteSheet extends CCNode implements CCTextureProtocol {
 
 
     public int atlasIndex(CCSprite sprite, int z) {
-        ArrayList<CCNode> brothers = sprite.getParent().getChildren();
+        List<CCNode> brothers = sprite.getParent().getChildren();
         int childIndex = brothers.indexOf(sprite);
 
         // ignore parent Z if parent is spriteSheet
@@ -384,10 +387,12 @@ public class CCSpriteSheet extends CCNode implements CCTextureProtocol {
         }
 
         // add children recursively
-        for (CCNode o: sprite.getChildren()) {
-        	child = (CCSprite)o;
-            int idx = atlasIndex(child, child.getZOrder());
-            insertChild(child, idx);
+        if (sprite.getChildren() != null) {
+        	for (CCNode o: sprite.getChildren()) {
+        		child = (CCSprite)o;
+        		int idx = atlasIndex(child, child.getZOrder());
+        		insertChild(child, idx);
+        	}
         }
     }
 

@@ -1,6 +1,5 @@
 package org.cocos2d.nodes;
 
-import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.util.HashMap;
 
@@ -108,11 +107,9 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
         opacity_			= anOpacity;
 
         // special opacity for premultiplied textures
-        if( opacityModifyRGB_ ) {
+        if( opacityModifyRGB_ )
             setColor(colorUnmodified_);
-        } else  {
-            updateColor();
-        }
+        updateColor();
     }
 
     /** RGB colors: conforms to CCRGBAProtocol protocol */
@@ -152,8 +149,8 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
 	CCTexture2D				texture_;				// Texture used to render the sprite
 
     /** conforms to CCTextureProtocol protocol */
-	protected ccBlendFunc      blendFunc_;             // Needed for the texture protocol 
-    
+	protected ccBlendFunc blendFunc_ = new ccBlendFunc(ccConfig.CC_BLEND_SRC, ccConfig.CC_BLEND_DST);
+	
 	// texture pixels
 	CGRect rect_;
 	
@@ -194,12 +191,16 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
     /** the quad (tex coords, vertex coords and color) information */
     private FloatBuffer texCoords;
     public float[] getTexCoordsArray() {
-    	return texCoords.array();
+    	float ret[] = new float[texCoords.limit()];
+    	texCoords.get(ret, 0, texCoords.limit());
+    	return ret;
     }
     
     private FloatBuffer vertexes;
     public float[] getVertexArray() {
-    	return vertexes.array();
+    	float ret[] = new float[vertexes.limit()];
+    	vertexes.get(ret, 0, vertexes.limit());
+    	return ret;
     }
     
     private FloatBuffer colors;
@@ -460,9 +461,7 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
 		opacity_					= 255;
 		color_                      = ccColor3B.ccWHITE;
         colorUnmodified_	        = ccColor3B.ccWHITE;
-		
-		blendFunc_ = new ccBlendFunc(ccConfig.CC_BLEND_SRC, ccConfig.CC_BLEND_DST);
-		
+				
 		// update texture (calls updateBlendFunc)
 		setTexture(null);
 		
@@ -545,12 +544,23 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
     }
 
     public void updateColor() {
-        ccColor4B color4 = new ccColor4B(color_.r,
-        		color_.g, color_.b, opacity_);
-
+        float[] tmpColor = new float[]{ 
+        		color_.r/255.f, color_.g/255.f, color_.b/255.f, opacity_/255.f };
+		colors.put(tmpColor);
+		colors.put(tmpColor);
+		colors.put(tmpColor);
+		colors.put(tmpColor);
+		colors.position(0);
+        
         // renders using Sprite Manager
         if( usesSpriteSheet_ ) {
             if( atlasIndex_ != CCSpriteIndexNotInitialized) {
+                ccColor4B [] color4 = new ccColor4B[4];
+                color4[0] = ccColor4B.ccc4(color_.r, color_.g, color_.b, opacity_);
+                color4[1] = color4[0];
+                color4[2] = color4[0];
+                color4[3] = color4[0];
+                
                 textureAtlas_.updateColor(color4, atlasIndex_);
             } else {
                 // no need to set it recursively
@@ -891,7 +901,7 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
         // Optimization: if it is not visible, then do nothing
         if( ! visible_ ) {
         	ccQuad3 q = new ccQuad3();
-        	textureAtlas_.putVertex(vertexes, q.toFloatArray(), atlasIndex_);
+        	textureAtlas_.putVertex(textureAtlas_.getVertexBuffer(), q.toFloatArray(), atlasIndex_);
             dirty_ = recursiveDirty_ = false;
             return ;
         }
@@ -970,7 +980,7 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
         	cx, cy, vertexZ_,  	bx, by, vertexZ_
         };        
 
-        textureAtlas_.putVertex(vertexes, v, atlasIndex_);
+        textureAtlas_.putVertex(textureAtlas_.getVertexBuffer(), v, atlasIndex_);
         dirty_ = recursiveDirty_ = false;
     }
 

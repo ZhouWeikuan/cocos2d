@@ -113,7 +113,8 @@ public class ClickAndMoveTest extends Activity {
 
         @Override
         public boolean ccTouchesBegan(MotionEvent event) {
-            CGPoint convertedLocation = CCDirector.sharedDirector().convertCoordinate(event.getX(), event.getY());
+            CGPoint convertedLocation = CCDirector.sharedDirector()
+            	.convertToGL(CGPoint.make(event.getX(), event.getY()));
 
             CCNode s = getChild(kTagSprite);
             s.stopAllActions();

@@ -23,16 +23,14 @@ import javax.microedition.khronos.egl.EGL10;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
-import org.cocos2d.actions.CCActionManager;
 import org.cocos2d.actions.CCScheduler;
 import org.cocos2d.config.ccConfig;
 import org.cocos2d.config.ccMacros;
 import org.cocos2d.events.CCTouchDispatcher;
 import org.cocos2d.layers.CCScene;
 import org.cocos2d.nodes.CCLabel.TextAlignment;
-import org.cocos2d.opengl.CCDrawingPrimitives;
 import org.cocos2d.opengl.CCTexture2D;
-import org.cocos2d.transitions.TransitionScene;
+import org.cocos2d.transitions.CCTransitionScene;
 import org.cocos2d.types.CGPoint;
 import org.cocos2d.types.CGRect;
 import org.cocos2d.types.CGSize;
@@ -292,8 +290,8 @@ public class CCDirector implements GLSurfaceView.Renderer {
     // rotates the screen if an orientation differnent than Portrait is used
     private void applyOrientation(GL10 gl) {
         CGSize s = surfaceSize_;
-        float h = s.height / 2;
-        float w = s.width / 2;
+        // float h = s.height / 2;
+        // float w = s.width / 2;
 
         // XXX it's using hardcoded values.
         // What if the the screen size changes in the future?
@@ -640,10 +638,13 @@ public class CCDirector implements GLSurfaceView.Renderer {
 
     public void onDrawFrame(GL10 gl) {
         synchronized (this) {
-            if (_sharedDirector == null)
-            	return;
-            drawCCScene(gl);
+            this.notify();
         }
+        Thread.yield();
+        
+        if (_sharedDirector == null)
+        	return;
+        drawCCScene(gl);
     }    
 
     /** Draw the CCScene.
@@ -672,15 +673,6 @@ public class CCDirector implements GLSurfaceView.Renderer {
         
         // By default enable VertexArray, ColorArray, TextureCoordArray and Texture2D
         ccMacros.CC_ENABLE_DEFAULT_GL_STATES(gl);
-        /*
-        CCLabelAtlas label = CCLabelAtlas.label("1314521", "fps_images.png", 16, 24, '.');
-        label.setPosition(CGPoint.make(80, 130));
-        label.visit(gl);
-        */
-        /*
-        CCSprite sprite = CCSprite.sprite("grossini.png");
-        sprite.setPosition(CGPoint.make(winSize().width/2, winSize().height/2));
-        sprite.visit(gl);*/
         
         /* draw the CCScene */
         runningCCScene_.visit(gl);
@@ -691,10 +683,6 @@ public class CCDirector implements GLSurfaceView.Renderer {
         //    showProfilers();
         }
         
-        // gl.glLineWidth(3.0f);
-        // gl.glColor4f(1.0f, 0.5f, 0.8f, 1.0f);
-        // CCDrawingPrimitives.ccDrawLine(gl, CGPoint.make(0, 0), CGPoint.make(200, 200));
-                
         ccMacros.CC_DISABLE_DEFAULT_GL_STATES(gl);
         
         gl.glPopMatrix();
@@ -931,10 +919,6 @@ public class CCDirector implements GLSurfaceView.Renderer {
         }
     }
 
-    public CGPoint convertCoordinate(float x, float y) {
-        return convertToGL(CGPoint.make(x, y));
-    }
-
     /** converts a UIKit coordinate to an OpenGL coordinate
       Useful to convert (multi) touchs coordinates to the current layout (portrait or landscape)
       */
@@ -1084,10 +1068,6 @@ public class CCDirector implements GLSurfaceView.Renderer {
     		stopAnimation();
     		// detach();
 
-    		if (ccConfig.CC_DIRECTOR_FAST_FPS) {
-    			FPSLabel_ = null;
-    		}
-
     		// Purge bitmap cache
     		// CCBitmapFontAtlas.purgeCachedData();
 
@@ -1099,14 +1079,15 @@ public class CCDirector implements GLSurfaceView.Renderer {
 
     		// OpenGL view
     		openGLView_ = null;
-
     		_sharedDirector = null;
+            if (FPSLabel_ != null)
+                FPSLabel_ = null;
     	}
     }
 
     public void setNextScene() {
-        boolean runningIsTransition = runningCCScene_ instanceof TransitionScene;
-        boolean newIsTransition = nextCCScene_ instanceof TransitionScene;
+        boolean runningIsTransition = runningCCScene_ instanceof CCTransitionScene;
+        boolean newIsTransition = nextCCScene_ instanceof CCTransitionScene;
 
         // If it is not a transition, call onExit
         if( runningCCScene_ != null && ! newIsTransition ) {

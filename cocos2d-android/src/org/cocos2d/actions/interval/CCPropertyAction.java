@@ -1,6 +1,7 @@
 package org.cocos2d.actions.interval;
 
-import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+
 import org.cocos2d.nodes.CCNode;
 
 
@@ -24,7 +25,7 @@ import org.cocos2d.nodes.CCNode;
  */
 public class CCPropertyAction extends CCIntervalAction {
 
-    Field           fld_;
+    Method          setMethod_;   // setScale, like this
     String          key_;
     float			from_, to_;
     float			delta_;
@@ -38,11 +39,9 @@ public class CCPropertyAction extends CCIntervalAction {
     protected CCPropertyAction(float aDuration, String key, float from, float to) {
         super(aDuration);
         key_    = key;
-        try {
-			fld_    = target.getClass().getDeclaredField(key_);
-		} catch (Exception e) {
-			fld_ = null;			
-		}
+
+        setMethod_ = null;
+		
 		
         to_		= to;
         from_	= from;
@@ -57,7 +56,12 @@ public class CCPropertyAction extends CCIntervalAction {
     @Override
     public void update(float dt) {
         try {
-			fld_.setFloat(target, to_  - delta_ * (1 - dt));
+        	if (setMethod_ == null) {        		
+        		setMethod_    = target.getClass().getMethod(key_, new Class[] {Float.TYPE});        		
+        	}
+        	setMethod_.invoke(target, new Object[] {
+        			to_  - delta_ * (1 - dt)
+        	});
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

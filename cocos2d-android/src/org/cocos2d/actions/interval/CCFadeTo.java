@@ -8,16 +8,16 @@ import org.cocos2d.protocols.CCRGBAProtocol;
  * @warning This action doesn't support "reverse"
  */
 public class CCFadeTo extends CCIntervalAction {
-    byte toOpacity;
-    byte fromOpacity;
+    int toOpacity;
+    int fromOpacity;
 
     /** creates an action with duration and opactiy */
-    public static CCFadeTo action(float t, byte a) {
+    public static CCFadeTo action(float t, int a) {
         return new CCFadeTo(t, a);
     }
 
     /** initializes the action with duration and opacity */
-    protected CCFadeTo(float t, byte a) {
+    protected CCFadeTo(float t, int a) {
         super(t);
         toOpacity = a;
     }
@@ -30,12 +30,12 @@ public class CCFadeTo extends CCIntervalAction {
     @Override
     public void start(CCNode aTarget) {
         super.start(aTarget);
-        fromOpacity = (byte) ((CCRGBAProtocol) target).getOpacity();
+        fromOpacity = ((CCRGBAProtocol) target).getOpacity();
     }
 
     @Override
     public void update(float t) {
-        ((CCRGBAProtocol) target).setOpacity((byte) (fromOpacity + (toOpacity - fromOpacity) * t));
+        ((CCRGBAProtocol) target).setOpacity((int)(fromOpacity + (toOpacity - fromOpacity) * t));
     }
 }
 

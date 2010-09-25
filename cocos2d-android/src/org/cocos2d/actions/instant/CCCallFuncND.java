@@ -1,6 +1,5 @@
 package org.cocos2d.actions.instant;
 
-import org.cocos2d.nodes.CCNode;
 
 /**
  * Calls a 'callback' with the node as the first argument and the 2nd argument is data
@@ -24,7 +23,7 @@ public class CCCallFuncND extends CCCallFuncN {
         try {
             Class<?> cls = targetCallback.getClass();
             Class<?> partypes[] = new Class<?>[] {
-            	CCNode.class, Object.class,
+            	Object.class, Object.class,
             };
             invocation = cls.getMethod(selector, partypes);
         } catch (Exception e) {

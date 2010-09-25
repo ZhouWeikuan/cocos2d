@@ -1,8 +1,5 @@
 package org.cocos2d.actions.instant;
 
-import org.cocos2d.nodes.CCNode;
-
-
 /**
  * Calls a 'callback' with the node as the first argument
  * N means Node

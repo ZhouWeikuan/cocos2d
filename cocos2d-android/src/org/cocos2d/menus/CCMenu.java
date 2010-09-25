@@ -347,8 +347,8 @@ public class CCMenu extends CCLayer {
     }
 
     private CCMenuItem itemForTouch(MotionEvent event) {
-    	CGPoint touchLocation =
-    		CCDirector.sharedDirector().convertCoordinate(event.getX(), event.getY());
+    	CGPoint touchLocation =	CCDirector.sharedDirector()
+    		.convertToGL(CGPoint.ccp(event.getX(), event.getY()));
     	CGPoint pnt = getPosition();
     	float menuX = pnt.x;
     	float menuY = pnt.y;

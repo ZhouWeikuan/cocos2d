@@ -4,6 +4,8 @@ import org.cocos2d.nodes.CCNode;
 import org.cocos2d.types.CGPoint;
 import org.cocos2d.types.CGRect;
 import org.cocos2d.types.CGSize;
+
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 
@@ -13,13 +15,12 @@ import java.lang.reflect.Method;
  */
 
 public class CCMenuItem extends CCNode {
-    public static final int kItemSize = 32;
+    public static final int kItemSize = 24;
 
     static int _fontSize = kItemSize;
     static String fontName = "DroidSans";
 
     public static final int kCurrentItem = 0xc0c05001;
-
     public static final int kZoomActionTag = 0xc0c05002;
 
     protected boolean isEnabled_;
@@ -47,13 +48,18 @@ public class CCMenuItem extends CCNode {
         setAnchorPoint(CGPoint.make(0.5f, 0.5f));
 
         invocation = null;
-        if (rec != null && cb != null)
-            try {
-                Class<?> cls = rec.getClass();
-                invocation = cls.getMethod(cb);
-            } catch (Exception e) {
-                // Do nothing
-            }
+        if (rec != null && cb != null) {
+        	Class<?> cls = rec.getClass();
+        	try {
+        		invocation = cls.getMethod(cb, new Class[]{});
+        	} catch (SecurityException e) {
+        		// TODO Auto-generated catch block
+        		e.printStackTrace();
+        	} catch (NoSuchMethodException e) {
+        		// TODO Auto-generated catch block
+        		e.printStackTrace();
+        	}
+        }
 
         isEnabled_ = true;
         isSelected_ = false;
@@ -64,13 +70,20 @@ public class CCMenuItem extends CCNode {
      */
     public void activate() {
         if (isEnabled_) {
-            if (targetCallback != null & invocation != null) {
-                try {
-                    invocation.invoke(targetCallback);
-                } catch (Exception e) {
-                    // Do nothing
-                }
-            }
+        	if (targetCallback != null & invocation != null) {
+        		try {
+        			invocation.invoke(targetCallback, new Object[]{});
+        		} catch (IllegalArgumentException e) {
+        			// TODO Auto-generated catch block
+        			e.printStackTrace();
+        		} catch (IllegalAccessException e) {
+        			// TODO Auto-generated catch block
+        			e.printStackTrace();
+        		} catch (InvocationTargetException e) {
+        			// TODO Auto-generated catch block
+        			e.printStackTrace();
+        		}
+        	}
         }
     }
 

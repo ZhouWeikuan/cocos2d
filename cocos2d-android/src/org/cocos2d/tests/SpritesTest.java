@@ -1,25 +1,49 @@
 package org.cocos2d.tests;
 
-import android.app.Activity;
-import android.os.Bundle;
-import android.view.Window;
-import android.view.WindowManager;
 import org.cocos2d.actions.base.CCAction;
 import org.cocos2d.actions.base.CCRepeatForever;
 import org.cocos2d.actions.camera.CCOrbitCamera;
-import org.cocos2d.actions.instant.*;
-import org.cocos2d.actions.interval.*;
+import org.cocos2d.actions.instant.CCCallFunc;
+import org.cocos2d.actions.instant.CCHide;
+import org.cocos2d.actions.instant.CCInstantAction;
+import org.cocos2d.actions.instant.CCPlace;
+import org.cocos2d.actions.instant.CCToggleVisibility;
+import org.cocos2d.actions.interval.CCBezierBy;
+import org.cocos2d.actions.interval.CCBlink;
+import org.cocos2d.actions.interval.CCDelayTime;
+import org.cocos2d.actions.interval.CCFadeIn;
+import org.cocos2d.actions.interval.CCFadeOut;
+import org.cocos2d.actions.interval.CCIntervalAction;
+import org.cocos2d.actions.interval.CCJumpBy;
+import org.cocos2d.actions.interval.CCJumpTo;
+import org.cocos2d.actions.interval.CCMoveBy;
+import org.cocos2d.actions.interval.CCMoveTo;
+import org.cocos2d.actions.interval.CCRepeat;
+import org.cocos2d.actions.interval.CCRotateBy;
+import org.cocos2d.actions.interval.CCRotateTo;
+import org.cocos2d.actions.interval.CCScaleBy;
+import org.cocos2d.actions.interval.CCScaleTo;
+import org.cocos2d.actions.interval.CCSequence;
+import org.cocos2d.actions.interval.CCSpawn;
+import org.cocos2d.actions.interval.CCTintBy;
+import org.cocos2d.actions.interval.CCTintTo;
 import org.cocos2d.layers.CCLayer;
 import org.cocos2d.layers.CCScene;
-import org.cocos2d.menus.CCMenu;
-import org.cocos2d.menus.CCMenuItemImage;
-import org.cocos2d.nodes.*;
+import org.cocos2d.nodes.CCAnimation;
+import org.cocos2d.nodes.CCDirector;
+import org.cocos2d.nodes.CCSprite;
+import org.cocos2d.nodes.CCTextureCache;
 import org.cocos2d.opengl.CCGLSurfaceView;
 import org.cocos2d.types.CCBezierConfig;
 import org.cocos2d.types.CGPoint;
 import org.cocos2d.types.CGSize;
 import org.cocos2d.types.ccColor3B;
 import org.cocos2d.utils.CCFormatter;
+
+import android.app.Activity;
+import android.os.Bundle;
+import android.view.Window;
+import android.view.WindowManager;
 
 public class SpritesTest extends Activity {
     // private static final String LOG_TAG = SpritesTest.class.getSimpleName();

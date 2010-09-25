@@ -9,10 +9,7 @@ import org.cocos2d.actions.interval.CCScaleBy;
 import org.cocos2d.actions.interval.CCSequence;
 import org.cocos2d.layers.CCLayer;
 import org.cocos2d.layers.CCScene;
-import org.cocos2d.menus.CCMenu;
-import org.cocos2d.menus.CCMenuItemImage;
 import org.cocos2d.nodes.CCDirector;
-import org.cocos2d.nodes.CCLabel;
 import org.cocos2d.nodes.CCLabelAtlas;
 import org.cocos2d.nodes.CCNode;
 import org.cocos2d.nodes.CCSprite;
@@ -43,7 +40,6 @@ public class CocosNodeTest extends Activity {
         setContentView(mGLSurfaceView);
     }
 
-    @SuppressWarnings("deprecation")
 	@Override
     public void onStart() {
         super.onStart();

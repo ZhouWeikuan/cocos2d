@@ -20,7 +20,7 @@ public class CCRotateTo extends CCIntervalAction {
     /** initializes the action */
     protected CCRotateTo(float duration, float ang) {
         super(duration);
-        diffAngle = ang;
+        dstAngle = ang;
     }
 
     @Override

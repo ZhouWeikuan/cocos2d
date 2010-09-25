@@ -10,9 +10,9 @@ import org.cocos2d.nodes.CCDirector;
 import org.cocos2d.nodes.CCLabel;
 import org.cocos2d.nodes.CCTextureCache;
 import org.cocos2d.opengl.CCGLSurfaceView;
-import org.cocos2d.transitions.FlipXTransition;
-import org.cocos2d.transitions.SlideInTTransition;
-import org.cocos2d.transitions.TransitionScene;
+import org.cocos2d.transitions.CCFlipXTransition;
+import org.cocos2d.transitions.CCSlideInTTransition;
+import org.cocos2d.transitions.CCTransitionScene;
 import org.cocos2d.types.CGPoint;
 import org.cocos2d.types.ccColor4B;
 
@@ -65,7 +65,7 @@ public class SceneTest extends Activity {
         public void onPushSceneTran() {
             CCScene scene = CCScene.node();
             scene.addChild(new Layer2(), 0);
-            CCDirector.sharedDirector().pushScene(SlideInTTransition.transition(1, scene));
+            CCDirector.sharedDirector().pushScene(CCSlideInTTransition.transition(1, scene));
         }
 
 
@@ -102,7 +102,7 @@ public class SceneTest extends Activity {
         public void onReplaceSceneTransition() {
             CCScene s = CCScene.node();
             s.addChild(new Layer3(), 0);
-            CCDirector.sharedDirector().replaceScene(FlipXTransition.transition(2.0f, s, TransitionScene.Orientation.kOrientationLeftOver));
+            CCDirector.sharedDirector().replaceScene(CCFlipXTransition.transition(2.0f, s, CCTransitionScene.Orientation.kOrientationLeftOver));
         }
     }
 

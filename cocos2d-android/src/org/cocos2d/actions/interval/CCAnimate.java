@@ -102,8 +102,9 @@ public class CCAnimate extends CCIntervalAction {
         }
 
         CCSprite sprite = (CCSprite) target;
-        if (!sprite.isFrameDisplayed(animation.frames().get(idx))) {
-            sprite.setDisplayFrame(animation.frames().get(idx));
+        CCSpriteFrame frame = animation.frames().get(idx); 
+        if (!sprite.isFrameDisplayed(frame)) {
+            sprite.setDisplayFrame(frame);
         }
     }
     

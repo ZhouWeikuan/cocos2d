@@ -1,6 +1,8 @@
 package org.cocos2d.nodes;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import javax.microedition.khronos.opengles.GL10;
 
@@ -189,7 +191,7 @@ public class CCNode {
     protected CGPoint anchorPoint_;
 
 	// untransformed size of the node
-    private CGSize contentSize_;
+    protected CGSize contentSize_;
 
     /** The untransformed size of the node.
      The contentSize remains the same no matter the node is scaled or rotated.
@@ -380,9 +382,9 @@ public class CCNode {
     }
 
 	// array of children
-    protected ArrayList<CCNode> children_;
+    protected List<CCNode> children_;
 
-    public ArrayList<CCNode> getChildren() {
+    public List<CCNode> getChildren() {
         return children_;
     }
 
@@ -547,16 +549,19 @@ public class CCNode {
     */
     public void removeAllChildren(boolean cleanup) {
 	    // not using detachChild improves speed here
-        for (CCNode child: children_) {
-            if (isRunning_)
-                child.onExit();
+    	
+    	for (int i=0; i<children_.size(); ++i) {
+    		CCNode child = children_.get(i);
+    		if (isRunning_)
+    			child.onExit();
 
-            if (cleanup)
-                child.cleanup();
+    		if (cleanup)
+    			child.cleanup();
 
-            child.setParent(null);
-        }
-        children_.clear();
+    		child.setParent(null);
+    	}
+    	children_.clear();
+
     }
 
     /** Gets a child from the container given its tag
@@ -567,7 +572,8 @@ public class CCNode {
         assert tag != kCCNodeTagInvalid : "Invalid tag_";
 
         if (children_ != null)
-            for (CCNode node: children_) {
+            for (int i=0; i<children_.size(); ++i) {
+            	CCNode node = children_.get(i);
                 if (node.tag_ == tag) {
                     return node;
                 }
@@ -637,22 +643,26 @@ public class CCNode {
 
         transform(gl);
 
-        if (children_ != null)
-            for (CCNode child: children_) {
-                if (child.zOrder_ < 0) {
-                    child.visit(gl);
-                } else
-                    break;
-            }
+        if (children_ != null) {
+        	for (int i=0; i<children_.size(); ++i) {
+        		CCNode child = children_.get(i);
+        		if (child.zOrder_ < 0) {
+        			child.visit(gl);
+        		} else
+        			break;
+        	}
+        }
 
         draw(gl);
 
-        if (children_ != null)
-            for (CCNode child: children_) {
-                if (child.zOrder_ >= 0) {
-                    child.visit(gl);
-                }
-            }
+        if (children_ != null) {
+        	for (int i=0; i<children_.size(); ++i) {
+        		CCNode child = children_.get(i);
+        		if (child.zOrder_ >= 0) {
+        			child.visit(gl);
+        		}
+        	}
+        }
 
 
         if (grid_ != null && grid_.isActive()) {
@@ -979,7 +989,7 @@ public class CCNode {
       @since v0.7.1
     */
     public CGPoint convertTouchToNodeSpace(MotionEvent event) {
-        CGPoint point = CCDirector.sharedDirector().convertCoordinate(event.getX(), event.getY());
+        CGPoint point = CCDirector.sharedDirector().convertToGL(CGPoint.make(event.getX(), event.getY()));
         return convertToNodeSpace(point.x, point.y);
     }
 
@@ -987,7 +997,7 @@ public class CCNode {
       @since v0.7.1
     */
     public CGPoint convertTouchToNodeSpaceAR(MotionEvent event) {
-        CGPoint point = CCDirector.sharedDirector().convertCoordinate(event.getX(), event.getY());
+        CGPoint point = CCDirector.sharedDirector().convertToGL(CGPoint.make(event.getX(), event.getY()));
         return convertToNodeSpaceAR(point.x, point.y);
     }
 
@@ -1004,14 +1014,15 @@ public class CCNode {
 
     // lazy allocs
     private void childrenAlloc() {
-        children_ = new ArrayList<CCNode>(4);
+        children_ =  Collections.synchronizedList(new ArrayList<CCNode>(4));
     }
 
     // helper that reorder a child
     private void insertChild(CCNode node, int z) {
         int index = 0;
         boolean added = false;
-        for (CCNode child: children_) {
+        for (int i=0; i<children_.size(); ++i) {
+        	CCNode child = children_.get(i);
             if (child.getZOrder() > z) {
                 added = true;
                 children_.add(index, node);
@@ -1035,7 +1046,8 @@ public class CCNode {
 	
     	// timers
         if (children_ != null)
-            for (CCNode node: children_) {
+            for (int i=0; i<children_.size(); ++i) {
+            	CCNode node = children_.get(i);
                 node.cleanup();
             }
     }
