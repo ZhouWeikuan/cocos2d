@@ -66,7 +66,11 @@ public class CCTexture2D {
 
     /** texture name */
     public int name() {
-        this.loadTexture(CCDirector.gl);
+    	
+        if( CCDirector.gl != null)
+        {	
+        	this.loadTexture(CCDirector.gl);
+        }
         return _name;
     }
 
