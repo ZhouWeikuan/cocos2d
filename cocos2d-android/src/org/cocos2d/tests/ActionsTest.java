@@ -63,6 +63,9 @@ import android.os.Bundle;
 import android.view.Window;
 import android.view.WindowManager;
 
+// ActionsTest, there is a downloadable demo here:
+//  http://code.google.com/p/cocos2d-android-1/downloads/detail?name=ActionsTest.3gp&can=2&q=#makechanges
+//
 public class ActionsTest extends Activity {
 	private static final String LOG_TAG = ActionsTest.class.getSimpleName();
 

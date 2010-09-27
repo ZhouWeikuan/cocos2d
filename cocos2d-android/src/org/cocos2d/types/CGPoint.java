@@ -1,5 +1,7 @@
 package org.cocos2d.types;
 
+import org.cocos2d.config.ccMacros;
+
 public class CGPoint {
     private static final float kCGPointEpsilon = 0.00000012f; 
     public float x, y;
@@ -202,6 +204,30 @@ public class CGPoint {
      */
     public static float ccpToAngle(final CGPoint v) {
         return (float) Math.atan2(v.y, v.x);
+    }
+
+    /**
+     *  Caculate the rotation(in degrees) between two points,
+     *      so that when we move from one point to the other,
+     *      we can set the correct rotation to head to that point.
+     *
+     * @param from
+     * @param to
+     * @return the rotation in degrees
+     */
+    public static float ccpCalcRotate(final CGPoint from, final CGPoint to) {
+        float o = to.x - from.x;
+        float a = to.y - from.y;
+        float at = ccMacros.CC_RADIANS_TO_DEGREES((float) Math.atan(o / a));
+
+        if (a < 0) {
+            if (o < 0)
+                at = 180 + Math.abs(at);
+            else
+                at = 180 - Math.abs(at);
+        }
+
+        return at;
     }
 
 

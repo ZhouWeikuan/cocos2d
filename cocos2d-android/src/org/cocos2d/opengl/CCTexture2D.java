@@ -107,7 +107,7 @@ public class CCTexture2D {
 
     /** hight in pixels */
     private int mHeight;
-    private Bitmap.Config _format;
+    // private Bitmap.Config _format;
 
     /** texture max S */
     private float _maxS;
@@ -149,7 +149,7 @@ public class CCTexture2D {
             imageSize.height *= 0.5f;
         }
 
-        if (imageSize.width != width && imageSize.height != height) {
+        if (imageSize.width != width || imageSize.height != height) {
             Bitmap bitmap = Bitmap.createBitmap(width, height,
                     image.hasAlpha() ? Bitmap.Config.ARGB_8888 : Bitmap.Config.RGB_565);
             Canvas canvas = new Canvas(bitmap);
@@ -177,7 +177,7 @@ public class CCTexture2D {
         mWidth = image.getWidth();
         mHeight = image.getHeight();
         mContentSize = imageSize;
-        _format = image.getConfig();
+        // _format = image.getConfig();
         _maxS = mContentSize.width / (float) mWidth;
         _maxT = mContentSize.height / (float) mHeight;
         _texParams = _gTexParams;
@@ -347,8 +347,8 @@ public class CCTexture2D {
 
         loadTexture(gl);
 
-        float width = (float) mWidth * _maxS;
-        float height = (float) mHeight * _maxT;
+        // float width = (float) mWidth * _maxS;
+        // float height = (float) mHeight * _maxT;
 
 	    float vertices[] = {
             rect.origin.x, rect.origin.y, /*0.0f,*/

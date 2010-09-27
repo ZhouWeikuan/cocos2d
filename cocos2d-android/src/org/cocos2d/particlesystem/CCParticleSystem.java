@@ -135,7 +135,7 @@ public abstract class CCParticleSystem extends CCNode implements CCTextureProtoc
 	// Mode A:Gravity + Tangential Accel + Radial Accel
 	class ModeA {
 		// gravity of the particles
-		CGPoint gravity;
+		CGPoint gravity = CGPoint.zero();
 
 		// The speed the particles will have.
 		float speed;
@@ -289,7 +289,21 @@ public abstract class CCParticleSystem extends CCNode implements CCTextureProtoc
 	protected CCTexture2D texture;
 
 	// Different modes
-	int emitterMode;
+	int emitterMode = -1;
+	public void setEmitterMode(int em) {
+		if (emitterMode == em)
+			return;
+		if (em == kCCParticleModeGravity) {
+			modeA = new ModeA();
+			if (modeB != null)
+				modeB = null;
+		} else {
+			modeB = new ModeB();
+			if (modeA != null)
+				modeA = null;
+		}
+
+	}
 
 	ModeA modeA;
 	ModeB modeB;

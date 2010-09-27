@@ -344,6 +344,8 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
             CGRect rect = CGRect.make(0, 0, 0, 0);
             rect.size = texture.getContentSize();
             init(texture, rect);
+        } else {
+		ccMacros.CCLOGERROR("CCSprite", "Unable to load texture from file: " + filename);
         }
     }
 

@@ -26,7 +26,7 @@ import android.view.WindowManager;
 
 
 public class SceneTest extends Activity {
-    private static final String LOG_TAG = SceneTest.class.getSimpleName();
+    // private static final String LOG_TAG = SceneTest.class.getSimpleName();
     private CCGLSurfaceView mGLSurfaceView;
 
 

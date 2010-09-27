@@ -38,13 +38,13 @@ public class ccMacros {
 
     public static final void CCLOGINFO(final String logName, final String logStr) {
         if (ccConfig.COCOS2D_DEBUG >= 1) {
-            Log.e(logName, logStr);
+            Log.i(logName, logStr);
         }
     }
 
     public static final void CCLOGERROR(final String logName, final String logStr) {
         if (ccConfig.COCOS2D_DEBUG >= 2) {
-            Log.i(logName, logStr);
+            Log.e(logName, logStr);
         }
     }
 

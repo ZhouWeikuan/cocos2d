@@ -1,6 +1,3 @@
-Box2dTest.mm
-ChipmunkAccelTouchTest.m
-ClickAndMoveTest.m
 cocosnodeTest.m
 drawPrimitivesTest.m
 EaseActionsTest.m
@@ -23,3 +20,6 @@ SpriteTest.m
 Texture2dTest.m
 TileMapTest.m
 TransitionsTest.m
+
+--- chipmunk not ported
+ChipmunkAccelTouchTest.m

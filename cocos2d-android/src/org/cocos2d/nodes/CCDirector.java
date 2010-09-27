@@ -642,9 +642,11 @@ public class CCDirector implements GLSurfaceView.Renderer {
         }
         Thread.yield();
         
-        if (_sharedDirector == null)
-        	return;
-        drawCCScene(gl);
+        synchronized(this) {
+		if (_sharedDirector == null)
+		return;
+		drawCCScene(gl);
+        }
     }    
 
     /** Draw the CCScene.

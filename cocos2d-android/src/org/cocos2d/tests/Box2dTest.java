@@ -36,6 +36,9 @@ import android.view.WindowManager;
  * 
  * @author Ray Cardillo
  */
+// Box2dTest, there is a downloadable demo here:
+//   http://code.google.com/p/cocos2d-android-1/downloads/detail?name=cocos2d%20%20and%20jbox2d.3gp&can=2&q=#makechanges
+//
 public class Box2dTest extends Activity {
     // private static final String LOG_TAG = JBox2DTest.class.getSimpleName();
     

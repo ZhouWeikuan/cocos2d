@@ -35,6 +35,9 @@ import android.os.Bundle;
 import android.view.Window;
 import android.view.WindowManager;
 
+// AtlasTest, there is a downloadable demo here:
+// http://code.google.com/p/cocos2d-android-1/downloads/detail?name=CCTextureAtlas%20and%20CCBitmapFontAtlas.3gp&can=2&q=#makechanges
+//
 public class AtlasTest extends Activity {
     // private static final String LOG_TAG = AtlasTest.class.getSimpleName();
     private CCGLSurfaceView mGLSurfaceView;

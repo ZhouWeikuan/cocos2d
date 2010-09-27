@@ -29,6 +29,9 @@ import android.os.Bundle;
 import android.view.Window;
 import android.view.WindowManager;
 
+// There is a downloadable demo on this test
+// http://code.google.com/p/cocos2d-android-1/downloads/detail?name=ActionManagerTest.3gp&can=2&q=#makechanges
+//
 public class ActionManagerTest extends Activity {
 	// private static final String LOG_TAG = ActionManagerTest.class.getSimpleName();
 

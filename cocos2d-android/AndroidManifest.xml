@@ -63,8 +63,28 @@
             </intent-filter>
         </activity>
         
-        
-        
+        <activity android:name=".tests.ClickAndMoveTest"
+                  android:debuggable="true"
+                  android:screenOrientation="portrait"
+                  android:launchMode="singleInstance"
+                  android:label="@string/activity_clickandmovetest">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.TEST"/>
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".tests.CocosNodeTest"
+                  android:debuggable="true"
+                  android:screenOrientation="landscape"
+                  android:launchMode="singleInstance"
+                  android:label="@string/activity_cocosnodetest">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.TEST"/>
+            </intent-filter>
+        </activity>
+
 
         <activity android:name=".tests.EaseActionsTest"
                   android:debuggable="true"
@@ -90,26 +110,6 @@
                   android:debuggable="true"
                   android:launchMode="singleInstance"
                   android:label="@string/activity_parallaxtest">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.TEST"/>
-            </intent-filter>
-        </activity>
-
-        <activity android:name=".tests.ClickAndMoveTest"
-                  android:debuggable="true"
-                  android:launchMode="singleInstance"
-                  android:label="@string/activity_clickandmovetest">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.TEST"/>
-            </intent-filter>
-        </activity>
-
-        <activity android:name=".tests.CocosNodeTest"
-                  android:debuggable="true"
-                  android:launchMode="singleInstance"
-                  android:label="@string/activity_cocosnodetest">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.TEST"/>

@@ -8,7 +8,7 @@ import org.cocos2d.types.ccBlendFunc;
 
 public class CCParticleFire extends CCParticleSystem {
 
-    public static CCParticleSystem node() {
+    public static CCParticleFire node() {
         return new CCParticleFire();
     }
 
