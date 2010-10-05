@@ -122,7 +122,8 @@ public class EaseActionsTest extends Activity {
     public void onDestroy() {
         super.onDestroy();
 
-        CCTextureCache.sharedTextureCache().removeAllTextures();
+        CCDirector.sharedDirector().end();
+        // CCTextureCache.sharedTextureCache().removeAllTextures();
     }
 
     static final int kTagAction1 = 1;

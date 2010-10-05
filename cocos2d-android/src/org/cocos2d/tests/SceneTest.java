@@ -8,7 +8,6 @@ import org.cocos2d.menus.CCMenu;
 import org.cocos2d.menus.CCMenuItemFont;
 import org.cocos2d.nodes.CCDirector;
 import org.cocos2d.nodes.CCLabel;
-import org.cocos2d.nodes.CCTextureCache;
 import org.cocos2d.opengl.CCGLSurfaceView;
 import org.cocos2d.transitions.CCFlipXTransition;
 import org.cocos2d.transitions.CCSlideInTTransition;
@@ -151,22 +150,22 @@ public class SceneTest extends Activity {
     }
 
     // getting a call, pause the game
-    public void applicationWillResignActive(Context context) {
-        CCDirector.sharedDirector().pause();
+    public void onPause() {
+    	super.onPause();
+    	
+    	CCDirector.sharedDirector().pause();
     }
 
     // call got rejected
-    public void applicationDidBecomeActive(Context context) {
+    public void onResume() {
+    	super.onResume();
+    	
         CCDirector.sharedDirector().resume();
     }
 
-    // purge memroy
-    public void applicationDidReceiveMemoryWarning(Context context) {
-        CCTextureCache.sharedTextureCache().removeAllTextures();
-    }
-
-    // next delta time will be zero
-    public void applicationSignificantTimeChange(Context context) {
-        //	Director.sharedDirector().setNextDeltaTimeZero(true);
+    public void onDestroy() {
+    	super.onDestroy();
+    	
+    	CCDirector.sharedDirector().end();
     }
 }

@@ -165,6 +165,7 @@ public class CCTexture2D {
         Bitmap.Config config = Bitmap.Config.ARGB_8888;
         Bitmap bitmap = Bitmap.createBitmap((int) imageSize.width, (int) imageSize.height, config);
         Canvas canvas = new Canvas(bitmap);
+        
         canvas.drawBitmap(image, 0, 0, new Paint());
         image.recycle();
 

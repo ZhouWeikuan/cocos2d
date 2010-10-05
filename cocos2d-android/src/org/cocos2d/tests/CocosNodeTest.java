@@ -471,6 +471,10 @@ public class CocosNodeTest extends Activity {
 	}
 
 	static class CustomNode extends CCNode {
+		public static CustomNode node() {
+			return new CustomNode();
+		}
+		
 		public void doSomething(float dt) {
 			ccMacros.CCLOG("CustomNode", "do something...");
 		}
@@ -484,7 +488,7 @@ public class CocosNodeTest extends Activity {
 			//
             super();
 
-            CCLayer layer = (CCLayer) CustomNode.node();
+            CCNode layer =  CustomNode.node();
             // ccMacros.CCLog(@"retain count after init is %d", [layer retainCount]);                // 1
 
             addChild(layer, 0);

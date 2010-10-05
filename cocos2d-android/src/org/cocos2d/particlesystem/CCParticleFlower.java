@@ -6,10 +6,14 @@ import org.cocos2d.types.CGPoint;
 import org.cocos2d.types.CGSize;
 import org.cocos2d.types.ccBlendFunc;
 
-public class CCParticleFlower extends CCParticleSystem {
+public class CCParticleFlower extends CCQuadParticleSystem {
 
-    public static CCParticleSystem node() {
+    public static CCParticleFlower node() {
         return new CCParticleFlower();
+    }
+    
+    public static CCParticleFlower node(int p) {
+        return new CCParticleFlower(p);
     }
 
     protected CCParticleFlower() {

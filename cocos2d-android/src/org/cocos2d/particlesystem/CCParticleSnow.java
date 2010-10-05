@@ -6,7 +6,7 @@ import org.cocos2d.types.CGPoint;
 import org.cocos2d.types.CGSize;
 import org.cocos2d.types.ccBlendFunc;
 
-public class CCParticleSnow extends CCParticleSystem {
+public class CCParticleSnow extends CCQuadParticleSystem {
 
     public static CCParticleSystem node() {
         return new CCParticleSnow();

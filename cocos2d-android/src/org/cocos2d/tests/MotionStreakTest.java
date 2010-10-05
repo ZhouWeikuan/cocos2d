@@ -85,7 +85,8 @@ public class MotionStreakTest extends Activity {
     public void onDestroy() {
         super.onDestroy();
 
-        CCTextureCache.sharedTextureCache().removeAllTextures();
+        CCDirector.sharedDirector().end();
+        // CCTextureCache.sharedTextureCache().removeAllTextures();
     }
 
     public static final int kTagLabel = 1;

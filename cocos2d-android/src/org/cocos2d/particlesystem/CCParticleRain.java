@@ -5,7 +5,7 @@ import org.cocos2d.nodes.CCTextureCache;
 import org.cocos2d.types.CGPoint;
 import org.cocos2d.types.ccBlendFunc;
 
-public class CCParticleRain extends CCParticleSystem {
+public class CCParticleRain extends CCQuadParticleSystem {
 
     public static CCParticleSystem node() {
         return new CCParticleRain();

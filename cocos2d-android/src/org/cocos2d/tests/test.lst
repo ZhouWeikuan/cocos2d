@@ -1,4 +1,3 @@
-cocosnodeTest.m
 drawPrimitivesTest.m
 EaseActionsTest.m
 EffectsAdvancedTest.m
@@ -10,7 +9,6 @@ LayerTest.m
 MenuTest.m
 MotionStreakTest.m
 ParallaxTest.m
-ParticleTest.m
 ProgressActionsTest.m
 RenderTextureTest.m
 RotateWorldTest.m

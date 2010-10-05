@@ -77,7 +77,8 @@ public class ParallaxTest extends Activity {
     public void onDestroy() {
         super.onDestroy();
 
-        CCTextureCache.sharedTextureCache().removeAllTextures();
+        CCDirector.sharedDirector().end();
+        // CCTextureCache.sharedTextureCache().removeAllTextures();
     }
 
     static int sceneIdx = -1;

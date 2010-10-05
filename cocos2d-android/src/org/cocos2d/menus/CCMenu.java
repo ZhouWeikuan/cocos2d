@@ -349,17 +349,14 @@ public class CCMenu extends CCLayer {
     private CCMenuItem itemForTouch(MotionEvent event) {
     	CGPoint touchLocation =	CCDirector.sharedDirector()
     		.convertToGL(CGPoint.ccp(event.getX(), event.getY()));
-    	CGPoint pnt = getPosition();
-    	float menuX = pnt.x;
-    	float menuY = pnt.y;
 
     	for (int i = 0; i < children_.size(); i++) {
     		CCMenuItem item = (CCMenuItem) children_.get(i);
             if (item.getVisible() && item.isEnabled()){
+                CGPoint local = item.convertToNodeSpace(touchLocation.x, touchLocation.y);
                 CGRect r = item.rect();
-                r.origin.x += menuX;
-                r.origin.y += menuY;
-                if (CGRect.containsPoint(r, touchLocation)) {
+                r.origin = CGPoint.zero();
+                if (CGRect.containsPoint(r, local)) {
                     return item;
                 }
             }

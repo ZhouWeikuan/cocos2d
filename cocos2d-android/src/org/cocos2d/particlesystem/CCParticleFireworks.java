@@ -6,14 +6,15 @@ import org.cocos2d.types.CGPoint;
 import org.cocos2d.types.CGSize;
 import org.cocos2d.types.ccBlendFunc;
 
-public class CCParticleFireworks extends CCParticleSystem {
+public class CCParticleFireworks extends CCQuadParticleSystem {
 
     public static CCParticleSystem node() {
         return new CCParticleFireworks();
     }
 
     protected CCParticleFireworks() {
-        this(1500);
+        // this(1500);
+    	this(1500);
     }
 
     protected CCParticleFireworks(int p) {
@@ -22,7 +23,7 @@ public class CCParticleFireworks extends CCParticleSystem {
 		duration = kCCParticleDurationInfinity;
 
 		// Gravity Mode
-		emitterMode = kCCParticleModeGravity;
+		this.setEmitterMode(kCCParticleModeGravity);
 
 		// Gravity Mode: gravity
 		this.setGravity(CGPoint.ccp(0,-90));
@@ -73,7 +74,7 @@ public class CCParticleFireworks extends CCParticleSystem {
 		startSizeVar = 2.0f;
 		endSize = kCCParticleStartSizeEqualToEndSize;
 
-        texture = CCTextureCache.sharedTextureCache().addImage("fire.png");
+        texture = CCTextureCache.sharedTextureCache().addImage("blocks.png");
 
         // additive
         blendAdditive = false;

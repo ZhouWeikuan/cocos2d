@@ -6,10 +6,14 @@ import org.cocos2d.types.CGPoint;
 import org.cocos2d.types.CGSize;
 import org.cocos2d.types.ccBlendFunc;
 
-public class CCParticleSun extends CCParticleSystem {
+public class CCParticleSun extends CCQuadParticleSystem {
 
-	public static CCParticleSystem node() {
+	public static CCParticleSun node() {
 		return new CCParticleSun();
+	}
+	
+	public static CCParticleSun node(int p) {
+		return new CCParticleSun(p);
 	}
 
 	protected CCParticleSun() {

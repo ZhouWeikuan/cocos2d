@@ -790,7 +790,8 @@ public class CCDirector implements GLSurfaceView.Renderer {
 //        CCRect rect = new CCRect(view.getScrollX(), view.getScrollY(), view.getWidth(), view.getHeight());
         WindowManager w = theApp.getWindowManager();
         CGRect rect = CGRect.make(0, 0, w.getDefaultDisplay().getWidth(), w.getDefaultDisplay().getHeight());
-
+        // CGRect rect = CGRect.make(view.getLeft(), view.getBottom(), view.getWidth(), view.getHeight());
+        
         return initOpenGLViewWithView(view, rect);
 
         /*

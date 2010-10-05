@@ -51,7 +51,7 @@ public class CCScheduler {
 		
 	// Used for "selectors with interval"
     ConcurrentHashMap<Object, tHashSelectorEntry>  hashForSelectors;
-    ConcurrentHashMap<Object, tHashSelectorEntry>  hashForUpdates;
+    ConcurrentHashMap<Object, tListEntry>  hashForUpdates;
 	tHashSelectorEntry	                currentTarget;
 	boolean						        currentTargetSalvaged;
 	
@@ -113,7 +113,7 @@ public class CCScheduler {
         updates0 = new ArrayList<tListEntry>();
         updatesNeg = new ArrayList<tListEntry>();
         updatesPos = new ArrayList<tListEntry>();
-        hashForUpdates = new ConcurrentHashMap<Object, tHashSelectorEntry>();
+        hashForUpdates = new ConcurrentHashMap<Object, tListEntry>();
         hashForSelectors = new ConcurrentHashMap<Object, tHashSelectorEntry>();
 
         // selectors with interval
@@ -148,7 +148,8 @@ public class CCScheduler {
         }
 
         // updates with priority == 0
-        for(tListEntry e: updates0) {
+        for(int i=0; i < updates0.size(); ++i) {
+        	tListEntry e = updates0.get(i);
             if( ! e.paused ) {
                 try {
 					e.impMethod.invoke(e.target, new Object[]{ dt } );
@@ -398,7 +399,7 @@ public class CCScheduler {
             element.paused = false;
 
         // Update selector
-        tHashSelectorEntry elementUpdate = hashForUpdates.get(target);
+        tListEntry elementUpdate = hashForUpdates.get(target);
         if( elementUpdate != null) {
             assert elementUpdate.target != null: "resumeTarget: unknown error";
             elementUpdate.paused = false;
@@ -420,7 +421,7 @@ public class CCScheduler {
             element.paused = true;
 
         // Update selector
-        tHashSelectorEntry elementUpdate = hashForUpdates.get(target);
+        tListEntry elementUpdate = hashForUpdates.get(target);
         if( elementUpdate != null) {
             assert elementUpdate.target != null:"pauseTarget: unknown error";
             elementUpdate.paused = true;
@@ -436,7 +437,7 @@ public class CCScheduler {
 	public void scheduleUpdate(Object target, int priority, boolean paused) {
         // TODO Auto-generated method stub
         if (ccConfig.COCOS2D_DEBUG >= 1) {
-            tHashSelectorEntry hashElement = hashForUpdates.get(target);
+            tListEntry hashElement = hashForUpdates.get(target);
             assert hashElement == null:"CCScheduler: You can't re-schedule an 'update' selector'. Unschedule it first";
         }
 
@@ -499,9 +500,7 @@ public class CCScheduler {
         list.add(listElement);
 
         // update hash entry for quicker access
-        tHashSelectorEntry hashElement = new tHashSelectorEntry();
-        hashElement.target = target;
-        hashForUpdates.put(target, hashElement);
+        hashForUpdates.put(target, listElement);
     }
 
     public void priority(ArrayList<tListEntry> list, Object target, int priority, boolean paused) {
@@ -519,12 +518,7 @@ public class CCScheduler {
 
         list.add(listElement);
 
-        // update hash entry for quicker access
-        tHashSelectorEntry hashElement = new tHashSelectorEntry();
-        hashElement.target = target;
-        hashForUpdates.put(target, hashElement);
+        hashForUpdates.put(target, listElement);
     }
-
-
 }
 

@@ -1,5 +1,9 @@
 package org.cocos2d.utils;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
@@ -9,7 +13,7 @@ import javax.microedition.khronos.opengles.GL10;
 
 public class BufferProvider {
 	// 64k is big enough for most objects
-	private static final int ALLOCATION_SIZE = 64 * 1024;
+	private static final int ALLOCATION_SIZE = 1024 * 1024;
 	private ByteBuffer currentBuffer = null;
 	private static BufferProvider global_synced = new BufferProvider();
 	
@@ -80,5 +84,29 @@ public class BufferProvider {
         temp.order(ByteOrder.nativeOrder());
         
         return temp.asShortBuffer();
+    }
+    
+    public static ByteBuffer bufferFromFile(String path) {
+    	ByteArrayOutputStream tmpOut = new ByteArrayOutputStream();
+    	byte buf[] = new byte[1024];
+    	int len = 0;
+    	try {
+			FileInputStream fis = new FileInputStream(path);
+			while(true) {
+				len = fis.read(buf);
+				if (len == -1)
+					break;
+				tmpOut.write(buf, 0, len);
+			}
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	
+		ByteBuffer bb = ByteBuffer.wrap(tmpOut.toByteArray());
+    	return bb;
     }
 }

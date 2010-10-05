@@ -937,7 +937,7 @@ public class CCNode {
         CGAffineTransform t = nodeToParentTransform();
 
         for (CCNode p = parent_; p != null; p = p.parent_)
-            t.getTransformConcat(p.nodeToParentTransform());
+            t = t.getTransformConcat(p.nodeToParentTransform());
 
         return t;
     }

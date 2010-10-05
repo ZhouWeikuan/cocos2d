@@ -32,7 +32,6 @@ import org.cocos2d.layers.CCScene;
 import org.cocos2d.nodes.CCAnimation;
 import org.cocos2d.nodes.CCDirector;
 import org.cocos2d.nodes.CCSprite;
-import org.cocos2d.nodes.CCTextureCache;
 import org.cocos2d.opengl.CCGLSurfaceView;
 import org.cocos2d.types.CCBezierConfig;
 import org.cocos2d.types.CGPoint;
@@ -665,6 +664,7 @@ public class SpritesTest extends Activity {
     public void onDestroy() {
         super.onDestroy();
 
-        CCTextureCache.sharedTextureCache().removeAllTextures();
+        CCDirector.sharedDirector().end();
+        // CCTextureCache.sharedTextureCache().removeAllTextures();
     }
 }

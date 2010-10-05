@@ -50,7 +50,8 @@ public class ccMacros {
 
     public static final float FLT_EPSILON = 0.000001f;
     public static final int INT_MIN = -2147483648;
-
+    public static final int CC_MAX_PARTICLE_SIZE = 64;
+    
     /// java doesn't support swap primitive types.
     /// public static void CC_SWAP(T x, T y);
 

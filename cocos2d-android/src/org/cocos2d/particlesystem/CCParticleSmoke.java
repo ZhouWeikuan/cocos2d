@@ -6,7 +6,7 @@ import org.cocos2d.types.CGPoint;
 import org.cocos2d.types.CGSize;
 import org.cocos2d.types.ccBlendFunc;
 
-public class CCParticleSmoke extends CCParticleSystem {
+public class CCParticleSmoke extends CCQuadParticleSystem {
 
     public static CCParticleSystem node() {
         return new CCParticleSmoke();

@@ -157,6 +157,7 @@ public class RotateWorldTest extends Activity {
     public void onDestroy() {
         super.onDestroy();
 
-        CCTextureCache.sharedTextureCache().removeAllTextures();
+        CCDirector.sharedDirector().end();
+        // CCTextureCache.sharedTextureCache().removeAllTextures();
     }
 }

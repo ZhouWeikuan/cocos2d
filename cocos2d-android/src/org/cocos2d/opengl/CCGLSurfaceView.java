@@ -17,7 +17,6 @@ public class CCGLSurfaceView extends GLSurfaceView {
 
     public Display frame;
 
-
     public CCGLSurfaceView(Context context) {
         super(context);
 

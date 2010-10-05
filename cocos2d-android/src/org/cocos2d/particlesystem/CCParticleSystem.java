@@ -1,14 +1,8 @@
 package org.cocos2d.particlesystem;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.nio.FloatBuffer;
 import java.util.HashMap;
 
 import javax.microedition.khronos.opengles.GL10;
-import javax.microedition.khronos.opengles.GL11;
 
 import org.cocos2d.config.ccConfig;
 import org.cocos2d.config.ccMacros;
@@ -98,15 +92,15 @@ public abstract class CCParticleSystem extends CCNode implements CCTextureProtoc
 	/** @struct tCCParticle
     Structure that contains the values of each particle
 	 */
-	class CCParticle {
-		class APart {
+	static class CCParticle {
+		static class ParticleModeA {
 			CGPoint		dir;
 			float		radialAccel;
 			float		tangentialAccel;
 		}
 
 		// Mode B: radius mode
-		class BPart {
+		static class ParticleModeB {
 			float		angle;
 			float		degreesPerSecond;
 			float		radius;
@@ -127,8 +121,8 @@ public abstract class CCParticleSystem extends CCNode implements CCTextureProtoc
 
 		float		timeToLive;
 
-		APart		modeA;
-		BPart		modeB;
+		ParticleModeA		modeA;
+		ParticleModeB		modeB;
 	}
 
 
@@ -172,8 +166,8 @@ public abstract class CCParticleSystem extends CCNode implements CCTextureProtoc
 	protected int id;
 	
 	// Optimization
-	Method	updateParticleImp;
-	String	updateParticleSel;
+	//Method	updateParticleImp;
+	// String	updateParticleSel;
 
 
 	// is the particle system active ?
@@ -187,36 +181,83 @@ public abstract class CCParticleSystem extends CCNode implements CCTextureProtoc
 
 	// start ize of the particles
 	float startSize;
+	public void setStartSize(float s) {
+		startSize = s;
+	}
+	
 	// start Size variance
 	float startSizeVar;
+	public void setStartSizeVar(float ssv) {
+		startSizeVar = ssv;
+	}
+	
 	// End size of the particle
 	float endSize;
+	public void setEndSize(float s) {
+		endSize = s;
+	}
+	
 	// end size of variance
 	float endSizeVar;
+	public void setEndSizeVar(float esv) {
+		endSizeVar = esv;
+	}
 
 	// start angle of the particles
 	float startSpin;
+	public void setStartSpin(float s) {
+		startSpin = s;
+	}
+	
 	// start angle variance
 	float startSpinVar;
+	public void setStartSpinVar(float ssv) {
+		startSpinVar = ssv;
+	}
+	
 	// End angle of the particle
 	float endSpin;
+	public void setEndSpin(float es) {
+		endSpin = es;
+	}
+	
 	// end angle ariance
 	float endSpinVar;
-
+	public void setEndSpinVar(float esv) {
+		endSpinVar = esv;
+	}
+	
 	/// Gravity of the particles
 	protected CGPoint centerOfGravity = CGPoint.zero();
-
+	public void setCenterOfGravity(CGPoint p) {
+		centerOfGravity = CGPoint.make(p.x, p.y);
+	}
+	
+	public CGPoint getCenterOfGravity() {
+		return CGPoint.ccp(centerOfGravity.x, centerOfGravity.y);
+	}
+	
 	// position is from "superclass" CocosNode
 	// Emitter source position
 	protected CGPoint source = CGPoint.zero();
 
 	// Position variance
 	protected CGPoint posVar = CGPoint.zero();
+	public void setPosVar(CGPoint pv){
+		posVar = CGPoint.make(pv.x, pv.y);
+	}
 
 	// The angle (direction) of the particles measured in degrees
 	protected float angle;
+	public void setAngle(float a) {
+		angle = a;
+	}
+	
 	// Angle variance measured in degrees;
 	protected float angleVar;
+	public void setAngleVar(float av) {
+		angleVar = av;
+	}
 
 	// The speed the particles will have.
 	protected float speed;
@@ -245,21 +286,42 @@ public abstract class CCParticleSystem extends CCNode implements CCTextureProtoc
 	protected float life;
 	// Life variance
 	protected float lifeVar;
+	public void setLifeVar(float lv) {
+		lifeVar = lv;
+	}
 
 	// Start color of the particles
 	protected ccColor4F startColor = new ccColor4F();
+	public void setStartColor(ccColor4F sc) {
+		startColor = new ccColor4F(sc);
+	}
+	public ccColor4F getStartColor() {
+		return new ccColor4F(startColor);
+	}
 
 	// Start color variance
 	protected ccColor4F startColorVar = new ccColor4F();
+	public void setStartColorVar(ccColor4F scv) {
+		startColorVar = new ccColor4F(scv);
+	}
+	public ccColor4F getStartColorVar() {
+		return new ccColor4F(startColorVar);
+	}
 
 	// End color of the particles
 	protected ccColor4F endColor = new ccColor4F();
+	public void setEndColor(ccColor4F ec) {
+		endColor = new ccColor4F(ec);
+	}
 
 	// End color variance
 	protected ccColor4F endColorVar = new ccColor4F();
+	public void setEndColorVar(ccColor4F ecv) {
+		endColorVar = new ccColor4F(ecv);
+	}
 
 	// blend function
-	ccBlendFunc	blendFunc;
+	ccBlendFunc	blendFunc = new ccBlendFunc(ccConfig.CC_BLEND_SRC, ccConfig.CC_BLEND_DST);
 
 	// movment type: free or grouped
 	protected int	positionType;
@@ -272,6 +334,9 @@ public abstract class CCParticleSystem extends CCNode implements CCTextureProtoc
 
 	// Maximum particles
 	protected int totalParticles;
+	public int getTotalParticles() {
+		return totalParticles;
+	}
 
 	// Count of active particles
 	protected int particleCount;
@@ -283,6 +348,10 @@ public abstract class CCParticleSystem extends CCNode implements CCTextureProtoc
 
 	// How many particles can be emitted per second
 	protected float emissionRate;
+	public void setEmissionRate(float er) {
+		emissionRate = er;
+	}
+	
 	protected float emitCounter;
 
 	// Texture of the particles
@@ -293,6 +362,7 @@ public abstract class CCParticleSystem extends CCNode implements CCTextureProtoc
 	public void setEmitterMode(int em) {
 		if (emitterMode == em)
 			return;
+		emitterMode = em;
 		if (em == kCCParticleModeGravity) {
 			modeA = new ModeA();
 			if (modeB != null)
@@ -301,8 +371,7 @@ public abstract class CCParticleSystem extends CCNode implements CCTextureProtoc
 			modeB = new ModeB();
 			if (modeA != null)
 				modeA = null;
-		}
-
+		}	
 	}
 
 	ModeA modeA;
@@ -327,6 +396,9 @@ public abstract class CCParticleSystem extends CCNode implements CCTextureProtoc
 	protected int particleIdx;
 	
 	protected boolean autoRemoveOnFinish;
+	public void setAutoRemoveOnFinish(boolean ar) {
+		autoRemoveOnFinish = ar;
+	}
 
     //! whether or not the system is full
     public boolean isFull() {
@@ -515,7 +587,6 @@ public abstract class CCParticleSystem extends CCNode implements CCTextureProtoc
 		return posVar;
 	}
 
-
 	/**
 	 * life, and life variation of each particle
 	 */
@@ -597,84 +668,48 @@ public abstract class CCParticleSystem extends CCNode implements CCTextureProtoc
 		}
 	}
 
-	private FloatBuffer mVertices;
-	private FloatBuffer mPointSizes;
-	private FloatBuffer mColors;
-
-
 	//! Initializes a system with a fixed number of particles
 	protected CCParticleSystem(int numberOfParticles) {
 		totalParticles = numberOfParticles;
 
 		particles = new CCParticle[totalParticles];
-		vertices = new ccPointSprite[totalParticles];
 
 		for (int i = 0; i < totalParticles; i++) {
 			particles[i] = new CCParticle();
-			vertices[i]  = new ccPointSprite();
 		}
 
 		// default, active
 		active = true;
 
-		// default blend function
-        blendFunc = new ccBlendFunc(ccConfig.CC_BLEND_SRC, ccConfig.CC_BLEND_DST);
-
-		// default: additive
-		blendAdditive = false;
-
-		// default: modulate
-		//colorModulate = true;
-
-		ByteBuffer vfb = ByteBuffer.allocateDirect(4 * 2 * totalParticles);
-		vfb.order(ByteOrder.nativeOrder());
-		mVertices = vfb.asFloatBuffer();
-
-		ByteBuffer sfb = ByteBuffer.allocateDirect(4 * 1 * totalParticles);
-		sfb.order(ByteOrder.nativeOrder());
-		mPointSizes = sfb.asFloatBuffer();
-
-		ByteBuffer cfb = ByteBuffer.allocateDirect(4 * 4 * totalParticles);
-		cfb.order(ByteOrder.nativeOrder());
-		mColors = cfb.asFloatBuffer();
-
-		// default movement type;
+        // default movement type;
 		positionType_ = kPositionTypeFree;
 
-		schedule("step");
+		// by default be in mode A:
+		this.setEmitterMode(kCCParticleModeGravity);
 
-		
+		// default: modulate
+		// XXX: not used
+		//	colorModulate = YES;
 
-            // default movement type;
-            positionType_ = kCCPositionTypeFree;
+		autoRemoveOnFinish = false;
 
-            // by default be in mode A:
-            emitterMode = kCCParticleModeGravity;
+		// profiling
+		// Optimization: compile udpateParticle method
+		/* updateParticleSel = "updateQuad";
 
-            // default: modulate
-            // XXX: not used
-            //	colorModulate = YES;
+		// updateParticleImp = null;
+		try {
+			updateParticleImp = this.getClass().getMethod(updateParticleSel, new Class[]{CCParticle.class, CGPoint.class});
+		} catch (SecurityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NoSuchMethodException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}*/
 
-            autoRemoveOnFinish = false;
-
-            // profiling
-            // Optimization: compile udpateParticle method
-            updateParticleSel = "updateQuad";
-            
-            updateParticleImp = null;
-            try {
-				updateParticleImp = this.getClass()
-					.getMethod(updateParticleSel, new Class[]{CCParticle.class, CGPoint.class});
-			} catch (SecurityException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (NoSuchMethodException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-            // udpate after action in run!
-            this.scheduleUpdateWithPriority(1);
+		// udpate after action in run!
+		this.scheduleUpdateWithPriority(1);
 	}
 
 	private void initParticle(CCParticle particle) {
@@ -683,8 +718,8 @@ public abstract class CCParticleSystem extends CCNode implements CCTextureProtoc
         particle.timeToLive = Math.max(0, life + lifeVar * ccMacros.CCRANDOM_MINUS1_1() );
 
         // position
-        particle.pos.x = centerOfGravity.x + posVar.x * ccMacros.CCRANDOM_MINUS1_1();
-        particle.pos.y = centerOfGravity.y + posVar.y * ccMacros.CCRANDOM_MINUS1_1();
+        particle.pos = CGPoint.make(centerOfGravity.x + posVar.x * ccMacros.CCRANDOM_MINUS1_1(),
+        					centerOfGravity.y + posVar.y * ccMacros.CCRANDOM_MINUS1_1());
 
         // Color
         ccColor4F start = new ccColor4F();
@@ -700,10 +735,10 @@ public abstract class CCParticleSystem extends CCNode implements CCTextureProtoc
         end.a = Math.min(1, Math.max(0, endColor.a + endColorVar.a * ccMacros.CCRANDOM_MINUS1_1() ) );
 
         particle.color = start;
-        particle.deltaColor.r = (end.r - start.r) / particle.timeToLive;
-        particle.deltaColor.g = (end.g - start.g) / particle.timeToLive;
-        particle.deltaColor.b = (end.b - start.b) / particle.timeToLive;
-        particle.deltaColor.a = (end.a - start.a) / particle.timeToLive;
+        particle.deltaColor = new ccColor4F( (end.r - start.r) / particle.timeToLive,
+        		(end.g - start.g) / particle.timeToLive,
+        		(end.b - start.b) / particle.timeToLive,
+        		(end.a - start.a) / particle.timeToLive);
 
         // size
         float startS = Math.max(0, startSize + startSizeVar * ccMacros.CCRANDOM_MINUS1_1() ); // no negative size
@@ -735,6 +770,10 @@ public abstract class CCParticleSystem extends CCNode implements CCTextureProtoc
             CGPoint v = CGPoint.make((float)Math.cos(a), (float)Math.sin(a));
             float s = modeA.speed + modeA.speedVar * ccMacros.CCRANDOM_MINUS1_1();
 
+            if (particle.modeA == null) {
+            	particle.modeA = new CCParticle.ParticleModeA();
+            }
+            
             // direction
             particle.modeA.dir = CGPoint.ccpMult( v, s );
 
@@ -751,6 +790,10 @@ public abstract class CCParticleSystem extends CCNode implements CCTextureProtoc
             float startRadius = modeB.startRadius + modeB.startRadiusVar * ccMacros.CCRANDOM_MINUS1_1();
             float endRadius = modeB.endRadius + modeB.endRadiusVar * ccMacros.CCRANDOM_MINUS1_1();
 
+            if (particle.modeB == null) {
+            	particle.modeB = new CCParticle.ParticleModeB();
+            }
+            
             particle.modeB.radius = startRadius;
 
             if( modeB.endRadius == kCCParticleStartRadiusEqualToEndRadius )
@@ -760,86 +803,8 @@ public abstract class CCParticleSystem extends CCNode implements CCTextureProtoc
 
             particle.modeB.angle = a;
             particle.modeB.degreesPerSecond = ccMacros.CC_DEGREES_TO_RADIANS(modeB.rotatePerSecond + modeB.rotatePerSecondVar * ccMacros.CCRANDOM_MINUS1_1());
-
         }
 	}
-
-
-	//! Initializes a particle
-	//    public ParticleSystem(Particle particle)
-	//    {
-	//    }
-/*
-	public void step(float dt) {
-		if (active && emissionRate != 0) {
-			float rate = 1.0f / emissionRate;
-			emitCounter += dt;
-			while (particleCount < totalParticles && emitCounter > rate) {
-				addParticle();
-				emitCounter -= rate;
-			}
-
-			elapsed += dt;
-			if (duration != -1 && duration < elapsed)
-				stopSystem();
-		}
-
-		particleIdx = 0;
-
-		while (particleIdx < particleCount) {
-			CCParticle p = particles[particleIdx];
-
-			if (p.timeToLive > 0) {
-
-				CGPoint tmp, radial, tangential;
-
-				radial = CGPoint.zero();
-				// radial acceleration
-				if (p.pos.x != 9 || p.pos.y != 0)
-					radial = CGPoint.ccpNormalize(p.pos);
-				tangential = radial;
-				radial = CGPoint.ccpMult(radial, p.modeA.radialAccel);
-
-				// tangential acceleration
-				float newy = tangential.x;
-				tangential.x = -tangential.y;
-				tangential.y = newy;
-				tangential = CGPoint.ccpMult(tangential, p.modeA.tangentialAccel);
-
-				// (gravity + radial + tangential) * dt
-				tmp = CGPoint.ccpAdd(CGPoint.ccpAdd(radial, tangential), gravity);
-				tmp = CGPoint.ccpMult(tmp, dt);
-				p.dir = CGPoint.ccpAdd(p.dir, tmp);
-				tmp = CGPoint.ccpMult(p.dir, dt);
-				p.pos = CGPoint.ccpAdd(p.pos, tmp);
-
-				p.color.r += (p.deltaColor.r * dt);
-				p.color.g += (p.deltaColor.g * dt);
-				p.color.b += (p.deltaColor.b * dt);
-				p.color.a += (p.deltaColor.a * dt);
-
-				p.life -= dt;
-
-				// place vertices and colos in array
-				vertices[particleIdx].x = p.pos.x;
-				vertices[particleIdx].y = p.pos.y;
-
-				// TODO: Remove when glPointSizePointerOES is fixed
-				vertices[particleIdx].size = p.size;
-				vertices[particleIdx].colors = new ccColor4F(p.color);
-
-				// update particle counter
-				particleIdx++;
-
-			} else {
-				// life < 0
-				if (particleIdx != particleCount - 1)
-					particles[particleIdx] = particles[particleCount - 1];
-				particleCount--;
-			}
-		}
-	}
-*/
 
 	//! stop emitting particles. Running particles will continue to run until they die
 	public void stopSystem() {
@@ -856,73 +821,6 @@ public abstract class CCParticleSystem extends CCNode implements CCTextureProtoc
 			CCParticle p = particles[particleIdx];
 			p.timeToLive = 0;
 		}
-	}
-
-	public void draw(GL10 gl) {
-		if (verticesID <= 0) {
-			int name[] = new int[1];
-			((GL11) gl).glGenBuffers(1, name, 0);
-			((GL11) gl).glBindBuffer(GL11.GL_ARRAY_BUFFER, verticesID);
-			// TODO: Remove when glPointSizePointerOES is fixed
-			//            gl.glBufferData(GL_ARRAY_BUFFER, 4*7*totalParticles, vertices, GL_DYNAMIC_DRAW);
-			((GL11) gl).glBindBuffer(GL11.GL_ARRAY_BUFFER, 0);
-		}
-
-		gl.glEnable(GL10.GL_TEXTURE_2D);
-		gl.glBindTexture(GL10.GL_TEXTURE_2D, texture.name());
-
-		gl.glEnable(GL11.GL_POINT_SPRITE_OES);
-		((GL11) gl).glTexEnvi(GL11.GL_POINT_SPRITE_OES, GL11.GL_COORD_REPLACE_OES, GL10.GL_TRUE);
-
-		gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
-		((GL11) gl).glBindBuffer(GL11.GL_ARRAY_BUFFER, verticesID);
-
-		for (int i = 0; i < totalParticles; i++) {
-			mVertices.put(vertices[i].x);
-			mVertices.put(vertices[i].y);
-			mPointSizes.put(vertices[i].size);
-			mColors.put(vertices[i].colors.r);
-			mColors.put(vertices[i].colors.g);
-			mColors.put(vertices[i].colors.b);
-			mColors.put(vertices[i].colors.a);
-		}
-		mVertices.position(0);
-		mPointSizes.position(0);
-		mColors.position(0);
-
-		// TODO: Remove when glPointSizePointerOES is fixed
-		gl.glVertexPointer(2, GL10.GL_FLOAT, 0, mVertices);
-
-		gl.glEnableClientState(GL11.GL_POINT_SIZE_ARRAY_OES);
-		// TODO: Remove when glPointSizePointerOES is fixed
-		//gl.glPointSizePointerOES(GL_FLOAT, 7*4, 4*2);
-		((GL11) gl).glPointSizePointerOES(GL10.GL_FLOAT, 0, mPointSizes);
-
-		gl.glEnableClientState(GL10.GL_COLOR_ARRAY);
-		// TODO: Remove when glPointSizePointerOES is fixed
-		//gl.glColorPointer(4, GL_FLOAT, 7*4, 4*3);
-		gl.glColorPointer(4, GL10.GL_FLOAT, 0, mColors);
-
-		if (blendAdditive)
-			gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE);
-		else
-			gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
-
-		// save color mode
-
-		gl.glDrawArrays(GL10.GL_POINTS, 0, particleIdx);
-
-		// restore blend state
-		gl.glBlendFunc(ccConfig.CC_BLEND_SRC, ccConfig.CC_BLEND_DST);
-
-		// unbind VBO buffer
-		((GL11) gl).glBindBuffer(GL11.GL_ARRAY_BUFFER, 0);
-
-		gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
-		gl.glDisableClientState(GL11.GL_POINT_SIZE_ARRAY_OES);
-		gl.glDisableClientState(GL10.GL_COLOR_ARRAY);
-		gl.glDisable(GL10.GL_TEXTURE_2D);
-		gl.glDisable(GL11.GL_POINT_SPRITE_OES);
 	}
 
     // ideas taken from:
@@ -947,7 +845,7 @@ public abstract class CCParticleSystem extends CCNode implements CCTextureProtoc
         http://particledesigner.71squared.com/
       @since v0.99.3
     */
-    public CCParticleSystem particleWithFile(String plistFile) {
+    public static CCParticleSystem particleWithFile(String plistFile) {
     //    return new CCParticleSystem(plistFile);
     	return null;
     }
@@ -1169,7 +1067,6 @@ public abstract class CCParticleSystem extends CCNode implements CCTextureProtoc
                     tmp = CGPoint.ccpMult(p.modeA.dir, dt);
                     p.pos = CGPoint.ccpAdd( p.pos, tmp );
                 }
-
                 // Mode B: radius movement
                 else {				
                     // Update the angle and radius of the particle.
@@ -1197,10 +1094,12 @@ public abstract class CCParticleSystem extends CCNode implements CCTextureProtoc
                 if( positionType_ == kCCPositionTypeFree ) {
                     CGPoint diff = CGPoint.ccpSub( currentPosition, p.startPos );
                     newPos = CGPoint.ccpSub(p.pos, diff);
-                } else
+                } else {
                     newPos = p.pos;
+                }
                 
-                try {
+                this.updateQuad(p, newPos);
+                /* try {
 					updateParticleImp.invoke(this, new Object[]{p, newPos});
 				} catch (IllegalArgumentException e) {
 					// TODO Auto-generated catch block
@@ -1211,7 +1110,7 @@ public abstract class CCParticleSystem extends CCNode implements CCTextureProtoc
 				} catch (InvocationTargetException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-				}
+				}*/
 
                 // update particle counter
                 particleIdx++;
