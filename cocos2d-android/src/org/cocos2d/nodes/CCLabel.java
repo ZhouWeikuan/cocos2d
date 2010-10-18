@@ -63,6 +63,7 @@ public class CCLabel extends CCSprite implements CCLabelProtocol {
         } else {
             tex = new CCTexture2D(string, _dimensions, _alignment, _fontName, _fontSize);
         }
+        CCTextureCache.sharedTextureCache().addTexture(tex);
         setTexture(tex);
 
 	    CGSize size = texture_.getContentSize();

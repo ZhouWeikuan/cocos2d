@@ -24,6 +24,13 @@ public class CCFadeTransition extends CCTransitionScene {
     public static CCFadeTransition transition(float t, CCScene s, ccColor3B rgb) {
         return new CCFadeTransition(t, s, rgb);
     }
+    
+    /**
+     * creates the transition with a duration
+     */
+    public static CCFadeTransition transition(float t, CCScene s) {
+        return new CCFadeTransition(t, s);
+    }
 
     /**
      * initializes the transition with a duration and with an RGB color
@@ -40,6 +47,7 @@ public class CCFadeTransition extends CCTransitionScene {
         this(d, s, new ccColor3B(0, 0, 0));
     }
 
+    @Override
     public void onEnter() {
         super.onEnter();
 
@@ -59,6 +67,7 @@ public class CCFadeTransition extends CCTransitionScene {
         f.runAction(a);
     }
 
+    @Override
     public void onExit() {
         super.onExit();
         removeChild(kSceneFade, false);

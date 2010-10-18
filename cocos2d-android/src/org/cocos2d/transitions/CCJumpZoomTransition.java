@@ -30,7 +30,7 @@ public class CCJumpZoomTransition extends CCTransitionScene {
         CGSize size = CCDirector.sharedDirector().winSize();
         
         float width = size.getWidth();
-        float height = size.getHeight();
+        // float height = size.getHeight();
 
         inScene.setScale(0.5f);
         inScene.setPosition(CGPoint.make(width, 0));

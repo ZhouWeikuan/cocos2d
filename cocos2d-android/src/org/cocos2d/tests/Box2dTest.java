@@ -58,12 +58,7 @@ public class Box2dTest extends Activity {
 		director.attachInView(mGLSurfaceView);
 		director.setDeviceOrientation(CCDirector.kCCDeviceOrientationLandscapeLeft);
 		setContentView(mGLSurfaceView);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
+		
         // show FPS
         CCDirector.sharedDirector().setDisplayFPS(true);
 
@@ -75,6 +70,12 @@ public class Box2dTest extends Activity {
 
         // Make the Scene active
         CCDirector.sharedDirector().runWithScene(scene);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
     }
 
     @Override

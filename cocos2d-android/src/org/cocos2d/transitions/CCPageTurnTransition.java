@@ -2,8 +2,6 @@ package org.cocos2d.transitions;
 
 import org.cocos2d.actions.interval.CCIntervalAction;
 import org.cocos2d.layers.CCScene;
-import org.cocos2d.nodes.CCDirector;
-import org.cocos2d.types.CGSize;
 
 public class CCPageTurnTransition extends CCTransitionScene {
     private boolean back_;
@@ -30,6 +28,7 @@ public class CCPageTurnTransition extends CCTransitionScene {
     {
         super.onEnter();
 
+        /*
         CGSize s = CCDirector.sharedDirector().winSize();
         int x,y;
         if( s.width > s.height)
@@ -40,8 +39,8 @@ public class CCPageTurnTransition extends CCTransitionScene {
         {
             x=12;y=16;
         }
-
-        CCIntervalAction action  = action(x,y);
+        */
+        // CCIntervalAction action  = action(x,y);
 
         if(! back_ )
         {

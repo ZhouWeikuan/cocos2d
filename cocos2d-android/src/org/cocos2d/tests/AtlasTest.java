@@ -57,6 +57,18 @@ public class AtlasTest extends Activity {
 		director.attachInView(mGLSurfaceView);
 		director.setDeviceOrientation(CCDirector.kCCDeviceOrientationLandscapeLeft);
 		setContentView(mGLSurfaceView);
+		
+        // show FPS
+        CCDirector.sharedDirector().setDisplayFPS(true);
+
+        // frames per second
+        CCDirector.sharedDirector().setAnimationInterval(1.0f / 60);
+
+        CCScene scene = CCScene.node();
+        scene.addChild(nextAction());
+
+        // Make the Scene active
+        CCDirector.sharedDirector().runWithScene(scene);
     }
 
     static int sceneIdx = -1;
@@ -75,17 +87,7 @@ public class AtlasTest extends Activity {
     @Override
     public void onStart() {
         super.onStart();
-        // show FPS
-        CCDirector.sharedDirector().setDisplayFPS(true);
 
-        // frames per second
-        CCDirector.sharedDirector().setAnimationInterval(1.0f / 60);
-
-        CCScene scene = CCScene.node();
-        scene.addChild(nextAction());
-
-        // Make the Scene active
-        CCDirector.sharedDirector().runWithScene(scene);
 
     }
 

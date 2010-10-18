@@ -1,9 +1,8 @@
-drawPrimitivesTest.m
 EaseActionsTest.m
+
 EffectsAdvancedTest.m
 EffectsTest.m
 FontTest.m
-HiResTest.m
 IntervalTest.m
 LayerTest.m
 MenuTest.m
@@ -21,3 +20,4 @@ TransitionsTest.m
 
 --- chipmunk not ported
 ChipmunkAccelTouchTest.m
+HiResTest.m

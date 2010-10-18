@@ -57,15 +57,12 @@ public class ParticleTest extends Activity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
-       
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
+                WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        
         mGLSurfaceView = new CCGLSurfaceView(this);
         setContentView(mGLSurfaceView);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
+        
         // attach the OpenGL view to a window
         CCDirector.sharedDirector().attachInView(mGLSurfaceView);
 
@@ -83,6 +80,11 @@ public class ParticleTest extends Activity {
 
         // Make the Scene active
         CCDirector.sharedDirector().runWithScene(scene);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
 
     }
 

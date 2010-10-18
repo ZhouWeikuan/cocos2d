@@ -5,6 +5,7 @@ import javax.microedition.khronos.opengles.GL10;
 import org.cocos2d.config.ccMacros;
 import org.cocos2d.nodes.CCDirector;
 import org.cocos2d.nodes.CCNode;
+import org.cocos2d.nodes.CCTextureCache;
 import org.cocos2d.opengl.CCTexture2D;
 import org.cocos2d.types.CGPoint;
 import org.cocos2d.types.CGSize;
@@ -105,7 +106,7 @@ public abstract class CCGridBase {
     	step_.x = texSize.width / gridSize_.x;
     	step_.y = texSize.height / gridSize_.y;
 
-    	grabber_ = new CCGrabber(gl);
+    	grabber_ = new CCGrabber();
     	grabber_.grab(texture_);
     	calculateVertexPoints();
     }
@@ -120,6 +121,8 @@ public abstract class CCGridBase {
         canvas.drawBitmap(bitmap, 0, 0, new Paint());
 
         CCTexture2D texture = new CCTexture2D(bitmap, s);
+        CCTextureCache.sharedTextureCache().addTexture(texture);
+        
         init(gSize, texture, false);
     }
 

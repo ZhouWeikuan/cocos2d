@@ -1,22 +1,49 @@
 package org.cocos2d.tests;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.os.Bundle;
-import android.view.Window;
-import android.view.WindowManager;
+import java.lang.reflect.Constructor;
+
 import org.cocos2d.layers.CCLayer;
 import org.cocos2d.layers.CCScene;
 import org.cocos2d.menus.CCMenu;
 import org.cocos2d.menus.CCMenuItemImage;
-import org.cocos2d.nodes.*;
+import org.cocos2d.nodes.CCDirector;
+import org.cocos2d.nodes.CCLabel;
+import org.cocos2d.nodes.CCSprite;
 import org.cocos2d.opengl.CCGLSurfaceView;
-import org.cocos2d.transitions.*;
+import org.cocos2d.transitions.CCFadeBLTransition;
+import org.cocos2d.transitions.CCFadeDownTransition;
+import org.cocos2d.transitions.CCFadeTRTransition;
+import org.cocos2d.transitions.CCFadeTransition;
+import org.cocos2d.transitions.CCFadeUpTransition;
+import org.cocos2d.transitions.CCFlipAngularTransition;
+import org.cocos2d.transitions.CCFlipXTransition;
+import org.cocos2d.transitions.CCFlipYTransition;
+import org.cocos2d.transitions.CCJumpZoomTransition;
+import org.cocos2d.transitions.CCMoveInBTransition;
+import org.cocos2d.transitions.CCMoveInLTransition;
+import org.cocos2d.transitions.CCMoveInRTransition;
+import org.cocos2d.transitions.CCMoveInTTransition;
+import org.cocos2d.transitions.CCRotoZoomTransition;
+import org.cocos2d.transitions.CCShrinkGrowTransition;
+import org.cocos2d.transitions.CCSlideInBTransition;
+import org.cocos2d.transitions.CCSlideInLTransition;
+import org.cocos2d.transitions.CCSlideInRTransition;
+import org.cocos2d.transitions.CCSlideInTTransition;
+import org.cocos2d.transitions.CCSplitColsTransition;
+import org.cocos2d.transitions.CCSplitRowsTransition;
+import org.cocos2d.transitions.CCTransitionScene;
+import org.cocos2d.transitions.CCTurnOffTilesTransition;
+import org.cocos2d.transitions.CCZoomFlipAngularTransition;
+import org.cocos2d.transitions.CCZoomFlipXTransition;
+import org.cocos2d.transitions.CCZoomFlipYTransition;
 import org.cocos2d.types.CGPoint;
-import org.cocos2d.types.ccColor3B;
 import org.cocos2d.types.CGSize;
+import org.cocos2d.types.ccColor3B;
 
-import java.lang.reflect.Constructor;
+import android.app.Activity;
+import android.os.Bundle;
+import android.view.Window;
+import android.view.WindowManager;
 
 public class TransitionsTest extends Activity {
     // private static final String LOG_TAG = TransitionsTest.class.getSimpleName();
@@ -31,13 +58,6 @@ public class TransitionsTest extends Activity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        new AlertDialog.Builder(this)
-                .setTitle("Warning")
-                .setMessage("There are known problems with this demo.")
-                .setPositiveButton("Ok", null)
-                .show();
-
-        
         mGLSurfaceView = new CCGLSurfaceView(this);
         setContentView(mGLSurfaceView);
     }
@@ -60,9 +80,9 @@ public class TransitionsTest extends Activity {
 
         CCScene scene = CCScene.node();
         scene.addChild(new TestLayer1());
+        
         // Make the Scene active
         CCDirector.sharedDirector().runWithScene(scene);
-
     }
 
     @Override
@@ -167,14 +187,14 @@ public class TransitionsTest extends Activity {
 
     static int sceneIdx = 0;
     static Class<?> transitions[] = {
-            CCJumpZoomTransition.class,
-//            FadeTRTransition.class,
-//            FadeBLTransition.class,
-//            FadeUpTransition.class,
-//            FadeDownTransition.class,
-//            TurnOffTilesTransition.class,
-//            SplitRowsTransition.class,
-//            SplitColsTransition.class,
+            CCJumpZoomTransition.class,            
+            CCFadeTRTransition.class,
+            CCFadeBLTransition.class,
+            CCFadeUpTransition.class,
+            CCFadeDownTransition.class,
+            CCTurnOffTilesTransition.class,
+            CCSplitRowsTransition.class,
+            CCSplitColsTransition.class,
             CCFadeTransition.class,
             FadeWhiteTransition.class,
             FlipXLeftOverTransition.class,

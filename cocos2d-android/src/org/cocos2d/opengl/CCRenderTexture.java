@@ -7,6 +7,7 @@ import org.cocos2d.config.ccMacros;
 import org.cocos2d.nodes.CCDirector;
 import org.cocos2d.nodes.CCNode;
 import org.cocos2d.nodes.CCSprite;
+import org.cocos2d.nodes.CCTextureCache;
 import org.cocos2d.types.CGSize;
 
 import android.graphics.Bitmap;
@@ -51,7 +52,7 @@ public class CCRenderTexture extends CCNode {
 		}
     
 		Bitmap bmp = Bitmap.createBitmap(pow, pow, Config.ARGB_8888);
-		texture_ = new CCTexture2D(bmp);
+		texture_ = CCTextureCache.sharedTextureCache().addImage(bmp); 
     
 		// generate FBO
 		egl.glGenRenderbuffersOES(1, fbo_, 0);

@@ -34,26 +34,23 @@ public class ClickAndMoveTest extends Activity {
     // private static final String LOG_TAG = ClickAndMoveTest.class.getSimpleName();
 
     // private static final boolean DEBUG = true;
-
+	public static ClickAndMoveTest app;
     private CCGLSurfaceView mGLSurfaceView;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        app = this;
+        
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
+                WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        
         mGLSurfaceView = new CCGLSurfaceView(this);
         setContentView(mGLSurfaceView);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
+        
         // attach the OpenGL view to a window
         CCDirector.sharedDirector().attachInView(mGLSurfaceView);
 
@@ -74,6 +71,12 @@ public class ClickAndMoveTest extends Activity {
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+
+    }
+
+    @Override
     public void onPause() {
         super.onPause();
 
@@ -88,8 +91,8 @@ public class ClickAndMoveTest extends Activity {
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
+    public void onDestroy() {
+        super.onDestroy();
 
         CCDirector.sharedDirector().end();
     }
@@ -99,7 +102,7 @@ public class ClickAndMoveTest extends Activity {
 
         public MainLayer() {
 
-		this.setIsTouchEnabled(true);
+        	this.setIsTouchEnabled(true);
 
             CCSprite sprite = CCSprite.sprite("grossini.png");
 

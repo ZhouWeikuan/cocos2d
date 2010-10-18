@@ -34,7 +34,6 @@ public class CCTextureCache {
     public static void purgeSharedTextureCache () {
     	if (_sharedTextureCache != null) {
     		_sharedTextureCache.removeAllTextures();
-    		_sharedTextureCache = null;
     	}
     }
 
@@ -94,7 +93,7 @@ public class CCTextureCache {
     	for (CCTexture2D tex : textures.values()) {
     		tex.releaseTexture(CCDirector.gl);    		
     	}
-    	textures.clear();
+    	// textures.clear();
     }
 
     /** Removes unused textures
@@ -118,11 +117,20 @@ public class CCTextureCache {
     /** 
      * Deletes a texture from the cache given a texture
     */
-    void removeTexture(CCTexture2D tex) {
+    public void removeTexture(CCTexture2D tex) {
         if (tex == null)
             return;
 
         textures.values().remove(tex);
+    }
+    
+    /*
+     * Add a texture to the cache so it gets managed
+     */
+    public void addTexture(CCTexture2D tex) {
+    	if (tex == null)
+    		return;
+    	textures.put(String.valueOf(tex.hashCode()), tex);
     }
 
     /** Deletes a texture from the cache given a its key name

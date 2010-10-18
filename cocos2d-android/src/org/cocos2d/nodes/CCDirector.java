@@ -18,6 +18,7 @@ import static javax.microedition.khronos.opengles.GL10.GL_TEXTURE_2D;
 
 import java.util.ArrayList;
 import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.microedition.khronos.egl.EGL10;
 import javax.microedition.khronos.egl.EGLConfig;
@@ -614,7 +615,7 @@ public class CCDirector implements GLSurfaceView.Renderer {
     public void onSurfaceChanged(GL10 gl, int width, int height) {
     	CCDirector.gl = gl;
         surfaceSize_ = CGSize.make(width, height);
-        gl.glViewport(0, 0, width, height);
+        CCDirector.gl.glViewport(0, 0, width, height);
         setProjection(CCDirector.kCCDirectorProjectionDefault);
     }
 
@@ -725,7 +726,7 @@ public class CCDirector implements GLSurfaceView.Renderer {
     public CGSize displaySize() {
         return CGSize.make(surfaceSize_.width, surfaceSize_.height);
     }
-
+    
     public boolean getLandscape() {
         return deviceOrientation_ == kCCDeviceOrientationLandscapeLeft;
     }
@@ -828,7 +829,11 @@ public class CCDirector implements GLSurfaceView.Renderer {
         screenSize_ = CGSize.make(surfaceSize_.getWidth(), surfaceSize_.getHeight());
         
 //        try {
-        openGLView_ = (GLSurfaceView) view;
+        if (openGLView_ != view) {
+        	openGLView_ = (GLSurfaceView) view;
+        	openGLView_.setRenderer(this);
+        	openGLView_.setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
+        }
 //
 //            // check if the view is not attached
 //            if(isOpenGLAttached())
@@ -1116,6 +1121,7 @@ public class CCDirector implements GLSurfaceView.Renderer {
       While paused, the draw rate will be 4 FPS to reduce CPU consuption
     */
     public void pause() {
+    	openGLView_.onPause();
         if (isPaused)
             return;
 
@@ -1131,6 +1137,8 @@ public class CCDirector implements GLSurfaceView.Renderer {
       The "delta time" will be 0 (as if the game wasn't paused)
     */
     public void resume() {
+    	CCTextureCache.purgeSharedTextureCache();
+    	openGLView_.onResume();
         if (!isPaused)
             return;
 
@@ -1153,15 +1161,20 @@ public class CCDirector implements GLSurfaceView.Renderer {
 
         animationTimer_ = new Timer();
 
-//        animationTimer.scheduleAtFixedRate(new TimerTask() {
-//            public void run() { mainLoop(); } }, 0L, (long)(animationInterval * 1000L));
+        animationTimer_.scheduleAtFixedRate(new TimerTask() {
+            public void run() { 
+            	openGLView_.requestRender();
+            }},
+            0L,
+            (long)(animationInterval_ * 1000L)
+        );
     }
 
     /** Stops the animation. Nothing will be drawn. The main loop won't be triggered anymore.
       If you wan't to pause your animation call [pause] instead.
     */
     public void stopAnimation() {
-//        animationTimer.cancel();
+    	animationTimer_.cancel();
         animationTimer_ = null;
     }
 

@@ -9,6 +9,7 @@ import android.opengl.GLUtils;
 
 import org.cocos2d.nodes.CCDirector;
 import org.cocos2d.nodes.CCLabel;
+import org.cocos2d.nodes.CCTextureCache;
 import org.cocos2d.types.CGAffineTransform;
 import org.cocos2d.types.CGPoint;
 import org.cocos2d.types.CGRect;
@@ -126,6 +127,14 @@ public class CCTexture2D {
             gl.glDeleteTextures(1, new int[]{_name}, 0);
             _name = 0;
         }
+    }
+    
+    @Override
+    protected void finalize() throws Throwable {
+    	CCTextureCache.sharedTextureCache().removeTexture(this);
+    	releaseTexture(CCDirector.gl);
+    	
+    	super.finalize();
     }
 
     /**
@@ -288,7 +297,7 @@ public class CCTexture2D {
 //            gl.glTexEnvx(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
 
             GLUtils.texImage2D(GL_TEXTURE_2D, 0, mBitmap, 0);
-            mBitmap.recycle();
+            // mBitmap.recycle();
         }
     }
 

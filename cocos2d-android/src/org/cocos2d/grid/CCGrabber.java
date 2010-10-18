@@ -4,24 +4,26 @@ import javax.microedition.khronos.opengles.GL10;
 import javax.microedition.khronos.opengles.GL11ExtensionPack;
 
 import org.cocos2d.config.ccMacros;
+import org.cocos2d.nodes.CCDirector;
 import org.cocos2d.opengl.CCTexture2D;
 /** FBO class that grabs the the contents of the screen */
 public class CCGrabber {
     int		fbo[] = new int[1];
     int		oldFBO[] = new int[1];
-    GL11ExtensionPack    gl;
 
-    public CCGrabber(GL10 gl) {
+    public CCGrabber() {
         // generate FBO
-        if (gl instanceof GL11ExtensionPack) {
-        	this.gl = (GL11ExtensionPack)gl;
-        	this.gl.glGenFramebuffersOES(1, fbo, 0);	
+        if (CCDirector.gl instanceof GL11ExtensionPack) {
+        	GL11ExtensionPack gl = (GL11ExtensionPack)CCDirector.gl;
+        	gl.glGenFramebuffersOES(1, fbo, 0);	
         }
     }
 
     public void grab(CCTexture2D texture){
-    	if (gl == null)
+    	if (!(CCDirector.gl instanceof GL11ExtensionPack)) {
     		return;
+    	}
+    	GL11ExtensionPack gl = (GL11ExtensionPack) CCDirector.gl;
         gl.glGetIntegerv(GL11ExtensionPack.GL_FRAMEBUFFER_BINDING_OES, oldFBO, 0);
 
         // bind
@@ -43,8 +45,10 @@ public class CCGrabber {
     }
 
     public void beforeRender(CCTexture2D texture) {
-    	if (gl == null)
+    	if (!(CCDirector.gl instanceof GL11ExtensionPack)) {
     		return;
+    	}
+    	GL11ExtensionPack gl = (GL11ExtensionPack) CCDirector.gl;
         gl.glGetIntegerv(GL11ExtensionPack.GL_FRAMEBUFFER_BINDING_OES, oldFBO, 0);
         gl.glBindFramebufferOES(GL11ExtensionPack.GL_FRAMEBUFFER_OES, fbo[0]);
 
@@ -61,16 +65,20 @@ public class CCGrabber {
     }
 
     public void afterRender(CCTexture2D texture) {
-    	if (gl == null)
+    	if (!(CCDirector.gl instanceof GL11ExtensionPack)) {
     		return;
+    	}
+    	GL11ExtensionPack gl = (GL11ExtensionPack) CCDirector.gl;
         gl.glBindFramebufferOES(GL11ExtensionPack.GL_FRAMEBUFFER_OES, oldFBO[0]);
         //	glColorMask(TRUE, TRUE, TRUE, TRUE);	// #631
     }
 
     @Override
     public void finalize() {
-    	if (gl == null)
+    	if (!(CCDirector.gl instanceof GL11ExtensionPack)) {
     		return;
+    	}
+    	GL11ExtensionPack gl = (GL11ExtensionPack) CCDirector.gl;
     	ccMacros.CCLOGINFO("cocos2d: deallocing %@", this.toString());
         gl.glDeleteFramebuffersOES(1, fbo, 0);
     }
