@@ -14,7 +14,7 @@ public class CCEaseExponentialOut extends CCEaseAction {
 
     @Override
     public void update(float t) {
-        other.update((t == 1) ? 1 : (-(float) (Math.pow(2, -10 * t / 1) + 1)));
+        other.update((t == 1) ? 1 : ((float) (-Math.pow(2, -10 * t / 1) + 1)));
     }
 
     @Override
