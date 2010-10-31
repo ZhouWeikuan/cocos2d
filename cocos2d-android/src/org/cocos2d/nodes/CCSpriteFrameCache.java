@@ -1,9 +1,12 @@
 package org.cocos2d.nodes;
 
 import java.util.HashMap;
+import java.util.Iterator;
 
 import org.cocos2d.config.ccMacros;
 import org.cocos2d.opengl.CCTexture2D;
+import org.cocos2d.utils.ZwoptexParser;
+import org.cocos2d.types.*;
 
 /*
  * To create sprite frames and texture atlas, use this tool:
@@ -31,6 +34,10 @@ public class CCSpriteFrameCache {
         spriteFrames = new HashMap<String, CCSpriteFrame>();
     }
 
+    public static CCSpriteFrame spriteFrameByName(String name) {
+        return CCSpriteFrameCache.sharedSpriteFrameCache().getSpriteFrame(name);
+    }
+
     /** Purges the cache. It releases all the Sprite Frames and the retained instance.
     */
     public static void purgeSharedSpriteFrameCache() {
@@ -44,65 +51,41 @@ public class CCSpriteFrameCache {
     /** Adds multiple Sprite Frames with a dictionary.
      * The texture will be associated with the created sprite frames.
      */
-    public void addSpriteFrames(HashMap<Object, Object> dictionary, CCTexture2D texture) {
-        /*
-           Supported Zwoptex Formats:
-           enum {
-           ZWTCoordinatesListXMLFormat_Legacy = 0
-           ZWTCoordinatesListXMLFormat_v1_0,
-           };
-           */
-        /*
-        NSDictionary *metadataDict = [dictionary objectForKey:@"metadata"];
-        NSDictionary *framesDict = [dictionary objectForKey:@"frames"];
-        int format = 0;
+    public void addSpriteFramesWithDictionary(HashMap dictionary, CCTexture2D texture) {
+
+        HashMap metadataDict = (HashMap)dictionary.get("metadata");
+        HashMap framesDict = (HashMap)dictionary.get("frames");
+
+        Integer format = 0;
 
         // get the format
-        if(metadataDict != nil) {
-            format = [[metadataDict objectForKey:@"format"] intValue];
+        if (metadataDict != null) {
+            format = (Integer)metadataDict.get("format");
         }
 
-        // check the format
-        if(format < 0 || format > 1) {
-            NSAssert(NO,@"cocos2d: WARNING: format is not supported for CCSpriteFrameCache addSpriteFramesWithDictionary:texture:");
-            return;
+        // only format 2 is supported
+        if (format != 2) {
+            ccMacros.CCLOGERROR("CCSpriteFrameCache",
+                "Unsupported Zwoptex plist file format.");
         }
 
-        for(NSString *frameDictKey in framesDict) {
-            NSDictionary *frameDict = [framesDict objectForKey:frameDictKey];
-            CCSpriteFrame *spriteFrame;
-            if(format == 0) {
-                float x = [[frameDict objectForKey:@"x"] floatValue];
-                float y = [[frameDict objectForKey:@"y"] floatValue];
-                float w = [[frameDict objectForKey:@"width"] floatValue];
-                float h = [[frameDict objectForKey:@"height"] floatValue];
-                float ox = [[frameDict objectForKey:@"offsetX"] floatValue];
-                float oy = [[frameDict objectForKey:@"offsetY"] floatValue];
-                int ow = [[frameDict objectForKey:@"originalWidth"] intValue];
-                int oh = [[frameDict objectForKey:@"originalHeight"] intValue];
-                // check ow/oh
-                if(!ow || !oh) {
-                    CCLOG(@"cocos2d: WARNING: originalWidth/Height not found on the CCSpriteFrame. AnchorPoint won't work as expected. Regenerate the .plist");
-                }
-                // abs ow/oh
-                ow = abs(ow);
-                oh = abs(oh);
-                // create frame
-                spriteFrame = [CCSpriteFrame frameWithTexture:texture rect:CGRectMake(x, y, w, h) offset:CGPointMake(ox, oy) originalSize:CGSizeMake(ow, oh)];
-            } else if(format == 1) {
-                CGRect frame = CGRectFromString([frameDict objectForKey:@"frame"]);
-                CGPoint offset = CGPointFromString([frameDict objectForKey:@"offset"]);
-                CGSize sourceSize = CGSizeFromString([frameDict objectForKey:@"sourceSize"]);
-                // create frame
-                spriteFrame = [CCSpriteFrame frameWithTexture:texture rect:frame offset:offset originalSize:sourceSize];
-            } else {
-                CCLOG(@"cocos2d: Unsupported Zwoptex version. Update cocos2d");
-            }
+        Iterator fi = framesDict.keySet().iterator();
+        while (fi.hasNext()) {
 
-            // add sprite frame
-            [spriteFrames setObject:spriteFrame forKey:frameDictKey];
+        		String frameDictKey = (String)fi.next();
+				HashMap frameDict = (HashMap)framesDict.get(frameDictKey);
+            CCSpriteFrame spriteFrame;
+
+            CGRect frame = (CGRect)frameDict.get("frame");
+            CGPoint offset = (CGPoint)frameDict.get("offset");
+            CGSize sourceSize = (CGSize)frameDict.get("sourceSize");
+
+            spriteFrame =
+                CCSpriteFrame.frame(texture, frame, offset, sourceSize);
+
+            spriteFrames.put(frameDictKey, spriteFrame);
+
         }
-        */
     }
 
     /** Adds multiple Sprite Frames from a plist file.
@@ -111,30 +94,26 @@ public class CCSpriteFrameCache {
      * If you want to use another texture, you should use the addSpriteFramesWithFile:texture method.
      */
     public void addSpriteFrames(String plist) {
-        /*
-        NSString *path = [CCFileUtils fullPathFromRelativePath:plist];
-        NSDictionary *dict = [NSDictionary dictionaryWithContentsOfFile:path];
-
-        NSString *texturePath = [NSString stringWithString:plist];
-        texturePath = [texturePath stringByDeletingPathExtension];
-        texturePath = [texturePath stringByAppendingPathExtension:@"png"];
-
-        CCTexture2D *texture = [[CCTextureCache sharedTextureCache] addImage:texturePath];
-
-        return [self addSpriteFramesWithDictionary:dict texture:texture];
-        */
+        String texturePath = null;
+        int i = plist.lastIndexOf('.');
+        if (i > 0 && i <= plist.length() - 2)
+		      texturePath = plist.substring(0, i) + ".png";
+        CCTexture2D texture =
+            CCTextureCache.sharedTextureCache().addImage(texturePath);
+        addSpriteFrames(plist, texture);
     }
 
     /** Adds multiple Sprite Frames from a plist file.
      * The texture will be associated with the created sprite frames.
      */
     public void addSpriteFrames(String plist, CCTexture2D texture) {
-        /*
-        NSString *path = [CCFileUtils fullPathFromRelativePath:plist];
-        NSDictionary *dict = [NSDictionary dictionaryWithContentsOfFile:path];
-
-        return [self addSpriteFramesWithDictionary:dict texture:texture];
-        */
+		  try {
+            HashMap dict = ZwoptexParser.parseZwoptex(plist);
+            addSpriteFramesWithDictionary(dict, texture);
+        } catch (Exception e) {
+                ccMacros.CCLOG("CCSpriteFrameCache",
+					     "Unable to read Zwoptex plist: " + e);
+		  }
     }
 
     /** Adds an sprite frame with a given name.
@@ -177,7 +156,7 @@ public class CCSpriteFrameCache {
         CCSpriteFrame frame = spriteFrames.get(name);
 
         if( frame == null )
-            ccMacros.CCLOG("cocos2d: CCSpriteFrameCache: Frame '%s' not found", name);
+            ccMacros.CCLOG("CCSpriteFrameCache", "Frame not found: " + name);
 
         return frame;
     }
