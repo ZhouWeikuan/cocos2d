@@ -3,7 +3,6 @@ package org.cocos2d.sound;
 import java.io.IOException;
 import java.util.HashMap;
 
-import android.app.Activity;
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -17,7 +16,7 @@ public class SoundEngine {
 	static HashMap<Integer, MediaPlayer> soundsMap = new HashMap<Integer, MediaPlayer>();
 	static SoundPool sp = new SoundPool(5, AudioManager.STREAM_MUSIC, 0);
 
-	public static void preloadEffects(Context app, int resId){
+	public static void preloadEffect(Context app, int resId){
 		synchronized(effectsMap) {
 			Integer sndId = effectsMap.get(resId);
 			if (sndId != null)
@@ -41,7 +40,7 @@ public class SoundEngine {
 		sp.play(sndId, 1.0f, 1.0f, 0, 0, 1.0f);
 	}
 	
-	public static void preloadSounds(Context ctxt, int resId) {
+	public static void preloadSound(Context ctxt, int resId) {
 		synchronized(soundsMap) {			
 			MediaPlayer mp = soundsMap.get(resId);
 			if (mp != null)
