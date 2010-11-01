@@ -47,8 +47,11 @@ public abstract class CCGridAction extends CCIntervalAction {
         } else {
             if (targetGrid != null && targetGrid.isActive())
             	targetGrid.setActive(false);
+            
             target.setGrid(newgrid);
-            targetGrid.setActive(true);
+            
+            if (targetGrid != null)
+            	targetGrid.setActive(true);
         }
     }
     

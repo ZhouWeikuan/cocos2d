@@ -469,7 +469,7 @@ public class CCTextureAtlas {
         }
     }
 
-    private void memmoveByte(ByteBuffer src, int from, ByteBuffer dst, int to, int size) {
+    public static void memmoveByte(ByteBuffer src, int from, ByteBuffer dst, int to, int size) {
         if (to < from) {
             memcopyByte(src, from, dst, to, size);
         } else {
@@ -479,7 +479,7 @@ public class CCTextureAtlas {
         }
     }
 
-    private void memcopyByte(ByteBuffer src, int from, ByteBuffer dst, int to, int size) {
+    public static void memcopyByte(ByteBuffer src, int from, ByteBuffer dst, int to, int size) {
         for (int i = 0; i < size; i++) {
             dst.put(i + to, src.get(i + from));
         }

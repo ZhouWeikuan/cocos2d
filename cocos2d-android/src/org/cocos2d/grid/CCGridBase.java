@@ -103,8 +103,7 @@ public abstract class CCGridBase {
     	isTextureFlipped_ = flipped;
 
     	CGSize texSize = texture_.getContentSize();
-    	step_.x = texSize.width / gridSize_.x;
-    	step_.y = texSize.height / gridSize_.y;
+    	step_ = CGPoint.ccp(texSize.width / gridSize_.x, texSize.height / gridSize_.y);
 
     	grabber_ = new CCGrabber();
     	grabber_.grab(texture_);
@@ -113,22 +112,26 @@ public abstract class CCGridBase {
     
     public CCGridBase(ccGridSize gSize) {
     	CGSize s = CCDirector.sharedDirector().winSize();
-    	int textureSize = 8;
-    	while (textureSize < s.width || textureSize < s.height)
-    		textureSize *= 2;
+    	
+    	int w = CCTexture2D.toPow2((int)s.width);
+    	int h = CCTexture2D.toPow2((int)s.height);
+    	int textureSize = Math.max(w, h);
+    	if (textureSize > 64) {
+    		textureSize = 64;
+    	}
     	Bitmap bitmap = Bitmap.createBitmap(textureSize, textureSize, Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
         canvas.drawBitmap(bitmap, 0, 0, new Paint());
 
-        CCTexture2D texture = new CCTexture2D(bitmap, s);
+        CCTexture2D texture = new CCTexture2D(bitmap, CGSize.make(textureSize, textureSize));
         CCTextureCache.sharedTextureCache().addTexture(texture);
         
         init(gSize, texture, false);
     }
 
     public String toString() {
-        return new CCFormatter().format("<%s = %08X | Dimensions = %ix%i>",
-        			CCGridBase.class, this, gridSize_.x, gridSize_.y);
+        return new CCFormatter().format("<%s : Dimensions = %dx%d>",
+        			CCGridBase.class, gridSize_.x, gridSize_.y);
     }
 
     // This routine can be merged with Director

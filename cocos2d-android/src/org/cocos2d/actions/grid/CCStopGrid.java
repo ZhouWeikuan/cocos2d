@@ -2,7 +2,6 @@ package org.cocos2d.actions.grid;
 
 import org.cocos2d.actions.instant.CCInstantAction;
 import org.cocos2d.grid.CCGridBase;
-import org.cocos2d.nodes.CCDirector;
 import org.cocos2d.nodes.CCNode;
 
 ////////////////////////////////////////////////////////////
@@ -14,6 +13,9 @@ import org.cocos2d.nodes.CCNode;
  */
 public class CCStopGrid extends CCInstantAction {
 	
+	public static CCStopGrid action() {
+		return new CCStopGrid();
+	}
 
 	@Override
 	public void start(CCNode aTarget) {

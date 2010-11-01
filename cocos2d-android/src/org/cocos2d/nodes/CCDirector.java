@@ -1162,8 +1162,10 @@ public class CCDirector implements GLSurfaceView.Renderer {
         animationTimer_ = new Timer();
 
         animationTimer_.scheduleAtFixedRate(new TimerTask() {
-            public void run() { 
-            	openGLView_.requestRender();
+            public void run() {
+            	if (openGLView_ != null) {
+            		openGLView_.requestRender();
+            	}
             }},
             0L,
             (long)(animationInterval_ * 1000L)

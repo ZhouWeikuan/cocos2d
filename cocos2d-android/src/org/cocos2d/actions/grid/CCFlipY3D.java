@@ -1,5 +1,6 @@
 package org.cocos2d.actions.grid;
 
+import org.cocos2d.actions.interval.CCIntervalAction;
 import org.cocos2d.types.CCVertex3D;
 import org.cocos2d.types.ccGridSize;
 
@@ -7,12 +8,19 @@ import org.cocos2d.types.ccGridSize;
 
 /** CCFlipY3D action */
 public class CCFlipY3D extends CCFlipX3D {
+	public static CCIntervalAction action(float duration) {
+		return new CCFlipY3D(duration);
+	}
 	
-	public CCFlipY3D(float duration) {
+	public static CCFlipY3D action(ccGridSize gridSize, float duration) {
+		return new CCFlipY3D(gridSize, duration);
+	}
+	
+	protected CCFlipY3D(float duration) {
 		this(ccGridSize.ccg(1, 1), duration);
 	}
 
-	public CCFlipY3D(ccGridSize gridSize, float duration) {
+	protected CCFlipY3D(ccGridSize gridSize, float duration) {
 		super(gridSize, duration);
 	}
 	

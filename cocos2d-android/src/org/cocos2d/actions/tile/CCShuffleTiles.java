@@ -98,9 +98,9 @@ public class CCShuffleTiles extends CCTiledGrid3DAction {
         int t = 0;
         for( i = 0; i < gridSize.x; i++ ) {
             for( j = 0; j < gridSize.y; j++ ) {
-                tileArray[t].position = CGPoint.ccp(i,j);
-                tileArray[t].startPosition = CGPoint.ccp(i,j);
-                tileArray[t].delta = getDelta(ccGridSize.ccg(i,j));
+                tileArray[t] = Tile.make(CGPoint.ccp(i,j),
+                					CGPoint.ccp(i,j),
+                					getDelta(ccGridSize.ccg(i,j)));
                 ++t;
             }
         }

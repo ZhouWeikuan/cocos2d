@@ -28,7 +28,33 @@ public class CCGLSurfaceView extends GLSurfaceView {
 
         setFocusable(true);
         setFocusableInTouchMode(true);
-        this.setId(VIEWID);        
+        this.setId(VIEWID);
+
+        // add this to resolve Samsung's Galaxy opengl problem
+        //  here for reference.
+        // http://www.anddev.org/samsung_galaxy_odd_ogl_es_hardware_acceleration_resolved-t8511.html
+        /* need a real machine to test
+        this.setEGLConfigChooser(
+        		new GLSurfaceView.EGLConfigChooser() {
+        			public EGLConfig chooseConfig(EGL10 egl,EGLDisplay display) {
+        				int[] attributes=new int[]{
+        						//EGL10.EGL_RED_SIZE,
+        						//5,
+        						//EGL10.EGL_BLUE_SIZE,
+        						//5,
+        						//EGL10.EGL_GREEN_SIZE,
+        						//6,
+        						EGL10.EGL_DEPTH_SIZE,
+        						16,
+        						EGL10.EGL_NONE
+        				};
+        				EGLConfig[] configs=new EGLConfig[1];
+        				int[] result=new int[1];
+        				egl.eglChooseConfig(display,attributes,configs,1,result);
+        				return configs[0];
+        			}
+        		}
+        );*/
     }
     
     @Override

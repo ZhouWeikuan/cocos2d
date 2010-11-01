@@ -740,8 +740,8 @@ public class CGAffineTransform {
      * @param t the AffineTransform that this AffineTransform is multiplied
      *          by.
      */
-    public void preConcatenate(CGAffineTransform t) {
-        setTransform(multiply(this, t));
+    public CGAffineTransform preConcatenate(CGAffineTransform t) {
+        return multiply(this, t);
     }
 
     /**

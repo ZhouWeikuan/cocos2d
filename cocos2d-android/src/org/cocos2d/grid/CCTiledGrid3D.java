@@ -227,8 +227,11 @@ public class CCTiledGrid3D extends CCGridBase {
     @Override
     public void reuse(GL10 gl) {
         if (reuseGrid_ > 0) {
-            int numQuads = gridSize_.x * gridSize_.y;
-
+            final int numQuads = gridSize_.x * gridSize_.y;
+            final int total = numQuads * 12;
+            for (int i=0; i<total; ++i) {
+            	originalVertices.put(i, vertices.get(i));
+            }
 //            memcpy(originalVertices, vertices, numQuads*12*sizeof(float));
             reuseGrid_--;
         }

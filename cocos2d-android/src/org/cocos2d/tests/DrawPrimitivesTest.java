@@ -132,6 +132,7 @@ public class DrawPrimitivesTest extends Activity {
             item1.setPosition(CGPoint.make(s.width / 2 - 100, 30));
             item2.setPosition(CGPoint.make(s.width / 2, 30));
             item3.setPosition(CGPoint.make(s.width / 2 + 100, 30));
+
             addChild(menu, -1);
         }
 

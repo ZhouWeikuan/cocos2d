@@ -936,8 +936,10 @@ public class CCNode {
     private CGAffineTransform nodeToWorldTransform() {
         CGAffineTransform t = nodeToParentTransform();
 
-        for (CCNode p = parent_; p != null; p = p.parent_)
-            t = t.getTransformConcat(p.nodeToParentTransform());
+        for (CCNode p = parent_; p != null; p = p.parent_) {
+            // t = t.getTransformConcat(p.nodeToParentTransform());
+            t = t.preConcatenate(p.nodeToParentTransform());
+        }
 
         return t;
     }

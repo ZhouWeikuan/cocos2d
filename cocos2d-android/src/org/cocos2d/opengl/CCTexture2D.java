@@ -133,7 +133,7 @@ public class CCTexture2D {
     protected void finalize() throws Throwable {
     	CCTextureCache.sharedTextureCache().removeTexture(this);
     	releaseTexture(CCDirector.gl);
-    	
+    	    	
     	super.finalize();
     }
 
@@ -234,6 +234,9 @@ public class CCTexture2D {
             while (i < v)
                 i *= 2;
             v = i;
+        }
+        if (v > CCTexture2D.kMaxTextureSize) {
+        	v = CCTexture2D.kMaxTextureSize;
         }
         return v;
     }

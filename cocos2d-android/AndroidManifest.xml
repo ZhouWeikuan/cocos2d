@@ -85,7 +85,46 @@
             </intent-filter>
         </activity>
         
-                
+        <activity android:name=".tests.DrawPrimitivesTest"
+                  android:debuggable="true"
+                  android:launchMode="singleInstance"
+                  android:label="@string/activity_drawprimitivestest">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.TEST"/>
+            </intent-filter>
+        </activity>
+        
+        <activity android:name=".tests.EaseActionsTest"
+                  android:debuggable="true"
+                  android:launchMode="singleInstance"
+                  android:label="@string/activity_easeactionstest">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.TEST"/>
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".tests.EffectsAdvancedTest"
+                  android:debuggable="true"
+                  android:launchMode="singleInstance"
+                  android:label="@string/activity_effectsadvancedtest">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.TEST"/>
+            </intent-filter>
+        </activity>
+        
+        <activity android:name=".tests.EffectsTest"
+                  android:debuggable="true"
+                  android:launchMode="singleInstance"
+                  android:label="@string/activity_effectstest">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.TEST"/>
+            </intent-filter>
+        </activity>
+                        
         <activity android:name=".tests.ParticleTest"
                   android:screenOrientation="landscape"
                   android:debuggable="true"
@@ -100,15 +139,7 @@
 
 
 
-        <activity android:name=".tests.EaseActionsTest"
-                  android:debuggable="true"
-                  android:launchMode="singleInstance"
-                  android:label="@string/activity_easeactionstest">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.TEST"/>
-            </intent-filter>
-        </activity>
+
 
         <activity android:name=".tests.MotionStreakTest"
                   android:debuggable="true"
@@ -124,16 +155,6 @@
                   android:debuggable="true"
                   android:launchMode="singleInstance"
                   android:label="@string/activity_parallaxtest">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.TEST"/>
-            </intent-filter>
-        </activity>
-
-        <activity android:name=".tests.DrawPrimitivesTest"
-                  android:debuggable="true"
-                  android:launchMode="singleInstance"
-                  android:label="@string/activity_drawprimitivestest">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.TEST"/>

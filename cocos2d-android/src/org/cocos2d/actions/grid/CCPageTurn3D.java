@@ -21,7 +21,7 @@ public class CCPageTurn3D extends CCGrid3DAction {
     protected CCPageTurn3D(ccGridSize gSize, float d) {
         super(gSize, d);
     }
-	
+    
     /*
      * Update each tick
      * Time is the percentage of the way through the duration

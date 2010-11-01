@@ -426,10 +426,18 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
         float x2 = x1 + rect_.size.width;
         float y2 = y1 + rect_.size.height;
 
-        vertexes.put(new float[]{ x1, y2, 0 });
-        vertexes.put(new float[]{ x1, y1, 0 });
-        vertexes.put(new float[]{ x2, y2, 0 });
-        vertexes.put(new float[]{ x2, y1, 0 });
+        vertexes.put(0, x1);
+        vertexes.put(1, y2);
+        vertexes.put(2, 0);
+        vertexes.put(3, x1);
+        vertexes.put(4, y1);
+        vertexes.put(5, 0);
+        vertexes.put(6, x2);
+        vertexes.put(7, y2);
+        vertexes.put(8, 0);
+        vertexes.put(9, x2);
+        vertexes.put(10, y1);
+        vertexes.put(11, 0);
         vertexes.position(0);
     }
 
@@ -685,10 +693,18 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
             float y2 = y1 + rect.size.height;
 
             // Don't update Z.
-            vertexes.put(new float[]{ x1, y2, 0 });
-            vertexes.put(new float[]{ x1, y1, 0 });
-            vertexes.put(new float[]{ x2, y2, 0 });
-            vertexes.put(new float[]{ x2, y1, 0 });
+            vertexes.put(0, x1);
+            vertexes.put(1, y2);
+            vertexes.put(2, 0);
+            vertexes.put(3, x1);
+            vertexes.put(4, y1);
+            vertexes.put(5, 0);
+            vertexes.put(6, x2);
+            vertexes.put(7, y2);
+            vertexes.put(8, 0);
+            vertexes.put(9, x2);
+            vertexes.put(10, y1);
+            vertexes.put(11, 0);
             vertexes.position(0);
         }
     }
@@ -698,8 +714,7 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
     private TransformValues getTransformValues() {
         TransformValues tv = new TransformValues();
         tv.pos = position_;
-        tv.scale.x = scaleX_;
-        tv.scale.y = scaleY_;
+        tv.scale = CGPoint.ccp(scaleX_, scaleY_);
         tv.rotation = rotation_;
         tv.ap = anchorPointInPixels_;
 

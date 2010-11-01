@@ -1,15 +1,16 @@
 package org.cocos2d.grid;
 
-import org.cocos2d.types.ccGridSize;
-import org.cocos2d.types.CGPoint;
-import org.cocos2d.types.ccQuad3;
-import org.cocos2d.types.CCVertex3D;
-
-import javax.microedition.khronos.opengles.GL10;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
+
+import javax.microedition.khronos.opengles.GL10;
+
+import org.cocos2d.types.CCVertex3D;
+import org.cocos2d.types.CGPoint;
+import org.cocos2d.types.ccGridSize;
+import org.cocos2d.types.ccQuad3;
 
 
 /**
@@ -54,19 +55,23 @@ public class CCGrid3D extends CCGridBase {
         ByteBuffer vfb = ByteBuffer.allocateDirect(ccQuad3.size * (gridSize_.x + 1) * (gridSize_.y + 1) * 4);
         vfb.order(ByteOrder.nativeOrder());
         vertices = vfb.asFloatBuffer();
+        // vertices = BufferProvider.createFloatBuffer(ccQuad3.size * (gridSize_.x + 1) * (gridSize_.y + 1));
 
         ByteBuffer ofb = ByteBuffer.allocateDirect(ccQuad3.size * (gridSize_.x + 1) * (gridSize_.y + 1) * 4);
         ofb.order(ByteOrder.nativeOrder());
         originalVertices = ofb.asFloatBuffer();
-
+        // originalVertices = BufferProvider.createFloatBuffer(ccQuad3.size * (gridSize_.x + 1) * (gridSize_.y + 1));
+                
         ByteBuffer tfb = ByteBuffer.allocateDirect(2 * (gridSize_.x + 1) * (gridSize_.y + 1) * 4);
         tfb.order(ByteOrder.nativeOrder());
         texCoordinates = tfb.asFloatBuffer();
-
+        // texCoordinates = BufferProvider.createFloatBuffer(2 * (gridSize_.x + 1) * (gridSize_.y + 1));
+        
         ByteBuffer isb = ByteBuffer.allocateDirect(6 * (gridSize_.x + 1) * (gridSize_.y + 1) * 2);
         isb.order(ByteOrder.nativeOrder());
         indices = isb.asShortBuffer();
-
+        // indices = BufferProvider.createShortBuffer(6 * (gridSize_.x + 1) * (gridSize_.y + 1));
+        
         for (y = 0; y < (gridSize_.y + 1); y++) {
             for (x = 0; x < (gridSize_.x + 1); x++) {
                 int idx = (y * (gridSize_.x + 1)) + x;
@@ -96,7 +101,8 @@ public class CCGrid3D extends CCGridBase {
 
                 short[] tempidx = {a, b, d, b, c, d};
 
-                indices.put(tempidx, 6 * idx, 6);
+               	indices.position(6 * idx);
+               	indices.put(tempidx, 0, 6);
 
                 int[] l1 = {a * 3, b * 3, c * 3, d * 3};
                 CCVertex3D e = new CCVertex3D(x1, y1, 0);
