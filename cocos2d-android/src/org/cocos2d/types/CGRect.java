@@ -28,6 +28,16 @@ public class CGRect {
         origin = CGPoint.ccp(x, y);
         size = CGSize.make(w, h);
     }
+    
+	public void set(CGRect r) {
+		origin.set(r.origin);
+		size.set(r.size);
+	}
+
+	public void set(float x, float y, float w, float h) {
+		origin.set(x, y);
+		size.set(w, h);
+	}
 
     public boolean contains(float x, float y) {
         return size.width > 0 && size.height > 0  // check for empty first

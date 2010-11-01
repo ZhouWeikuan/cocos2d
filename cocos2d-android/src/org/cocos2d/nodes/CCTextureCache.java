@@ -7,6 +7,7 @@ import org.cocos2d.opengl.CCTexture2D;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.Set;
 
 
 /** Singleton that handles the loading of textures
@@ -158,6 +159,14 @@ public class CCTextureCache {
         return new CCTexture2D(bmp);
     }
 
+	public void reloadTextures() {
+		Set<String> keys = textures.keySet();
+		for(String key : keys) {
+			CCTexture2D tex = textures.get(key);
+			
+			tex.setTextureName(key);
+		}
+	}
 }
 
 

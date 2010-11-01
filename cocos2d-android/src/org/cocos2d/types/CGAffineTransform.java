@@ -1056,6 +1056,75 @@ public class CGAffineTransform {
             dst[dstOff++] = (y * m00 - x * m10) / det;
         }
     }
+    
+	public void set(double m00, double m10, double m01, double m11, double m02, double m12) {
+        this.type = TYPE_UNKNOWN;
+        this.m00 = m00;
+        this.m10 = m10;
+        this.m01 = m01;
+        this.m11 = m11;
+        this.m02 = m02;
+        this.m12 = m12;
+	} 
+	
+    public void translate(double mx, double my) {
+    	type = TYPE_UNKNOWN;
+    	
+        m02 = mx * m00 + my * m01 + m02;
+        m12 = mx * m10 + my * m11 + m12;
+    }
+    
+    public void rotate(double angle) {
+    	double sin = Math.sin(angle);
+    	double cos = Math.cos(angle);
+    	if (Math.abs(cos) < ZERO) {
+    		cos = 0.0;
+    		sin = sin > 0.0 ? 1.0 : -1.0;
+    	} else if (Math.abs(sin) < ZERO) {
+    		sin = 0.0;
+    		cos = cos > 0.0 ? 1.0 : -1.0;
+    	}
+    	
+    	type = TYPE_UNKNOWN;	
+    	
+    	double m00 =   cos * this.m00 + sin * this.m01;
+    	double m10 =   cos * this.m10 + sin * this.m11;
+        double m01 =  -sin * this.m00 + cos * this.m01;
+        double m11 =  -sin * this.m10 + cos * this.m11;
+    	
+    	this.m00 = m00;
+    	this.m01 = m01;
+        this.m10 = m10;
+        this.m11 = m11;
+    }  
+    
+    public void scale(double scx, double scy) {
+		type = TYPE_UNKNOWN;	
+		
+		m00 = scx * m00;
+		double m10 = scx * this.m10;
+	    double m01 = scy * this.m01;
+	    m11 = scy * m11;
+
+		this.m01 = m01;
+	    this.m10 = m10;
+	}
+    
+    public void multiply(CGAffineTransform t) {
+    	double m00 = t.m00 * this.m00 + t.m10 * this.m01;
+    	double m10 = t.m00 * this.m10 + t.m10 * this.m11;
+    	double m01 = t.m01 * this.m00 + t.m11 * this.m01;
+    	double m11 = t.m01 * this.m10 + t.m11 * this.m11;
+    	double m02 = t.m02 * this.m00 + t.m12 * this.m01 + this.m02;
+    	double m12 = t.m02 * this.m10 + t.m12 * this.m11 + this.m12;
+    	
+    	this.m00 = m00;
+    	this.m10 = m10;
+    	this.m01 = m01;
+    	this.m11 = m11;
+    	this.m02 = m02;
+    	this.m12 = m12;
+    }
 
 //    /**
 //     * Creates a new shape whose data is given by applying this AffineTransform

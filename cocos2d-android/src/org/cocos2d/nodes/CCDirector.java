@@ -103,7 +103,7 @@ public class CCDirector implements GLSurfaceView.Renderer {
     public static final int kCCDirectorProjectionCustom = 3;
 
     /// Detault projection is 3D projection
-    public static final int kCCDirectorProjectionDefault = kCCDirectorProjection3D;
+    public static final int kCCDirectorProjectionDefault = kCCDirectorProjection2D;
 
     /** Sets an OpenGL projection
       @since v0.8.2
@@ -115,7 +115,7 @@ public class CCDirector implements GLSurfaceView.Renderer {
     }
 
     public void setProjection(int p) {
-        CGSize size = surfaceSize_;
+        CGSize size = screenSize_;
         switch (p) {
             case kCCDirectorProjection2D:
                 gl.glMatrixMode(GL_PROJECTION);
@@ -129,7 +129,7 @@ public class CCDirector implements GLSurfaceView.Renderer {
                 gl.glViewport(0, 0, (int)size.width, (int)size.height);
                 gl.glMatrixMode(GL_PROJECTION);
                 gl.glLoadIdentity();
-                GLU.gluPerspective(gl, 60, (float)size.width/size.height, 0.5f, 1500.0f);
+                GLU.gluPerspective(gl, 60, size.width/size.height, 0.5f, 1500.0f);
                 
                 gl.glMatrixMode(GL_MODELVIEW);	
                 gl.glLoadIdentity();
@@ -570,7 +570,9 @@ public class CCDirector implements GLSurfaceView.Renderer {
 
             // for iphone 4?
             contentScaleFactor_ = 1;
-            screenSize_ = surfaceSize_ = CGSize.zero();
+
+            screenSize_  = CGSize.zero();
+        	surfaceSize_ = CGSize.zero();
             isContentScaleSupported_ = false;
         }
     }
@@ -614,7 +616,7 @@ public class CCDirector implements GLSurfaceView.Renderer {
 
     public void onSurfaceChanged(GL10 gl, int width, int height) {
     	CCDirector.gl = gl;
-        surfaceSize_ = CGSize.make(width, height);
+    	surfaceSize_.set(width, height);
         CCDirector.gl.glViewport(0, 0, width, height);
         setProjection(CCDirector.kCCDirectorProjectionDefault);
     }
@@ -711,7 +713,7 @@ public class CCDirector implements GLSurfaceView.Renderer {
     
     /** returns the size of the OpenGL view in pixels, according to the landspace */
     public CGSize winSize() {
-        CGSize s = CGSize.make(surfaceSize_.width, surfaceSize_.height);
+        CGSize s = CGSize.make(screenSize_.width, screenSize_.height);
         /*if( deviceOrientation_ == kCCDeviceOrientationLandscapeLeft) {
             // swap x,y in landscape mode
             float t = s.width;
@@ -823,7 +825,11 @@ public class CCDirector implements GLSurfaceView.Renderer {
         return NO;
         */
     }
-
+    
+	public void setScreenSize(float width, float height) {
+		screenSize_.set(width, height);
+	}
+	
     private boolean initOpenGLViewWithView(View view, CGRect rect) {
         surfaceSize_ = rect.size;
         screenSize_ = CGSize.make(surfaceSize_.getWidth(), surfaceSize_.getHeight());
@@ -931,17 +937,18 @@ public class CCDirector implements GLSurfaceView.Renderer {
       Useful to convert (multi) touchs coordinates to the current layout (portrait or landscape)
       */
     public CGPoint convertToGL(CGPoint uiPoint) {
-        float newY = screenSize_.height - uiPoint.y;
+    	float newX = uiPoint.x / surfaceSize_.width * screenSize_.width;
+        float newY = screenSize_.height - uiPoint.y / surfaceSize_.height * screenSize_.height;
         
         CGPoint ret = null;
         switch (deviceOrientation_) {
             case kCCDeviceOrientationPortrait:
-                ret = CGPoint.ccp(uiPoint.x, newY);
+                ret = CGPoint.ccp(newX, newY);
                 break;
 
             case kCCDeviceOrientationLandscapeLeft:
                 // ret = CGPoint.ccp(uiPoint.y, uiPoint.x);
-            	ret = CGPoint.ccp(uiPoint.x, newY);
+            	ret = CGPoint.ccp(newX, newY);
                 break;
 
             default:
@@ -1116,12 +1123,28 @@ public class CCDirector implements GLSurfaceView.Renderer {
         }
     }
 
+    /**
+     * this should be called from activity when activity pause
+     */
+    public void onPause() {
+    	openGLView_.onPause();
+    	pause();
+    }
+
+    /**
+     * this should be called from activity when activity resume
+     */
+    public void onResume() {
+    	CCTextureCache.sharedTextureCache().reloadTextures();
+    	openGLView_.onResume();
+    	resume();
+    }
+    
     /** Pauses the running CCScene.
       The running CCScene will be _drawed_ but all scheduled timers will be paused
       While paused, the draw rate will be 4 FPS to reduce CPU consuption
     */
     public void pause() {
-    	openGLView_.onPause();
         if (isPaused)
             return;
 
@@ -1137,8 +1160,6 @@ public class CCDirector implements GLSurfaceView.Renderer {
       The "delta time" will be 0 (as if the game wasn't paused)
     */
     public void resume() {
-    	CCTextureCache.purgeSharedTextureCache();
-    	openGLView_.onResume();
         if (!isPaused)
             return;
 

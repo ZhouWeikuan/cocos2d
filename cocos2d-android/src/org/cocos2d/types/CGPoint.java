@@ -5,7 +5,12 @@ import org.cocos2d.config.ccMacros;
 public class CGPoint {
     private static final float kCGPointEpsilon = 0.00000012f; 
     public float x, y;
-
+    
+    private static final CGPoint ZERO_POINT = new CGPoint(0, 0);
+    public static CGPoint getZero() {
+    	return ZERO_POINT;
+    }
+    
     public static CGPoint zero() {
         return new CGPoint(0, 0);
     }
@@ -22,7 +27,21 @@ public class CGPoint {
         this.x = x;
         this.y = y;
     }
-
+    
+    /**
+     * Set value
+     */
+    public void set(float x, float y) {
+    	this.x = x;
+    	this.y = y;
+    }
+    
+    public void set(CGPoint p) {
+    	this.x = p.x;
+    	this.y = p.y;
+    }
+    
+    
     public String toString() {
         return "(" + x + ", " + y + ")";
     }

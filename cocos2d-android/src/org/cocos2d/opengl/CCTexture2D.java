@@ -1,6 +1,7 @@
 package org.cocos2d.opengl;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -20,6 +21,9 @@ import javax.microedition.khronos.opengles.GL10;
 import javax.microedition.khronos.opengles.GL11;
 
 import static javax.microedition.khronos.opengles.GL10.*;
+
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
@@ -85,10 +89,10 @@ public class CCTexture2D {
         return _maxT;
     }
 
+    private boolean premultipliedAlpha = false;
     /** whether or not the texture has their Alpha premultiplied */
-    // TODO: Implement me
     public boolean hasPremultipliedAlpha() {
-        return false;
+        return premultipliedAlpha;
     }
     
     private FloatBuffer mVertices;
@@ -170,6 +174,41 @@ public class CCTexture2D {
         init(image, imageSize);
     }
 
+    // this is temporary solution for white texture problem,
+    // works maybe only with textures created with CCTexture2D(Bitmap image)
+    // i would fix this soon to deferred texture loading
+    private String textureName = "";
+    public void setTextureName(String texName) {
+    	textureName = texName;
+    	_name = 0;
+    }
+    
+    private void prepareBitmap(Bitmap image) {
+        CGSize imageSize = CGSize.make(image.getWidth(), image.getHeight());
+
+        int width = toPow2((int) imageSize.width);
+        int height = toPow2((int) imageSize.height);
+
+        while (width > kMaxTextureSize || height > kMaxTextureSize) {
+            width /= 2;
+            height /= 2;
+
+            imageSize.width *= 0.5f;
+            imageSize.height *= 0.5f;
+        }
+
+        if (imageSize.width != width || imageSize.height != height) {
+            Bitmap bitmap = Bitmap.createBitmap(width, height,
+                    image.hasAlpha() ? Bitmap.Config.ARGB_8888 : Bitmap.Config.RGB_565);
+            Canvas canvas = new Canvas(bitmap);
+            canvas.drawBitmap(image, 0, 0, null);
+            image.recycle();
+            image = bitmap;
+        }
+
+        mBitmap = image;
+    }
+    
     public CCTexture2D(Bitmap image, CGSize imageSize) {
         Bitmap.Config config = Bitmap.Config.ARGB_8888;
         Bitmap bitmap = Bitmap.createBitmap((int) imageSize.width, (int) imageSize.height, config);
@@ -199,6 +238,10 @@ public class CCTexture2D {
         tfb.order(ByteOrder.nativeOrder());
         mCoordinates = tfb.asFloatBuffer();
         
+        // GLUtils.texImage2D makes premultiplied alpha
+		if(mBitmap.getConfig() == Bitmap.Config.ARGB_8888)
+			premultipliedAlpha = true;
+		
 //        ByteBuffer isb = ByteBuffer.allocateDirect(6 * 2);
 //        isb.order(ByteOrder.nativeOrder());
 //        mIndices = isb.asShortBuffer();
@@ -298,9 +341,26 @@ public class CCTexture2D {
             applyTexParameters(gl);
 
 //            gl.glTexEnvx(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+            
+            if(textureName != "") {
+	            InputStream is;
+				try {
+					is = CCDirector.sharedDirector().getActivity().getAssets().open(textureName);
+					Bitmap bmp = BitmapFactory.decodeStream(is);
+		            is.close();
+		            prepareBitmap(bmp);
+		            
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				textureName = "";
+            }
 
             GLUtils.texImage2D(GL_TEXTURE_2D, 0, mBitmap, 0);
-            // mBitmap.recycle();
+            
+            mBitmap.recycle();
         }
     }
 

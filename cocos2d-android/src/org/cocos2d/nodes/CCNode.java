@@ -199,9 +199,13 @@ public class CCNode {
      @since v0.8
      */
     public void setContentSize(CGSize size) {
-        if (! CGSize.equalToSize(contentSize_, size)) {
-            contentSize_ = CGSize.make(size.width, size.height);
-            anchorPointInPixels_ = CGPoint.ccp(contentSize_.width * anchorPoint_.x,
+    	setContentSize(size.width, size.height);
+    }
+	
+	public void setContentSize(float w, float h) {
+        if ( !(contentSize_.width == w && contentSize_.height == h) ) {
+            contentSize_.set(w, h);// = CGSize.make(size.width, size.height);
+            anchorPointInPixels_.set(contentSize_.width * anchorPoint_.x,
                                               contentSize_.height * anchorPoint_.y);
             isTransformDirty_ = isInverseDirty_ = true;
             if (ccConfig.CC_NODE_TRANSFORM_USING_AFFINE_MATRIX) {
@@ -210,7 +214,7 @@ public class CCNode {
 
         }
     }
-
+	
     public CGSize getContentSize() {
         return CGSize.make(contentSize_.width, contentSize_.height);
     }
@@ -224,10 +228,14 @@ public class CCNode {
       @since v0.8
     */
     public void setAnchorPoint(CGPoint pnt) {
-        if (!CGPoint.equalToPoint(pnt, anchorPoint_)) {
-            anchorPoint_ = CGPoint.make(pnt.x, pnt.y);
-            anchorPointInPixels_ = CGPoint.ccp(contentSize_.width * anchorPoint_.x, 
-                                              contentSize_.height * anchorPoint_.y);
+    	setAnchorPoint(pnt.x, pnt.y);
+    }
+    
+    public void setAnchorPoint(float x, float y) {
+        if (!(x == anchorPoint_.x && y == anchorPoint_.y)) {
+            anchorPoint_.set(x, y);// = CGPoint.make(pnt.x, pnt.y);
+            anchorPointInPixels_.set(contentSize_.width * anchorPoint_.x,// = CGPoint.ccp(contentSize_.width * anchorPoint_.x, 
+            						contentSize_.height * anchorPoint_.y);//   contentSize_.height * anchorPoint_.y);
 
             isTransformDirty_ = isInverseDirty_ = true;
             if (ccConfig.CC_NODE_TRANSFORM_USING_AFFINE_MATRIX) {
@@ -235,7 +243,7 @@ public class CCNode {
             }
         }
     }
-
+   
     public CGPoint getAnchorPoint() {
         return CGPoint.make(anchorPoint_.x, anchorPoint_.y);
     }
@@ -273,15 +281,22 @@ public class CCNode {
         return CGPoint.make(position_.x, position_.y);
     }
 
+    public CGPoint getPositionRef() {
+        return position_;
+    }
+    
     public void setPosition(CGPoint pnt) {
-        position_ = CGPoint.make(pnt.x, pnt.y);
+    	setPosition(pnt.x, pnt.y);
+    }
+    
+	public void setPosition(float x, float y) {
+        position_.set(x, y);// = CGPoint.make(pnt.x, pnt.y);
         isTransformDirty_ = isInverseDirty_ = true;
         if (ccConfig.CC_NODE_TRANSFORM_USING_AFFINE_MATRIX) {
             isTransformGLDirty_ = true;
         }
-    }
-
-
+    }	
+	
     /** A CCCamera object that lets you move the node using a gluLookAt */
     private CCCamera camera_;
 
@@ -427,6 +442,9 @@ public class CCNode {
         scaleY_ = 1.0f;
         position_ = CGPoint.ccp(0, 0);
 
+        transform_ = CGAffineTransform.identity();
+        inverse_ = CGAffineTransform.identity();
+        
         // "whole screen" objects. like Scenes and Layers, should set relativeAnchorPoint to false        
         isRelativeAnchorPoint_ = true;
 
@@ -892,31 +910,31 @@ public class CCNode {
     */
     private CGAffineTransform nodeToParentTransform() {
         if (isTransformDirty_) {
-        	CGPoint zero = CGPoint.zero();
-            transform_ = CGAffineTransform.identity();
+        	CGPoint zero = CGPoint.getZero();
+            transform_.setToIdentity();
 
             if (!isRelativeAnchorPoint_ && !CGPoint.equalToPoint(anchorPointInPixels_, zero)) {
-                transform_ = transform_.getTransformTranslate(anchorPointInPixels_.x, anchorPointInPixels_.y);
+            	transform_.translate(anchorPointInPixels_.x, anchorPointInPixels_.y);
             }
 
             if (!CGPoint.equalToPoint(position_, zero))
-            	transform_ = transform_.getTransformTranslate(position_.x, position_.y);
+            	transform_.translate(position_.x, position_.y);
             
             if (rotation_ != 0)
-            	transform_ = transform_.getTransformRotate(-ccMacros.CC_DEGREES_TO_RADIANS(rotation_));
+            	transform_.rotate(-ccMacros.CC_DEGREES_TO_RADIANS(rotation_));
             
             if( ! (scaleX_ == 1 && scaleY_ == 1) ) 
-            	transform_ = transform_.getTransformScale(scaleX_, scaleY_);
+            	transform_.scale(scaleX_, scaleY_);
            
             if (!CGPoint.equalToPoint(anchorPointInPixels_, zero))
-            	transform_ = transform_.getTransformTranslate(-anchorPointInPixels_.x, -anchorPointInPixels_.y);
+            	transform_.translate(-anchorPointInPixels_.x, -anchorPointInPixels_.y);
 
             isTransformDirty_ = false;
         }
 
         return transform_;
     }
-
+ 
     /** Returns the inverse local affine transform matrix
       @since v0.7.1
     */
