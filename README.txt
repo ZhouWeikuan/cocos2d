@@ -1,0 +1,1 @@
+This branch was created to show some changes made to cocod2d-android to reduce GC calls in our project, plus some more things. This changes should come to master branch in some form later.
