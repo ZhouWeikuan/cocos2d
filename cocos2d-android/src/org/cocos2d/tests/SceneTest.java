@@ -153,14 +153,14 @@ public class SceneTest extends Activity {
     public void onPause() {
     	super.onPause();
     	
-    	CCDirector.sharedDirector().pause();
+    	CCDirector.sharedDirector().onPause();
     }
 
     // call got rejected
     public void onResume() {
     	super.onResume();
     	
-        CCDirector.sharedDirector().resume();
+        CCDirector.sharedDirector().onResume();
     }
 
     public void onDestroy() {

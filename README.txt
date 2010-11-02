@@ -43,3 +43,5 @@ Notes:
 		layoutParams.gravity = Gravity.CENTER;
 		return layoutParams;
 	}
+	
+- CCDirector pause/resume doesn't mean that rendering thread must be stopped, but we need to stop it when activity pauses, that why there should be separate methods onPause/onResume for activity and pause/resume.

@@ -205,6 +205,16 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
     	return ret;
     }
     
+    public FloatBuffer getTexCoords() {
+    	texCoords.position(0);
+    	return texCoords;
+    }
+    
+    public FloatBuffer getVertices() {
+    	vertexes.position(0);
+    	return vertexes;
+    }
+    
     private FloatBuffer colors;
 
 	// whether or not it's parent is a CCSpriteSheet

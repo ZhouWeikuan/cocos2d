@@ -463,7 +463,7 @@ public class CCBitmapFontAtlas extends CCSpriteSheet implements CCLabelProtocol,
 
     @Override
     public void setColor(ccColor3B color) {
-        color_ = new ccColor3B(color);
+        color_.set(color);
         for (CCNode o: children_) {
         	CCSprite child = (CCSprite)o;
             child.setColor(color);
@@ -493,7 +493,7 @@ public class CCBitmapFontAtlas extends CCSpriteSheet implements CCLabelProtocol,
         // assert configuration_:"Error creating config for BitmapFontAtlas";
 
         opacity_ = 255;
-        color_ = ccColor3B.ccWHITE;
+        color_ = new ccColor3B(ccColor3B.ccWHITE);
 
         contentSize_ = CGSize.zero();
         opacityModifyRGB_ = textureAtlas_.getTexture().hasPremultipliedAlpha();
@@ -581,13 +581,10 @@ public class CCBitmapFontAtlas extends CCSpriteSheet implements CCLabelProtocol,
                 fontChar.setOpacity(255);
             }
 
-            fontChar.setPosition(CGPoint.ccp( nextFontPositionX + fontDef.xOffset + fontDef.rect.size.width / 2.0f ,
-                    (configuration_.commonHeight - fontDef.yOffset) - rect.size.height/2.0f));		
+         // update kerning
+    		fontChar.setPosition(nextFontPositionX + fontDef.xOffset + fontDef.rect.size.width / 2.0f + kerningAmount,
+                    (configuration_.commonHeight - fontDef.yOffset) - rect.size.height/2.0f);	
 
-            //		NSLog(@"position.y: %f", fontChar.position.y);
-
-            // update kerning
-            fontChar.setPosition(CGPoint.ccpAdd(fontChar.getPosition(), CGPoint.ccp(kerningAmount,0)));
             nextFontPositionX += configuration_.bitmapFontArray[c].xAdvance + kerningAmount;
             prev = c;
 
@@ -635,16 +632,6 @@ public class CCBitmapFontAtlas extends CCSpriteSheet implements CCLabelProtocol,
             super.setAnchorPoint(point);
             createFontChars();
         }
-    }
-
-    public void draw(GL10 gl) {
-        super.draw(gl);
-        CGSize s = this.getContentSize();
-        CGPoint vertices[]={
-            CGPoint.ccp(0,0),   CGPoint.ccp(s.width,0),
-            CGPoint.ccp(s.width,s.height),  CGPoint.ccp(0,s.height),
-        };
-        CCDrawingPrimitives.ccDrawPoly(gl, vertices, 4, true);
     }
 }
 

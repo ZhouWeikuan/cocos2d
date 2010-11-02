@@ -162,15 +162,20 @@ public class CCSpriteSheet extends CCNode implements CCTextureProtocol {
     }
 
     // override addChild:
-    public CCSprite addChild(CCSprite child, int z, int aTag) {
+    @Override
+    public CCNode addChild(CCNode child, int z, int aTag) {
         // NSAssert( child != nil, @"Argument must be non-nil");
         // NSAssert( [child isKindOfClass:[CCSprite class]], @"CCSpriteSheet only supports CCSprites as children");
         // NSAssert( child.texture.name == textureAtlas_.texture.name, @"CCSprite is not using the same texture id");
 
     	super.addChild(child, z, aTag);
+    	
+    	CCSprite sprite = (CCSprite)child;
 
-        int index = atlasIndex(child, z);
-        insertChild(child, index);
+        int index = atlasIndex(sprite, z);
+        insertChild(sprite, index);
+        
+        sprite.updateColor();
 
         return child;
     }
@@ -373,8 +378,8 @@ public class CCSpriteSheet extends CCNode implements CCTextureProtocol {
             increaseAtlasCapacity();
         }
 
-        textureAtlas_.putVertex(textureAtlas_.getVertexBuffer(), sprite.getVertexArray(), index);
-        textureAtlas_.putTexCoords(textureAtlas_.getTexCoordsBuffer(), sprite.getTexCoordsArray(), index);
+        textureAtlas_.putVertex(sprite.getVertices(), index);
+		textureAtlas_.putTexCoords(sprite.getTexCoords(), index);
 
         descendants_.add(index, sprite);
         

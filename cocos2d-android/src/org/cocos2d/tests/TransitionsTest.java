@@ -89,14 +89,14 @@ public class TransitionsTest extends Activity {
     public void onPause() {
         super.onPause();
 
-        CCDirector.sharedDirector().pause();
+        CCDirector.sharedDirector().onPause();
     }
 
     @Override
     public void onResume() {
         super.onResume();
 
-        CCDirector.sharedDirector().resume();
+        CCDirector.sharedDirector().onResume();
     }
 
     @Override
