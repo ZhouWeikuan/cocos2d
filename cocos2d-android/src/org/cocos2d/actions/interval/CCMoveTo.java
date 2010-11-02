@@ -22,7 +22,9 @@ public class CCMoveTo extends CCIntervalAction {
     /** initializes the action */
     protected CCMoveTo(float t, CGPoint pos) {
         super(t);
+        startPosition = CGPoint.zero();
         endPosition = CGPoint.make(pos.x, pos.y);
+        delta = CGPoint.zero();
     }    
 
     @Override
@@ -34,13 +36,13 @@ public class CCMoveTo extends CCIntervalAction {
     public void start(CCNode aTarget) {
         super.start(aTarget);
 
-        startPosition = target.getPosition();
-        delta = CGPoint.ccpSub(endPosition, startPosition);
+        startPosition.set(target.getPositionRef());
+        delta.set(endPosition.x - startPosition.x, endPosition.y - startPosition.y);
     }
 
     @Override
     public void update(float t) {
-        target.setPosition(CGPoint.make(startPosition.x + delta.x * t,
-        					startPosition.y + delta.y * t));
+        target.setPosition(startPosition.x + delta.x * t,
+        					startPosition.y + delta.y * t);
     }
 }

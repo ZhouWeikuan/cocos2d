@@ -16,7 +16,7 @@ public class CCMoveBy extends CCMoveTo {
     /** initializes the action */
     protected CCMoveBy(float t, CGPoint pos) {
         super(t, pos);
-        delta = CGPoint.make(pos.x, pos.y);
+        delta.set(pos.x, pos.y);
     }
 
     @Override
@@ -26,9 +26,11 @@ public class CCMoveBy extends CCMoveTo {
 
     @Override
     public void start(CCNode aTarget) {
-        CGPoint dTmp = CGPoint.make(delta.x, delta.y);
+    	float tmpx = delta.x;
+		float tmpy = delta.y;
+
         super.start(aTarget);
-        delta = dTmp;
+        delta.set(tmpx, tmpy);
     }
 
     @Override
