@@ -28,7 +28,7 @@ public class CCScene extends CCNode {
         
         setRelativeAnchorPoint(false);
 
-        setAnchorPoint(CGPoint.ccp(0.5f, 0.5f));
+        setAnchorPoint(0.5f, 0.5f);
         setContentSize(s);	
     }
 }

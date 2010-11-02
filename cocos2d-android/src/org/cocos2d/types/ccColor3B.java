@@ -42,7 +42,13 @@ public class ccColor3B {
         g = gg;
         b = bb;
     }
-
+    
+	public void set(ccColor3B color) {
+		r = color.r;
+		g = color.g;
+		b = color.b;
+	}
+	
     public byte[] toByteArray() {
         return new byte[]{(byte) r, (byte) g, (byte) b};
     }

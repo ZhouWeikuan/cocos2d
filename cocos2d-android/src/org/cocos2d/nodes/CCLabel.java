@@ -58,7 +58,7 @@ public class CCLabel extends CCSprite implements CCLabelProtocol {
      */
     public void setString(String string) {
         CCTexture2D tex = null;
-        if (CGSize.equalToSize(_dimensions, CGSize.zero())) {
+        if (CGSize.equalToSize(_dimensions, CGSize.getZero())) {
             tex = new CCTexture2D(string, _fontName, _fontSize);
         } else {
             tex = new CCTexture2D(string, _dimensions, _alignment, _fontName, _fontSize);
@@ -67,7 +67,7 @@ public class CCLabel extends CCSprite implements CCLabelProtocol {
         setTexture(tex);
 
 	    CGSize size = texture_.getContentSize();
-	    setTextureRect(CGRect.make(0, 0, size.width, size.height));
+	    setTextureRect(0, 0, size.width, size.height);
     }
 
 

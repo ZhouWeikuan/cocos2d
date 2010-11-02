@@ -130,9 +130,10 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
         return new ccColor3B(color_);
     }
 
+    @Override
     public void setColor(ccColor3B color3) {
-        color_ = new ccColor3B(color3);
-        colorUnmodified_ = new ccColor3B(color3);
+        color_.set(color3);
+        colorUnmodified_.set(color3);
 
         if( opacityModifyRGB_ ){
             color_.r = color3.r * opacity_/255;
@@ -407,6 +408,10 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
 
     /** updates the texture rect of the CCSprite.
     */
+
+	public void setTextureRect(float x, float y, float w, float h) {
+    	setTextureRect(x, y, w, h, w, h);
+    }  
     public void setTextureRect(CGRect rect) {
 	    setTextureRect(rect, rect.size);
     }
@@ -460,6 +465,7 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
 		
 		// zwoptex default values
 		offsetPosition_ = CGPoint.zero();
+		unflippedOffsetPositionFromCenter_ = new CGPoint();
         rect_ = CGRect.make(0, 0, 1, 1);
 		
 		// by default use "Self Render".
@@ -469,8 +475,8 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
 		
 		opacityModifyRGB_			= true;
 		opacity_					= 255;
-		color_                      = ccColor3B.ccWHITE;
-        colorUnmodified_	        = ccColor3B.ccWHITE;
+		color_                      = new ccColor3B(ccColor3B.ccWHITE);
+        colorUnmodified_	        = new ccColor3B(ccColor3B.ccWHITE);
 				
 		// update texture (calls updateBlendFunc)
 		setTexture(null);
@@ -481,24 +487,23 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
 		animations_ = null;
 		
 		// default transform anchor: center
-		anchorPoint_ =  CGPoint.ccp(0.5f, 0.5f);
+		anchorPoint_.set(0.5f, 0.5f);
 		
 		
 		honorParentTransform_ = CC_HONOR_PARENT_TRANSFORM_ALL;
 		hasChildren_ = false;
 		
 		// Atlas: Color
-		float[] tmpColor = new float[]{ 1.0f, 1.0f, 1.0f, 1.0f };
-		colors.put(tmpColor);
-		colors.put(tmpColor);
-		colors.put(tmpColor);
-		colors.put(tmpColor);
+		colors.put(1.0f).put(1.0f).put(1.0f).put(1.0f);
+		colors.put(1.0f).put(1.0f).put(1.0f).put(1.0f);
+		colors.put(1.0f).put(1.0f).put(1.0f).put(1.0f);
+		colors.put(1.0f).put(1.0f).put(1.0f).put(1.0f);
 		colors.position(0);
 		
 		// Atlas: Vertex		
 		// updated in "useSelfRender"		
 		// Atlas: TexCoords
-		setTextureRect(CGRect.make(0, 0, 0, 0));
+		setTextureRect(0, 0, 0, 0);
     }
 
     /** sets a new display frame to the CCSprite. */
@@ -662,24 +667,25 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
     }
 
     private void setTextureRect(CGRect rect, CGSize size) {
-        rect_ = CGRect.make(rect);
+    	setTextureRect(rect.origin.x, rect.origin.y, rect.size.width, rect.size.height, size.width, size.height);
+    }
+	private void setTextureRect(float x, float y, float w, float h, float sw, float sh) {
+        rect_.set(x, y, w, h);
 
-        setContentSize(size);
+        setContentSize(sw, sh);
         updateTextureCoords(rect_);
 
-        CGPoint relativeOffset = unflippedOffsetPositionFromCenter_;
-        if (relativeOffset == null) {
-        	relativeOffset = CGPoint.zero();
-        }
+        float relativeOffsetX = unflippedOffsetPositionFromCenter_.x;
+        float relativeOffsetY = unflippedOffsetPositionFromCenter_.y;
         
         // issue #732
         if( flipX_ )
-            relativeOffset.x = - relativeOffset.x;
+        	relativeOffsetX = - relativeOffsetX;
         if( flipY_ )
-            relativeOffset.y = - relativeOffset.y;
+        	relativeOffsetY = - relativeOffsetY;
 
-        offsetPosition_.x = relativeOffset.x + (getContentSize().width - rect_.size.width) / 2;
-        offsetPosition_.y = relativeOffset.y + (getContentSize().height - rect_.size.height) / 2;
+        offsetPosition_.x = relativeOffsetX + (contentSize_.width - rect_.size.width) / 2;
+        offsetPosition_.y = relativeOffsetY + (contentSize_.height - rect_.size.height) / 2;
 
         // rendering using SpriteSheet
         if( usesSpriteSheet_ ) {
@@ -689,26 +695,27 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
             // Atlas: Vertex
             float x1 = 0 + offsetPosition_.x;
             float y1 = 0 + offsetPosition_.y;
-            float x2 = x1 + rect.size.width;
-            float y2 = y1 + rect.size.height;
+            float x2 = x1 + w;
+            float y2 = y1 + h;
 
             // Don't update Z.
-            vertexes.put(0, x1);
-            vertexes.put(1, y2);
-            vertexes.put(2, 0);
-            vertexes.put(3, x1);
-            vertexes.put(4, y1);
-            vertexes.put(5, 0);
-            vertexes.put(6, x2);
-            vertexes.put(7, y2);
-            vertexes.put(8, 0);
-            vertexes.put(9, x2);
-            vertexes.put(10, y1);
-            vertexes.put(11, 0);
+            vertexes.position(0);
+            vertexes.put(x1);
+            vertexes.put(y2);
+            vertexes.put(0);
+            vertexes.put(x1);
+            vertexes.put(y1);
+            vertexes.put(0);
+            vertexes.put(x2);
+            vertexes.put(y2);
+            vertexes.put(0);
+            vertexes.put(x2);
+            vertexes.put(y1);
+            vertexes.put(0);
             vertexes.position(0);
         }
     }
-
+	
     // XXX: Optimization: instead of calling 5 times the parent sprite to obtain: position, scale.x, scale.y, anchorpoint and rotation,
     // this fuction return the 5 values in 1 single call
     private TransformValues getTransformValues() {
@@ -740,7 +747,13 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
         super.setPosition(pos);
         SET_DIRTY_RECURSIVELY();
     }
-
+    
+    @Override
+    public void setPosition(float x, float y) {
+        super.setPosition(x, y);
+        SET_DIRTY_RECURSIVELY();
+    }
+    
     public void setRotation(float rot) {
         super.setRotation(rot);
         SET_DIRTY_RECURSIVELY();
