@@ -1,6 +1,7 @@
 package org.cocos2d.nodes;
 
 import java.nio.FloatBuffer;
+import java.util.Arrays;
 import java.util.HashMap;
 
 import javax.microedition.khronos.opengles.GL10;
@@ -431,18 +432,19 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
         float x2 = x1 + rect_.size.width;
         float y2 = y1 + rect_.size.height;
 
-        vertexes.put(0, x1);
-        vertexes.put(1, y2);
-        vertexes.put(2, 0);
-        vertexes.put(3, x1);
-        vertexes.put(4, y1);
-        vertexes.put(5, 0);
-        vertexes.put(6, x2);
-        vertexes.put(7, y2);
-        vertexes.put(8, 0);
-        vertexes.put(9, x2);
-        vertexes.put(10, y1);
-        vertexes.put(11, 0);
+        vertexes.position(0);
+        vertexes.put(x1);
+        vertexes.put(y2);
+        vertexes.put(0);
+        vertexes.put(x1);
+        vertexes.put(y1);
+        vertexes.put(0);
+        vertexes.put(x2);
+        vertexes.put(y2);
+        vertexes.put(0);
+        vertexes.put(x2);
+        vertexes.put(y1);
+        vertexes.put(0);
         vertexes.position(0);
     }
 
@@ -508,7 +510,7 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
 
     /** sets a new display frame to the CCSprite. */
     public void setDisplayFrame(CCSpriteFrame frame) {
-        unflippedOffsetPositionFromCenter_ = frame.offset_;
+        unflippedOffsetPositionFromCenter_.set(frame.offset_);
 
         CCTexture2D newTexture = frame.getTexture();
         // update texture before updating texture rect
@@ -530,14 +532,16 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
         setDisplayFrame(frame);
     }
 
+    @Override
     public void setVisible(boolean v) {
-        super.setVisible(v);
         if( v != visible_ ) {
+        	super.setVisible(v);
             if( usesSpriteSheet_ && ! recursiveDirty_ ) {
                 dirty_ = recursiveDirty_ = true;
-                for (CCNode child:children_) {
-                    child.setVisible(v);
-                }
+                if(children_ != null)
+	                for (CCNode child:children_) {
+	                    child.setVisible(v);
+	                }
             }
         }
     }
@@ -557,26 +561,27 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
         assert animationName != null : "animationName parameter must be non null";
         return animations_.get(animationName);
     }
-
-    public void updateColor() {
-        float[] tmpColor = new float[]{ 
-        		color_.r/255.f, color_.g/255.f, color_.b/255.f, opacity_/255.f };
-		colors.put(tmpColor);
-		colors.put(tmpColor);
-		colors.put(tmpColor);
-		colors.put(tmpColor);
-		colors.position(0);
+    
+    private static final ccColor4B tmpColor4B = ccColor4B.ccc4(0, 0, 0, 0);
+    private static final ccColor4B[] tmpColors = new ccColor4B[] { tmpColor4B, tmpColor4B, tmpColor4B, tmpColor4B };
+    public void updateColor() {		
+        float tmpR = color_.r/255.f;
+        float tmpG = color_.g/255.f;
+        float tmpB = color_.b/255.f;
+        float tmpA = opacity_/255.f;
+        
+        colors.put(tmpR).put(tmpG).put(tmpB).put(tmpA)
+        	  .put(tmpR).put(tmpG).put(tmpB).put(tmpA)
+        	  .put(tmpR).put(tmpG).put(tmpB).put(tmpA)
+        	  .put(tmpR).put(tmpG).put(tmpB).put(tmpA);
+        colors.position(0);
         
         // renders using Sprite Manager
         if( usesSpriteSheet_ ) {
             if( atlasIndex_ != CCSpriteIndexNotInitialized) {
-                ccColor4B [] color4 = new ccColor4B[4];
-                color4[0] = ccColor4B.ccc4(color_.r, color_.g, color_.b, opacity_);
-                color4[1] = color4[0];
-                color4[2] = color4[0];
-                color4[3] = color4[0];
-                
-                textureAtlas_.updateColor(color4, atlasIndex_);
+            	tmpColor4B.r = color_.r; tmpColor4B.g = color_.g; tmpColor4B.b = color_.b; tmpColor4B.a = opacity_;
+            	textureAtlas_.updateColor(tmpColors, atlasIndex_);
+            	
             } else {
                 // no need to set it recursively
                 // update dirty_, don't update recursiveDirty_
@@ -586,7 +591,7 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
         // self render
         // do nothing
     }
-
+    
     public void setFlipX(boolean b) {
         if( flipX_ != b ) {
             flipX_ = b;
@@ -921,17 +926,26 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
         texCoords.put(6, right);
         texCoords.put(7, bottom);
         texCoords.position(0);
+        
+        if(usesSpriteSheet_)
+        	textureAtlas_.putTexCoords( texCoords, atlasIndex_);
     }
 
+    private final static CGAffineTransform tmpMatrix = CGAffineTransform.identity();
+    private final static CGAffineTransform tmpNewMatrix = CGAffineTransform.identity();
+    private final static float tmpV[] = new float[] { 
+        	0, 0, 0 , 	0, 0, 0,
+        	0, 0, 0,  	0, 0, 0
+        };  
     /** updates the quad according the the rotation, position, scale values.
     */
     public void updateTransform() {
-        CGAffineTransform matrix = CGAffineTransform.identity();
+    	tmpMatrix.setToIdentity();
 
         // Optimization: if it is not visible, then do nothing
         if( ! visible_ ) {
-        	ccQuad3 q = new ccQuad3();
-        	textureAtlas_.putVertex(textureAtlas_.getVertexBuffer(), q.toFloatArray(), atlasIndex_);
+        	Arrays.fill(tmpV, 0);
+        	textureAtlas_.putVertex(textureAtlas_.getVertexBuffer(), tmpV, atlasIndex_);
             dirty_ = recursiveDirty_ = false;
             return ;
         }
@@ -942,36 +956,37 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
             float radians = -ccMacros.CC_DEGREES_TO_RADIANS(rotation_);
             float c = (float)Math.cos(radians);
             float s = (float)Math.sin(radians);
-
-            matrix = CGAffineTransform.make( c * scaleX_,  s * scaleX_,
+            
+            tmpMatrix.set(c * scaleX_,  s * scaleX_,
                     -s * scaleY_, c * scaleY_,
                     position_.x, position_.y);
-            matrix = matrix.getTransformTranslate(-anchorPointInPixels_.x, -anchorPointInPixels_.y);		
+
+            tmpMatrix.translate(-anchorPointInPixels_.x, -anchorPointInPixels_.y);
         } 
 
         // else do affine transformation according to the HonorParentTransform
         else if( parent_ != spriteSheet_ ) {
 
-            matrix = CGAffineTransform.identity();
             int prevHonor = CC_HONOR_PARENT_TRANSFORM_ALL;
 
             for (CCNode p = this; p != null && p != spriteSheet_; p = p.getParent()) {
-                TransformValues tv = ((CCSprite)p).getTransformValues();
-                CGAffineTransform newMatrix = CGAffineTransform.identity();
+            	CCSprite sprP = (CCSprite)p;
+                
+                tmpNewMatrix.setToIdentity();
                 // 2nd: Translate, Rotate, Scale
                 if( (prevHonor & CC_HONOR_PARENT_TRANSFORM_TRANSLATE) !=0 )
-                    newMatrix = newMatrix.getTransformTranslate(tv.pos.x, tv.pos.y);
+                	tmpNewMatrix.translate(sprP.position_.x, sprP.position_.y);
                 if( (prevHonor & CC_HONOR_PARENT_TRANSFORM_ROTATE) != 0 )
-                    newMatrix = newMatrix.getTransformRotate(-ccMacros.CC_DEGREES_TO_RADIANS(tv.rotation));
+                	tmpNewMatrix.rotate(-ccMacros.CC_DEGREES_TO_RADIANS(sprP.rotation_));
                 if( (prevHonor & CC_HONOR_PARENT_TRANSFORM_SCALE) != 0 ) {
-                    newMatrix = newMatrix.getTransformScale(tv.scale.x, tv.scale.y);
+                	tmpNewMatrix.scale(sprP.scaleX_, sprP.scaleY_);
                 }
 
                 // 3rd: Translate anchor point
-                newMatrix = newMatrix.getTransformTranslate(-tv.ap.x, -tv.ap.y);
+                tmpNewMatrix.translate(-sprP.anchorPoint_.x, -sprP.anchorPoint_.y);
                 // 4th: Matrix multiplication
-                matrix =  matrix.getTransformConcat(newMatrix);
-                prevHonor = ((CCSprite)p).honorParentTransform_;
+                tmpMatrix.multiply(tmpNewMatrix);
+                prevHonor = sprP.honorParentTransform_;
             }		
         }
 
@@ -986,13 +1001,14 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
 
         float x2 = x1 + size.width;
         float y2 = y1 + size.height;
-        float x = (float) matrix.m02;
-        float y = (float) matrix.m12;
+        float x = (float) tmpMatrix.m02;
+        float y = (float) tmpMatrix.m12;
 
-        float cr = (float) matrix.m00;
-        float sr = (float) matrix.m10;
-        float cr2 = (float) matrix.m11;
-        float sr2 = (float) -matrix.m01;
+        float cr = (float) tmpMatrix.m00;
+        float sr = (float) tmpMatrix.m10;
+        float cr2 = (float) tmpMatrix.m11;
+        float sr2 = (float) -tmpMatrix.m01;
+
         float ax = x1 * cr - y1 * sr2 + x;
         float ay = x1 * sr + y1 * cr2 + y;
 
@@ -1005,15 +1021,15 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
         float dx = x1 * cr - y2 * sr2 + x;
         float dy = x1 * sr + y2 * cr2 + y;
 
-        float v[] = new float[] { 
-        	dx, dy, vertexZ_ , 	ax, ay, vertexZ_,
-        	cx, cy, vertexZ_,  	bx, by, vertexZ_
-        };        
+        tmpV[0] = dx; tmpV[1] = dy; tmpV[2] = vertexZ_;   
+        tmpV[3] = ax; tmpV[4] = ay; tmpV[5] = vertexZ_;   
+        tmpV[6] = cx; tmpV[7] = cy; tmpV[8] = vertexZ_;   
+        tmpV[9] = bx; tmpV[10] = by; tmpV[11] = vertexZ_;   
 
-        textureAtlas_.putVertex(textureAtlas_.getVertexBuffer(), v, atlasIndex_);
+        textureAtlas_.putVertex(textureAtlas_.getVertexBuffer(), tmpV, atlasIndex_);
         dirty_ = recursiveDirty_ = false;
     }
-
+    
 	@Override
 	public ccBlendFunc getBlendFunc() {
 		return blendFunc_;

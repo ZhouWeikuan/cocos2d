@@ -388,7 +388,25 @@ public class CCTextureAtlas {
         }
         dst.position(0);
     }
+    
+    public void putTexCoords(FloatBuffer src, int index) {
+    	final int base = index * ccQuad2.size;
+    	textureCoordinates.position(base);
+    	textureCoordinates.put(src);
+    	
+    	src.position(0);
+    	textureCoordinates.position(0);
+    }
 
+    public void putVertex(FloatBuffer src, int index) {
+    	final int base = index * ccQuad3.size;
+    	vertexCoordinates.position(base);
+    	vertexCoordinates.put(src);
+    	
+    	src.position(0);
+    	textureCoordinates.position(0);
+    }
+    
     private float[] getVertex(FloatBuffer src, int index) {
         float[] quadV = new float[ccQuad3.size];
         final int base = index * ccQuad3.size;
