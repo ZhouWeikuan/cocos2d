@@ -1,6 +1,9 @@
 package org.cocos2d.events;
 
+import android.util.Log;
 import android.view.MotionEvent;
+
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CopyOnWriteArrayList;
 import org.cocos2d.protocols.CCTouchDelegateProtocol;
 
@@ -174,6 +177,39 @@ public class CCTouchDispatcher {
         }
     }
 
+    private ConcurrentLinkedQueue<MotionEvent> eventQueue = new ConcurrentLinkedQueue<MotionEvent>();
+    
+    public void queueMotionEvent(MotionEvent event) {
+    	// copy event for queue
+    	MotionEvent eventForQueue  = MotionEvent.obtain(event);
+    	    	
+    	eventQueue.add(eventForQueue);
+    }
+    
+    public void update() {
+    	
+    	MotionEvent event;
+    	while((event = eventQueue.poll()) != null) {
+    		
+			switch (event.getAction()) {
+			case MotionEvent.ACTION_CANCEL:
+				touchesCancelled(event);
+				break;
+			case MotionEvent.ACTION_DOWN:
+				touchesBegan(event);
+				break;
+			case MotionEvent.ACTION_MOVE:
+				touchesMoved(event);
+				break;
+			case MotionEvent.ACTION_UP:
+				touchesEnded(event);
+				break;
+			}
+			
+			event.recycle();
+    	}
+    }
+    
     //
     // dispatch events
     //

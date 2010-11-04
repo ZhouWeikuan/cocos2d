@@ -648,6 +648,8 @@ public class CCDirector implements GLSurfaceView.Renderer {
         synchronized(this) {
 		if (_sharedDirector == null)
 		return;
+		
+		CCTouchDispatcher.sharedDispatcher().update();
 		drawCCScene(gl);
         }
     }    

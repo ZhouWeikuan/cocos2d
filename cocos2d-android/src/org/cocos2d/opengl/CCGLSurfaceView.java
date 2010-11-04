@@ -63,20 +63,22 @@ public class CCGLSurfaceView extends GLSurfaceView {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
   	
-		switch (event.getAction()) {
-		case MotionEvent.ACTION_CANCEL:
-			mDispatcher.touchesCancelled(event);
-			break;
-		case MotionEvent.ACTION_DOWN:
-			mDispatcher.touchesBegan(event);
-			break;
-		case MotionEvent.ACTION_MOVE:
-			mDispatcher.touchesMoved(event);
-			break;
-		case MotionEvent.ACTION_UP:
-			mDispatcher.touchesEnded(event);
-			break;
-		}
+    	mDispatcher.queueMotionEvent(event);
+    	
+//		switch (event.getAction()) {
+//		case MotionEvent.ACTION_CANCEL:
+//			mDispatcher.touchesCancelled(event);
+//			break;
+//		case MotionEvent.ACTION_DOWN:
+//			mDispatcher.touchesBegan(event);
+//			break;
+//		case MotionEvent.ACTION_MOVE:
+//			mDispatcher.touchesMoved(event);
+//			break;
+//		case MotionEvent.ACTION_UP:
+//			mDispatcher.touchesEnded(event);
+//			break;
+//		}
 		
 		synchronized (CCDirector.sharedDirector()) {
 			try {
