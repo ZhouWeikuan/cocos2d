@@ -35,6 +35,8 @@ public class CCScheduler {
     private static class tHashSelectorEntry {
         ArrayList<CCTimer>    timers;
         Object			target;		// hash key (retained)
+        ArrayList<tListEntry> list;
+        tListEntry 		entry;
         int	            timerIndex;
         CCTimer			currentTimer;
         boolean			currentTimerSalvaged;
@@ -51,7 +53,7 @@ public class CCScheduler {
 		
 	// Used for "selectors with interval"
     ConcurrentHashMap<Object, tHashSelectorEntry>  hashForSelectors;
-    ConcurrentHashMap<Object, tListEntry>  hashForUpdates;
+    ConcurrentHashMap<Object, tHashSelectorEntry>  hashForUpdates;
 	tHashSelectorEntry	                currentTarget;
 	boolean						        currentTargetSalvaged;
 	
@@ -113,7 +115,7 @@ public class CCScheduler {
         updates0 = new ArrayList<tListEntry>();
         updatesNeg = new ArrayList<tListEntry>();
         updatesPos = new ArrayList<tListEntry>();
-        hashForUpdates = new ConcurrentHashMap<Object, tListEntry>();
+        hashForUpdates = new ConcurrentHashMap<Object, tHashSelectorEntry>();
         hashForSelectors = new ConcurrentHashMap<Object, tHashSelectorEntry>();
 
         // selectors with interval
@@ -136,40 +138,46 @@ public class CCScheduler {
             dt *= timeScale_;
         
         // updates with priority < 0
-        for (tListEntry e: updatesNeg) {
-            if( ! e.paused ) {
-            	try {
-					e.impMethod.invoke(e.target, new Object[] {dt});
-				} catch (Exception e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-            }
+        synchronized (updatesNeg) {
+	        for (tListEntry e: updatesNeg) {
+	            if( ! e.paused ) {
+	            	try {
+						e.impMethod.invoke(e.target, new Object[] {dt});
+					} catch (Exception e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+	            }
+	        }
         }
 
         // updates with priority == 0
-        for(int i=0; i < updates0.size(); ++i) {
-        	tListEntry e = updates0.get(i);
-            if( ! e.paused ) {
-                try {
-					e.impMethod.invoke(e.target, new Object[]{ dt } );
-				} catch (Exception e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-            }
+        synchronized (updates0) {
+	        for(int i=0; i < updates0.size(); ++i) {
+	        	tListEntry e = updates0.get(i);
+	            if( ! e.paused ) {
+	                try {
+						e.impMethod.invoke(e.target, new Object[]{ dt } );
+					} catch (Exception e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+	            }
+	        }
         }
         
         // updates with priority > 0
-        for (tListEntry e: updatesPos ) {
-            if( ! e.paused ) {
-                try {
-					e.impMethod.invoke(e.target, new Object[]{ dt } );
-				} catch (Exception e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-            }
+        synchronized (updatesPos) {
+	        for (tListEntry e: updatesPos ) {
+	            if( ! e.paused ) {
+	                try {
+						e.impMethod.invoke(e.target, new Object[]{ dt } );
+					} catch (Exception e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+	            }
+	        }
         }
         
         // Iterate all over the  custome selectors
@@ -326,6 +334,14 @@ public class CCScheduler {
     public void unscheduleUpdate(Object target) {
         if( target == null )
             return;
+        tHashSelectorEntry entry = hashForUpdates.get(target);
+        if ( entry == null )
+        	return;
+
+        synchronized (entry.list) {
+			entry.list.remove(entry.entry);
+		}
+        
         hashForUpdates.remove(target);
     }
 
@@ -399,7 +415,7 @@ public class CCScheduler {
             element.paused = false;
 
         // Update selector
-        tListEntry elementUpdate = hashForUpdates.get(target);
+        tHashSelectorEntry elementUpdate = hashForUpdates.get(target);
         if( elementUpdate != null) {
             assert elementUpdate.target != null: "resumeTarget: unknown error";
             elementUpdate.paused = false;
@@ -421,7 +437,7 @@ public class CCScheduler {
             element.paused = true;
 
         // Update selector
-        tListEntry elementUpdate = hashForUpdates.get(target);
+        tHashSelectorEntry elementUpdate = hashForUpdates.get(target);
         if( elementUpdate != null) {
             assert elementUpdate.target != null:"pauseTarget: unknown error";
             elementUpdate.paused = true;
@@ -437,7 +453,7 @@ public class CCScheduler {
 	public void scheduleUpdate(Object target, int priority, boolean paused) {
         // TODO Auto-generated method stub
         if (ccConfig.COCOS2D_DEBUG >= 1) {
-            tListEntry hashElement = hashForUpdates.get(target);
+        	tHashSelectorEntry hashElement = hashForUpdates.get(target);
             assert hashElement == null:"CCScheduler: You can't re-schedule an 'update' selector'. Unschedule it first";
         }
 
@@ -497,10 +513,16 @@ public class CCScheduler {
 			e.printStackTrace();
 		}
 
-        list.add(listElement);
+		synchronized (list) {
+			list.add(listElement);			
+		}
 
         // update hash entry for quicker access
-        hashForUpdates.put(target, listElement);
+        tHashSelectorEntry hashElement = new tHashSelectorEntry();
+        hashElement.target = target;
+        hashElement.list = list;
+        hashElement.entry = listElement;
+        hashForUpdates.put(target, hashElement);
     }
 
     public void priority(ArrayList<tListEntry> list, Object target, int priority, boolean paused) {
@@ -515,10 +537,16 @@ public class CCScheduler {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		synchronized (list) {
+			list.add(listElement);			
+		}
 
-        list.add(listElement);
-
-        hashForUpdates.put(target, listElement);
+        tHashSelectorEntry hashElement = new tHashSelectorEntry();
+        hashElement.target = target;
+        hashElement.list = list;
+        hashElement.entry = listElement;  
+        hashForUpdates.put(target, hashElement);
     }
 }
 

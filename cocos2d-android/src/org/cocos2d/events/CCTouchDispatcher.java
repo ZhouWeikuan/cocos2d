@@ -1,11 +1,11 @@
 package org.cocos2d.events;
 
-import android.util.Log;
-import android.view.MotionEvent;
-
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CopyOnWriteArrayList;
+
 import org.cocos2d.protocols.CCTouchDelegateProtocol;
+
+import android.view.MotionEvent;
 
 /** CCTouchDispatcher.
   Singleton that handles all the touch events.
