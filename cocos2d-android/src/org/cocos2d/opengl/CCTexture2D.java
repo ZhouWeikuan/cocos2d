@@ -135,10 +135,13 @@ public class CCTexture2D {
     
     @Override
     protected void finalize() throws Throwable {
-    	CCTextureCache.sharedTextureCache().removeTexture(this);
-    	releaseTexture(CCDirector.gl);
-    	    	
-    	super.finalize();
+    	if (_name > 0) {
+    		GLResourceHelper.sharedHelper().releaseTexture(_name);
+    	}
+//    	CCTextureCache.sharedTextureCache().removeTexture(this);
+//    	releaseTexture(CCDirector.gl);
+//    	    	
+//    	super.finalize();
     }
 
     /**

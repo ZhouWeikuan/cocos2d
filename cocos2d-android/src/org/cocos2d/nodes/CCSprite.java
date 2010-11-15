@@ -662,7 +662,7 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
     }
 
     private void updateBlendFunc() {
-        assert usesSpriteSheet_ :
+        assert ! usesSpriteSheet_ :
             "CCSprite: updateBlendFunc doesn't work when the sprite is rendered using a CCSpriteSheet";
 
         // it's possible to have an untextured sprite

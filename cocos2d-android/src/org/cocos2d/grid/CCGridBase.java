@@ -124,7 +124,7 @@ public abstract class CCGridBase {
         canvas.drawBitmap(bitmap, 0, 0, new Paint());
 
         CCTexture2D texture = new CCTexture2D(bitmap, CGSize.make(textureSize, textureSize));
-        CCTextureCache.sharedTextureCache().addTexture(texture);
+//        CCTextureCache.sharedTextureCache().addTexture(texture);
         
         init(gSize, texture, false);
     }

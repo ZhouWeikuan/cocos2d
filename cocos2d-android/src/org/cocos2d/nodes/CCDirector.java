@@ -31,6 +31,7 @@ import org.cocos2d.events.CCTouchDispatcher;
 import org.cocos2d.layers.CCScene;
 import org.cocos2d.nodes.CCLabel.TextAlignment;
 import org.cocos2d.opengl.CCTexture2D;
+import org.cocos2d.opengl.GLResourceHelper;
 import org.cocos2d.transitions.CCTransitionScene;
 import org.cocos2d.types.CGPoint;
 import org.cocos2d.types.CGRect;
@@ -622,6 +623,9 @@ public class CCDirector implements GLSurfaceView.Renderer {
     }
 
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
+    	// reload all GL resources here
+    	CCTextureCache.sharedTextureCache().reloadTextures();
+    	
     	CCDirector.gl = gl;
         /*
          * By default, OpenGL enables features that improve quality
@@ -650,6 +654,7 @@ public class CCDirector implements GLSurfaceView.Renderer {
 		return;
 		
 		CCTouchDispatcher.sharedDispatcher().update();
+		GLResourceHelper.sharedHelper().update(gl);
 		drawCCScene(gl);
         }
     }    
@@ -1137,7 +1142,6 @@ public class CCDirector implements GLSurfaceView.Renderer {
      * this should be called from activity when activity resume
      */
     public void onResume() {
-    	CCTextureCache.sharedTextureCache().reloadTextures();
     	openGLView_.onResume();
     	resume();
     }
