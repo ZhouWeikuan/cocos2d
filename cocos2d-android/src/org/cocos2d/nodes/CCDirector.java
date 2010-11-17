@@ -104,7 +104,7 @@ public class CCDirector implements GLSurfaceView.Renderer {
     public static final int kCCDirectorProjectionCustom = 3;
 
     /// Detault projection is 3D projection
-    public static final int kCCDirectorProjectionDefault = kCCDirectorProjection2D;
+    public static final int kCCDirectorProjectionDefault = kCCDirectorProjection3D;
 
     /** Sets an OpenGL projection
       @since v0.8.2
@@ -127,7 +127,7 @@ public class CCDirector implements GLSurfaceView.Renderer {
                 break;
 
             case kCCDirectorProjection3D:
-                gl.glViewport(0, 0, (int)size.width, (int)size.height);
+//                gl.glViewport(0, 0, (int)size.width, (int)size.height);
                 gl.glMatrixMode(GL_PROJECTION);
                 gl.glLoadIdentity();
                 GLU.gluPerspective(gl, 60, size.width/size.height, 0.5f, 1500.0f);
@@ -249,7 +249,7 @@ public class CCDirector implements GLSurfaceView.Renderer {
 
     /// XXX: missing description
     public float getZEye () {
-	    return ( surfaceSize_.height / 1.1566f );
+	    return ( screenSize_.height / 1.1566f );
     }
 
     /** Uses a new pixel format for the EAGLView.
