@@ -26,6 +26,7 @@ public class ZwoptexParser extends DefaultHandler {
 	private Boolean mode_set_key;
 	private Boolean mode_set_string;
 	private Boolean mode_set_integer;
+	private Boolean mode_set_real;		//ADD BY NGLOOM
 
 	private String section;
 	private String metadata_key;
@@ -70,6 +71,7 @@ public class ZwoptexParser extends DefaultHandler {
 	public HashMap getResults() {
 		HashMap results = new HashMap();
 		results.put("frames", frames);
+		metadata.put("format", 2);	//for the format check NGLOOM
 		results.put("metadata", metadata);
 		return results;
 	}
@@ -78,6 +80,7 @@ public class ZwoptexParser extends DefaultHandler {
 		mode_set_key = false;
 		mode_set_string = false;
 		mode_set_integer = false;
+		mode_set_real = false;
 		dict_depth = 0;
 		frameReset();
 	}
@@ -108,6 +111,8 @@ public class ZwoptexParser extends DefaultHandler {
 			mode_set_string = true;
 		} else if ("integer".equals(name)) {
 			mode_set_integer = true;
+		} else if("real".equals(name)) {
+			mode_set_real = true;
 		}
 	}
 
@@ -129,8 +134,15 @@ public class ZwoptexParser extends DefaultHandler {
 		mode_set_key = false;
 		mode_set_string = false;
 		mode_set_integer = false;
+		mode_set_real = false;
 	}
 
+	int tmpX = 0;
+	int tmpY = 0;
+	int tmpWidth = 0;
+	int tmpHeight = 0;
+	float tmpOffsetX = 0;
+	float tmpOffsetY = 0;
 	public void characters (char ch[], int start, int length) {
 		String s = new String(ch, start, length);
 
@@ -140,16 +152,23 @@ public class ZwoptexParser extends DefaultHandler {
 			section = s;
 		}
 
-		// metadata string
-		if ("metadata".equals(section) &&
-			mode_set_string == true && dict_depth == 2)
-		{
-			if (metadata_key.equals("size"))
-				metadata.put(metadata_key, parseCoords(s));
-		}
+//		// metadata string //texture elements
+//		if ("texture".equals(section) &&
+//			mode_set_string == true && dict_depth == 2)
+//		{
+//			if (metadata_key.equals("size"))
+//				metadata.put(metadata_key, parseCoords(s));
+//		}
 
+		// metadata key
+		if ("texture".equals(section) &&
+			mode_set_key == true && dict_depth == 2)
+		{
+			metadata_key = s;
+		}
+		
 		// metadata integer
-		if ("metadata".equals(section) &&
+		if ("texture".equals(section) &&
 			mode_set_integer == true && dict_depth == 2)
 		{
 			metadata.put(metadata_key, Integer.parseInt(s));
@@ -165,13 +184,6 @@ public class ZwoptexParser extends DefaultHandler {
 		if ("frames".equals(section) && mode_set_key == true && dict_depth == 3)
 		{
 			f_key = s;
-		}
-
-		// metadata key
-		if ("metadata".equals(section) &&
-			mode_set_key == true && dict_depth == 2)
-		{
-			metadata_key = s;
 		}
 
 		// strings
@@ -191,6 +203,47 @@ public class ZwoptexParser extends DefaultHandler {
 				f_source_size = parseCoordsSize(s);
 			}
 		}
+		
+		if("frames".equals(section) &&
+				(mode_set_integer || mode_set_real) && dict_depth == 3)
+		{
+			if("x".equals(f_key))
+			{
+				tmpX = Integer.parseInt(s);
+			}else if("y".equals(f_key))
+			{
+				tmpY = Integer.parseInt(s);				
+			}
+			else if("width".equals(f_key))
+			{
+				tmpWidth = Integer.parseInt(s);
+			}
+			else if("height".equals(f_key))
+			{
+				tmpHeight = Integer.parseInt(s);
+				f_frame = CGRect.make(tmpX, tmpY, tmpWidth, tmpHeight);
+			}
+			else if("offsetX".equals(f_key))
+			{
+				tmpOffsetX  = Float.parseFloat(s);
+			}
+			else if("offsetY".equals(f_key))
+			{
+				tmpOffsetY = Float.parseFloat(s);
+				f_offset = CGPoint.ccp(tmpOffsetX, tmpOffsetY);
+			}
+			else if("originalWidth".equals(f_key))
+			{
+				tmpWidth = Integer.parseInt(s);
+			}
+			else if("originalHeight".equals(f_key))
+			{
+				tmpHeight = Integer.parseInt(s);
+				f_source_size = CGSize.make(tmpWidth,tmpHeight);
+			}		
+			
+		}
+		
 
 	}
 
