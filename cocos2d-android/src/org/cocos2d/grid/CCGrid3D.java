@@ -125,6 +125,7 @@ public class CCGrid3D extends CCGridBase {
                 }
             }
         }
+        indices.position(0);
         vertices.position(0);
         texCoordinates.position(0);
 
