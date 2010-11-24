@@ -1,5 +1,36 @@
 package org.cocos2d.opengl;
 
+import static javax.microedition.khronos.opengles.GL10.GL_CLAMP_TO_EDGE;
+import static javax.microedition.khronos.opengles.GL10.GL_FLOAT;
+import static javax.microedition.khronos.opengles.GL10.GL_LINEAR;
+import static javax.microedition.khronos.opengles.GL10.GL_NEAREST;
+import static javax.microedition.khronos.opengles.GL10.GL_REPEAT;
+import static javax.microedition.khronos.opengles.GL10.GL_TEXTURE_2D;
+import static javax.microedition.khronos.opengles.GL10.GL_TEXTURE_COORD_ARRAY;
+import static javax.microedition.khronos.opengles.GL10.GL_TEXTURE_MAG_FILTER;
+import static javax.microedition.khronos.opengles.GL10.GL_TEXTURE_MIN_FILTER;
+import static javax.microedition.khronos.opengles.GL10.GL_TEXTURE_WRAP_S;
+import static javax.microedition.khronos.opengles.GL10.GL_TEXTURE_WRAP_T;
+import static javax.microedition.khronos.opengles.GL10.GL_TRIANGLE_STRIP;
+import static javax.microedition.khronos.opengles.GL10.GL_VERTEX_ARRAY;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.FloatBuffer;
+
+import javax.microedition.khronos.opengles.GL10;
+import javax.microedition.khronos.opengles.GL11;
+
+import org.cocos2d.nodes.CCDirector;
+import org.cocos2d.nodes.CCLabel;
+import org.cocos2d.types.CCTexParams;
+import org.cocos2d.types.CGAffineTransform;
+import org.cocos2d.types.CGPoint;
+import org.cocos2d.types.CGRect;
+import org.cocos2d.types.CGSize;
+
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -7,26 +38,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.opengl.GLUtils;
-
-import org.cocos2d.nodes.CCDirector;
-import org.cocos2d.nodes.CCLabel;
-import org.cocos2d.nodes.CCTextureCache;
-import org.cocos2d.types.CGAffineTransform;
-import org.cocos2d.types.CGPoint;
-import org.cocos2d.types.CGRect;
-import org.cocos2d.types.CGSize;
-import org.cocos2d.types.CCTexParams;
-
-import javax.microedition.khronos.opengles.GL10;
-import javax.microedition.khronos.opengles.GL11;
-
-import static javax.microedition.khronos.opengles.GL10.*;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.nio.FloatBuffer;
 
 /** CCTexture2D class.
  * This class allows to easily create OpenGL 2D textures from images, text or raw data.
@@ -102,7 +113,7 @@ public class CCTexture2D {
     private Bitmap mBitmap;
 
     /** texture name */
-    private int _name = -1;
+    private int _name = 0;
 
     /** content size */
     private CGSize mContentSize;
@@ -127,7 +138,7 @@ public class CCTexture2D {
     }
 
     public void releaseTexture (GL10 gl) {
-        if (_name > 0) {
+        if (_name != 0) {
             gl.glDeleteTextures(1, new int[]{_name}, 0);
             _name = 0;
         }
@@ -135,7 +146,7 @@ public class CCTexture2D {
     
     @Override
     protected void finalize() throws Throwable {
-    	if (_name > 0) {
+    	if (_name != 0) {
     		GLResourceHelper.sharedHelper().releaseTexture(_name);
     	}
 //    	CCTextureCache.sharedTextureCache().removeTexture(this);
@@ -335,7 +346,7 @@ public class CCTexture2D {
     }
 
     public void loadTexture(GL10 gl) {
-        if (_name <= 0) {
+        if (_name == 0) {
             int[] textures = new int[1];
             gl.glGenTextures(1, textures, 0);
 
