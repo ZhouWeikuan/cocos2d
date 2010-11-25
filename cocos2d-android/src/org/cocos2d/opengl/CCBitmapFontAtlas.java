@@ -100,8 +100,9 @@ public class CCBitmapFontAtlas extends CCSpriteSheet implements CCLabelProtocol,
     static class CCBitmapFontConfiguration {
         // XXX: Creating a public interface so that the bitmapFontArray[] is accesible
         // The characters building up the font
-        public ccBitmapFontDef	bitmapFontArray[] = new ccBitmapFontDef[kCCBitmapFontAtlasMaxChars];
-
+        //public ccBitmapFontDef	bitmapFontArray[] = new ccBitmapFontDef[kCCBitmapFontAtlasMaxChars];
+    	public HashMap<Integer,ccBitmapFontDef>	bitmapFontArray = new HashMap<Integer, ccBitmapFontDef>();
+    	
         // FNTConfig: Common Height
         public int commonHeight;
 
@@ -188,7 +189,8 @@ public class CCBitmapFontAtlas extends CCSpriteSheet implements CCLabelProtocol,
 				        this.parseCharacterDefinition(line, characterDefinition);
 				        
 				        // Add the CharDef returned to the charArray
-				        bitmapFontArray[ characterDefinition.charID ] = characterDefinition;
+				        //bitmapFontArray[ characterDefinition.charID ] = characterDefinition;
+				        bitmapFontArray.put(Integer.valueOf(characterDefinition.charID), characterDefinition);
 				    }
 				    else if(line.startsWith("kernings count")) {
 				        this.parseKerningCapacity(line);
@@ -563,7 +565,8 @@ public class CCBitmapFontAtlas extends CCSpriteSheet implements CCLabelProtocol,
 
             kerningAmount = kerningAmount(prev, c);
 
-            ccBitmapFontDef fontDef = configuration_.bitmapFontArray[c];
+            //ccBitmapFontDef fontDef = configuration_.bitmapFontArray[c];
+            ccBitmapFontDef fontDef = configuration_.bitmapFontArray.get(Integer.valueOf(c));
 
             CGRect rect = fontDef.rect;
 
@@ -585,10 +588,12 @@ public class CCBitmapFontAtlas extends CCSpriteSheet implements CCLabelProtocol,
     		fontChar.setPosition(nextFontPositionX + fontDef.xOffset + fontDef.rect.size.width / 2.0f + kerningAmount,
                     (configuration_.commonHeight - fontDef.yOffset) - rect.size.height/2.0f);	
 
-            nextFontPositionX += configuration_.bitmapFontArray[c].xAdvance + kerningAmount;
+            //nextFontPositionX += configuration_.bitmapFontArray[c].xAdvance + kerningAmount;
+    		nextFontPositionX += configuration_.bitmapFontArray.get(Integer.valueOf(c)).xAdvance + kerningAmount;
             prev = c;
 
-            tmpSize.width += configuration_.bitmapFontArray[c].xAdvance + kerningAmount;
+            //tmpSize.width += configuration_.bitmapFontArray[c].xAdvance + kerningAmount;
+            tmpSize.width += configuration_.bitmapFontArray.get(Integer.valueOf(c)).xAdvance + kerningAmount;
             tmpSize.height = configuration_.commonHeight;
 
             // Apply label properties
