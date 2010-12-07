@@ -463,7 +463,6 @@ public class CCBitmapFontAtlas extends CCSpriteSheet implements CCLabelProtocol,
         return new ccColor3B(color_);
     }
 
-    @Override
     public void setColor(ccColor3B color) {
         color_.set(color);
         for (CCNode o: children_) {
@@ -553,61 +552,91 @@ public class CCBitmapFontAtlas extends CCSpriteSheet implements CCLabelProtocol,
     /** updates the font chars based on the string to render */
     public void createFontChars() {
         int nextFontPositionX = 0;
-        char prev = (char) -1;
-        int kerningAmount = 0;
+        int nextFontPositionY = 0;
+        char prev = (char)-1;
+		int kerningAmount = 0;
 
-        CGSize tmpSize = CGSize.zero();
+		CGSize tmpSize = CGSize.zero();
 
-        int l = string_.length();
-        for(int i=0; i<l; i++) {
-            char c = string_.charAt(i);
-            // assert (c < kCCBitmapFontAtlasMaxChars):"BitmapFontAtlas: character outside bounds";
+		int longestLine = 0;
+		int totalHeight = 0;
 
-            kerningAmount = kerningAmount(prev, c);
+		int quantityOfLines = 1;
 
-            //ccBitmapFontDef fontDef = configuration_.bitmapFontArray[c];
-            ccBitmapFontDef fontDef = configuration_.bitmapFontArray.get(Integer.valueOf(c));
+		int stringLen = string_.length();
+		if(stringLen == 0)
+			return;
 
-            CGRect rect = fontDef.rect;
+		// quantity of lines NEEDS to be calculated before parsing the lines,
+		// since the Y position needs to be calculated before hand
+		for(int i=0; i < stringLen-1;i++) {
+			char c = string_.charAt(i);
+			if( c=='\n')
+				quantityOfLines++;
+		}
 
-            CCSprite fontChar = (CCSprite)getChild(i);
-            if( fontChar == null ) {
-                fontChar = CCSprite.sprite(this, rect); 
+		totalHeight = configuration_.commonHeight * quantityOfLines;
+		nextFontPositionY = -(configuration_.commonHeight - configuration_.commonHeight*quantityOfLines);
 
-                addChild(fontChar, 0, i);
-            } else {
-                // reusing fonts
-                fontChar.setTextureRect(rect);
+		for(int i=0; i<stringLen; i++) {
+			char c = string_.charAt(i);
 
-                // restore to default in case they were modified
-                fontChar.setVisible(true);
-                fontChar.setOpacity(255);
-            }
+			if (c == '\n') {
+				nextFontPositionX = 0;
+				nextFontPositionY -= configuration_.commonHeight;
+				continue;
+			}
 
-         // update kerning
-    		fontChar.setPosition(nextFontPositionX + fontDef.xOffset + fontDef.rect.size.width / 2.0f + kerningAmount,
-                    (configuration_.commonHeight - fontDef.yOffset) - rect.size.height/2.0f);	
+			kerningAmount = kerningAmount(prev, c);
 
-            //nextFontPositionX += configuration_.bitmapFontArray[c].xAdvance + kerningAmount;
-    		nextFontPositionX += configuration_.bitmapFontArray.get(Integer.valueOf(c)).xAdvance + kerningAmount;
-            prev = c;
+			ccBitmapFontDef fontDef = configuration_.bitmapFontArray.get(Integer.valueOf(c));
+			if (fontDef == null)
+				continue;
 
-            //tmpSize.width += configuration_.bitmapFontArray[c].xAdvance + kerningAmount;
-            tmpSize.width += configuration_.bitmapFontArray.get(Integer.valueOf(c)).xAdvance + kerningAmount;
-            tmpSize.height = configuration_.commonHeight;
+			CGRect rect = fontDef.rect;
 
-            // Apply label properties
-            fontChar.setOpacityModifyRGB(opacityModifyRGB_);
-            // Color MUST be set before opacity, since opacity might change color if OpacityModifyRGB is on
-            fontChar.setColor(color_);
+			CCSprite fontChar;
 
-            // only apply opaccity if it is different than 255 )
-            // to prevent modifying the color too (issue #610)
-            if( opacity_ != 255 )
-                fontChar.setOpacity(opacity_);
-        }
+			fontChar = (CCSprite)getChild(i);
+			if( fontChar == null ) {
+				fontChar = CCSprite.sprite(this, rect);
+				addChild(fontChar, 0, i);
+			}
+			else {
+				// reusing fonts
+				fontChar.setTextureRect(rect);
 
-        setContentSize(tmpSize);
+				// restore to default in case they were modified
+				fontChar.setVisible(true);
+				fontChar.setOpacity(255);
+			}
+
+			float yOffset = configuration_.commonHeight - fontDef.yOffset;
+			fontChar.setPosition((float)nextFontPositionX + fontDef.xOffset + fontDef.rect.size.width*0.5f + kerningAmount,
+									(float)nextFontPositionY + yOffset - rect.size.height*0.5f );
+
+			// update kerning
+			nextFontPositionX += fontDef.xAdvance + kerningAmount;
+			prev = c;
+
+			// Apply label properties
+			fontChar.setOpacityModifyRGB(opacityModifyRGB_);
+			// Color MUST be set before opacity, since opacity might change color if OpacityModifyRGB is on
+			fontChar.setColor(color_);
+
+			// only apply opacity if it is different than 255 )
+			// to prevent modifying the color too (issue #610)
+			if( opacity_ != 255 )
+				fontChar.setOpacity(opacity_);
+
+			if (longestLine < nextFontPositionX)
+				longestLine = nextFontPositionX;
+		}
+
+		tmpSize.width = longestLine;
+		tmpSize.height = totalHeight;
+
+		setContentSize(tmpSize);
     }
 
     public void setString(String newString) {	
