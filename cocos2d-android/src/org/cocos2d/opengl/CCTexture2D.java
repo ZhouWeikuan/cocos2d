@@ -14,8 +14,6 @@ import static javax.microedition.khronos.opengles.GL10.GL_TEXTURE_WRAP_T;
 import static javax.microedition.khronos.opengles.GL10.GL_TRIANGLE_STRIP;
 import static javax.microedition.khronos.opengles.GL10.GL_VERTEX_ARRAY;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
@@ -25,6 +23,7 @@ import javax.microedition.khronos.opengles.GL11;
 
 import org.cocos2d.nodes.CCDirector;
 import org.cocos2d.nodes.CCLabel;
+import org.cocos2d.nodes.CCTextureCache;
 import org.cocos2d.types.CCTexParams;
 import org.cocos2d.types.CGAffineTransform;
 import org.cocos2d.types.CGPoint;
@@ -32,7 +31,6 @@ import org.cocos2d.types.CGRect;
 import org.cocos2d.types.CGSize;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -185,7 +183,7 @@ public class CCTexture2D {
             image = bitmap;
         }
 
-        init(image, imageSize);
+        init(image, imageSize, imageSize);
     }
 
     // this is temporary solution for white texture problem,
@@ -222,7 +220,7 @@ public class CCTexture2D {
 
         mBitmap = image;
     }
-    
+
     public CCTexture2D(Bitmap image, CGSize imageSize) {
         Bitmap.Config config = Bitmap.Config.ARGB_8888;
         Bitmap bitmap = Bitmap.createBitmap((int) imageSize.width, (int) imageSize.height, config);
@@ -231,15 +229,26 @@ public class CCTexture2D {
         canvas.drawBitmap(image, 0, 0, new Paint());
         image.recycle();
 
-        init(bitmap, imageSize);
+        init(bitmap, imageSize, imageSize);
+    }
+    
+    public CCTexture2D(Bitmap image, CGSize imageSize, CGSize contentSize) {
+        Bitmap.Config config = Bitmap.Config.ARGB_8888;
+        Bitmap bitmap = Bitmap.createBitmap((int) imageSize.width, (int) imageSize.height, config);
+        Canvas canvas = new Canvas(bitmap);
+        
+        canvas.drawBitmap(image, 0, 0, new Paint());
+        image.recycle();
+
+        init(bitmap, imageSize, contentSize);
     }
 
-    private void init(Bitmap image, CGSize imageSize) {
+    private void init(Bitmap image, CGSize imageSize, CGSize contentSize) {
         mBitmap = image;
 
         mWidth = image.getWidth();
         mHeight = image.getHeight();
-        mContentSize = imageSize;
+        mContentSize = contentSize;
         // _format = image.getConfig();
         _maxS = mContentSize.width / (float) mWidth;
         _maxT = mContentSize.height / (float) mHeight;
@@ -259,6 +268,7 @@ public class CCTexture2D {
 //        ByteBuffer isb = ByteBuffer.allocateDirect(6 * 2);
 //        isb.order(ByteOrder.nativeOrder());
 //        mIndices = isb.asShortBuffer();
+		CCTextureCache.sharedTextureCache().addTexture(this);
     }
 
     /**
@@ -277,6 +287,7 @@ public class CCTexture2D {
         Paint textPaint = new Paint();
         textPaint.setTypeface(typeface);
         textPaint.setTextSize(fontSize);
+        textPaint.setAntiAlias(true);
 
         int ascent = (int) Math.ceil(-textPaint.ascent());  // Paint.ascent is negative, so negate it
         int descent = (int) Math.ceil(textPaint.descent());
@@ -305,6 +316,7 @@ public class CCTexture2D {
         Paint textPaint = new Paint();
         textPaint.setTypeface(typeface);
         textPaint.setTextSize(fontSize);
+        textPaint.setAntiAlias(true);
 
         int ascent = (int) Math.ceil(-textPaint.ascent());  // Paint.ascent is negative, so negate it
         int descent = (int) Math.ceil(textPaint.descent());
@@ -342,7 +354,7 @@ public class CCTexture2D {
                 ascent + centerOffsetHeight,
                 textPaint);
 
-        init(bitmap, dimensions);
+        init(bitmap, dimensions, dimensions);
     }
 
     public void loadTexture(GL10 gl) {
@@ -356,6 +368,7 @@ public class CCTexture2D {
 
 //            gl.glTexEnvx(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
             
+            /*
             if(textureName != "") {
 	            InputStream is;
 				try {
@@ -370,11 +383,11 @@ public class CCTexture2D {
 				}
 				
 				textureName = "";
-            }
+            }*/
 
             GLUtils.texImage2D(GL_TEXTURE_2D, 0, mBitmap, 0);
             
-            mBitmap.recycle();
+            // mBitmap.recycle();
         }
     }
 
