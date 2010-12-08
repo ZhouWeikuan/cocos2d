@@ -1,8 +1,9 @@
 package org.cocos2d.nodes;
 
+import java.util.HashSet;
+
 import org.cocos2d.opengl.CCTexture2D;
 import org.cocos2d.protocols.CCLabelProtocol;
-import org.cocos2d.types.CGRect;
 import org.cocos2d.types.CGSize;
 
 /** CCLabel is a subclass of CCTextureNode that knows how to render text labels
@@ -23,6 +24,12 @@ public class CCLabel extends CCSprite implements CCLabelProtocol {
     private TextAlignment _alignment;
     private String _fontName;
     private float _fontSize;
+    private String _string;
+    private boolean _active = false;
+    private int _dirtyId = -1;
+
+    private static int _globalDirtyId = 0;
+    private static HashSet<CCLabel> _activeLabels = new HashSet<CCLabel>();
 
     /** creates a CCLabel from a fontname, alignment, dimension and font size */
     public static CCLabel makeLabel(String string, final CGSize dimensions, TextAlignment alignment, 
@@ -57,19 +64,60 @@ public class CCLabel extends CCSprite implements CCLabelProtocol {
         To obtain better performance use CCLabelAtlas
      */
     public void setString(String string) {
-        CCTexture2D tex = null;
+	if (_string == null || !_string.equals(string))
+	{
+		_string = string;
+		_dirtyId = -1;
+		updateTexture();
+	}
+    }
+
+    private void updateTexture()
+    {
+	if (_dirtyId == _globalDirtyId)
+		return;
+
+	CCTexture2D tex = null;
         if (CGSize.equalToSize(_dimensions, CGSize.getZero())) {
-            tex = new CCTexture2D(string, _fontName, _fontSize);
+            tex = new CCTexture2D(_string, _fontName, _fontSize);
         } else {
-            tex = new CCTexture2D(string, _dimensions, _alignment, _fontName, _fontSize);
+            tex = new CCTexture2D(_string, _dimensions, _alignment, _fontName, _fontSize);
         }
 //        CCTextureCache.sharedTextureCache().addTexture(tex);
         setTexture(tex);
 
 	    CGSize size = texture_.getContentSize();
 	    setTextureRect(0, 0, size.width, size.height);
+
+	    _dirtyId = _globalDirtyId;
     }
 
+    @Override
+    public void onEnter()
+    {
+	super.onEnter();
+	_active = true;
+	_activeLabels.add(this);
+	updateTexture();
+    }
+
+    @Override
+    public void onExit()
+    {
+	super.onExit();
+	_activeLabels.remove(this);
+	_active = false;
+    }
+
+    // this is a temporary solution for white texture problem,
+    public static void reloadTextures()
+    {
+	_globalDirtyId += 1;
+	for (CCLabel label : _activeLabels)
+	{
+		label.updateTexture();
+	}
+    }
 
     public String toString() {
         return "CCLabel <" + CCLabel.class.getSimpleName() + " = " + this.hashCode()
