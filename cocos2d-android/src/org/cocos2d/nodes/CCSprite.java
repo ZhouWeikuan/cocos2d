@@ -131,7 +131,6 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
         return new ccColor3B(color_);
     }
 
-    @Override
     public void setColor(ccColor3B color3) {
         color_.set(color3);
         colorUnmodified_.set(color3);
@@ -1036,16 +1035,15 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
         tmpV[6] = cx; tmpV[7] = cy; tmpV[8] = vertexZ_;   
         tmpV[9] = bx; tmpV[10] = by; tmpV[11] = vertexZ_;   
 
-        textureAtlas_.putVertex(textureAtlas_.getVertexBuffer(), tmpV, atlasIndex_);
+        FloatBuffer tmpVBuffer  = BufferProvider.makeFloatBuffer(tmpV);
+        textureAtlas_.updateQuad(getTexCoords(), tmpVBuffer, atlasIndex_);
         dirty_ = recursiveDirty_ = false;
     }
-    
-	@Override
+
 	public ccBlendFunc getBlendFunc() {
 		return blendFunc_;
 	}
 
-	@Override
 	public void setBlendFunc(ccBlendFunc blendFunc) {
 		blendFunc_ = blendFunc;
 	}

@@ -116,15 +116,15 @@ public abstract class CCGridBase {
     	int w = CCTexture2D.toPow2((int)s.width);
     	int h = CCTexture2D.toPow2((int)s.height);
     	int textureSize = Math.max(w, h);
-    	if (textureSize > 64) {
-    		textureSize = 64;
+    	if (textureSize > 1024) {
+    		textureSize = 1024;
     	}
     	Bitmap bitmap = Bitmap.createBitmap(textureSize, textureSize, Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
         canvas.drawBitmap(bitmap, 0, 0, new Paint());
 
-        CCTexture2D texture = new CCTexture2D(bitmap, CGSize.make(textureSize, textureSize));
-//        CCTextureCache.sharedTextureCache().addTexture(texture);
+        CCTexture2D texture = new CCTexture2D(bitmap, CGSize.make(textureSize, textureSize), CGSize.make(s.width, s.height));
+        CCTextureCache.sharedTextureCache().addTexture(texture);
         
         init(gSize, texture, false);
     }

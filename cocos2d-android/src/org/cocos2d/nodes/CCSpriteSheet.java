@@ -161,6 +161,10 @@ public class CCSpriteSheet extends CCNode implements CCTextureProtocol {
         return sprite;
     }
 
+    @Override
+    public CCNode addChild(CCNode child, int z) {
+	return addChild(child, z, child.getTag());
+    }
     // override addChild:
     @Override
     public CCNode addChild(CCNode child, int z, int aTag) {
@@ -369,7 +373,7 @@ public class CCSpriteSheet extends CCNode implements CCTextureProtocol {
     }
 
     // add child helper
-    public void insertChild(CCSprite sprite, int index) {
+    protected void insertChild(CCSprite sprite, int index) {
         sprite.useSpriteSheetRender(this);
         sprite.atlasIndex_ = index;
         sprite.dirty_ = true;
@@ -378,9 +382,7 @@ public class CCSpriteSheet extends CCNode implements CCTextureProtocol {
             increaseAtlasCapacity();
         }
 
-        textureAtlas_.putVertex(sprite.getVertices(), index);
-		textureAtlas_.putTexCoords(sprite.getTexCoords(), index);
-
+        textureAtlas_.insertQuad(sprite.getTexCoords(), sprite.getVertices(), index);
         descendants_.add(index, sprite);
         
         // update indices
@@ -444,7 +446,6 @@ public class CCSpriteSheet extends CCNode implements CCTextureProtocol {
         return textureAtlas_.getTexture();
     }
 
-	@Override
 	public void setBlendFunc(ccBlendFunc blendFunc) {
 		// TODO Auto-generated method stub
 		blendFunc_ = blendFunc;

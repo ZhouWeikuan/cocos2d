@@ -26,9 +26,11 @@
         <javaElement handleIdentifier="=cocos2d_android/src&lt;org.cocos2d.opengl"/>
         <file path="/cocos2d_android/.classpath"/>
         <javaElement handleIdentifier="=cocos2d_android/src&lt;org.cocos2d.particlesystem"/>
+        <file path="/cocos2d_android/assets/fps_images.png"/>
         <javaElement handleIdentifier="=cocos2d_android/src&lt;org.cocos2d.menus"/>
         <javaElement handleIdentifier="=cocos2d_android/src&lt;org.cocos2d.layers"/>
         <javaElement handleIdentifier="=cocos2d_android/src&lt;org.box2d.dynamics.joints"/>
+        <javaElement handleIdentifier="=cocos2d_android/src&lt;org.cocos2d.sound"/>
         <file path="/cocos2d_android/AUTHORS"/>
         <javaElement handleIdentifier="=cocos2d_android/src&lt;org.cocos2d"/>
         <file path="/cocos2d_android/build.xml"/>

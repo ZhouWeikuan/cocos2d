@@ -8,15 +8,34 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.SoundPool;
 
+// TODO: support volume customizations for both effects and background ...
 public class SoundEngine {
 	// effects are sounds that less than 5 seconds, better in 3 seconds
-	static HashMap<Integer, Integer> effectsMap = new HashMap<Integer, Integer>();
+	HashMap<Integer, Integer> effectsMap = new HashMap<Integer, Integer>();
 	
 	// sounds are background sounds, usually longer than 5 seconds
-	static HashMap<Integer, MediaPlayer> soundsMap = new HashMap<Integer, MediaPlayer>();
-	static SoundPool sp = new SoundPool(5, AudioManager.STREAM_MUSIC, 0);
+	HashMap<Integer, MediaPlayer> soundsMap = new HashMap<Integer, MediaPlayer>();
+	SoundPool sp = new SoundPool(5, AudioManager.STREAM_MUSIC, 0);
+	int lastSndId = -1;
+	
+    static SoundEngine _sharedEngine = null;
 
-	public static void preloadEffect(Context app, int resId){
+    public static SoundEngine sharedEngine() {
+        synchronized(SoundEngine.class) {
+            if (_sharedEngine == null) {
+                _sharedEngine = new SoundEngine();
+            }
+        }
+        return _sharedEngine;
+    }
+
+    public static void purgeSharedEngine() {
+        synchronized(SoundEngine.class) {
+            _sharedEngine = null;
+        }
+    }
+
+	public void preloadEffect(Context app, int resId){
 		synchronized(effectsMap) {
 			Integer sndId = effectsMap.get(resId);
 			if (sndId != null)
@@ -27,7 +46,7 @@ public class SoundEngine {
 		}
 	}
 		
-	public static void playEffect(Context app, int resId) {
+	public void playEffect(Context app, int resId) {
 		Integer sndId = -1;
 		synchronized (effectsMap) {
 			sndId = effectsMap.get(resId);
@@ -40,7 +59,7 @@ public class SoundEngine {
 		sp.play(sndId, 1.0f, 1.0f, 0, 0, 1.0f);
 	}
 	
-	public static void preloadSound(Context ctxt, int resId) {
+	public void preloadSound(Context ctxt, int resId) {
 		synchronized(soundsMap) {			
 			MediaPlayer mp = soundsMap.get(resId);
 			if (mp != null)
@@ -52,7 +71,11 @@ public class SoundEngine {
 		}
 	}
 	
-	public static void playSound(Context ctxt, int resId, boolean loop) {
+	public void playSound(Context ctxt, int resId, boolean loop) {
+		if (lastSndId != -1) {
+			stopSound();
+		}
+		
 		MediaPlayer mp = null;
 		synchronized(soundsMap) {
 			mp = soundsMap.get(resId);
@@ -70,31 +93,50 @@ public class SoundEngine {
 				}
 			}
 		}
-		
+		lastSndId = resId;
 		mp.start();
 
 		if (loop)
 			mp.setLooping(true);
 	}
 	
-	public static void pauseSound(int resId) {
+	public void pauseSound() {
+		if (lastSndId == -1)
+			return;
+		
 		MediaPlayer mp = null;
 		synchronized(soundsMap) {
-			mp = soundsMap.get(resId);
+			mp = soundsMap.get(lastSndId);
 			if (mp == null)
 				return;
 		}
 		mp.pause();
 	}
 	
-	public static void stopSound(int resId) {
+	public void resumeSound() {
+		if (lastSndId == -1)
+			return;
+		
 		MediaPlayer mp = null;
 		synchronized(soundsMap) {
-			mp = soundsMap.get(resId);
+			mp = soundsMap.get(lastSndId);
+			if (mp == null)
+				return;
+		}
+		mp.start();
+	}
+	
+	public void stopSound() {
+		if (lastSndId == -1)
+			return;
+		MediaPlayer mp = null;
+		synchronized(soundsMap) {
+			mp = soundsMap.get(lastSndId);
 			if (mp == null)
 				return;
 		}
 		mp.stop();
+		lastSndId = -1;
 	}
 
 }

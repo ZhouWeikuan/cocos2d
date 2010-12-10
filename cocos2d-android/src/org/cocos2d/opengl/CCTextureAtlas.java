@@ -168,13 +168,22 @@ public class CCTextureAtlas {
      * index must be between 0 and the atlas capacity - 1
      @since v0.8
      */
-    public void updateQuad(ccQuad2 quadT, ccQuad3 quadV, int index) {
+    public void updateQuad(FloatBuffer texCordBuffer, FloatBuffer vertexBuffer, int index) {
         assert (index >= 0 && index < capacity_) : "update quad with texture_: Invalid index";
 
         totalQuads_ = Math.max(index + 1, totalQuads_);
 
-        putTexCoords(textureCoordinates, quadT.toFloatArray(), index);
-        putVertex(vertexCoordinates, quadV.toFloatArray(), index);
+        putTexCoords(texCordBuffer, index);
+        putVertex(vertexBuffer, index);
+    }
+
+    public void updateQuad(ccQuad2 texQuad, ccQuad3 vertexQuad, int index) {
+        assert (index >= 0 && index < capacity_) : "update quad with texture_: Invalid index";
+
+        totalQuads_ = Math.max(index + 1, totalQuads_);
+
+        putTexCoords(this.getTexCoordsBuffer(), texQuad.toFloatArray(), index);
+        putVertex(this.getVertexBuffer(), vertexQuad.toFloatArray(), index);
     }
 
     public void updateColor(ccColor4B[] color, int index) {
@@ -194,7 +203,7 @@ public class CCTextureAtlas {
     index must be between 0 and the atlas capacity - 1
     @since v0.8
     */
-    public void insertQuad(ccQuad2 texCoords, ccQuad3 vertexCoords, int index) {
+    public void insertQuad(FloatBuffer texCordBuffer, FloatBuffer vertexBuffer, int index) {
         assert (index >= 0 && index < capacity_) : "insert quad with texture_: Invalid index";
 
         totalQuads_++;
@@ -214,8 +223,8 @@ public class CCTextureAtlas {
                 arraycopyColor(colors, index, colors, index + 1, remaining);
             }
         }
-        putTexCoords(textureCoordinates, texCoords.toFloatArray(), index);
-        putVertex(vertexCoordinates, vertexCoords.toFloatArray(), index);
+        putTexCoords(texCordBuffer, index);
+        putVertex(vertexBuffer, index);
     }
  
     /** Removes the quad that is located at a certain index and inserts it at a new index
@@ -381,7 +390,7 @@ public class CCTextureAtlas {
         return quadT;
     }
 
-    public void putTexCoords(FloatBuffer dst, float[] quadT, int index) {
+    protected void putTexCoords(FloatBuffer dst, float[] quadT, int index) {
     	final int base = index * ccQuad2.size;
         for (int i = 0; i < ccQuad2.size; i++) {
             dst.put(base + i, quadT[i]);
@@ -398,13 +407,13 @@ public class CCTextureAtlas {
     	textureCoordinates.position(0);
     }
 
-    public void putVertex(FloatBuffer src, int index) {
+    protected void putVertex(FloatBuffer src, int index) {
     	final int base = index * ccQuad3.size;
     	vertexCoordinates.position(base);
     	vertexCoordinates.put(src);
     	
     	src.position(0);
-    	textureCoordinates.position(0);
+        vertexCoordinates.position(0);
     }
     
     private float[] getVertex(FloatBuffer src, int index) {

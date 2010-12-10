@@ -143,19 +143,19 @@ public class CCTextureCache {
         textures.remove(textureKeyName);
     }
 
-    public static CCTexture2D createTextureFromFilePath(String path) {
+    private static CCTexture2D createTextureFromFilePath(String path) {
         try {
         	InputStream is = CCDirector.sharedDirector().getActivity().getAssets().open(path);
             Bitmap bmp = BitmapFactory.decodeStream(is);
             is.close();
-            return createTextureFromBitmap(bmp);            
+            return  createTextureFromBitmap(bmp);            
         } catch (IOException e) {
             e.printStackTrace();
             return null;
         }
     }
 
-    public static CCTexture2D createTextureFromBitmap(Bitmap bmp) {
+    private static CCTexture2D createTextureFromBitmap(Bitmap bmp) {
         return new CCTexture2D(bmp);
     }
 
