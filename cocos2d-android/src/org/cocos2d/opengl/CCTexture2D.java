@@ -17,6 +17,7 @@ import static javax.microedition.khronos.opengles.GL10.GL_VERTEX_ARRAY;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 
 import javax.microedition.khronos.opengles.GL10;
 import javax.microedition.khronos.opengles.GL11;
@@ -47,6 +48,15 @@ import android.opengl.GLUtils;
 */
 public class CCTexture2D {
     // private static final String LOG_TAG = CCTexture2D.class.getSimpleName();
+	
+	/**
+	 * These objects are stored in CCTextureCache,
+	 * they would be removed only when finalize() of CCTexture2D,
+	 * that's why DO NOT STORE REFERENCE TO CCTexture2D in TextureLoader
+	 */
+	public interface TextureLoader {
+		void load();
+	}
 
     public static final int kMaxTextureSize = 1024;
 
@@ -108,6 +118,9 @@ public class CCTexture2D {
     private FloatBuffer mCoordinates;
 //    private ShortBuffer mIndices;
 
+    /** this mBitmap should be created when we call load(),
+     * then we create texture, mBitmap is destroyed
+     */
     private Bitmap mBitmap;
 
     /** texture name */
@@ -130,6 +143,9 @@ public class CCTexture2D {
     private float _maxT;
 
     private CCTexParams _texParams;
+    
+    /** this object is responsible for loading Bitmap for texture */
+    private TextureLoader mLoader;
 
     public final CGSize getContentSize() {
         return mContentSize;
@@ -144,21 +160,49 @@ public class CCTexture2D {
     
     @Override
     protected void finalize() throws Throwable {
-    	if (_name != 0) {
-    		GLResourceHelper.sharedHelper().releaseTexture(_name);
+    	if(mLoader != null) {
+    		CCTextureCache.sharedTextureCache().removeLoader(mLoader);
     	}
-//    	CCTextureCache.sharedTextureCache().removeTexture(this);
-//    	releaseTexture(CCDirector.gl);
-//    	    	
-//    	super.finalize();
+    	if (_name != 0) {
+    		GLResourceHelper.sharedHelper().release(new GLResourceHelper.GLResource() {
+    			
+				@Override
+				public void release(GL10 gl) {
+					IntBuffer intBuffer = IntBuffer.allocate(1);
+					intBuffer.put(0, _name);
+					gl.glDeleteTextures(1, intBuffer);
+				}
+				
+			});
+    	}
     }
 
+    public CCTexture2D() {//TextureLoader loader) {
+//    	mLoader = loader;
+//    	if(mLoader != null) {
+//    		mLoader.load(this);
+//    		CCTextureCache.sharedTextureCache().addLoader(mLoader);
+//    	}
+    }
+    
+    public void setLoader(TextureLoader loader) {
+    	if(loader != null) {
+    		loader.load();
+    		
+        	if(mLoader != null) {
+        		CCTextureCache.sharedTextureCache().removeLoader(mLoader);
+        	}
+        	CCTextureCache.sharedTextureCache().addLoader(loader);
+    	}
+    	mLoader = loader;
+    }
+    
     /**
       Extensions to make it easy to create a CCTexture2D object from an image file.
       Note that RGBA type textures will have their alpha premultiplied - use the blending mode (GL_ONE, GL_ONE_MINUS_SRC_ALPHA).
       */
     /** Initializes a texture from a UIImage object */
-    public CCTexture2D(Bitmap image) {
+    public void initWithImage(Bitmap image) {
 
         CGSize imageSize = CGSize.make(image.getWidth(), image.getHeight());
         CGAffineTransform transform = CGAffineTransform.identity();
@@ -189,39 +233,39 @@ public class CCTexture2D {
     // this is temporary solution for white texture problem,
     // works maybe only with textures created with CCTexture2D(Bitmap image)
     // i would fix this soon to deferred texture loading
-    private String textureName = "";
-    public void setTextureName(String texName) {
-    	textureName = texName;
-    	_name = 0;
-    }
+//    private String textureName = "";
+//    public void setTextureName(String texName) {
+//    	textureName = texName;
+//    	_name = 0;
+//    }
     
-    private void prepareBitmap(Bitmap image) {
-        CGSize imageSize = CGSize.make(image.getWidth(), image.getHeight());
+//    private void prepareBitmap(Bitmap image) {
+//        CGSize imageSize = CGSize.make(image.getWidth(), image.getHeight());
+//
+//        int width = toPow2((int) imageSize.width);
+//        int height = toPow2((int) imageSize.height);
+//
+//        while (width > kMaxTextureSize || height > kMaxTextureSize) {
+//            width /= 2;
+//            height /= 2;
+//
+//            imageSize.width *= 0.5f;
+//            imageSize.height *= 0.5f;
+//        }
+//
+//        if (imageSize.width != width || imageSize.height != height) {
+//            Bitmap bitmap = Bitmap.createBitmap(width, height,
+//                    image.hasAlpha() ? Bitmap.Config.ARGB_8888 : Bitmap.Config.RGB_565);
+//            Canvas canvas = new Canvas(bitmap);
+//            canvas.drawBitmap(image, 0, 0, null);
+//            image.recycle();
+//            image = bitmap;
+//        }
+//
+//        mBitmap = image;
+//    }
 
-        int width = toPow2((int) imageSize.width);
-        int height = toPow2((int) imageSize.height);
-
-        while (width > kMaxTextureSize || height > kMaxTextureSize) {
-            width /= 2;
-            height /= 2;
-
-            imageSize.width *= 0.5f;
-            imageSize.height *= 0.5f;
-        }
-
-        if (imageSize.width != width || imageSize.height != height) {
-            Bitmap bitmap = Bitmap.createBitmap(width, height,
-                    image.hasAlpha() ? Bitmap.Config.ARGB_8888 : Bitmap.Config.RGB_565);
-            Canvas canvas = new Canvas(bitmap);
-            canvas.drawBitmap(image, 0, 0, null);
-            image.recycle();
-            image = bitmap;
-        }
-
-        mBitmap = image;
-    }
-
-    public CCTexture2D(Bitmap image, CGSize imageSize) {
+    public void initWithImage(Bitmap image, CGSize imageSize) {
         Bitmap.Config config = Bitmap.Config.ARGB_8888;
         Bitmap bitmap = Bitmap.createBitmap((int) imageSize.width, (int) imageSize.height, config);
         Canvas canvas = new Canvas(bitmap);
@@ -232,7 +276,7 @@ public class CCTexture2D {
         init(bitmap, imageSize, imageSize);
     }
     
-    public CCTexture2D(Bitmap image, CGSize imageSize, CGSize contentSize) {
+    public void initWithImage(Bitmap image, CGSize imageSize, CGSize contentSize) {
         Bitmap.Config config = Bitmap.Config.ARGB_8888;
         Bitmap bitmap = Bitmap.createBitmap((int) imageSize.width, (int) imageSize.height, config);
         Canvas canvas = new Canvas(bitmap);
@@ -268,7 +312,13 @@ public class CCTexture2D {
 //        ByteBuffer isb = ByteBuffer.allocateDirect(6 * 2);
 //        isb.order(ByteOrder.nativeOrder());
 //        mIndices = isb.asShortBuffer();
-		CCTextureCache.sharedTextureCache().addTexture(this);
+//		CCTextureCache.sharedTextureCache().addTexture(this);
+		
+		// for call loadTexture when reinit
+		if(_name != 0) {
+			_name = 0;
+			loadTexture(CCDirector.gl);
+		}
     }
 
     /**
@@ -276,8 +326,8 @@ public class CCTexture2D {
       Note that the generated textures are of type A8 - use the blending mode (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA).
     */
     /** Initializes a texture from a string with font name and font size */
-    public CCTexture2D(String text, String fontname, float fontSize) {
-        this(text, calculateTextSize(text, fontname, fontSize),
+    public void initWithText(String text, String fontname, float fontSize) {
+    	initWithText(text, calculateTextSize(text, fontname, fontSize),
                 CCLabel.TextAlignment.CENTER, fontname, fontSize);
     }
 
@@ -310,7 +360,7 @@ public class CCTexture2D {
     }
 
     /** Initializes a texture from a string with dimensions, alignment, font name and font size */
-    public CCTexture2D(String text, CGSize dimensions, CCLabel.TextAlignment alignment, String fontname, float fontSize) {
+    public void initWithText(String text, CGSize dimensions, CCLabel.TextAlignment alignment, String fontname, float fontSize) {
     	Typeface typeface = Typeface.create(fontname, Typeface.NORMAL);
 
         Paint textPaint = new Paint();
@@ -366,28 +416,14 @@ public class CCTexture2D {
 
             applyTexParameters(gl);
 
-//            gl.glTexEnvx(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
-            
-            /*
-            if(textureName != "") {
-	            InputStream is;
-				try {
-					is = CCDirector.sharedDirector().getActivity().getAssets().open(textureName);
-					Bitmap bmp = BitmapFactory.decodeStream(is);
-		            is.close();
-		            prepareBitmap(bmp);
-		            
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				
-				textureName = "";
-            }*/
-
+            // this shouldn't be so never, but if so, needs to be found where
+            // texture reloading is in progress 
+        	if(mBitmap ==null)
+        		return;
+        	
             GLUtils.texImage2D(GL_TEXTURE_2D, 0, mBitmap, 0);
-            
-            // mBitmap.recycle();
+            mBitmap.recycle();
+            mBitmap = null;
         }
     }
 

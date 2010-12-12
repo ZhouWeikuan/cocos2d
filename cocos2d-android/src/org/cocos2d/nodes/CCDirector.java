@@ -1319,8 +1319,9 @@ public class CCDirector implements GLSurfaceView.Renderer {
             }
 
             String str = new CCFormatter().format("%.2f", frameRate_);
-            CCTexture2D texture = new CCTexture2D(str,
-                                    CGSize.make(100, 30), TextAlignment.LEFT, "DroidSans", 24);
+            CCTexture2D texture = new CCTexture2D();
+            // no need to register Loader for this subordinate texture
+            texture.initWithText(str, CGSize.make(100, 30), TextAlignment.LEFT, "DroidSans", 24);
 
             // Default GL states: GL_TEXTURE_2D, GL_VERTEX_ARRAY, GL_COLOR_ARRAY, GL_TEXTURE_COORD_ARRAY
             // Needed states: GL_TEXTURE_2D, GL_VERTEX_ARRAY, GL_TEXTURE_COORD_ARRAY

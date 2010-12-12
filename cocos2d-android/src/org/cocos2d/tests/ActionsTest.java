@@ -209,7 +209,9 @@ public class ActionsTest extends Activity {
 				e.printStackTrace();
 			}
 			
-			CCTexture2D tex = new CCTexture2D(bmp);
+			// such texture wont be reloaded while!
+			CCTexture2D tex = new CCTexture2D();
+			tex.initWithImage(bmp);
 			grossini = CCSprite.sprite(tex);
 
 			// Example:

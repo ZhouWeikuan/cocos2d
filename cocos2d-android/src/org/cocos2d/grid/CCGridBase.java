@@ -5,7 +5,6 @@ import javax.microedition.khronos.opengles.GL10;
 import org.cocos2d.config.ccMacros;
 import org.cocos2d.nodes.CCDirector;
 import org.cocos2d.nodes.CCNode;
-import org.cocos2d.nodes.CCTextureCache;
 import org.cocos2d.opengl.CCTexture2D;
 import org.cocos2d.types.CGPoint;
 import org.cocos2d.types.CGSize;
@@ -13,9 +12,9 @@ import org.cocos2d.types.ccGridSize;
 import org.cocos2d.utils.CCFormatter;
 
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.Bitmap.Config;
 import android.opengl.GLU;
 
 /** Base class for other
@@ -110,23 +109,31 @@ public abstract class CCGridBase {
     	calculateVertexPoints();
     }
     
-    public CCGridBase(ccGridSize gSize) {
-    	CGSize s = CCDirector.sharedDirector().winSize();
+    public CCGridBase(final ccGridSize gSize) {
     	
-    	int w = CCTexture2D.toPow2((int)s.width);
-    	int h = CCTexture2D.toPow2((int)s.height);
-    	int textureSize = Math.max(w, h);
-    	if (textureSize > 64) {
-    		textureSize = 64;
-    	}
-    	Bitmap bitmap = Bitmap.createBitmap(textureSize, textureSize, Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap);
-        canvas.drawBitmap(bitmap, 0, 0, new Paint());
-
-        CCTexture2D texture = new CCTexture2D(bitmap, CGSize.make(textureSize, textureSize));
-//        CCTextureCache.sharedTextureCache().addTexture(texture);
-        
-        init(gSize, texture, false);
+    	final CCTexture2D texture = new CCTexture2D();
+    	
+    	texture.setLoader(new CCTexture2D.TextureLoader() {
+			
+			@Override
+			public void load() {
+		    	CGSize s = CCDirector.sharedDirector().winSize();
+		    	
+		    	int w = CCTexture2D.toPow2((int)s.width);
+		    	int h = CCTexture2D.toPow2((int)s.height);
+		    	int textureSize = Math.max(w, h);
+		    	if (textureSize > 64) {
+		    		textureSize = 64;
+		    	}
+		    	Bitmap bitmap = Bitmap.createBitmap(textureSize, textureSize, Config.ARGB_8888);
+		        Canvas canvas = new Canvas(bitmap);
+		        canvas.drawBitmap(bitmap, 0, 0, new Paint());
+		        
+		        texture.initWithImage(bitmap, CGSize.make(textureSize, textureSize));
+				
+				init(gSize, texture, false);
+			}
+		});
     }
 
     public String toString() {
@@ -209,8 +216,6 @@ public abstract class CCGridBase {
     	ccMacros.CCLOGINFO("cocos2d: deallocing %s", this.toString());
 
     	setActive(false);
-    	texture_ = null;
-    	grabber_ = null;
     }
     
     public abstract void blit(GL10 gl);

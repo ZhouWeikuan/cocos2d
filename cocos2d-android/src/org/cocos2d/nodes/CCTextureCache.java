@@ -1,13 +1,14 @@
 package org.cocos2d.nodes;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-
-import org.cocos2d.opengl.CCTexture2D;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
-import java.util.Set;
+import java.util.concurrent.ConcurrentLinkedQueue;
+
+import org.cocos2d.opengl.CCTexture2D;
+
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 
 
 /** Singleton that handles the loading of textures
@@ -143,29 +144,56 @@ public class CCTextureCache {
         textures.remove(textureKeyName);
     }
 
-    public static CCTexture2D createTextureFromFilePath(String path) {
-        try {
-        	InputStream is = CCDirector.sharedDirector().getActivity().getAssets().open(path);
-            Bitmap bmp = BitmapFactory.decodeStream(is);
-            is.close();
-            return createTextureFromBitmap(bmp);            
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
+    public static CCTexture2D createTextureFromFilePath(final String path) {
+            
+        	final CCTexture2D tex = new CCTexture2D();
+            tex.setLoader(new CCTexture2D.TextureLoader() {
+				
+				@Override
+				public void load() {
+		            try {
+			        	InputStream is = CCDirector.sharedDirector().getActivity().getAssets().open(path);
+			            Bitmap bmp = BitmapFactory.decodeStream(is);
+						is.close();
+						tex.initWithImage(bmp);
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			});
+            
+            return tex;
     }
 
     public static CCTexture2D createTextureFromBitmap(Bitmap bmp) {
-        return new CCTexture2D(bmp);
+        CCTexture2D tex = new CCTexture2D();
+        tex.initWithImage(bmp);
+        return tex;
+    }
+    
+    private ConcurrentLinkedQueue<CCTexture2D.TextureLoader> reloadTexQueue = new ConcurrentLinkedQueue<CCTexture2D.TextureLoader>();
+
+    public void addLoader(CCTexture2D.TextureLoader loader) {
+    	reloadTexQueue.add(loader);
+    }
+    
+    public void removeLoader(CCTexture2D.TextureLoader loader) {
+    	reloadTexQueue.remove(loader);
     }
 
 	public void reloadTextures() {
-		Set<String> keys = textures.keySet();
-		for(String key : keys) {
-			CCTexture2D tex = textures.get(key);
+		CCDirector.sharedDirector().getOpenGLView().queueEvent(new Runnable() {
+			@Override
+			public void run() {
 			
-			tex.setTextureName(key);
-		}
+				if(reloadTexQueue.size() > 0) {
+					for(CCTexture2D.TextureLoader res : reloadTexQueue) {
+						res.load();
+					}
+				}
+			}
+		});
 	}
 }
 

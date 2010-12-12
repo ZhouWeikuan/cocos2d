@@ -5,9 +5,11 @@ Some rules to keep in mind:
 - call "set" method instead of creating new every time;
 
 Notes:
-- android have at minimum 2 theads in activity, UI thread should react on user interaction only, the rest of the work should be performed in rendering thread, i will implement deferred texture loading soon. While white texture bug is solved in rude manner, but is gentle for memory(we can't stay Bitmap without recycle()).
-- thread count. There is no multicore CPUs as I know while, we should keep number of theads at minimum. On iPhone there is one thread in cocos2d and this is fixed in engine design. We should keep the same behaviour. Deffer long user events from UI thread, and handle them in Render thread. Somehow...
+- android have at minimum 2 theads in activity, UI thread should react on user interaction only, the rest of the work should be performed in rendering thread.
+- thread count. There is no multicore CPUs as I know while, we should keep number of theads at minimum.  Deffer long user events from UI thread, and handle them in Render thread. Somehow...
 - Now key pressed is dispatching handling to rendering thread.
+- Texture handling. When activity pause all OpenGL resources are destroyed. We need to recreate them. Textures are created from different sources. For this there is interface in CCTexture2D class (later it may go out of there, if we need to recreate another resources, now textures only) which define load() method. Class implementing this inteface must not have reference to CCTexture2D handling it. Good news that you usually do not have to know about this. Except that case if you initialize texture with your own Bitmap(then load() method implementation is your work). And now CCTextureCache.addImage(Bitmap image) (and so CCAnimation(String n, float d, Bitmap... images), CCRenderTexture(int width, int height), CCSprite(Bitmap image, String key)) wont do reloading. This should be kept in mind. Some redesign is in progress.
+, i will implement deferred texture loading soon. While white texture bug is solved in rude manner, but is gentle for memory(we can't stay Bitmap without recycle())
 - we ported Sky Tower from iPhone, and there the scene has fixed size 320x480, therefore I've changed code in CCDirector so that screenSize_ could be requested with specific size. This seems to be expected considering to CCDirector logic, but makes 2d default projection. This is performed in such way in our application:
 
 	public static final float SUPPOSED_WIN_WIDTH  = 320; 

@@ -1,15 +1,12 @@
 package org.cocos2d.opengl;
 
-import java.nio.IntBuffer;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import javax.microedition.khronos.opengles.GL10;
 
-import android.util.Log;
-
 /**
- *  This class perfoms cleaning on the side of opengl thread when textures desrtoys.
- *  CCTexture2D calls releaseTexture() in finalize method, and texId is queued to be
+ *  This class performs cleaning on the side of OpenGL thread when OGL resources are destroyed.
+ *  CCTexture2D calls release() in finalize method, and texId is queued to be
  *  deleted later.
  *  
  *  Only texture resources are supported while.
@@ -33,25 +30,34 @@ public class GLResourceHelper {
         return _sharedResourceHelper;
     }
     
-	private ConcurrentLinkedQueue<Integer> releaseQueue;
+    public interface GLResource {
+    	void release(GL10 gl);
+    }
+    
+	private ConcurrentLinkedQueue<GLResource> releaseQueue;
 	
 	public GLResourceHelper() {
-		releaseQueue = new ConcurrentLinkedQueue<Integer>();
+		releaseQueue = new ConcurrentLinkedQueue<GLResource>();
 	}
 	
-	public void releaseTexture(int texId) {
-		releaseQueue.add(texId);
-		Log.v("DEBUG", "Texture resource addded for destroy: " + texId);
+	/**
+	 * Add OGL texture id in releaseQueue
+	 * @param texId OGL texture ID
+	 */
+	public void release(GLResource res) {
+		releaseQueue.add(res);
 	}
-	
-	private IntBuffer intBuffer = IntBuffer.allocate(1);
-	
+
+	/**
+	 * Method is called from update cycle,
+	 * all textures added to queue are destroyed
+	 * @param gl
+	 */
 	public void update(GL10 gl) {
 		if(releaseQueue.size() > 0) {
-			Integer texId;
-			while((texId = releaseQueue.poll()) != null) {
-				intBuffer.put(0, texId);
-				gl.glDeleteTextures(1, intBuffer);
+			GLResource res;
+			while((res = releaseQueue.poll()) != null) {
+				res.release(gl);
 			}
 		}
 	}
