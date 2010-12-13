@@ -110,7 +110,6 @@ public abstract class CCGridBase {
     }
     
     public CCGridBase(final ccGridSize gSize) {
-    	
     	final CCTexture2D texture = new CCTexture2D();
     	
     	texture.setLoader(new CCTexture2D.TextureLoader() {
@@ -122,8 +121,8 @@ public abstract class CCGridBase {
 		    	int w = CCTexture2D.toPow2((int)s.width);
 		    	int h = CCTexture2D.toPow2((int)s.height);
 		    	int textureSize = Math.max(w, h);
-		    	if (textureSize > 64) {
-		    		textureSize = 64;
+		    	if (textureSize > 1024) {
+		    		textureSize = 1024;
 		    	}
 		    	Bitmap bitmap = Bitmap.createBitmap(textureSize, textureSize, Config.ARGB_8888);
 		        Canvas canvas = new Canvas(bitmap);

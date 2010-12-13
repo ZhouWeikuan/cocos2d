@@ -584,7 +584,7 @@ public class CCDirector implements GLSurfaceView.Renderer {
         assert openGLView_!=null:"openGLView_ must be initialized";
 
         setAlphaBlending(gl, true);
-        setDepthTest(gl, true);
+        setDepthTest(gl, false);
         setProjection(kCCDirectorProjectionDefault);
 
         // set other opengl default values
@@ -625,6 +625,7 @@ public class CCDirector implements GLSurfaceView.Renderer {
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
     	// reload all GL resources here
     	CCTextureCache.sharedTextureCache().reloadTextures();
+	CCLabel.reloadTextures();
     	
     	CCDirector.gl = gl;
         /*

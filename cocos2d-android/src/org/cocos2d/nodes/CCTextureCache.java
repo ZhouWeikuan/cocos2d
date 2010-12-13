@@ -144,7 +144,7 @@ public class CCTextureCache {
         textures.remove(textureKeyName);
     }
 
-    public static CCTexture2D createTextureFromFilePath(final String path) {
+    private static CCTexture2D createTextureFromFilePath(final String path) {
             
         	final CCTexture2D tex = new CCTexture2D();
             tex.setLoader(new CCTexture2D.TextureLoader() {
@@ -166,7 +166,7 @@ public class CCTextureCache {
             return tex;
     }
 
-    public static CCTexture2D createTextureFromBitmap(Bitmap bmp) {
+    private static CCTexture2D createTextureFromBitmap(Bitmap bmp) {
         CCTexture2D tex = new CCTexture2D();
         tex.initWithImage(bmp);
         return tex;
@@ -180,7 +180,7 @@ public class CCTextureCache {
     
     public void removeLoader(CCTexture2D.TextureLoader loader) {
     	reloadTexQueue.remove(loader);
-    }
+	}
 
 	public void reloadTextures() {
 		CCDirector.sharedDirector().getOpenGLView().queueEvent(new Runnable() {

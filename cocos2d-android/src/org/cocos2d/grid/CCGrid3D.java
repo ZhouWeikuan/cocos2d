@@ -17,10 +17,11 @@ import org.cocos2d.types.ccQuad3;
  CCGrid3D is a 3D grid implementation. Each vertex has 3 dimensions: x,y,z
  */
 public class CCGrid3D extends CCGridBase {
-    FloatBuffer texCoordinates;
-    FloatBuffer vertices;
-    FloatBuffer originalVertices;
-    ShortBuffer indices;
+	protected FloatBuffer texCoordinates;
+	protected FloatBuffer vertices;
+	protected FloatBuffer originalVertices;
+    protected ShortBuffer indices;
+    protected FloatBuffer mVertexBuffer;
 
     public CCGrid3D(ccGridSize gSize) {
         super(gSize);
@@ -36,8 +37,23 @@ public class CCGrid3D extends CCGridBase {
         // Unneeded states: GL_COLOR_ARRAY
 	    gl.glDisableClientState(GL10.GL_COLOR_ARRAY);	
 
-        gl.glVertexPointer(3, GL10.GL_FLOAT, 0, vertices);
+        ByteBuffer vbb = ByteBuffer.allocateDirect(vertices.limit()*3*4);
+        //System.out.printf("vertices limit = %d\n", vertices.limit());
+        vbb.order(ByteOrder.nativeOrder());
+        mVertexBuffer = vbb.asFloatBuffer();            
+        mVertexBuffer.clear();          
+        mVertexBuffer.position(0);
+        for (int i = 0; i < vertices.limit(); i=i+3) {            
+            mVertexBuffer.put(vertices.get(i));
+            mVertexBuffer.put(vertices.get(i+1));
+            mVertexBuffer.put(vertices.get(i+2));
+        }
+        mVertexBuffer.position(0);
+        gl.glVertexPointer(3, GL10.GL_FLOAT, 0, mVertexBuffer);
+        // gl.glVertexPointer(3, GL10.GL_FLOAT, 0, vertices);
         gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, texCoordinates);
+        indices.position(0);
+
         gl.glDrawElements(GL10.GL_TRIANGLES, n * 6, GL10.GL_UNSIGNED_SHORT, indices);
 
         // restore GL default state

@@ -45,13 +45,13 @@ public abstract class CCGridAction extends CCIntervalAction {
                 throw new RuntimeException("Cannot reuse grid_");
             }
         } else {
-            // if (targetGrid != null && targetGrid.isActive())
-            //	targetGrid.setActive(false);
+            if (targetGrid != null && targetGrid.isActive())
+                targetGrid.setActive(false);
             
             target.setGrid(newgrid);
             
             if (targetGrid != null)
-            	targetGrid.setActive(true);
+            	target.getGrid().setActive(true);
         }
     }
     

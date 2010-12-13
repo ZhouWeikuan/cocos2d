@@ -62,6 +62,7 @@ public class BufferProvider {
         bb.order(ByteOrder.nativeOrder());
         FloatBuffer fb = bb.asFloatBuffer();
         fb.put(arr);
+        fb.position(0);
         return fb;
     }
 
