@@ -625,7 +625,6 @@ public class CCDirector implements GLSurfaceView.Renderer {
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
     	// reload all GL resources here
     	CCTextureCache.sharedTextureCache().reloadTextures();
-	CCLabel.reloadTextures();
     	
     	CCDirector.gl = gl;
         /*
