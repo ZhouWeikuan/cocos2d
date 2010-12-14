@@ -175,6 +175,8 @@ public class CCTexture2D {
 				
 			});
     	}
+
+        super.finalize();
     }
 
     public CCTexture2D() {//TextureLoader loader) {

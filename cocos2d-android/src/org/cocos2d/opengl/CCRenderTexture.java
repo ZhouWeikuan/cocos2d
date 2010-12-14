@@ -74,9 +74,11 @@ public class CCRenderTexture extends CCNode {
 		egl.glBindFramebufferOES(GL11ExtensionPack.GL_FRAMEBUFFER_OES, oldFBO_[0]);
     }
 
-    public void finalize() {
+    public void finalize() throws Throwable {
     	GL11ExtensionPack egl = (GL11ExtensionPack)CCDirector.gl;
 	    egl.glDeleteFramebuffersOES(1, fbo_, 0);
+
+        super.finalize();
     }
 
     public void begin() {

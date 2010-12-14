@@ -84,11 +84,13 @@ public class CCActionManager {
     }
     
     @Override
-    public void finalize () {
+    public void finalize ()  throws Throwable {
     	ccMacros.CCLOGINFO(LOG_TAG, "cocos2d: deallocing " + this.toString());
     	
     	this.removeAllActions();
     	_sharedManager = null;
+
+        super.finalize();
     }
 
     private void deleteHashElement(HashElement element) {

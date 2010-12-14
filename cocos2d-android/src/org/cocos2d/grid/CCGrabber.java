@@ -90,17 +90,18 @@ public class CCGrabber {
 	}
 
 	@Override
-	public void finalize() {
+	public void finalize() throws Throwable  {
 		if (!(CCDirector.gl instanceof GL11ExtensionPack)) {
-			return;
-		}
-		GL11ExtensionPack gl = (GL11ExtensionPack) CCDirector.gl;
-		ccMacros.CCLOGINFO("cocos2d: deallocing %@", this.toString());
-		try {
-			gl.glDeleteFramebuffersOES(1, fbo, 0);
-		} catch (Exception e) {
+        } else {
+            GL11ExtensionPack gl = (GL11ExtensionPack) CCDirector.gl;
+            ccMacros.CCLOGINFO("cocos2d: deallocing %@", this.toString());
+            try {
+                gl.glDeleteFramebuffersOES(1, fbo, 0);
+            } catch (Exception e) {
 
-		}
+            }
+        }
+        super.finalize();
 	}
 }
 

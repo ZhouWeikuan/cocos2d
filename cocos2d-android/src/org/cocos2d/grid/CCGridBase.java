@@ -211,10 +211,12 @@ public abstract class CCGridBase {
 
 
     @Override
-    public void finalize() {
+    public void finalize()  throws Throwable {
     	ccMacros.CCLOGINFO("cocos2d: deallocing %s", this.toString());
 
     	setActive(false);
+
+        super.finalize();
     }
     
     public abstract void blit(GL10 gl);

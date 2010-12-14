@@ -496,9 +496,11 @@ public class CCScheduler {
     }
 
     @Override
-    public void finalize () {
+    public void finalize () throws Throwable  {
         unscheduleAllSelectors();
         _sharedScheduler = null;
+
+        super.finalize();
     }
 
     public void append(ArrayList<tListEntry> list, Object target, boolean paused) {

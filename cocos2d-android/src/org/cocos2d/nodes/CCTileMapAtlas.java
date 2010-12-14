@@ -213,17 +213,13 @@ public class CCTileMapAtlas extends CCAtlasNode {
     }
     
     @Override
-    public void finalize() {
+    public void finalize()  throws Throwable {
     	if( tgaInfo != null )
     		TGA.destroy(tgaInfo);
     	tgaInfo = null;
     	posToAtlasIndex = null;
-    	try {
-			super.finalize();
-		} catch (Throwable e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+
+		super.finalize();
     }
 
 	@Override
