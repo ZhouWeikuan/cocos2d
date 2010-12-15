@@ -91,7 +91,7 @@ public class CCTexture2D {
     /** texture name */
     public int name() {
     	
-        if( CCDirector.gl != null && Thread.currentThread().getName().startsWith("GLThread"))
+        if( _name == 0 && CCDirector.gl != null && Thread.currentThread().getName().startsWith("GLThread"))
         {	
         	this.loadTexture(CCDirector.gl);
         }

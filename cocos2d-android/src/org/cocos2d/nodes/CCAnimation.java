@@ -6,8 +6,6 @@ import org.cocos2d.opengl.CCTexture2D;
 import org.cocos2d.types.CGPoint;
 import org.cocos2d.types.CGRect;
 
-import android.graphics.Bitmap;
-
 /** an Animation object used within Sprites to perform animations */
 public class CCAnimation {
     /** name of the animation */
@@ -82,19 +80,6 @@ public class CCAnimation {
         	frames_.addAll(frames);
     }
 
-    /*
-    protected CCAnimation(String n, float d, CCSpriteFrame... frames) {
-        name_ = n;
-        frames_ = new ArrayList<CCSpriteFrame>();
-        delay_ = d;
-
-        if (frames != null) {
-            for (CCSpriteFrame o: frames) {
-                frames_.add(o);
-            }
-        }
-    }*/
-
     /** Adds a frame with an image filename.
      * Internally it will create a CCSpriteFrame and it will add it.
      * Added to facilitate the migration from v0.8 to v0.9.
@@ -113,7 +98,10 @@ public class CCAnimation {
         CCSpriteFrame frame = CCSpriteFrame.frame(tex, rect, CGPoint.zero());
         frames_.add(frame);
     }
-    
+
+    /*
+     * Bad for texture handling method. There is no analog in cocos2d-iphone.
+     * 
     public CCAnimation(String n, float d, Bitmap... images) {
         name_ = n;
         frames_ = new ArrayList<CCSpriteFrame>();
@@ -126,7 +114,8 @@ public class CCAnimation {
             }
         }
     }
-
+     */
+    
     /** Adds a frame to a CCAnimation. */
     public void addFrame(CCSpriteFrame frame) {
         frames_.add(frame);
