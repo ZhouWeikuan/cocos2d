@@ -36,6 +36,12 @@ public class CCSpriteFrame {
     public CCTexture2D getTexture() {
     	return texture_;
     }
+    
+    /** Flag shows that Zwoptex rotated texture for optimizations */
+    Boolean rotated_;
+    public Boolean getRotated() {
+    	return rotated_;
+    }
 
     /** Create a CCSpriteFrame with a texture, rect and offset.
       It is assumed that the frame was not trimmed.
@@ -48,28 +54,36 @@ public class CCSpriteFrame {
       The originalSize is the size in pixels of the frame before being trimmed.
       */
     public static CCSpriteFrame frame(CCTexture2D texture, CGRect rect, CGPoint offset, CGSize originalSize ){
-        return new CCSpriteFrame(texture, rect, offset, originalSize);
+        return new CCSpriteFrame(texture, rect, offset, originalSize, false);
+    }
+    
+    /** Create a CCSpriteFrame with a texture, rect, offset, originalSize and rotated.
+    	The originalSize is the size in pixels of the frame before being trimmed.
+    */
+    public static CCSpriteFrame frame(CCTexture2D texture, CGRect rect, Boolean rotated, CGPoint offset, CGSize originalSize ){
+        return new CCSpriteFrame(texture, rect, offset, originalSize, rotated);
     }
 
     /** Initializes a CCSpriteFrame with a texture, rect and offset.
       It is assumed that the frame was not trimmed.
       */
     protected CCSpriteFrame (CCTexture2D texture, CGRect rect, CGPoint offset) {
-        this(texture, rect, offset, rect.size);
+        this(texture, rect, offset, rect.size, false);
     }
 
     /** Initializes a CCSpriteFrame with a texture, rect, offset and originalSize.
       The originalSize is the size in pixels of the frame before being trimmed.
       */
-    protected CCSpriteFrame (CCTexture2D texture, CGRect rect, CGPoint offset, CGSize originalSize) {
+    protected CCSpriteFrame (CCTexture2D texture, CGRect rect, CGPoint offset, CGSize originalSize, Boolean rotated) {
         texture_ = texture;
         offset_ = offset;
         rect_ = rect;
         originalSize_ = originalSize;
+        rotated_ = rotated;
     }
 
     public CCSpriteFrame copy() {
-        CCSpriteFrame copy = new CCSpriteFrame(texture_, rect_, offset_, originalSize_);
+        CCSpriteFrame copy = new CCSpriteFrame(texture_, rect_, offset_, originalSize_, rotated_);
         return copy;
     }
 }

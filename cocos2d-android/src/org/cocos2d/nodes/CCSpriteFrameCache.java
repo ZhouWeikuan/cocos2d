@@ -64,26 +64,40 @@ public class CCSpriteFrameCache {
         }
 
         // only format 2 is supported
-        if (format != 2) {
+        if (format != 2 && format != 3) {
             ccMacros.CCLOGERROR("CCSpriteFrameCache",
                 "Unsupported Zwoptex plist file format.");
         }
 
         Iterator fi = framesDict.keySet().iterator();
         while (fi.hasNext()) {
-
-        		String frameDictKey = (String)fi.next();
+	    		String frameDictKey = (String)fi.next();
 				HashMap frameDict = (HashMap)framesDict.get(frameDictKey);
-            CCSpriteFrame spriteFrame;
-
-            CGRect frame = (CGRect)frameDict.get("frame");
-            CGPoint offset = (CGPoint)frameDict.get("offset");
-            CGSize sourceSize = (CGSize)frameDict.get("sourceSize");
-
-            spriteFrame =
-                CCSpriteFrame.frame(texture, frame, offset, sourceSize);
-
-            spriteFrames.put(frameDictKey, spriteFrame);
+	        CCSpriteFrame spriteFrame;
+	        
+	        if (format == 3)
+	        {
+	        	CGSize spriteSize = (CGSize)frameDict.get("spriteSize");
+				CGPoint spriteOffset = (CGPoint)frameDict.get("spriteOffset");
+				CGSize spriteSourceSize = (CGSize)frameDict.get("spriteSourceSize");
+				CGRect textureRect = (CGRect)frameDict.get("textureRect");
+				Boolean textureRotated = (Boolean)frameDict.get("textureRotated");
+				
+				spriteFrame = CCSpriteFrame.frame(texture, 
+						CGRect.make(textureRect.origin.x, textureRect.origin.y, spriteSize.width, spriteSize.height),
+						textureRotated, spriteOffset, spriteSourceSize);
+	        } else
+	        {
+	        	// default behavior  
+	        	CGRect frame = (CGRect)frameDict.get("frame");
+	            CGPoint offset = (CGPoint)frameDict.get("offset");
+	            CGSize sourceSize = (CGSize)frameDict.get("sourceSize");
+	
+	            spriteFrame =
+	                CCSpriteFrame.frame(texture, frame, offset, sourceSize);
+	        }
+	
+	        spriteFrames.put(frameDictKey, spriteFrame);
 
         }
     }

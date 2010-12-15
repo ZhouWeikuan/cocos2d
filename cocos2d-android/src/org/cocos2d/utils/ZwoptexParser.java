@@ -37,6 +37,15 @@ public class ZwoptexParser extends DefaultHandler {
 	private CGPoint f_offset;
 	private Boolean f_rotated;
 	private CGSize f_source_size;
+	
+	private CGSize f_spriteSize;
+	private CGPoint f_spriteOffset;
+	private CGSize f_spriteSourceSize;
+	private CGRect f_textureRect;
+	private Boolean f_textureRotated;
+	//private Object[] f_aliases; // not supported now
+	
+	private Integer f_format = 2;
 
 	// returns a HashMap with root keys 'frames' and 'metadata'
 	public static HashMap parseZwoptex(String filename)
@@ -71,7 +80,7 @@ public class ZwoptexParser extends DefaultHandler {
 	public HashMap getResults() {
 		HashMap results = new HashMap();
 		results.put("frames", frames);
-		metadata.put("format", 2);	//for the format check NGLOOM
+		metadata.put("format", f_format);	//for the format check NGLOOM
 		results.put("metadata", metadata);
 		return results;
 	}
@@ -113,6 +122,12 @@ public class ZwoptexParser extends DefaultHandler {
 			mode_set_integer = true;
 		} else if("real".equals(name)) {
 			mode_set_real = true;
+		}else if ("true".equals(name)) {
+			if ("textureRotated".equals(f_key))
+				f_textureRotated = true;
+		}else if("false".equals(name)) {
+			if ("textureRotated".equals(f_key))
+				f_textureRotated = false; 
 		}
 	}
 
@@ -126,6 +141,13 @@ public class ZwoptexParser extends DefaultHandler {
 				f.put("offset", f_offset);
 				f.put("rotated", f_rotated);
 				f.put("sourceSize", f_source_size);
+				// version 3
+				f.put("spriteSize", f_spriteSize);
+				f.put("spriteOffset", f_spriteOffset);
+				f.put("spriteSourceSize", f_spriteSourceSize);
+				f.put("textureRect", f_textureRect);
+				f.put("textureRotated", f_textureRotated);
+				
 				this.frames.put(f_filename, f);
 				frameReset();
 			}
@@ -173,6 +195,17 @@ public class ZwoptexParser extends DefaultHandler {
 		{
 			metadata.put(metadata_key, Integer.parseInt(s));
 		}
+		
+		if ("metadata".equals(section) && mode_set_integer == true
+				&& dict_depth == 2 && "format".equals(f_key))
+		{
+			f_format = Integer.parseInt(s);
+		}
+		
+		if ("metadata".equals(section) && mode_set_key == true && dict_depth == 2)
+		{
+			f_key = s;
+		}
 
 		// filename
 		if ("frames".equals(section) && mode_set_key == true && dict_depth == 2)
@@ -190,7 +223,7 @@ public class ZwoptexParser extends DefaultHandler {
 		if ("frames".equals(section) &&
 			mode_set_string == true && dict_depth == 3)
 		{
-			
+			// version 2
 			if ("frame".equals(f_key)) {
 				f_frame = parseCoordsRect(s);
 			} else if ("offset".equals(f_key)) {
@@ -201,6 +234,17 @@ public class ZwoptexParser extends DefaultHandler {
 	//			f_source_color_rect = parseCoordsRect(s);
 			} else if ("sourceSize".equals(f_key)) {
 				f_source_size = parseCoordsSize(s);
+			}
+			
+			// version 3
+			if ("textureRect".equals(f_key)) {
+				f_textureRect = parseCoordsRect(s);
+			} else if ("spriteOffset".equals(f_key)) {
+				f_spriteOffset = parseCoords(s);
+			} else if ("spriteSourceSize".equals(f_key)) {
+				f_spriteSourceSize = parseCoordsSize(s);
+			} else if ("spriteSize".equals(f_key)) {
+				f_spriteSize = parseCoordsSize(s);
 			}
 		}
 		

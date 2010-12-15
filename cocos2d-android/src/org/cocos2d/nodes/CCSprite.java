@@ -154,6 +154,7 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
 	
 	// texture pixels
 	CGRect rect_;
+	Boolean rectRotated_ = false;
 	
     /** offset position of the sprite. Calculated automatically by editors like Zwoptex.
       @since v0.99.0
@@ -222,6 +223,11 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
 
     public CGRect getTextureRect() {
         return rect_;
+    }
+    
+    public Boolean getTextureRectRotated()
+    {
+    	return rectRotated_;
     }
 
     /** Creates an sprite with a texture.
@@ -326,7 +332,8 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
     
     protected void init(CCSpriteFrame spriteFrame) {
         assert spriteFrame!=null:"Invalid spriteFrame for sprite";
-
+        
+        rectRotated_ = spriteFrame.rotated_;
         init(spriteFrame.getTexture(), spriteFrame.getRect());
         setDisplayFrame(spriteFrame);    	
     }
@@ -419,11 +426,16 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
     /** updates the texture rect of the CCSprite.
     */
 
-	public void setTextureRect(float x, float y, float w, float h) {
-    	setTextureRect(x, y, w, h, w, h);
-    }  
+	public void setTextureRect(float x, float y, float w, float h, Boolean rotated) {
+    	setTextureRect(x, y, w, h, w, h, rotated);
+    }
+	
+	public void setTextureRect(CGRect rect, Boolean rotated) {
+	    setTextureRect(rect, rect.size, rotated);
+    }
+	
     public void setTextureRect(CGRect rect) {
-	    setTextureRect(rect, rect.size);
+	    setTextureRect(rect, rectRotated_);
     }
 
     /** tell the sprite to use self-render.
@@ -514,7 +526,7 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
 		// Atlas: Vertex		
 		// updated in "useSelfRender"		
 		// Atlas: TexCoords
-		setTextureRect(0, 0, 0, 0);
+		setTextureRect(0, 0, 0, 0, rectRotated_);
     }
 
     /** sets a new display frame to the CCSprite. */
@@ -527,7 +539,7 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
             setTexture(newTexture);
 
         // update rect
-        setTextureRect(frame.rect_, frame.originalSize_);
+        setTextureRect(frame.rect_, frame.originalSize_, frame.rotated_);
     }
 
 
@@ -680,11 +692,12 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
         animations_ = new HashMap<String, CCAnimation>();
     }
 
-    private void setTextureRect(CGRect rect, CGSize size) {
-    	setTextureRect(rect.origin.x, rect.origin.y, rect.size.width, rect.size.height, size.width, size.height);
+    private void setTextureRect(CGRect rect, CGSize size, Boolean rotated) {
+    	setTextureRect(rect.origin.x, rect.origin.y, rect.size.width, rect.size.height, size.width, size.height, rotated);
     }
-	private void setTextureRect(float x, float y, float w, float h, float sw, float sh) {
+	private void setTextureRect(float x, float y, float w, float h, float sw, float sh, boolean rotated) {
         rect_.set(x, y, w, h);
+        rectRotated_ = rotated;
 
         setContentSize(sw, sh);
         updateTextureCoords(rect_);
@@ -909,31 +922,62 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
         	 atlasHeight = texture_.pixelsHigh();
         }
         
-        float left = rect.origin.x / atlasWidth;
-        float right = (rect.origin.x + rect.size.width) / atlasWidth;
-        float top = rect.origin.y / atlasHeight;
-        float bottom = (rect.origin.y + rect.size.height) / atlasHeight;
-
-        if( flipX_) {
-            float tmp = left;
-            left = right;
-            right = tmp;
+        if (rectRotated_)
+        {
+        	float left	= (2*rect.origin.x+1)/(2*atlasWidth);
+        	float right	= left+(rect.size.height*2-2)/(2*atlasWidth);
+        	float top	= (2*rect.origin.y+1)/(2*atlasHeight);
+        	float bottom= top+(rect.size.width*2-2)/(2*atlasHeight);
+	
+	        if( flipX_) {
+	        	float tmp = top;
+	            top = bottom;
+	            bottom = tmp;
+	        }
+	
+	        if( flipY_) {
+	            float tmp = left;
+	            left = right;
+	            right = tmp;
+	        }
+	
+	        texCoords.put(0, right); // tl u
+	        texCoords.put(1, top); // tl v
+	        texCoords.put(2, left); // bl u
+	        texCoords.put(3, top); // bl v   
+	        texCoords.put(4, right); // tr u
+	        texCoords.put(5, bottom); // tr v
+	        texCoords.put(6, left); // br u
+	        texCoords.put(7, bottom); // br v
+        }else
+        {
+        	float left	= (2*rect.origin.x+1)/(2*atlasWidth);
+        	float right	= left + (rect.size.width*2-2)/(2*atlasWidth);
+        	float top	= (2*rect.origin.y+1)/(2*atlasHeight);
+        	float bottom= top + (rect.size.height*2-2)/(2*atlasHeight);
+	
+	        if( flipX_) {
+	            float tmp = left;
+	            left = right;
+	            right = tmp;
+	        }
+	
+	        if( flipY_) {
+	            float tmp = top;
+	            top = bottom;
+	            bottom = tmp;
+	        }
+	
+	        texCoords.put(0, left); // tl u
+	        texCoords.put(1, top); // tl v
+	        texCoords.put(2, left); // bl u
+	        texCoords.put(3, bottom); // bl v   
+	        texCoords.put(4, right); // tr u
+	        texCoords.put(5, top); // tr v
+	        texCoords.put(6, right); // br u
+	        texCoords.put(7, bottom); // br v
         }
-
-        if( flipY_) {
-            float tmp = top;
-            top = bottom;
-            bottom = tmp;
-        }
-
-        texCoords.put(0, left);
-        texCoords.put(1, top);
-        texCoords.put(2, left);
-        texCoords.put(3, bottom);        
-        texCoords.put(4, right);
-        texCoords.put(5, top);
-        texCoords.put(6, right);
-        texCoords.put(7, bottom);
+        
         texCoords.position(0);
         
         if(usesSpriteSheet_)

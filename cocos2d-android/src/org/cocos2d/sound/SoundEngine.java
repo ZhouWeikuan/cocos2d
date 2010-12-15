@@ -66,7 +66,7 @@ public class SoundEngine {
 				return;
 			
 			mp = MediaPlayer.create(ctxt, resId);
-			mp.prepareAsync();
+//			mp.prepareAsync();
 			soundsMap.put(resId, mp);
 		}
 	}
@@ -137,6 +137,14 @@ public class SoundEngine {
 		}
 		mp.stop();
 		lastSndId = -1;
+	}
+	
+	public void realesAllSounds() {
+		for(MediaPlayer mp : soundsMap.values()) {
+			mp.release();
+		}
+		
+		soundsMap.clear();
 	}
 
 }
