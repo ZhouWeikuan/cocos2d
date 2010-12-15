@@ -837,7 +837,7 @@ public class CCNode {
 
     /** schedules the "update" selector with a custom priority. This selector will be called every frame.
       Scheduled selectors with a lower priority will be called before the ones that have a higher value.
-      Only one "udpate" selector could be scheduled per node (You can't have 2 'update' selectors).
+      Only one "update" selector could be scheduled per node (You can't have 2 'update' selectors).
 
       @since v0.99.3
     */

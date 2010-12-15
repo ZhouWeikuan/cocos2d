@@ -41,6 +41,12 @@ public class CCScheduler {
         CCTimer			currentTimer;
         boolean			currentTimerSalvaged;
         boolean			paused;
+        void setPaused(boolean b){
+            paused = b;
+            if (entry != null){
+                entry.paused = b;
+            }
+        }
         // UT_hash_handle  hh;
     }
 
@@ -418,7 +424,7 @@ public class CCScheduler {
         tHashSelectorEntry elementUpdate = hashForUpdates.get(target);
         if( elementUpdate != null) {
             assert elementUpdate.target != null: "resumeTarget: unknown error";
-            elementUpdate.paused = false;
+            elementUpdate.setPaused(false);
         }	
 
 	}
@@ -440,7 +446,7 @@ public class CCScheduler {
         tHashSelectorEntry elementUpdate = hashForUpdates.get(target);
         if( elementUpdate != null) {
             assert elementUpdate.target != null:"pauseTarget: unknown error";
-            elementUpdate.paused = true;
+            elementUpdate.setPaused(true);
         }
 
     }
