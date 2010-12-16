@@ -47,6 +47,7 @@ import org.cocos2d.nodes.CCDirector;
 import org.cocos2d.nodes.CCLabel;
 import org.cocos2d.nodes.CCNode;
 import org.cocos2d.nodes.CCSprite;
+import org.cocos2d.nodes.CCTextureCache;
 import org.cocos2d.opengl.CCDrawingPrimitives;
 import org.cocos2d.opengl.CCGLSurfaceView;
 import org.cocos2d.opengl.CCTexture2D;
@@ -209,10 +210,27 @@ public class ActionsTest extends Activity {
 				e.printStackTrace();
 			}
 			
-			// such texture wont be reloaded while!
-			CCTexture2D tex = new CCTexture2D();
-			tex.initWithImage(bmp);
+			// Keep copy for reinit texture after Activity pause
+			final Bitmap bmpCopy = bmp.copy(bmp.getConfig(), false);
+			bmp.recycle();
+			
+			final CCTexture2D tex = new CCTexture2D();
+			tex.setLoader(new CCTexture2D.TextureLoader() {
+				@Override
+				public void load() {
+					Bitmap bmpForInit = bmpCopy.copy(bmpCopy.getConfig(), false);
+					tex.initWithImage(bmpForInit);
+				}
+			});
 			grossini = CCSprite.sprite(tex);
+			// or just use:
+			// grossini = CCSprite.sprite(bmp);
+			// and better not to use this way at all(this is better for manually generated tex)
+			// because you have to store bmp copy in memory.
+			// use for assets:
+			// CCTexture2D tex = CCTextureCache.sharedTextureCache().addImage("grossini.png");
+			// grossini = CCSprite.sprite(tex);
+			
 
 			// Example:
 			// Or you can create an sprite using a filename. PNG, JPEG and BMP files are supported. Probably TIFF too

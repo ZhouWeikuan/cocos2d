@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import org.cocos2d.config.ccMacros;
 import org.cocos2d.opengl.CCTexture2D;
 
 import android.graphics.Bitmap;
@@ -70,17 +71,39 @@ public class CCTextureCache {
      * Otherwise it will return a reference of a previously loaded image
      * The "key" parameter will be used as the "key" for the cache.
      * If "key" is nil, then a new texture will be created each time.
+     * 
+     * BE AWARE OF the fact that copy of image is stored in memory,
+     * use assets method if you can.  
      * @since v0.8
     */
-    public CCTexture2D addImage(Bitmap image) {
+    public CCTexture2D addImage(Bitmap image, String key) {
         assert (image != null) : "TextureCache: image must not be null";
-        String key = image.toString();
-        CCTexture2D tex = textures.get(key);
-        if (tex == null) {
-            tex = createTextureFromBitmap(image);
-            textures.put(key, tex);
-        }
-        return tex;
+        CCTexture2D tex = null;
+        
+    	if( key !=null && (tex = textures.get(key)) != null ) {
+    		return tex;
+    	}
+    	
+    	final Bitmap copy = image.copy(image.getConfig(), false);
+    	
+    	if(copy != null) {
+	    	final CCTexture2D texNew = new CCTexture2D();
+	    	texNew.setLoader(new CCTexture2D.TextureLoader() {
+				@Override
+				public void load() {
+					Bitmap initImage = copy.copy(copy.getConfig(), false);
+					texNew.initWithImage(initImage);
+				}
+			});
+	    	if( key!= null ) {
+	    		textures.put(key, texNew);
+	    	}
+	    	
+	    	return texNew;
+    	} else {
+    		ccMacros.CCLOG("cocos2d", "Couldn't add Bitmap in CCTextureCache");
+    		return null;
+    	}
     }
 
 
