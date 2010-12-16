@@ -623,10 +623,11 @@ public class CCDirector implements GLSurfaceView.Renderer {
     }
 
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
+    	CCDirector.gl = gl;
+    	
     	// reload all GL resources here
     	CCTextureCache.sharedTextureCache().reloadTextures();
     	
-    	CCDirector.gl = gl;
         /*
          * By default, OpenGL enables features that improve quality
          * but reduce performance. One might want to tweak that

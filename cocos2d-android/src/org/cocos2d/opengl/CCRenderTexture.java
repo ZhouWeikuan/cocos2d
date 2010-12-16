@@ -51,8 +51,16 @@ public class CCRenderTexture extends CCNode {
 			pow*=2;
 		}
     
-		Bitmap bmp = Bitmap.createBitmap(pow, pow, Config.ARGB_8888);
-		texture_ = CCTextureCache.sharedTextureCache().addImage(bmp); 
+		final int finPow = pow;
+		texture_ = new CCTexture2D();
+		texture_.setLoader(new CCTexture2D.TextureLoader() {
+			@Override
+			public void load() {
+				Bitmap bmp = Bitmap.createBitmap(finPow, finPow, Config.ARGB_8888);
+				texture_.initWithImage(bmp);
+			}
+		});
+		 
     
 		// generate FBO
 		egl.glGenRenderbuffersOES(1, fbo_, 0);
@@ -68,7 +76,7 @@ public class CCRenderTexture extends CCNode {
 			return ;
 		}
 		sprite_ = CCSprite.sprite(texture_);
-		texture_ = null;
+//		texture_ = null;
 		sprite_.setScaleY(-1);
 		addChild(sprite_);
 		egl.glBindFramebufferOES(GL11ExtensionPack.GL_FRAMEBUFFER_OES, oldFBO_[0]);
