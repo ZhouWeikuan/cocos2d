@@ -91,8 +91,7 @@ public class CCLabelAtlas extends CCAtlasNode
         string_ = newString;
         updateAtlasValues();
 
-        CGSize s = CGSize.make(string_.length() * itemWidth, itemHeight);
-        setContentSize(s);
+        setContentSize(string_.length() * itemWidth, itemHeight);
     }
 
     @Override

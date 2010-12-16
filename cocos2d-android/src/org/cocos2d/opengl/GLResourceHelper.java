@@ -5,11 +5,9 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import javax.microedition.khronos.opengles.GL10;
 
 /**
- *  This class performs cleaning on the side of OpenGL thread when OGL resources are destroyed.
- *  CCTexture2D calls release() in finalize method, and texId is queued to be
+ *  This class performs tasks on the side of OpenGL thread.
+ *  CCTexture2D calls perform() in finalize method, and texId is queued to be
  *  deleted later.
- *  
- *  Only texture resources are supported while.
  *  
  * @author genius
  */

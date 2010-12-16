@@ -1304,7 +1304,7 @@ public class CCDirector implements GLSurfaceView.Renderer {
                 accumDt_ = 0;
             }
 
-            FPSLabel_.setString(new CCFormatter().format("%.1f", frameRate_));
+            FPSLabel_.setString(String.format("%.1f", frameRate_));
             FPSLabel_.draw(gl);
         } else {
             // display the FPS using a manually generated Texture (very slow)
