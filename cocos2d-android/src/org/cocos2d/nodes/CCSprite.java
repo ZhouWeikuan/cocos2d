@@ -19,7 +19,6 @@ import org.cocos2d.types.CGSize;
 import org.cocos2d.types.ccBlendFunc;
 import org.cocos2d.types.ccColor3B;
 import org.cocos2d.types.ccColor4B;
-import org.cocos2d.types.ccQuad3;
 import org.cocos2d.utils.BufferProvider;
 
 import android.graphics.Bitmap;
@@ -276,8 +275,11 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
     }
 
     /** Creates an sprite with a CGImageRef.
-      @deprecated Use spriteWithCGImage:key: instead. Will be removed in v1.0 final
-      */
+     * BE AWARE OF the fact that copy of image is stored in memory,
+     * use assets method if you can.
+     *
+     * @deprecated Use spriteWithCGImage:key: instead. Will be removed in v1.0 final
+     */
     public static CCSprite sprite(Bitmap image) {
         return new CCSprite(image);
     }
@@ -286,6 +288,9 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
       The key is used by the CCTextureCache to know if a texture was already created with this CGImage.
       For example, a valid key is: @"sprite_frame_01".
       If key is nil, then a new texture will be created each time by the CCTextureCache. 
+
+    * BE AWARE OF the fact that copy of image is stored in memory,
+    * use assets method if you can.
       @since v0.99.0
       */
     public static CCSprite sprite(Bitmap image, String key) {
@@ -390,7 +395,8 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
         assert image!=null:"Invalid CGImageRef for sprite";
 
         // XXX: possible bug. See issue #349. New API should be added
-        CCTexture2D texture = CCTextureCache.sharedTextureCache().addImage(image);
+        String key = image.toString();
+        CCTexture2D texture = CCTextureCache.sharedTextureCache().addImage(image, key);
 
         CGSize size = texture.getContentSize();
         CGRect rect = CGRect.make(0, 0, size.width, size.height );
@@ -408,7 +414,7 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
         assert image!=null:"Invalid CGImageRef for sprite";
 
         // XXX: possible bug. See issue #349. New API should be added
-        CCTexture2D texture = CCTextureCache.sharedTextureCache().addImage(image);
+        CCTexture2D texture = CCTextureCache.sharedTextureCache().addImage(image, key);
 
         CGSize size = texture.getContentSize();
         CGRect rect = CGRect.make(0, 0, size.width, size.height );
