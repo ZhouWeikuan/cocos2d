@@ -2,6 +2,7 @@ package org.cocos2d.actions;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.cocos2d.config.ccConfig;
@@ -130,10 +131,15 @@ public class CCScheduler {
     }
 
     private void removeHashElement(Object key, tHashSelectorEntry element){
-        element.timers.clear();
+    	removeHashElement(element);
+        hashForSelectors.remove(key);
+    }
+    
+    private void removeHashElement(tHashSelectorEntry element)
+    {
+    	element.timers.clear();
         element.timers = null;
         element.target = null;
-        hashForSelectors.remove(key);
     }
 
     /** 'tick' the scheduler.
@@ -145,7 +151,9 @@ public class CCScheduler {
         
         // updates with priority < 0
         synchronized (updatesNeg) {
-	        for (tListEntry e: updatesNeg) {
+        	int len1 = updatesNeg.size();
+	        for (int i = 0; i < len1; i++) {
+	        	tListEntry e = updatesNeg.get(i);
 	            if( ! e.paused ) {
 	            	try {
 						e.impMethod.invoke(e.target, new Object[] {dt});
@@ -159,7 +167,8 @@ public class CCScheduler {
 
         // updates with priority == 0
         synchronized (updates0) {
-	        for(int i=0; i < updates0.size(); ++i) {
+        	int len2 = updates0.size();
+	        for(int i=0; i < len2; ++i) {
 	        	tListEntry e = updates0.get(i);
 	            if( ! e.paused ) {
 	                try {
@@ -174,7 +183,9 @@ public class CCScheduler {
         
         // updates with priority > 0
         synchronized (updatesPos) {
-	        for (tListEntry e: updatesPos ) {
+        	int len3 = updatesPos.size();
+	        for (int i=0; i < len3; i++) {
+	        	tListEntry e = updatesPos.get(i);
 	            if( ! e.paused ) {
 	                try {
 						e.impMethod.invoke(e.target, new Object[]{ dt } );
@@ -187,14 +198,17 @@ public class CCScheduler {
         }
         
         // Iterate all over the  custome selectors
-        ArrayList<tHashSelectorEntry> toBeRemoved = new ArrayList<tHashSelectorEntry>(); 
-        for (tHashSelectorEntry elt: hashForSelectors.values()) {
+        Iterator<tHashSelectorEntry> iterator = hashForSelectors.values().iterator();
+        tHashSelectorEntry elt = null;
+        while (iterator.hasNext()) {
+        	elt = iterator.next();
             currentTarget = elt;
             currentTargetSalvaged = false;
             
             if( ! currentTarget.paused ) {                
                 // The 'timers' ccArray may change while inside this loop.
-                for( elt.timerIndex = 0; elt.timerIndex < elt.timers.size(); elt.timerIndex++) {
+            	int len = elt.timers.size();
+                for( elt.timerIndex = 0; elt.timerIndex < len; elt.timerIndex++) {
                     elt.currentTimer = elt.timers.get(elt.timerIndex);
                     elt.currentTimerSalvaged = false;
 
@@ -222,14 +236,11 @@ public class CCScheduler {
             
             // only delete currentTarget if no actions were scheduled during the cycle (issue #481)
             if( currentTargetSalvaged && currentTarget.timers.isEmpty()) {
-            	toBeRemoved.add(elt);
+            	removeHashElement(elt);
+            	iterator.remove();
             	// this.removeHashElement(elt.target, elt);
                 // [self removeHashElement:currentTarget];
             }
-        }
-        
-        for (tHashSelectorEntry e: toBeRemoved) {
-        	this.removeHashElement(e.target, e);
         }
         
         currentTarget = null;
