@@ -30,34 +30,34 @@ public class GLResourceHelper {
         return _sharedResourceHelper;
     }
     
-    public interface GLResource {
-    	void release(GL10 gl);
+    public interface GLResorceTask {
+	void perform(GL10 gl);
     }
     
-	private ConcurrentLinkedQueue<GLResource> releaseQueue;
+	private ConcurrentLinkedQueue<GLResorceTask> taskQueue;
 	
 	public GLResourceHelper() {
-		releaseQueue = new ConcurrentLinkedQueue<GLResource>();
+		taskQueue = new ConcurrentLinkedQueue<GLResorceTask>();
 	}
 	
 	/**
-	 * Add OGL texture id in releaseQueue
-	 * @param texId OGL texture ID
+	 * Add OGL task in queue
+	 * @param res GL task
 	 */
-	public void release(GLResource res) {
-		releaseQueue.add(res);
+	public void perform(GLResorceTask res) {
+		taskQueue.add(res);
 	}
 
 	/**
 	 * Method is called from update cycle,
-	 * all textures added to queue are destroyed
+	 * perform all tasks in GL thread
 	 * @param gl
 	 */
 	public void update(GL10 gl) {
-		if(releaseQueue.size() > 0) {
-			GLResource res;
-			while((res = releaseQueue.poll()) != null) {
-				res.release(gl);
+		if(taskQueue.size() > 0) {
+			GLResorceTask res;
+			while((res = taskQueue.poll()) != null) {
+				res.perform(gl);
 			}
 		}
 	}
