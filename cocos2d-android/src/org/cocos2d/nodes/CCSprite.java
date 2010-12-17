@@ -277,7 +277,7 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
     /** Creates an sprite with a CGImageRef.
      * BE AWARE OF the fact that copy of image is stored in memory,
      * use assets method if you can.
-     *
+     * 
      * @deprecated Use spriteWithCGImage:key: instead. Will be removed in v1.0 final
      */
     public static CCSprite sprite(Bitmap image) {
@@ -291,6 +291,7 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
 
     * BE AWARE OF the fact that copy of image is stored in memory,
     * use assets method if you can.
+      
       @since v0.99.0
       */
     public static CCSprite sprite(Bitmap image, String key) {

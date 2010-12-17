@@ -92,8 +92,8 @@ public class CCTexture2D {
     public int name() {
     	
 //        if( _name == 0 && CCDirector.gl != null && Thread.currentThread().getName().startsWith("GLThread"))
-
-//    	if( _name == 0) {
+    	
+//    	if( _name == 0) {	
 //        	this.loadTexture(CCDirector.gl);
 //        }
         return _name;
@@ -165,7 +165,7 @@ public class CCTexture2D {
     		CCTextureCache.sharedTextureCache().removeLoader(mLoader);
     	}
     	if (_name != 0) {
-		GLResourceHelper.sharedHelper().perform(new GLResourceHelper.GLResorceTask() {
+    		GLResourceHelper.sharedHelper().perform(new GLResourceHelper.GLResorceTask() {
     			
 				@Override
 				public void perform(GL10 gl) {
@@ -318,13 +318,13 @@ public class CCTexture2D {
 			loadTexture(CCDirector.gl);
 		}
 		else {
-		GLResourceHelper.sharedHelper().perform(new GLResourceHelper.GLResorceTask() {
-
+    		GLResourceHelper.sharedHelper().perform(new GLResourceHelper.GLResorceTask() {
+    			
 				@Override
 				public void perform(GL10 gl) {
 					loadTexture(gl);
 				}
-			});
+			});			
 		}
     }
 

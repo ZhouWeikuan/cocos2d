@@ -79,31 +79,31 @@ public class CCTextureCache {
     public CCTexture2D addImage(Bitmap image, String key) {
         assert (image != null) : "TextureCache: image must not be null";
         CCTexture2D tex = null;
-
-	if( key !=null && (tex = textures.get(key)) != null ) {
-		return tex;
-	}
-
-	final Bitmap copy = image.copy(image.getConfig(), false);
-
-	if(copy != null) {
-		final CCTexture2D texNew = new CCTexture2D();
-		texNew.setLoader(new CCTexture2D.TextureLoader() {
+        
+    	if( key !=null && (tex = textures.get(key)) != null ) {
+    		return tex;
+    	}
+    	
+    	final Bitmap copy = image.copy(image.getConfig(), false);
+    	
+    	if(copy != null) {
+	    	final CCTexture2D texNew = new CCTexture2D();
+	    	texNew.setLoader(new CCTexture2D.TextureLoader() {
 				@Override
 				public void load() {
 					Bitmap initImage = copy.copy(copy.getConfig(), false);
 					texNew.initWithImage(initImage);
 				}
 			});
-		if( key!= null ) {
-			textures.put(key, texNew);
-		}
-
-		return texNew;
-	} else {
-		ccMacros.CCLOG("cocos2d", "Couldn't add Bitmap in CCTextureCache");
-		return null;
-	}
+	    	if( key!= null ) {
+	    		textures.put(key, texNew);
+	    	}
+	    	
+	    	return texNew;
+    	} else {
+    		ccMacros.CCLOG("cocos2d", "Couldn't add Bitmap in CCTextureCache");
+    		return null;
+    	}
     }
 
 

@@ -115,7 +115,7 @@ public class CCAnimation {
         }
     }
      */
-
+    
     /** Adds a frame to a CCAnimation. */
     public void addFrame(CCSpriteFrame frame) {
         frames_.add(frame);

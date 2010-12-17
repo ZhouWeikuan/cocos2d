@@ -29,7 +29,7 @@ public class GLResourceHelper {
     }
     
     public interface GLResorceTask {
-	void perform(GL10 gl);
+    	void perform(GL10 gl);
     }
     
 	private ConcurrentLinkedQueue<GLResorceTask> taskQueue;

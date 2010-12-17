@@ -213,7 +213,7 @@ public class ActionsTest extends Activity {
 			// Keep copy for reinit texture after Activity pause
 			final Bitmap bmpCopy = bmp.copy(bmp.getConfig(), false);
 			bmp.recycle();
-
+			
 			final CCTexture2D tex = new CCTexture2D();
 			tex.setLoader(new CCTexture2D.TextureLoader() {
 				@Override
@@ -230,7 +230,7 @@ public class ActionsTest extends Activity {
 			// use for assets:
 			// CCTexture2D tex = CCTextureCache.sharedTextureCache().addImage("grossini.png");
 			// grossini = CCSprite.sprite(tex);
-
+			
 
 			// Example:
 			// Or you can create an sprite using a filename. PNG, JPEG and BMP files are supported. Probably TIFF too
