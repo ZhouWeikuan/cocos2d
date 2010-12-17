@@ -207,8 +207,7 @@ public class CCScheduler {
             
             if( ! currentTarget.paused ) {                
                 // The 'timers' ccArray may change while inside this loop.
-            	int len = elt.timers.size();
-                for( elt.timerIndex = 0; elt.timerIndex < len; elt.timerIndex++) {
+                for( elt.timerIndex = 0; elt.timerIndex < elt.timers.size(); elt.timerIndex++) {
                     elt.currentTimer = elt.timers.get(elt.timerIndex);
                     elt.currentTimerSalvaged = false;
 
