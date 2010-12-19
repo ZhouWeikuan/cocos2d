@@ -19,13 +19,17 @@ public class CCSequence extends CCIntervalAction {
 
     /** helper contructor to create an array of sequenceable actions */
     public static CCSequence actions(CCFiniteTimeAction action1, CCFiniteTimeAction... actions) {
-        CCFiniteTimeAction prev = action1;
-        for (CCFiniteTimeAction now : actions) {
-            prev = new CCSequence(prev, now);
+        if(actions.length == 0) {
+        	return new CCSequence(action1, CCFiniteTimeAction.action(0));
+        } else {
+	    	CCFiniteTimeAction prev = action1;
+	        for (CCFiniteTimeAction now : actions) {
+	            prev = new CCSequence(prev, now);
+	        }
+	        return (CCSequence) prev;
         }
-        return (CCSequence) prev;
     }
-
+    
     /** initializes the action */
     protected CCSequence(CCFiniteTimeAction one, CCFiniteTimeAction two) {
         //assert one != null : "Sequence: argument one must be non-null";

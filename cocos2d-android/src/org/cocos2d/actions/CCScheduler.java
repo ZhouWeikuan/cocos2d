@@ -113,7 +113,7 @@ public class CCScheduler {
         // used to trigger CCTimer#update
         updateSelector = "update";
         try {
-			impMethod = CCTimer.class.getMethod(updateSelector, new Class[]{Float.TYPE});
+			impMethod = CCTimer.class.getMethod(updateSelector, Float.TYPE);
 		} catch (Exception e) {
 			impMethod = null;
 		}
@@ -156,7 +156,7 @@ public class CCScheduler {
 	        	tListEntry e = updatesNeg.get(i);
 	            if( ! e.paused ) {
 	            	try {
-						e.impMethod.invoke(e.target, new Object[] {dt});
+						e.impMethod.invoke(e.target, dt);
 					} catch (Exception e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
@@ -172,7 +172,7 @@ public class CCScheduler {
 	        	tListEntry e = updates0.get(i);
 	            if( ! e.paused ) {
 	                try {
-						e.impMethod.invoke(e.target, new Object[]{ dt } );
+						e.impMethod.invoke(e.target, dt );
 					} catch (Exception e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
@@ -188,7 +188,7 @@ public class CCScheduler {
 	        	tListEntry e = updatesPos.get(i);
 	            if( ! e.paused ) {
 	                try {
-						e.impMethod.invoke(e.target, new Object[]{ dt } );
+						e.impMethod.invoke(e.target, dt );
 					} catch (Exception e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
@@ -212,7 +212,7 @@ public class CCScheduler {
                     elt.currentTimerSalvaged = false;
 
                     try {
-						impMethod.invoke( elt.currentTimer, new Object[]{ dt });
+						impMethod.invoke( elt.currentTimer, dt);
 					} catch (Exception e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
@@ -525,7 +525,7 @@ public class CCScheduler {
         listElement.target = target;
         listElement.paused = paused;
         try {
-			listElement.impMethod = target.getClass().getMethod(updateSelector, new Class[]{Float.TYPE});
+			listElement.impMethod = target.getClass().getMethod(updateSelector, Float.TYPE);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -550,7 +550,7 @@ public class CCScheduler {
         listElement.priority = priority;
         listElement.paused = paused;
         try {
-			listElement.impMethod = target.getClass().getMethod(updateSelector, new Class[]{Float.TYPE});
+			listElement.impMethod = target.getClass().getMethod(updateSelector, Float.TYPE);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
