@@ -32,10 +32,57 @@ public class GLResourceHelper {
     	void perform(GL10 gl);
     }
     
+	/**
+	 * These objects are stored in reloadQueue,
+	 * they should be removed manually,
+	 * DO NOT STORE REFERENCE TO CCTexture2D in TextureLoader,
+	 * GLResourceLoader is called in finalize()
+	 */
+	public interface GLResourceLoader {
+		void load();
+	}
+
 	private ConcurrentLinkedQueue<GLResorceTask> taskQueue;
+    private ConcurrentLinkedQueue<GLResourceLoader> reloadQueue;
+
 	
 	public GLResourceHelper() {
 		taskQueue = new ConcurrentLinkedQueue<GLResorceTask>();
+		reloadQueue = new ConcurrentLinkedQueue<GLResourceLoader>();
+	}
+
+    public void addLoader(final GLResourceLoader loader, boolean addTask) {
+    	if(addTask) {
+	    	taskQueue.add(new GLResorceTask() {
+				@Override
+				public void perform(GL10 gl) {
+					loader.load();
+									
+				}
+			});
+    	} else {
+    		reloadQueue.add(loader);
+    	}
+    }
+    
+    public void removeLoader(GLResourceLoader loader) {
+    	reloadQueue.remove(loader);
+	}
+
+    /**
+     * This should be called only when recreating GL context
+     */
+	public void reloadResources() {
+		taskQueue.add(new GLResorceTask() {
+			@Override
+			public void perform(GL10 gl) {
+				if(reloadQueue.size() > 0) {
+					for(GLResourceLoader res : reloadQueue) {
+						res.load();
+					}
+				}
+			}
+		});
 	}
 	
 	/**

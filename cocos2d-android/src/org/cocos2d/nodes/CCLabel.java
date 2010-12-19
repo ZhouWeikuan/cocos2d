@@ -3,6 +3,7 @@ package org.cocos2d.nodes;
 import java.util.HashSet;
 
 import org.cocos2d.opengl.CCTexture2D;
+import org.cocos2d.opengl.GLResourceHelper;
 import org.cocos2d.protocols.CCLabelProtocol;
 import org.cocos2d.types.CGRect;
 import org.cocos2d.types.CGSize;
@@ -61,7 +62,7 @@ public class CCLabel extends CCSprite implements CCLabelProtocol {
      */
     public void setString(final String string) {   	
     	final CCTexture2D texture = new CCTexture2D();
-    	texture.setLoader(new CCTexture2D.TextureLoader() {
+    	texture.setLoader(new GLResourceHelper.GLResourceLoader() {
     		@Override
     		public void load() {
     	    	if (CGSize.equalToSize(_dimensions, CGSize.zero())) {

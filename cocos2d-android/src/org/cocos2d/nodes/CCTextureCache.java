@@ -3,10 +3,10 @@ package org.cocos2d.nodes;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.cocos2d.config.ccMacros;
 import org.cocos2d.opengl.CCTexture2D;
+import org.cocos2d.opengl.GLResourceHelper;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -88,7 +88,7 @@ public class CCTextureCache {
     	
     	if(copy != null) {
 	    	final CCTexture2D texNew = new CCTexture2D();
-	    	texNew.setLoader(new CCTexture2D.TextureLoader() {
+	    	texNew.setLoader(new GLResourceHelper.GLResourceLoader() {
 				@Override
 				public void load() {
 					Bitmap initImage = copy.copy(copy.getConfig(), false);
@@ -169,55 +169,25 @@ public class CCTextureCache {
 
     private static CCTexture2D createTextureFromFilePath(final String path) {
             
-        	final CCTexture2D tex = new CCTexture2D();
-            tex.setLoader(new CCTexture2D.TextureLoader() {
-				
-				@Override
-				public void load() {
-		            try {
-			        	InputStream is = CCDirector.sharedDirector().getActivity().getAssets().open(path);
-			            Bitmap bmp = BitmapFactory.decodeStream(is);
-						is.close();
-						tex.initWithImage(bmp);
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
-			});
-            
-            return tex;
-    }
-
-    private static CCTexture2D createTextureFromBitmap(Bitmap bmp) {
-        CCTexture2D tex = new CCTexture2D();
-        tex.initWithImage(bmp);
-        return tex;
-    }
-    
-    private ConcurrentLinkedQueue<CCTexture2D.TextureLoader> reloadTexQueue = new ConcurrentLinkedQueue<CCTexture2D.TextureLoader>();
-
-    public void addLoader(CCTexture2D.TextureLoader loader) {
-    	reloadTexQueue.add(loader);
-    }
-    
-    public void removeLoader(CCTexture2D.TextureLoader loader) {
-    	reloadTexQueue.remove(loader);
-	}
-
-	public void reloadTextures() {
-		CCDirector.sharedDirector().getOpenGLView().queueEvent(new Runnable() {
-			@Override
-			public void run() {
+    	final CCTexture2D tex = new CCTexture2D();
+        tex.setLoader(new GLResourceHelper.GLResourceLoader() {
 			
-				if(reloadTexQueue.size() > 0) {
-					for(CCTexture2D.TextureLoader res : reloadTexQueue) {
-						res.load();
-					}
+			@Override
+			public void load() {
+	            try {
+		        	InputStream is = CCDirector.sharedDirector().getActivity().getAssets().open(path);
+		            Bitmap bmp = BitmapFactory.decodeStream(is);
+					is.close();
+					tex.initWithImage(bmp);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
 			}
 		});
-	}
+        
+        return tex;
+    }
 }
 
 

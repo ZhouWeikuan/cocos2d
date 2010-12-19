@@ -51,6 +51,7 @@ import org.cocos2d.nodes.CCTextureCache;
 import org.cocos2d.opengl.CCDrawingPrimitives;
 import org.cocos2d.opengl.CCGLSurfaceView;
 import org.cocos2d.opengl.CCTexture2D;
+import org.cocos2d.opengl.GLResourceHelper;
 import org.cocos2d.types.CCBezierConfig;
 import org.cocos2d.types.CGPoint;
 import org.cocos2d.types.CGRect;
@@ -215,7 +216,7 @@ public class ActionsTest extends Activity {
 			bmp.recycle();
 			
 			final CCTexture2D tex = new CCTexture2D();
-			tex.setLoader(new CCTexture2D.TextureLoader() {
+			tex.setLoader(new GLResourceHelper.GLResourceLoader() {
 				@Override
 				public void load() {
 					Bitmap bmpForInit = bmpCopy.copy(bmpCopy.getConfig(), false);

@@ -626,7 +626,7 @@ public class CCDirector implements GLSurfaceView.Renderer {
     	CCDirector.gl = gl;
 
     	// reload all GL resources here
-    	CCTextureCache.sharedTextureCache().reloadTextures();
+    	GLResourceHelper.sharedHelper().reloadResources();
     	
         /*
          * By default, OpenGL enables features that improve quality

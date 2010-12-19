@@ -53,7 +53,7 @@ public class CCRenderTexture extends CCNode {
     
 		final int finPow = pow;
 		texture_ = new CCTexture2D();
-		texture_.setLoader(new CCTexture2D.TextureLoader() {
+		texture_.setLoader(new GLResourceHelper.GLResourceLoader() {
 			@Override
 			public void load() {
 				Bitmap bmp = Bitmap.createBitmap(finPow, finPow, Config.ARGB_8888);

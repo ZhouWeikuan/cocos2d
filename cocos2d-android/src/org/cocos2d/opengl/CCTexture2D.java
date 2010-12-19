@@ -24,7 +24,6 @@ import javax.microedition.khronos.opengles.GL11;
 
 import org.cocos2d.nodes.CCDirector;
 import org.cocos2d.nodes.CCLabel;
-import org.cocos2d.nodes.CCTextureCache;
 import org.cocos2d.types.CCTexParams;
 import org.cocos2d.types.CGAffineTransform;
 import org.cocos2d.types.CGPoint;
@@ -49,16 +48,7 @@ import android.opengl.GLUtils;
 public class CCTexture2D {
     // private static final String LOG_TAG = CCTexture2D.class.getSimpleName();
 	
-	/**
-	 * These objects are stored in CCTextureCache,
-	 * they would be removed only when finalize() of CCTexture2D,
-	 * that's why DO NOT STORE REFERENCE TO CCTexture2D in TextureLoader
-	 */
-	public interface TextureLoader {
-		void load();
-	}
-
-    public static final int kMaxTextureSize = 1024;
+	public static final int kMaxTextureSize = 1024;
 
     /**
      * width in pixels
@@ -146,7 +136,7 @@ public class CCTexture2D {
     private CCTexParams _texParams;
     
     /** this object is responsible for loading Bitmap for texture */
-    private TextureLoader mLoader;
+    private GLResourceHelper.GLResourceLoader mLoader;
 
     public final CGSize getContentSize() {
         return mContentSize;
@@ -162,7 +152,7 @@ public class CCTexture2D {
     @Override
     protected void finalize() throws Throwable {
     	if(mLoader != null) {
-    		CCTextureCache.sharedTextureCache().removeLoader(mLoader);
+    		GLResourceHelper.sharedHelper().removeLoader(mLoader);
     	}
     	if (_name != 0) {
     		GLResourceHelper.sharedHelper().perform(new GLResourceHelper.GLResorceTask() {
@@ -183,14 +173,14 @@ public class CCTexture2D {
     public CCTexture2D() {
     }
     
-    public void setLoader(TextureLoader loader) {
+    public void setLoader(GLResourceHelper.GLResourceLoader loader) {
     	if(loader != null) {
     		loader.load();
     		
         	if(mLoader != null) {
-        		CCTextureCache.sharedTextureCache().removeLoader(mLoader);
+        		GLResourceHelper.sharedHelper().removeLoader(mLoader);
         	}
-        	CCTextureCache.sharedTextureCache().addLoader(loader);
+        	GLResourceHelper.sharedHelper().addLoader(loader, false);
     	}
     	mLoader = loader;
     }
@@ -227,41 +217,6 @@ public class CCTexture2D {
 
         init(image, imageSize, imageSize);
     }
-
-    // this is temporary solution for white texture problem,
-    // works maybe only with textures created with CCTexture2D(Bitmap image)
-    // i would fix this soon to deferred texture loading
-//    private String textureName = "";
-//    public void setTextureName(String texName) {
-//    	textureName = texName;
-//    	_name = 0;
-//    }
-    
-//    private void prepareBitmap(Bitmap image) {
-//        CGSize imageSize = CGSize.make(image.getWidth(), image.getHeight());
-//
-//        int width = toPow2((int) imageSize.width);
-//        int height = toPow2((int) imageSize.height);
-//
-//        while (width > kMaxTextureSize || height > kMaxTextureSize) {
-//            width /= 2;
-//            height /= 2;
-//
-//            imageSize.width *= 0.5f;
-//            imageSize.height *= 0.5f;
-//        }
-//
-//        if (imageSize.width != width || imageSize.height != height) {
-//            Bitmap bitmap = Bitmap.createBitmap(width, height,
-//                    image.hasAlpha() ? Bitmap.Config.ARGB_8888 : Bitmap.Config.RGB_565);
-//            Canvas canvas = new Canvas(bitmap);
-//            canvas.drawBitmap(image, 0, 0, null);
-//            image.recycle();
-//            image = bitmap;
-//        }
-//
-//        mBitmap = image;
-//    }
 
     public void initWithImage(Bitmap image, CGSize imageSize) {
         Bitmap.Config config = Bitmap.Config.ARGB_8888;

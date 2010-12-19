@@ -6,6 +6,7 @@ import org.cocos2d.config.ccMacros;
 import org.cocos2d.nodes.CCDirector;
 import org.cocos2d.nodes.CCNode;
 import org.cocos2d.opengl.CCTexture2D;
+import org.cocos2d.opengl.GLResourceHelper;
 import org.cocos2d.types.CGPoint;
 import org.cocos2d.types.CGSize;
 import org.cocos2d.types.ccGridSize;
@@ -112,7 +113,7 @@ public abstract class CCGridBase {
     public CCGridBase(final ccGridSize gSize) {
     	final CCTexture2D texture = new CCTexture2D();
     	
-    	texture.setLoader(new CCTexture2D.TextureLoader() {
+    	texture.setLoader(new GLResourceHelper.GLResourceLoader() {
 			
 			@Override
 			public void load() {
