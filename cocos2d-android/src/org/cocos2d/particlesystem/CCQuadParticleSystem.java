@@ -1,6 +1,7 @@
 package org.cocos2d.particlesystem;
 
 import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
 
 import javax.microedition.khronos.opengles.GL10;
@@ -11,6 +12,7 @@ import org.cocos2d.config.ccMacros;
 import org.cocos2d.nodes.CCDirector;
 import org.cocos2d.nodes.CCSpriteFrame;
 import org.cocos2d.opengl.CCTexture2D;
+import org.cocos2d.opengl.GLResourceHelper;
 import org.cocos2d.types.CGPoint;
 import org.cocos2d.types.CGRect;
 import org.cocos2d.types.ccBlendFunc;
@@ -40,6 +42,8 @@ public class CCQuadParticleSystem extends CCParticleSystem {
 	ShortBuffer			indices;	// indices
 	int					quadsIDs[];	// VBO id
 	public static final int QuadSize = 3;
+	
+	private GLResourceHelper.GLResourceLoader  mLoader;
 
 	// overriding the init method
 	public CCQuadParticleSystem(int numberOfParticles) {
@@ -62,34 +66,51 @@ public class CCQuadParticleSystem extends CCParticleSystem {
 		initTexCoordsWithRect(CGRect.make(0, 0, 10, 10));
 		initIndices();
 
-		GL11 gl = (GL11)CCDirector.gl;
-		// create the VBO buffer
-		quadsIDs = new int[QuadSize];
-		gl.glGenBuffers(QuadSize, quadsIDs, 0);
-		
-		// initial binding
-		// for texCoords
-		gl.glBindBuffer(GL11.GL_ARRAY_BUFFER, quadsIDs[0]);
-		gl.glBufferData(GL11.GL_ARRAY_BUFFER, texCoords.capacity() * 4, texCoords, GL11.GL_DYNAMIC_DRAW);	
-		
-		// for vertices
-		gl.glBindBuffer(GL11.GL_ARRAY_BUFFER, quadsIDs[1]);
-		gl.glBufferData(GL11.GL_ARRAY_BUFFER, vertices.capacity() * 4, vertices, GL11.GL_DYNAMIC_DRAW);	
-		
-		// for colors
-		gl.glBindBuffer(GL11.GL_ARRAY_BUFFER, quadsIDs[2]);
-		gl.glBufferData(GL11.GL_ARRAY_BUFFER, colors.capacity() * 4, colors, GL11.GL_DYNAMIC_DRAW);	
-		
-		// restore the elements, arrays
-		gl.glBindBuffer(GL11.GL_ARRAY_BUFFER, 0);
+		mLoader = new GLResourceHelper.GLResourceLoader() {
+			@Override
+			public void load() {
+				GL11 gl = (GL11)CCDirector.gl;
+				// create the VBO buffer
+				quadsIDs = new int[QuadSize];
+				gl.glGenBuffers(QuadSize, quadsIDs, 0);
+				
+				// initial binding
+				// for texCoords
+				gl.glBindBuffer(GL11.GL_ARRAY_BUFFER, quadsIDs[0]);
+				gl.glBufferData(GL11.GL_ARRAY_BUFFER, texCoords.capacity() * 4, texCoords, GL11.GL_DYNAMIC_DRAW);	
+				
+				// for vertices
+				gl.glBindBuffer(GL11.GL_ARRAY_BUFFER, quadsIDs[1]);
+				gl.glBufferData(GL11.GL_ARRAY_BUFFER, vertices.capacity() * 4, vertices, GL11.GL_DYNAMIC_DRAW);	
+				
+				// for colors
+				gl.glBindBuffer(GL11.GL_ARRAY_BUFFER, quadsIDs[2]);
+				gl.glBufferData(GL11.GL_ARRAY_BUFFER, colors.capacity() * 4, colors, GL11.GL_DYNAMIC_DRAW);	
+				
+				// restore the elements, arrays
+				gl.glBindBuffer(GL11.GL_ARRAY_BUFFER, 0);
+			}
+		};
+		GLResourceHelper.sharedHelper().addLoader(mLoader, true);
 	}
 
 	@Override
 	public void finalize() throws Throwable {
 
-		GL11 gl = (GL11)CCDirector.gl;
-		gl.glDeleteBuffers(QuadSize, quadsIDs, 0);
-
+    	if(mLoader != null) {
+    		GLResourceHelper.sharedHelper().removeLoader(mLoader);
+    	}
+    	
+		GLResourceHelper.sharedHelper().perform(new GLResourceHelper.GLResorceTask() {
+			
+			@Override
+			public void perform(GL10 gl) {
+				GL11 gl11 = (GL11)gl;
+				gl11.glDeleteBuffers(QuadSize, quadsIDs, 0);
+			}
+			
+		});
+    	
 		super.finalize();
 	}
 
