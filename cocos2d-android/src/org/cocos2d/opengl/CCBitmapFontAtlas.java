@@ -425,7 +425,7 @@ public class CCBitmapFontAtlas extends CCSpriteSheet implements CCLabelProtocol,
 
             // second
             propertyValue = nse.next();
-            int amount = Integer.valueOf(propertyValue);
+            int amount = Integer.valueOf(propertyValue.trim());
 
             tKerningHashElement element = new tKerningHashElement(); 
             element.amount = amount;
