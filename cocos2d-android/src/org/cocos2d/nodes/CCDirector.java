@@ -655,7 +655,6 @@ public class CCDirector implements GLSurfaceView.Renderer {
 		return;
 		
 		CCTouchDispatcher.sharedDispatcher().update();
-		GLResourceHelper.sharedHelper().update(gl);
 		drawCCScene(gl);
         }
     }    
@@ -670,8 +669,9 @@ public class CCDirector implements GLSurfaceView.Renderer {
         
         /* tick before glClear: issue #533 */
         if(!isPaused) {
-        	CCScheduler.sharedScheduler().tick(dt);	
+        	CCScheduler.sharedScheduler().tick(dt);
         }
+        GLResourceHelper.sharedHelper().update(gl);
 
         gl.glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
