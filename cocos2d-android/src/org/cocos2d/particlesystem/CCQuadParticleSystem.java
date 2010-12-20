@@ -42,7 +42,7 @@ public class CCQuadParticleSystem extends CCParticleSystem {
 	int					quadsIDs[];	// VBO id
 	public static final int QuadSize = 3;
 	
-	private GLResourceHelper.GLResourceLoader  mLoader;
+//	private GLResourceHelper.GLResourceLoader  mLoader;
 
 	// overriding the init method
 	public CCQuadParticleSystem(int numberOfParticles) {
@@ -65,9 +65,9 @@ public class CCQuadParticleSystem extends CCParticleSystem {
 		initTexCoordsWithRect(CGRect.make(0, 0, 10, 10));
 		initIndices();
 
-		mLoader = new GLResourceHelper.GLResourceLoader() {
-			@Override
-			public void load() {
+//		mLoader = new GLResourceHelper.GLResourceLoader() {
+//			@Override
+//			public void load() {
 				GL11 gl = (GL11)CCDirector.gl;
 				// create the VBO buffer
 				quadsIDs = new int[QuadSize];
@@ -88,18 +88,18 @@ public class CCQuadParticleSystem extends CCParticleSystem {
 				
 				// restore the elements, arrays
 				gl.glBindBuffer(GL11.GL_ARRAY_BUFFER, 0);
-			}
-		};
-		GLResourceHelper.sharedHelper().addLoader(mLoader, true);
+//			}
+//		};
+//		GLResourceHelper.sharedHelper().addLoader(mLoader, true);
 	}
 
 	@Override
 	public void finalize() throws Throwable {
 
-    	if(mLoader != null) {
-    		GLResourceHelper.sharedHelper().removeLoader(mLoader);
-    	}
-    	
+//    	if(mLoader != null) {
+//    		GLResourceHelper.sharedHelper().removeLoader(mLoader);
+//    	}
+//    	
 		GLResourceHelper.sharedHelper().perform(new GLResourceHelper.GLResorceTask() {
 			
 			@Override

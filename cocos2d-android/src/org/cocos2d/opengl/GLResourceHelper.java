@@ -57,7 +57,7 @@ public class GLResourceHelper {
 				@Override
 				public void perform(GL10 gl) {
 					loader.load();
-									
+					reloadQueue.add(loader);
 				}
 			});
     	} else {
