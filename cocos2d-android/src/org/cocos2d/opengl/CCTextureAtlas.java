@@ -176,6 +176,15 @@ public class CCTextureAtlas {
         putTexCoords(texCordBuffer, index);
         putVertex(vertexBuffer, index);
     }
+    
+    public void updateQuad(FloatBuffer texCordBuffer, float[] vertexData, int index) {
+        assert (index >= 0 && index < capacity_) : "update quad with texture_: Invalid index";
+
+        totalQuads_ = Math.max(index + 1, totalQuads_);
+
+        putTexCoords(texCordBuffer, index);
+        putVertex(vertexCoordinates, vertexData, index);
+    }
 
     public void updateQuad(ccQuad2 texQuad, ccQuad3 vertexQuad, int index) {
         assert (index >= 0 && index < capacity_) : "update quad with texture_: Invalid index";

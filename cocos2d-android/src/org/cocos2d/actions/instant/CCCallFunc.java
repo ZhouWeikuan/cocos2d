@@ -31,7 +31,7 @@ public class CCCallFunc extends CCInstantAction {
 
         try {
             Class<?> cls = targetCallback.getClass();
-            invocation = cls.getMethod(selector, new Class[]{});
+            invocation = cls.getMethod(selector);
         } catch (Exception e) {
         }
     }
@@ -51,7 +51,7 @@ public class CCCallFunc extends CCInstantAction {
      */
     public void execute() {
         try {
-            invocation.invoke(targetCallback, new Object[]{});
+            invocation.invoke(targetCallback);
         } catch (Exception e) {
         }
     }

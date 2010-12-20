@@ -23,11 +23,25 @@ import java.nio.FloatBuffer;
  @warning These functions draws the Line, Point, Polygon, immediately. They aren't batched. If you are going to make a game that depends on these primitives, I suggest creating a batch.
 */
 public class CCDrawingPrimitives {
+	
+	private static FloatBuffer tmpFloatBuf;
+	
+	private static FloatBuffer getVertices(int size) {
+		if(tmpFloatBuf == null || tmpFloatBuf.capacity() < size) {
+	        ByteBuffer vbb = ByteBuffer.allocateDirect(4 * size);
+	        vbb.order(ByteOrder.nativeOrder());
+	        tmpFloatBuf = vbb.asFloatBuffer();
+		}
+		tmpFloatBuf.rewind();
+		return tmpFloatBuf;
+	}
+	
     /** draws a point given x and y coordinate */
     public static void ccDrawPoint(GL10 gl, CGPoint pnt) {
-        ByteBuffer vbb = ByteBuffer.allocateDirect(4 * 2 * 1);
-        vbb.order(ByteOrder.nativeOrder());
-        FloatBuffer vertices = vbb.asFloatBuffer();
+//        ByteBuffer vbb = ByteBuffer.allocateDirect(4 * 2 * 1);
+//        vbb.order(ByteOrder.nativeOrder());
+//        FloatBuffer vertices = vbb.asFloatBuffer();
+        FloatBuffer vertices = getVertices(2 * 1);
 
         vertices.put(pnt.x);
         vertices.put(pnt.y);
@@ -53,9 +67,10 @@ public class CCDrawingPrimitives {
       @since v0.7.2
     */
     public static void ccDrawPoints(GL10 gl, CGPoint points[], int numberOfPoints) {
-        ByteBuffer vbb = ByteBuffer.allocateDirect(4 * 2 * numberOfPoints);
-        vbb.order(ByteOrder.nativeOrder());
-        FloatBuffer vertices = vbb.asFloatBuffer();
+//        ByteBuffer vbb = ByteBuffer.allocateDirect(4 * 2 * numberOfPoints);
+//        vbb.order(ByteOrder.nativeOrder());
+//        FloatBuffer vertices = vbb.asFloatBuffer();
+        FloatBuffer vertices = getVertices(2 * numberOfPoints);
 
         for (int i = 0; i < numberOfPoints; i++) {
             vertices.put(points[i].x);
@@ -81,9 +96,10 @@ public class CCDrawingPrimitives {
 
     /** draws a line given the origin and destination point */
     public static void ccDrawLine(GL10 gl, CGPoint origin, CGPoint destination) {
-        ByteBuffer vbb = ByteBuffer.allocateDirect(4 * 2 * 2);
-        vbb.order(ByteOrder.nativeOrder());
-        FloatBuffer vertices = vbb.asFloatBuffer();
+//        ByteBuffer vbb = ByteBuffer.allocateDirect(4 * 2 * 2);
+//        vbb.order(ByteOrder.nativeOrder());
+//        FloatBuffer vertices = vbb.asFloatBuffer();
+        FloatBuffer vertices = getVertices(2 * 2);
 
         vertices.put(origin.x);
         vertices.put(origin.y);
@@ -123,9 +139,10 @@ public class CCDrawingPrimitives {
      * The polygon can be closed or open
     */
     public static void ccDrawPoly(GL10 gl, CGPoint poli[], int numberOfPoints, boolean closePolygon) {
-        ByteBuffer vbb = ByteBuffer.allocateDirect(4 * 2 * numberOfPoints);
-        vbb.order(ByteOrder.nativeOrder());
-        FloatBuffer vertices = vbb.asFloatBuffer();
+//        ByteBuffer vbb = ByteBuffer.allocateDirect(4 * 2 * numberOfPoints);
+//        vbb.order(ByteOrder.nativeOrder());
+//        FloatBuffer vertices = vbb.asFloatBuffer();
+        FloatBuffer vertices = getVertices(2 * numberOfPoints);
 
         for (int i = 0; i < numberOfPoints; i++) {
             vertices.put(poli[i].x);
@@ -156,9 +173,10 @@ public class CCDrawingPrimitives {
     public static void ccDrawCircle(GL10 gl, CGPoint center, float r, float a,
             int segments, boolean drawLineToCenter) {
 
-        ByteBuffer vbb = ByteBuffer.allocateDirect(4 * 2 * (segments + 2));
-        vbb.order(ByteOrder.nativeOrder());
-        FloatBuffer vertices = vbb.asFloatBuffer();
+//        ByteBuffer vbb = ByteBuffer.allocateDirect(4 * 2 * (segments + 2));
+//        vbb.order(ByteOrder.nativeOrder());
+//        FloatBuffer vertices = vbb.asFloatBuffer();
+        FloatBuffer vertices = getVertices(2 * (segments + 2));
 
         int additionalSegment = 1;
 
@@ -199,9 +217,10 @@ public class CCDrawingPrimitives {
     public static void ccDrawQuadBezier(GL10 gl, CGPoint origin, CGPoint control,
             CGPoint destination, int segments) {
 
-        ByteBuffer vbb = ByteBuffer.allocateDirect(4 * 2 * (segments + 1));
-        vbb.order(ByteOrder.nativeOrder());
-        FloatBuffer vertices = vbb.asFloatBuffer();
+//        ByteBuffer vbb = ByteBuffer.allocateDirect(4 * 2 * (segments + 1));
+//        vbb.order(ByteOrder.nativeOrder());
+//        FloatBuffer vertices = vbb.asFloatBuffer();
+        FloatBuffer vertices = getVertices(2 * (segments + 1));
         
         float t = 0.0f;
         for(int i = 0; i < segments; i++) {
@@ -239,9 +258,10 @@ public class CCDrawingPrimitives {
     public static void ccDrawCubicBezier(GL10 gl, CGPoint origin, CGPoint control1, CGPoint control2,
             CGPoint destination, int segments) {
 
-        ByteBuffer vbb = ByteBuffer.allocateDirect(4 * 2 * (segments + 1));
-        vbb.order(ByteOrder.nativeOrder());
-        FloatBuffer vertices = vbb.asFloatBuffer();
+//        ByteBuffer vbb = ByteBuffer.allocateDirect(4 * 2 * (segments + 1));
+//        vbb.order(ByteOrder.nativeOrder());
+//        FloatBuffer vertices = vbb.asFloatBuffer();
+        FloatBuffer vertices = getVertices(2 * (segments + 1));
 
         float t = 0;
         for(int i = 0; i < segments; i++)
