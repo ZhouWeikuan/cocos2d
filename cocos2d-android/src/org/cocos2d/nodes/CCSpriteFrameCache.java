@@ -51,10 +51,10 @@ public class CCSpriteFrameCache {
     /** Adds multiple Sprite Frames with a dictionary.
      * The texture will be associated with the created sprite frames.
      */
-    public void addSpriteFramesWithDictionary(HashMap dictionary, CCTexture2D texture) {
+    public void addSpriteFrames(HashMap<String, Object> dictionary, CCTexture2D texture) {
 
-        HashMap metadataDict = (HashMap)dictionary.get("metadata");
-        HashMap framesDict = (HashMap)dictionary.get("frames");
+        HashMap<String, Object> metadataDict = (HashMap<String, Object>)dictionary.get("metadata");
+        HashMap<String, Object> framesDict = (HashMap<String, Object>)dictionary.get("frames");
 
         Integer format = 0;
 
@@ -69,36 +69,34 @@ public class CCSpriteFrameCache {
                 "Unsupported Zwoptex plist file format.");
         }
 
-        Iterator fi = framesDict.keySet().iterator();
+        Iterator<String> fi = framesDict.keySet().iterator();
         while (fi.hasNext()) {
-	    		String frameDictKey = (String)fi.next();
-				HashMap frameDict = (HashMap)framesDict.get(frameDictKey);
-	        CCSpriteFrame spriteFrame;
-	        
-	        if (format == 3)
-	        {
-	        	CGSize spriteSize = (CGSize)frameDict.get("spriteSize");
-				CGPoint spriteOffset = (CGPoint)frameDict.get("spriteOffset");
-				CGSize spriteSourceSize = (CGSize)frameDict.get("spriteSourceSize");
-				CGRect textureRect = (CGRect)frameDict.get("textureRect");
-				Boolean textureRotated = (Boolean)frameDict.get("textureRotated");
-				
-				spriteFrame = CCSpriteFrame.frame(texture, 
-						CGRect.make(textureRect.origin.x, textureRect.origin.y, spriteSize.width, spriteSize.height),
-						textureRotated, spriteOffset, spriteSourceSize);
-	        } else
-	        {
-	        	// default behavior  
-	        	CGRect frame = (CGRect)frameDict.get("frame");
-	            CGPoint offset = (CGPoint)frameDict.get("offset");
-	            CGSize sourceSize = (CGSize)frameDict.get("sourceSize");
-	
-	            spriteFrame =
-	                CCSpriteFrame.frame(texture, frame, offset, sourceSize);
-	        }
-	
-	        spriteFrames.put(frameDictKey, spriteFrame);
+        	String frameDictKey = (String)fi.next();
+        	HashMap<String, Object> frameDict = (HashMap<String, Object>)framesDict.get(frameDictKey);
+        	CCSpriteFrame spriteFrame;
 
+        	if (format == 3)
+        	{
+        		CGSize spriteSize = (CGSize)frameDict.get("spriteSize");
+        		CGPoint spriteOffset = (CGPoint)frameDict.get("spriteOffset");
+        		CGSize spriteSourceSize = (CGSize)frameDict.get("spriteSourceSize");
+        		CGRect textureRect = (CGRect)frameDict.get("textureRect");
+        		Boolean textureRotated = (Boolean)frameDict.get("textureRotated");
+
+        		spriteFrame = CCSpriteFrame.frame(texture, 
+        				CGRect.make(textureRect.origin.x, textureRect.origin.y, spriteSize.width, spriteSize.height),
+        				textureRotated, spriteOffset, spriteSourceSize);
+        	} else {
+        		// default behavior  
+        		CGRect frame = (CGRect)frameDict.get("frame");
+        		CGPoint offset = (CGPoint)frameDict.get("offset");
+        		CGSize sourceSize = (CGSize)frameDict.get("sourceSize");
+
+        		spriteFrame =
+        			CCSpriteFrame.frame(texture, frame, offset, sourceSize);
+        	}
+
+        	spriteFrames.put(frameDictKey, spriteFrame);
         }
     }
 
@@ -122,8 +120,8 @@ public class CCSpriteFrameCache {
      */
     public void addSpriteFrames(String plist, CCTexture2D texture) {
 		  try {
-            HashMap dict = ZwoptexParser.parseZwoptex(plist);
-            addSpriteFramesWithDictionary(dict, texture);
+            HashMap<String, Object> dict = ZwoptexParser.parseZwoptex(plist);
+            addSpriteFrames(dict, texture);
         } catch (Exception e) {
                 ccMacros.CCLOG("CCSpriteFrameCache",
 					     "Unable to read Zwoptex plist: " + e);

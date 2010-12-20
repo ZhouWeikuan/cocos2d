@@ -1,7 +1,6 @@
 package org.cocos2d.particlesystem;
 
 import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
 
 import javax.microedition.khronos.opengles.GL10;

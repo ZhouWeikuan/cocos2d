@@ -47,7 +47,6 @@ import org.cocos2d.nodes.CCDirector;
 import org.cocos2d.nodes.CCLabel;
 import org.cocos2d.nodes.CCNode;
 import org.cocos2d.nodes.CCSprite;
-import org.cocos2d.nodes.CCTextureCache;
 import org.cocos2d.opengl.CCDrawingPrimitives;
 import org.cocos2d.opengl.CCGLSurfaceView;
 import org.cocos2d.opengl.CCTexture2D;
@@ -271,19 +270,19 @@ public class ActionsTest extends Activity {
 			addChild(menu, 1);
 		}
 
-		public void restartCallback() {
+		public void restartCallback(Object sender) {
 			CCScene s = CCScene.node();
 			s.addChild(restartAction());
 			CCDirector.sharedDirector().replaceScene(s);
 		}
 
-		public void nextCallback() {
+		public void nextCallback(Object sender) {
 			CCScene s = CCScene.node();
 			s.addChild(nextAction());
 			CCDirector.sharedDirector().replaceScene(s);
 		}
 
-		public void backCallback() {
+		public void backCallback(Object sender) {
 			CCScene s = CCScene.node();
 			s.addChild(backAction());
 			CCDirector.sharedDirector().replaceScene(s);

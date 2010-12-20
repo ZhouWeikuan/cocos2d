@@ -171,19 +171,19 @@ public class ActionManagerTest extends Activity {
 			addChild(menu, 1);
 		}
 
-		public static void restartCallback() {
+		public void restartCallback(Object sender) {
 			CCScene s = CCScene.node();
 			s.addChild(restartAction());
 			CCDirector.sharedDirector().replaceScene(s);
 		}
 
-		public void nextCallback() {
+		public void nextCallback(Object sender) {
 			CCScene s = CCScene.node();
 			s.addChild(nextAction());
 			CCDirector.sharedDirector().replaceScene(s);
 		}
 
-		public void backCallback() {
+		public void backCallback(Object sender) {
 			CCScene s = CCScene.node();
 			s.addChild(backAction());
 			CCDirector.sharedDirector().replaceScene(s);
@@ -222,7 +222,7 @@ public class ActionManagerTest extends Activity {
 
 		public void removeThis() {
 			this.getParent().removeChild(this, true);
-			this.nextCallback();
+			this.nextCallback(null);
 		}
 
 		@Override

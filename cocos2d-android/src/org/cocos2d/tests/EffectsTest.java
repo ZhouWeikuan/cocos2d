@@ -265,17 +265,17 @@ public class EffectsTest extends Activity {
 			CCDirector.sharedDirector().replaceScene(s);
 		}
 		
-		public void restartCallback() {
+		public void restartCallback(Object sender) {
 			this.newOrientation();
 			this.newScene();
 		}
 
-		public void nextCallback() {
+		public void nextCallback(Object sender) {
 			nextAction();
 			this.newScene();
 		}
 
-		public void backCallback() {
+		public void backCallback(Object sender) {
 			backAction();
 			this.newScene();
 		}

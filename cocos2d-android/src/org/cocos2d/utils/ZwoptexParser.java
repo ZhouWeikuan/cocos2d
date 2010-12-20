@@ -19,8 +19,8 @@ import org.cocos2d.types.CGSize;
 
 public class ZwoptexParser extends DefaultHandler {
 
-	private HashMap frames;
-	private HashMap metadata;
+	private HashMap<String, Object> frames;
+	private HashMap<String, Object> metadata;
 
 	private Integer dict_depth;
 	private Boolean mode_set_key;
@@ -48,7 +48,7 @@ public class ZwoptexParser extends DefaultHandler {
 	private Integer f_format = 2;
 
 	// returns a HashMap with root keys 'frames' and 'metadata'
-	public static HashMap parseZwoptex(String filename)
+	public static HashMap<String, Object> parseZwoptex(String filename)
 		throws Exception {
 
 		System.setProperty("org.xml.sax.driver", "org.xmlpull.v1.sax2.Driver");
@@ -73,12 +73,12 @@ public class ZwoptexParser extends DefaultHandler {
 
 	public ZwoptexParser() {
 		super();
-		this.frames = new HashMap();
-		this.metadata = new HashMap();
+		this.frames = new HashMap<String, Object>();
+		this.metadata = new HashMap<String, Object>();
 	}
 
-	public HashMap getResults() {
-		HashMap results = new HashMap();
+	public HashMap<String, Object> getResults() {
+		HashMap<String, Object> results = new HashMap<String, Object>();
 		results.put("frames", frames);
 		metadata.put("format", f_format);	//for the format check NGLOOM
 		results.put("metadata", metadata);
@@ -136,7 +136,7 @@ public class ZwoptexParser extends DefaultHandler {
 		if ("dict".equals(name)) {
 			// add the frame
 			if (dict_depth == 3) {
-				HashMap f = new HashMap();
+				HashMap<String, Object> f = new HashMap<String, Object>();
 				f.put("frame", f_frame);
 				f.put("offset", f_offset);
 				f.put("rotated", f_rotated);

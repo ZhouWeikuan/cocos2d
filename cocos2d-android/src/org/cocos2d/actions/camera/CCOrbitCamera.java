@@ -1,6 +1,5 @@
 package org.cocos2d.actions.camera;
 
-import org.cocos2d.actions.interval.CCIntervalAction;
 import org.cocos2d.config.ccMacros;
 import org.cocos2d.nodes.CCNode;
 import org.cocos2d.opengl.CCCamera;

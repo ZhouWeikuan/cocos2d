@@ -752,7 +752,7 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
 	
     // XXX: Optimization: instead of calling 5 times the parent sprite to obtain: position, scale.x, scale.y, anchorpoint and rotation,
     // this fuction return the 5 values in 1 single call
-    private TransformValues getTransformValues() {
+    protected TransformValues getTransformValues() {
         TransformValues tv = new TransformValues();
         tv.pos = position_;
         tv.scale = CGPoint.ccp(scaleX_, scaleY_);
@@ -839,17 +839,19 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
         }
     }
 
-    public CCNode addChild(CCSprite child, int z, int aTag) {
-        CCNode ret = super.addChild(child, z, aTag);
-
-        if( usesSpriteSheet_ ) {
-            int index = spriteSheet_.atlasIndex(child, z);
-            spriteSheet_.insertChild(child, index);
+    @Override
+    public CCNode addChild(CCNode child, int z, int aTag) {
+        super.addChild(child, z, aTag);
+        
+        CCSprite sprite = (CCSprite)child;
+        if (sprite!=null && usesSpriteSheet_ ) {
+            int index = spriteSheet_.atlasIndex(sprite, z);
+            spriteSheet_.insertChild(sprite, index);
         }
 
         hasChildren_ = true;
 
-        return ret;
+        return this;
     }
 
     public void removeChild(CCSprite sprite, boolean doCleanup) {

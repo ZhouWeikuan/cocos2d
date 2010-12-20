@@ -22,6 +22,13 @@ public class CCMenuItemToggle extends CCMenuItem {
       @since v0.7.2
     */
     private ArrayList<CCMenuItem> subItems_;
+    public ArrayList<CCMenuItem> getSubItemsRef() {
+    	if (subItems_ == null) {
+    		subItems_ = new ArrayList<CCMenuItem>();
+    	}
+    	return subItems_;	
+    }
+    
     /** conforms with CCRGBAProtocol protocol */
     private byte opacity_;
     /** conforms with CCRGBAProtocol protocol */

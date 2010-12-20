@@ -51,7 +51,7 @@ public class CCMenuItem extends CCNode {
         if (rec != null && cb != null) {
         	Class<?> cls = rec.getClass();
         	try {
-        		invocation = cls.getMethod(cb, new Class[]{});
+        		invocation = cls.getMethod(cb, Object.class);
         	} catch (SecurityException e) {
         		// TODO Auto-generated catch block
         		e.printStackTrace();
@@ -72,7 +72,7 @@ public class CCMenuItem extends CCNode {
         if (isEnabled_) {
         	if (targetCallback != null & invocation != null) {
         		try {
-        			invocation.invoke(targetCallback, new Object[]{});
+        			invocation.invoke(targetCallback, this);
         		} catch (IllegalArgumentException e) {
         			// TODO Auto-generated catch block
         			e.printStackTrace();

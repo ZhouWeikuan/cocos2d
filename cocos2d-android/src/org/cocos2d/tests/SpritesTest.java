@@ -29,8 +29,11 @@ import org.cocos2d.actions.interval.CCTintBy;
 import org.cocos2d.actions.interval.CCTintTo;
 import org.cocos2d.layers.CCLayer;
 import org.cocos2d.layers.CCScene;
+import org.cocos2d.menus.CCMenu;
+import org.cocos2d.menus.CCMenuItemImage;
 import org.cocos2d.nodes.CCAnimation;
 import org.cocos2d.nodes.CCDirector;
+import org.cocos2d.nodes.CCLabel;
 import org.cocos2d.nodes.CCSprite;
 import org.cocos2d.opengl.CCGLSurfaceView;
 import org.cocos2d.types.CCBezierConfig;
@@ -119,10 +122,9 @@ public class SpritesTest extends Activity {
         public SpriteDemo() {
             CGSize s = CCDirector.sharedDirector().winSize();
 
-            /*
             CCLabel label = CCLabel.makeLabel(title(), "DroidSans", 24);
             label.setPosition(CGPoint.make(s.width / 2, s.height / 2));
-            addChild(label);*/
+            addChild(label);
 
             // TODO
             // Example:
@@ -141,7 +143,6 @@ public class SpritesTest extends Activity {
             grossini.setPosition(CGPoint.make(60, s.height / 3));
             // tamara.setPosition(CGPoint.make(60, 2 * s.height / 3));
 
-            /*
             CCMenuItemImage item1 = CCMenuItemImage.item("b1.png", "b2.png", this, "backCallback");
             CCMenuItemImage item2 = CCMenuItemImage.item("r1.png", "r2.png", this, "restartCallback");
             CCMenuItemImage item3 = CCMenuItemImage.item("f1.png", "f2.png", this, "nextCallback");
@@ -151,28 +152,26 @@ public class SpritesTest extends Activity {
             item1.setPosition(CGPoint.make(s.width / 2 - 100, 30));
             item2.setPosition(CGPoint.make(s.width / 2, 30));
             item3.setPosition(CGPoint.make(s.width / 2 + 100, 30));
-            addChild(menu, 1);*/
+            addChild(menu, 1);
         }
 
-
-        public static void restartCallback() {
+        public void restartCallback(Object sender) {
             CCScene s = CCScene.node();
             s.addChild(restartAction());
             CCDirector.sharedDirector().replaceScene(s);
         }
 
-        public void nextCallback() {
+        public void nextCallback(Object sender) {
             CCScene s = CCScene.node();
             s.addChild(nextAction());
             CCDirector.sharedDirector().replaceScene(s);
         }
 
-        public void backCallback() {
+        public void backCallback(Object sender) {
             CCScene s = CCScene.node();
             s.addChild(backAction());
             CCDirector.sharedDirector().replaceScene(s);
         }
-
 
         protected void centerSprites() {
             CGSize s = CCDirector.sharedDirector().winSize();
@@ -184,7 +183,6 @@ public class SpritesTest extends Activity {
         protected abstract String title();
     }
 
-
     static class SpriteManual extends SpriteDemo {
 
         @Override
@@ -192,7 +190,6 @@ public class SpritesTest extends Activity {
             super.onEnter();
             
             this.setAnchorPoint(CGPoint.make(0, 0));
-            /*
             tamara.setScaleX(2.5f);
             tamara.setScaleY(-1.0f);
             tamara.setPosition(CGPoint.make(100, 100));
@@ -200,7 +197,6 @@ public class SpritesTest extends Activity {
             grossini.setRotation(120.0f);
             grossini.setOpacity(128);
             grossini.setPosition(CGPoint.make(240, 160));
-            */
         }
 
         @Override

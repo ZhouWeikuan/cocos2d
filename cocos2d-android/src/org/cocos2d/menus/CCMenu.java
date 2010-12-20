@@ -33,7 +33,7 @@ public class CCMenu extends CCLayer {
     private MenuState   state;
 
     /** conforms to CCRGBAProtocol protocol */
-    private byte        opacity_;
+    private int        opacity_;
     /** conforms to CCRGBAProtocol protocol */
     private ccColor3B   color_;
 
@@ -85,12 +85,17 @@ public class CCMenu extends CCLayer {
     }
 
     /** Override synthesized setOpacity to recurse items */
-    public void setOpacity(byte newOpacity) {
+    public void setOpacity(int newOpacity) {
         opacity_ = newOpacity;
-        for (CCNode item: children_) {
-        	
-            ((CCRGBAProtocol)item).setOpacity(opacity_);
+        if (children_ != null) {
+        	for (CCNode item: children_) {
+        		((CCRGBAProtocol)item).setOpacity(opacity_);
+        	}
         }
+    }
+    
+    public int getOpacity() {
+    	return opacity_;
     }
 
     public void setColor(ccColor3B color) {

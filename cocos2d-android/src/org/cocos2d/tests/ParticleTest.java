@@ -266,15 +266,14 @@ public class ParticleTest extends Activity {
         	atlas.setString(str);
         }
 
-        public void toggleCallback()
-        {
+        public void toggleCallback(Object sender) {
             if( emitter.getPositionType() == CCParticleSystem.kPositionTypeGrouped )
                 emitter.setPositionType(CCParticleSystem.kPositionTypeFree);
             else
                 emitter.setPositionType(CCParticleSystem.kPositionTypeGrouped);
         }
 
-        public void restartCallback() {
+        public void restartCallback(Object sender) {
 //            Scene s = Scene.node();
 //            s.addChild(restartAction());
 //            Director.sharedDirector().replaceScene(s);
@@ -286,13 +285,13 @@ public class ParticleTest extends Activity {
         		emitter.setPosition(CGPoint.make(200, 70));
         }
 
-        public void nextCallback() {
+        public void nextCallback(Object sender) {
             CCScene s = CCScene.node();
             s.addChild(nextAction());
             CCDirector.sharedDirector().replaceScene(s);
         }
 
-        public void backCallback() {
+        public void backCallback(Object sender) {
             CCScene s = CCScene.node();
             s.addChild(backAction());
             CCDirector.sharedDirector().replaceScene(s);

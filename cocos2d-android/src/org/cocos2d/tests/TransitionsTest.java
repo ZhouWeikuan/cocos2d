@@ -283,19 +283,19 @@ public class TransitionsTest extends Activity {
             addChild(menu, 1);
         }
 
-        public void nextCallback() {
+        public void nextCallback(Object sender) {
             CCScene scene = CCScene.node();
             scene.addChild(new TestLayer2());
             CCDirector.sharedDirector().replaceScene(nextTransition(TRANSITION_DURATION, scene));
         }
 
-        public void backCallback() {
+        public void backCallback(Object sender) {
             CCScene scene = CCScene.node();
             scene.addChild(new TestLayer2());
             CCDirector.sharedDirector().replaceScene(backTransition(TRANSITION_DURATION, scene));
         }
 
-        public void restartCallback() {
+        public void restartCallback(Object sender) {
             CCScene scene = CCScene.node();
             scene.addChild(new TestLayer2());
             CCDirector.sharedDirector().replaceScene(restartTransition(TRANSITION_DURATION, scene));
@@ -333,25 +333,24 @@ public class TransitionsTest extends Activity {
 
         }
 
-        public void nextCallback() {
+        public void nextCallback(Object sender) {
             CCScene scene = CCScene.node();
             scene.addChild(new TestLayer1());
             CCDirector.sharedDirector().replaceScene(nextTransition(TRANSITION_DURATION, scene));
         }
 
-        public void backCallback() {
+        public void backCallback(Object sender) {
             CCScene scene = CCScene.node();
             scene.addChild(new TestLayer1());
             CCDirector.sharedDirector().replaceScene(backTransition(TRANSITION_DURATION, scene));
         }
 
-        public void restartCallback() {
+        public void restartCallback(Object sender) {
             CCScene scene = CCScene.node();
             scene.addChild(new TestLayer1());
             CCDirector.sharedDirector().replaceScene(restartTransition(TRANSITION_DURATION, scene));
-
         }
     }
 
-
 }
+

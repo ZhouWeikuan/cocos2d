@@ -1,11 +1,14 @@
-EffectsAdvancedTest.m
+MenuTest.m
 
 
+TransitionsTest.m
 EffectsTest.m
+
 FontTest.m
 IntervalTest.m
 LayerTest.m
-MenuTest.m
+
+
 MotionStreakTest.m
 ParallaxTest.m
 ProgressActionsTest.m
@@ -16,8 +19,8 @@ SchedulerTest.m
 SpriteTest.m
 Texture2dTest.m
 TileMapTest.m
-TransitionsTest.m
 
 --- chipmunk not ported
 ChipmunkAccelTouchTest.m
+
 HiResTest.m

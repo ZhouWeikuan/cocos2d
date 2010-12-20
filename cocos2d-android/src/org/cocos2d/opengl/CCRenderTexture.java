@@ -7,7 +7,6 @@ import org.cocos2d.config.ccMacros;
 import org.cocos2d.nodes.CCDirector;
 import org.cocos2d.nodes.CCNode;
 import org.cocos2d.nodes.CCSprite;
-import org.cocos2d.nodes.CCTextureCache;
 import org.cocos2d.types.CGSize;
 
 import android.graphics.Bitmap;

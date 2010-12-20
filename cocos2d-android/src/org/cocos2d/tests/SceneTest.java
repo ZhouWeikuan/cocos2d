@@ -55,20 +55,19 @@ public class SceneTest extends Activity {
             addChild(menu);
         }
 
-        public void onPushScene() {
+        public void onPushScene(Object sender) {
             CCScene scene = CCScene.node();
             scene.addChild(new Layer2(), 0);
             CCDirector.sharedDirector().pushScene(scene);
         }
 
-        public void onPushSceneTran() {
+        public void onPushSceneTran(Object sender) {
             CCScene scene = CCScene.node();
             scene.addChild(new Layer2(), 0);
             CCDirector.sharedDirector().pushScene(CCSlideInTTransition.transition(1, scene));
         }
 
-
-        public void onQuit() {
+        public void onQuit(Object sender) {
             CCDirector.sharedDirector().popScene();
         }
 
@@ -88,17 +87,17 @@ public class SceneTest extends Activity {
             addChild(menu);
         }
 
-        public void onGoBack() {
+        public void onGoBack(Object sender) {
             CCDirector.sharedDirector().popScene();
         }
 
-        public void onReplaceScene() {
+        public void onReplaceScene(Object sender) {
             CCScene scene = CCScene.node();
             scene.addChild(new Layer3(), 0);
             CCDirector.sharedDirector().replaceScene(scene);
         }
 
-        public void onReplaceSceneTransition() {
+        public void onReplaceSceneTransition(Object sender) {
             CCScene s = CCScene.node();
             s.addChild(new Layer3(), 0);
             CCDirector.sharedDirector().replaceScene(CCFlipXTransition.transition(2.0f, s, CCTransitionScene.Orientation.kOrientationLeftOver));

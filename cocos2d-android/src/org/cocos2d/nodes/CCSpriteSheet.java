@@ -161,10 +161,6 @@ public class CCSpriteSheet extends CCNode implements CCTextureProtocol {
         return sprite;
     }
 
-    @Override
-    public CCNode addChild(CCNode child, int z) {
-	return addChild(child, z, child.getTag());
-    }
     // override addChild:
     @Override
     public CCNode addChild(CCNode child, int z, int aTag) {
@@ -425,8 +421,10 @@ public class CCSpriteSheet extends CCNode implements CCTextureProtocol {
         }
 
         // remove children recursively
-        for(CCNode o : sprite.getChildren()) {
-            removeSpriteFromAtlas((CCSprite)o);
+        if (sprite.getChildren() != null) {
+            for(CCNode o : sprite.getChildren()) {
+                removeSpriteFromAtlas((CCSprite)o);
+            }
         }
     }
 

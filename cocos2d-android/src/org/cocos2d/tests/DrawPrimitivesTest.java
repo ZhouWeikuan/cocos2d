@@ -136,7 +136,7 @@ public class DrawPrimitivesTest extends Activity {
             addChild(menu, -1);
         }
 
-        public void restartCallback() {
+        public void restartCallback(Object sender) {
             boolean landscape = CCDirector.sharedDirector().getLandscape();
             CCDirector.sharedDirector().setLandscape(!landscape);
 
@@ -145,7 +145,7 @@ public class DrawPrimitivesTest extends Activity {
             CCDirector.sharedDirector().replaceScene(s);
         }
 
-        public void nextCallback() {
+        public void nextCallback(Object sender) {
             boolean landscape = CCDirector.sharedDirector().getLandscape();
             CCDirector.sharedDirector().setLandscape(!landscape);
 
@@ -154,7 +154,7 @@ public class DrawPrimitivesTest extends Activity {
             CCDirector.sharedDirector().replaceScene(s);
         }
 
-        public void backCallback() {
+        public void backCallback(Object sender) {
             boolean landscape = CCDirector.sharedDirector().getLandscape();
             CCDirector.sharedDirector().setLandscape(!landscape);
 

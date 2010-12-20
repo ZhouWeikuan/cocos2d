@@ -2,7 +2,6 @@ package org.cocos2d.layers;
 
 import org.cocos2d.nodes.CCDirector;
 import org.cocos2d.nodes.CCNode;
-import org.cocos2d.types.CGPoint;
 import org.cocos2d.types.CGSize;
 
 /** CCScene is a subclass of CCNode that is used only as an abstract concept.

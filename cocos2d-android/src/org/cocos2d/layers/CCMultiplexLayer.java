@@ -16,7 +16,7 @@ public class CCMultiplexLayer extends CCLayer {
     /** creates a CCMultiplexLayer with one or more layers
      * using a variable argument list.
     */ 
-    public CCMultiplexLayer node(CCLayer... params) {
+    public static CCMultiplexLayer node(CCLayer... params) {
         return new CCMultiplexLayer(params);
     }
 

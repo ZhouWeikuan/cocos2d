@@ -12,18 +12,14 @@
     <string name="activity_effectsadvancedtest"> Advanced Effects </string>
     <string name="activity_effectstest"> Effects Test </string>
     <string name="activity_jbox2dtest"> JBox2D Test </string>
-    <string name="activity_particletest"> Particle Test </string>
-    
-    
-    <string name="activity_motionstreaktest">Motion Streak Test</string>
     <string name="activity_menutest">Menu Test</string>
-            
+    <string name="activity_particletest"> Particle Test </string>
+        
+    <string name="activity_motionstreaktest">Motion Streak Test</string>
     <string name="activity_scenetest">Scene Test</string>
     <string name="activity_spritestest">Sprites Test</string>
     <string name="activity_transitionstest">Transitions Test</string>
     <string name="activity_rotateworldtest">Rotate World Test</string>
     <string name="activity_parallaxtest">Parallax Test</string>
-    
-    
     
 </resources>
