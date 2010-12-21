@@ -671,7 +671,6 @@ public class CCDirector implements GLSurfaceView.Renderer {
         if(!isPaused) {
         	CCScheduler.sharedScheduler().tick(dt);
         }
-        GLResourceHelper.sharedHelper().update(gl);
 
         gl.glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
@@ -679,6 +678,8 @@ public class CCDirector implements GLSurfaceView.Renderer {
          XXX: Which bug is this one. It seems that it can't be reproduced with v0.9 */
         if( nextCCScene_ != null)
         	setNextScene();
+        
+        GLResourceHelper.sharedHelper().update(gl);
         
         gl.glPushMatrix();
 
