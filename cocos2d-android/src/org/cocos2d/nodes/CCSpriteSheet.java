@@ -234,7 +234,9 @@ public class CCSpriteSheet extends CCNode implements CCTextureProtocol {
         if( textureAtlas_.getTotalQuads() == 0 )
             return;
 
-        for (CCSprite child: descendants_) {
+        final int descendants_Num = descendants_.size();
+        for (int i = 0; i < descendants_Num; i++) {
+        	CCSprite child = descendants_.get(i);
             // fast dispatch
             // if( dirtyMethod(child, selDirty) )
             //    updateMethod(child, selUpdate);

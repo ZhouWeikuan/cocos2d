@@ -7,6 +7,8 @@ import org.cocos2d.types.ccQuad2;
 import org.cocos2d.types.ccQuad3;
 import org.cocos2d.utils.CCFormatter;
 
+import android.util.Log;
+
 import javax.microedition.khronos.opengles.GL10;
 import static javax.microedition.khronos.opengles.GL10.*;
 import java.nio.ByteBuffer;
@@ -410,7 +412,12 @@ public class CCTextureAtlas {
     public void putTexCoords(FloatBuffer src, int index) {
     	final int base = index * ccQuad2.size;
     	textureCoordinates.position(base);
-    	textureCoordinates.put(src);
+    	
+    	// if textureCoordinates.put(src) then allocation is performed
+    	// this solution not efficient may be, need to find best way for copy Buffers
+    	int num = src.capacity();
+    	for(int i = 0; i < num; i++)
+    		textureCoordinates.put(src.get());
     	
     	src.position(0);
     	textureCoordinates.position(0);
