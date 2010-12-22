@@ -1,20 +1,23 @@
 package org.cocos2d.opengl;
 
+import static javax.microedition.khronos.opengles.GL10.GL_REPEAT;
+import static javax.microedition.khronos.opengles.GL10.GL_TEXTURE_2D;
+import static javax.microedition.khronos.opengles.GL10.GL_TEXTURE_WRAP_S;
+import static javax.microedition.khronos.opengles.GL10.GL_TEXTURE_WRAP_T;
+
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.FloatBuffer;
+import java.nio.ShortBuffer;
+
+import javax.microedition.khronos.opengles.GL10;
+
 import org.cocos2d.config.ccConfig;
 import org.cocos2d.nodes.CCTextureCache;
 import org.cocos2d.types.ccColor4B;
 import org.cocos2d.types.ccQuad2;
 import org.cocos2d.types.ccQuad3;
 import org.cocos2d.utils.CCFormatter;
-
-import android.util.Log;
-
-import javax.microedition.khronos.opengles.GL10;
-import static javax.microedition.khronos.opengles.GL10.*;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.nio.FloatBuffer;
-import java.nio.ShortBuffer;
 
 /** A class that implements a Texture Atlas.
  Supported features:

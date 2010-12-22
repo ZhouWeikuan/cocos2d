@@ -1088,8 +1088,7 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
         tmpV[6] = cx; tmpV[7] = cy; tmpV[8] = vertexZ_;   
         tmpV[9] = bx; tmpV[10] = by; tmpV[11] = vertexZ_;   
 
-//        FloatBuffer tmpVBuffer  = BufferProvider.makeFloatBuffer(tmpV);
-        textureAtlas_.updateQuad(getTexCoords(), tmpV, atlasIndex_);
+        textureAtlas_.putVertex(textureAtlas_.getVertexBuffer(), tmpV, atlasIndex_);
         dirty_ = recursiveDirty_ = false;
     }
 

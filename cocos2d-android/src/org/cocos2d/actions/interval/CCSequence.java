@@ -1,10 +1,7 @@
 package org.cocos2d.actions.interval;
 
-import org.cocos2d.actions.base.CCAction;
 import org.cocos2d.actions.base.CCFiniteTimeAction;
 import org.cocos2d.nodes.CCNode;
-
-import java.util.ArrayList;
 
 //
 // Sequence
@@ -13,7 +10,7 @@ import java.util.ArrayList;
 /** Runs actions sequentially, one after another
  */
 public class CCSequence extends CCIntervalAction {
-    private ArrayList<CCFiniteTimeAction> actions;
+    private CCFiniteTimeAction[] actions;
     private float split;
     private int last;
 
@@ -37,26 +34,27 @@ public class CCSequence extends CCIntervalAction {
 
         super(one.getDuration() + two.getDuration());
 
-        actions = new ArrayList<CCFiniteTimeAction>(2);
-        actions.add(one);
-        actions.add(two);
+        actions = new CCFiniteTimeAction[2];
+        actions[0] = one;
+        actions[1] = two;
     }
 
     @Override
     public CCSequence copy() {
-        return new CCSequence(actions.get(0).copy(), actions.get(1).copy());
+        return new CCSequence(actions[0].copy(), actions[1].copy());
     }
 
     @Override
     public void start(CCNode aTarget) {
         super.start(aTarget);
-        split = actions.get(0).getDuration() / duration;
+        split = actions[0].getDuration() / duration;
         last = -1;
     }
 
     public void stop() {
-        for (CCAction action : actions)
-            action.stop();
+    	actions[0].stop();
+        actions[1].stop();
+        
         super.stop();
     }
 
@@ -81,24 +79,24 @@ public class CCSequence extends CCIntervalAction {
         }
 
         if (last == -1 && found == 1) {
-            actions.get(0).start(target);
-            actions.get(0).update(1.0f);
-            actions.get(0).stop();
+            actions[0].start(target);
+            actions[0].update(1.0f);
+            actions[0].stop();
         }
 
         if (last != found) {
             if (last != -1) {
-                actions.get(last).update(1.0f);
-                actions.get(last).stop();
+                actions[last].update(1.0f);
+                actions[last].stop();
             }
-            actions.get(found).start(target);
+            actions[found].start(target);
         }
-        actions.get(found).update(new_t);
+        actions[found].update(new_t);
         last = found;
     }
 
     @Override
     public CCSequence reverse() {
-        return new CCSequence(actions.get(1).reverse(), actions.get(0).reverse());
+        return new CCSequence(actions[1].reverse(), actions[0].reverse());
     }
 }
