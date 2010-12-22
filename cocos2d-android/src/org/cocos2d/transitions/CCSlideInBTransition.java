@@ -22,7 +22,7 @@ public class CCSlideInBTransition extends CCSlideInLTransition {
     }
 
     public void sceneOrder() {
-        inSceneOnTop = false;
+        inSceneOnTop = true;
     }
 
     /**
@@ -30,7 +30,7 @@ public class CCSlideInBTransition extends CCSlideInLTransition {
      */
     protected void initScenes() {
         CGSize s = CCDirector.sharedDirector().winSize();
-        inScene.setPosition(CGPoint.make(0,-(s.height-ADJUST_FACTOR)));
+        inScene.setPosition(0,-(s.height-ADJUST_FACTOR));
     }
 
     protected CCIntervalAction action() {

@@ -33,7 +33,7 @@ public class CCFlipXTransition extends CCOrientedTransitionScene {
         float inDeltaZ, inAngleZ;
         float outDeltaZ, outAngleZ;
 
-        if (orientation == Orientation.kOrientationRightOver) {
+        if (orientation == tOrientation.kOrientationRightOver) {
             inDeltaZ = 90;
             inAngleZ = 270;
             outDeltaZ = 90;

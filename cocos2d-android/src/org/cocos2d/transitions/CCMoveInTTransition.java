@@ -2,7 +2,6 @@ package org.cocos2d.transitions;
 
 import org.cocos2d.layers.CCScene;
 import org.cocos2d.nodes.CCDirector;
-import org.cocos2d.types.CGPoint;
 
 /**
  * MoveInT Transition.
@@ -21,7 +20,8 @@ public class CCMoveInTTransition extends CCMoveInLTransition {
     /**
      * initializes the scenes
      */
+    @Override
     protected void initScenes() {
-        inScene.setPosition(CGPoint.make(0, CCDirector.sharedDirector().winSize().height));
+        inScene.setPosition(0, CCDirector.sharedDirector().winSize().height);
     }
 }

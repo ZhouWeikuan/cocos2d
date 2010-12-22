@@ -14,8 +14,11 @@ import org.cocos2d.types.CGSize;
  * SlideInL Transition.
  * Slide in the incoming scene from the left border.
  */
-public class CCSlideInLTransition extends CCTransitionScene {
-
+public class CCSlideInLTransition extends CCTransitionScene implements CCTransitionEaseScene {
+	// The adjust factor is needed to prevent issue #442
+	// One solution is to use DONT_RENDER_IN_SUBPIXELS images, but NO
+	// The other issue is that in some transitions (and I don't know why)
+	// the order should be reversed (In in top of Out or vice-versa).
     protected static final float ADJUST_FACTOR = 0.5f;
 
     public static CCSlideInLTransition transition(float t, CCScene s) {
@@ -26,6 +29,7 @@ public class CCSlideInLTransition extends CCTransitionScene {
         super(t, s);
     }
 
+    @Override
     public void onEnter() {
         super.onEnter();
 
@@ -49,10 +53,10 @@ public class CCSlideInLTransition extends CCTransitionScene {
      */
     protected void initScenes() {
         CGSize s = CCDirector.sharedDirector().winSize();
-        inScene.setPosition(CGPoint.make(-s.width, 0));
+        inScene.setPosition(-(s.width-ADJUST_FACTOR), 0);
     }
 
-    /**
+	/**
      * returns the action that will be performed
      */
     protected CCIntervalAction action() {
@@ -61,7 +65,8 @@ public class CCSlideInLTransition extends CCTransitionScene {
     }
 
 
-    protected CCIntervalAction easeAction(CCIntervalAction action) {
+    @Override
+    public CCIntervalAction easeAction(CCIntervalAction action) {
         return CCEaseOut.action(action, 2.0f);
     }
 

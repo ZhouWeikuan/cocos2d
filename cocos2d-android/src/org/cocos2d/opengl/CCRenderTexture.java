@@ -32,10 +32,13 @@ public class CCRenderTexture extends CCNode {
 	CCTexture2D		texture_;
 
     /** sprite being used */
-	CCSprite		sprite_;
+	protected CCSprite		sprite_;
+	public CCSprite getSprite() {
+		return sprite_;
+	}
 
     /** creates a RenderTexture object with width and height */
-    public static Object renderTexture(int width, int height) {
+    public static CCRenderTexture renderTexture(int width, int height) {
         return new CCRenderTexture(width, height);
     }
 

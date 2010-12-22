@@ -1,5 +1,7 @@
 package org.cocos2d.transitions;
 
+import org.cocos2d.actions.interval.CCIntervalAction;
+import org.cocos2d.actions.tile.CCSplitRows;
 import org.cocos2d.layers.CCScene;
 
 /**
@@ -8,12 +10,11 @@ import org.cocos2d.layers.CCScene;
  */
 public class CCSplitRowsTransition extends CCSplitColsTransition {
 
-    public CCSplitRowsTransition(float t, CCScene s) {
-        super(t, s);
-    }
+	public CCSplitRowsTransition(float t, CCScene s) {
+		super(t, s);
+	}
 
-//	   	protected IntervalAction action(CCGridSize v)
-//		{
-//			return SplitRows.action(3, duration/2.0f);
-//		}
+	protected CCIntervalAction action() {
+		return CCSplitRows.action(3, duration/2.0f);
+	}
 }

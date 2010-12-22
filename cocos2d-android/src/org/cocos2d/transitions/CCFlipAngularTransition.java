@@ -34,7 +34,7 @@ public class CCFlipAngularTransition extends CCOrientedTransitionScene {
         float inDeltaZ, inAngleZ;
         float outDeltaZ, outAngleZ;
 
-        if (orientation == Orientation.kOrientationRightOver) {
+        if (orientation == tOrientation.kOrientationRightOver) {
             inDeltaZ = 90;
             inAngleZ = 270;
             outDeltaZ = 90;
@@ -49,10 +49,10 @@ public class CCFlipAngularTransition extends CCOrientedTransitionScene {
         inA = CCSequence.actions(
                 CCDelayTime.action(duration / 2),
                 CCShow.action(),
-                CCOrbitCamera.action(duration / 2, 1, 0, inAngleZ, inDeltaZ, 90, 0),
+                CCOrbitCamera.action(duration / 2, 1, 0, inAngleZ, inDeltaZ, -45, 0),
                 CCCallFunc.action(this, "finish"));
         outA = CCSequence.actions(
-                CCOrbitCamera.action(duration / 2, 1, 0, outAngleZ, outDeltaZ, 90, 0),
+                CCOrbitCamera.action(duration / 2, 1, 0, outAngleZ, outDeltaZ, 45, 0),
                 CCHide.action(),
                 CCDelayTime.action(duration / 2));
 

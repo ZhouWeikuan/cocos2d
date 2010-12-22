@@ -11,11 +11,10 @@ public class CCTransitionScene extends CCScene {
 
     protected static final int kSceneFade = 0xFADEFADE;
 
-
     /**
      * Orientation Type used by some transitions
      */
-    public interface Orientation {
+    public interface tOrientation {
         /// An horizontal orientation where the Left is nearer
         public static int kOrientationLeftOver = 0;
         /// An horizontal orientation where the Right is nearer
@@ -26,6 +25,7 @@ public class CCTransitionScene extends CCScene {
         public static int kOrientationDownOver = 1;
     }
 
+
     /**
      * Base class for Transition scenes
      */
@@ -33,6 +33,7 @@ public class CCTransitionScene extends CCScene {
     protected CCScene outScene;
     protected float duration;
     protected boolean inSceneOnTop;
+    protected boolean sendCleanupToScene;
 
     /**
      * creates a base transition with duration and incoming scene
@@ -60,7 +61,6 @@ public class CCTransitionScene extends CCScene {
         // disable events while transition
         CCTouchDispatcher.sharedDispatcher().setDispatchEvents(false);
         sceneOrder();
-
     }
 
     protected void sceneOrder() {
@@ -68,8 +68,8 @@ public class CCTransitionScene extends CCScene {
         inSceneOnTop = true;
     }
 
-    public void draw(GL10 gl)
-    {
+    @Override
+    public void draw(GL10 gl) {
         if( inSceneOnTop) {
             outScene.visit(gl);
             inScene.visit(gl);
@@ -96,10 +96,10 @@ public class CCTransitionScene extends CCScene {
         schedule("setNewScene", 0);
     }
 
-    public void setNewScene(float dt) {
-
+    protected void setNewScene(float dt) {
         unschedule("setNewScene");
 
+        sendCleanupToScene = CCDirector.sharedDirector().getSendCleanupToScene();
         CCDirector.sharedDirector().replaceScene(inScene);
 
         // enable events after transition
@@ -107,7 +107,6 @@ public class CCTransitionScene extends CCScene {
 
         // issue #267
         outScene.setVisible(true);
-
     }
 
     /**
@@ -118,9 +117,7 @@ public class CCTransitionScene extends CCScene {
         outScene.setVisible(false);
     }
 
-
     // custom onEnter
-
     @Override
     public void onEnter() {
         super.onEnter();
@@ -145,6 +142,15 @@ public class CCTransitionScene extends CCScene {
         super.onEnterTransitionDidFinish();
     }
 
+    // custom cleanup
+    @Override
+    public void cleanup() {
+        super.cleanup();
+
+        if (sendCleanupToScene) {
+            outScene.cleanup();
+        }
+    }
     
     static class TransitionWithInvalidSceneException extends RuntimeException {
         /**

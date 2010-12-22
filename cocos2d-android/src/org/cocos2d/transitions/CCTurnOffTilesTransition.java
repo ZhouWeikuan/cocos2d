@@ -1,15 +1,20 @@
 package org.cocos2d.transitions;
 
+import org.cocos2d.actions.grid.CCStopGrid;
+import org.cocos2d.actions.instant.CCCallFunc;
 import org.cocos2d.actions.interval.CCIntervalAction;
+import org.cocos2d.actions.interval.CCSequence;
+import org.cocos2d.actions.tile.CCTurnOffTiles;
 import org.cocos2d.layers.CCScene;
 import org.cocos2d.nodes.CCDirector;
 import org.cocos2d.types.CGSize;
+import org.cocos2d.types.ccGridSize;
 
 /**
  * TurnOffTiles Transition.
  * Turn off the tiles of the outgoing scene in random order
  */
-public class CCTurnOffTilesTransition extends CCTransitionScene {
+public class CCTurnOffTilesTransition extends CCTransitionScene implements CCTransitionEaseScene {
     
     public static CCTransitionScene transition(float t, CCScene s) {
         return new CCTurnOffTilesTransition(t, s);
@@ -20,29 +25,29 @@ public class CCTurnOffTilesTransition extends CCTransitionScene {
     }
 
     // override addScenes, and change the order
-    public void sceneOrder()
-    {
+    public void sceneOrder() {
         inSceneOnTop = false;
     }
 
     public void onEnter() {
         super.onEnter();
 
-        CGSize s = CCDirector.sharedDirector().winSize();
-        // float aspect = s.width / s.height;
-        // int x = (int) (12 * aspect);
-        // int y = 12;
+	CGSize s = CCDirector.sharedDirector().winSize();
+	float aspect = s.width / s.height;
+	int x = (int)(12 * aspect);
+	int y = 12;
 
-//        Action toff = TurnOffTiles.action(CCGridSize.ccg(x,y), duration);
-//        outScene.runAction(Sequence.actions(toff,
-//                           new CallFunc(this, new CCSelector(this, "finish")),
-//                           StopGrid.action()));
-
+	CCTurnOffTiles toff = CCTurnOffTiles.action((int)System.currentTimeMillis(), ccGridSize.ccg(x,y), duration);
+	CCIntervalAction action = easeAction(toff);
+	outScene.runAction(CCSequence.actions(action,
+							CCCallFunc.action(this, "finish"),
+							CCStopGrid.action()
+						)
+			);
     }
 
-    protected CCIntervalAction easeAction(CCIntervalAction action) {
+    @Override
+    public CCIntervalAction easeAction(CCIntervalAction action) {
         return action;
-//        return EaseOut.action(action, 2.0f);
     }
-    
 }

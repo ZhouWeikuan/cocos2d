@@ -1,7 +1,9 @@
 package org.cocos2d.tests;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 
+import org.cocos2d.config.ccMacros;
 import org.cocos2d.layers.CCLayer;
 import org.cocos2d.layers.CCScene;
 import org.cocos2d.menus.CCMenu;
@@ -10,6 +12,7 @@ import org.cocos2d.nodes.CCDirector;
 import org.cocos2d.nodes.CCLabel;
 import org.cocos2d.nodes.CCSprite;
 import org.cocos2d.opengl.CCGLSurfaceView;
+import org.cocos2d.transitions.CCCrossFadeTransition;
 import org.cocos2d.transitions.CCFadeBLTransition;
 import org.cocos2d.transitions.CCFadeDownTransition;
 import org.cocos2d.transitions.CCFadeTRTransition;
@@ -23,6 +26,9 @@ import org.cocos2d.transitions.CCMoveInBTransition;
 import org.cocos2d.transitions.CCMoveInLTransition;
 import org.cocos2d.transitions.CCMoveInRTransition;
 import org.cocos2d.transitions.CCMoveInTTransition;
+import org.cocos2d.transitions.CCPageTurnTransition;
+import org.cocos2d.transitions.CCRadialCCWTransition;
+import org.cocos2d.transitions.CCRadialCWTransition;
 import org.cocos2d.transitions.CCRotoZoomTransition;
 import org.cocos2d.transitions.CCShrinkGrowTransition;
 import org.cocos2d.transitions.CCSlideInBTransition;
@@ -31,7 +37,6 @@ import org.cocos2d.transitions.CCSlideInRTransition;
 import org.cocos2d.transitions.CCSlideInTTransition;
 import org.cocos2d.transitions.CCSplitColsTransition;
 import org.cocos2d.transitions.CCSplitRowsTransition;
-import org.cocos2d.transitions.CCTransitionScene;
 import org.cocos2d.transitions.CCTurnOffTilesTransition;
 import org.cocos2d.transitions.CCZoomFlipAngularTransition;
 import org.cocos2d.transitions.CCZoomFlipXTransition;
@@ -46,311 +51,429 @@ import android.view.Window;
 import android.view.WindowManager;
 
 public class TransitionsTest extends Activity {
-    // private static final String LOG_TAG = TransitionsTest.class.getSimpleName();
-    private CCGLSurfaceView mGLSurfaceView;
+	public static final String LOG_TAG = "TransitionTest";
+	// private static final String LOG_TAG = TransitionsTest.class.getSimpleName();
+	private CCGLSurfaceView mGLSurfaceView;
 
-    private static final float TRANSITION_DURATION = 1.2f;
+	private static final float TRANSITION_DURATION = 1.2f;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+				WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        mGLSurfaceView = new CCGLSurfaceView(this);
-        setContentView(mGLSurfaceView);
-    }
+		mGLSurfaceView = new CCGLSurfaceView(this);
+		setContentView(mGLSurfaceView);
+	}
 
-    @Override
-    public void onStart() {
-        super.onStart();
+	@Override
+	public void onStart() {
+		super.onStart();
 
-        // attach the OpenGL view to a window
-        CCDirector.sharedDirector().attachInView(mGLSurfaceView);
+		// attach the OpenGL view to a window
+		CCDirector.sharedDirector().attachInView(mGLSurfaceView);
 
-        // set landscape mode
-        CCDirector.sharedDirector().setLandscape(true);
+		// set landscape mode
+		CCDirector.sharedDirector().setLandscape(true);
 
-        // show FPS
-        CCDirector.sharedDirector().setDisplayFPS(true);
+		// show FPS
+		CCDirector.sharedDirector().setDisplayFPS(true);
 
-        // frames per second
-        CCDirector.sharedDirector().setAnimationInterval(1.0f / 60);
+		// frames per second
+		CCDirector.sharedDirector().setAnimationInterval(1.0f / 60);
 
-        CCScene scene = CCScene.node();
-        scene.addChild(new TestLayer1());
-        
-        // Make the Scene active
-        CCDirector.sharedDirector().runWithScene(scene);
-    }
+		CCScene scene = TestLayer.scene();
 
-    @Override
-    public void onPause() {
-        super.onPause();
+		// Make the Scene active
+		CCDirector.sharedDirector().runWithScene(scene);
+	}
 
-        CCDirector.sharedDirector().onPause();
-    }
+	@Override
+	public void onPause() {
+		super.onPause();
 
-    @Override
-    public void onResume() {
-        super.onResume();
+		CCDirector.sharedDirector().onPause();
+	}
 
-        CCDirector.sharedDirector().onResume();
-    }
+	@Override
+	public void onResume() {
+		super.onResume();
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
+		CCDirector.sharedDirector().onResume();
+	}
 
-        CCDirector.sharedDirector().end();
-        // CCTextureCache.sharedTextureCache().removeAllTextures();
-    }
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
 
-    static class FadeWhiteTransition extends CCFadeTransition {
-        public FadeWhiteTransition(float t, CCScene s) {
-            super(t, s, new ccColor3B(255, 255, 255));
-        }
-    }
+		CCDirector.sharedDirector().end();
+		// CCTextureCache.sharedTextureCache().removeAllTextures();
+	}
 
-    static class FlipXLeftOverTransition extends CCFlipXTransition {
-        public FlipXLeftOverTransition(float t, CCScene s) {
-            super(t, s, Orientation.kOrientationLeftOver);
-        }
-    }
+	static class FadeWhiteTransition extends CCFadeTransition {
+		public FadeWhiteTransition(float t, CCScene s) {
+			super(t, s, ccColor3B.ccWHITE);
+		}
+	}
 
-    static class FlipXRightOverTransition extends CCFlipXTransition {
-        public FlipXRightOverTransition(float t, CCScene s) {
-            super(t, s, Orientation.kOrientationRightOver);
-        }
-    }
+	static class FlipXLeftOver extends CCFlipXTransition {
+		public FlipXLeftOver(float t, CCScene s) {
+			super(t, s, tOrientation.kOrientationLeftOver);
+		}
+	}
 
-    static class FlipYUpOverTransition extends CCFlipYTransition {
-        public FlipYUpOverTransition(float t, CCScene s) {
-            super(t, s, Orientation.kOrientationUpOver);
-        }
-    }
+	static class FlipXRightOver extends CCFlipXTransition {
+		public FlipXRightOver(float t, CCScene s) {
+			super(t, s, tOrientation.kOrientationRightOver);
+		}
+	}
 
-    static class FlipYDownOverTransition extends CCFlipYTransition {
-        public FlipYDownOverTransition(float t, CCScene s) {
-            super(t, s, Orientation.kOrientationDownOver);
-        }
-    }
+	static class FlipYUpOver extends CCFlipYTransition {
+		public FlipYUpOver(float t, CCScene s) {
+			super(t, s, tOrientation.kOrientationUpOver);
+		}
+	}
 
-    static class FlipAngularLeftOverTransition extends CCFlipAngularTransition {
-        public FlipAngularLeftOverTransition(float t, CCScene s) {
-            super(t, s, Orientation.kOrientationLeftOver);
-        }
-    }
+	static class FlipYDownOver extends CCFlipYTransition {
+		public FlipYDownOver (float t, CCScene s) {
+			super(t, s, tOrientation.kOrientationDownOver);
+		}
+	}
 
-    static class FlipAngularRightOverTransition extends CCFlipAngularTransition {
-        public FlipAngularRightOverTransition(float t, CCScene s) {
-            super(t, s, Orientation.kOrientationRightOver);
-        }
-    }
+	static class FlipAngularLeftOver extends CCFlipAngularTransition {
+		public FlipAngularLeftOver (float t, CCScene s) {
+			super(t, s, tOrientation.kOrientationLeftOver);
+		}
+	}
 
-    static class ZoomFlipXLeftOverTransition extends CCZoomFlipXTransition {
-        public ZoomFlipXLeftOverTransition(float t, CCScene s) {
-            super(t, s, Orientation.kOrientationLeftOver);
-        }
-    }
+	static class FlipAngularRightOver extends CCFlipAngularTransition {
+		public FlipAngularRightOver (float t, CCScene s) {
+			super(t, s, tOrientation.kOrientationRightOver);
+		}
+	}
 
-    static class ZoomFlipXRightOverTransition extends CCZoomFlipXTransition {
-        public ZoomFlipXRightOverTransition(float t, CCScene s) {
-            super(t, s, Orientation.kOrientationRightOver);
-        }
-    }
+	static class ZoomFlipXLeftOver extends CCZoomFlipXTransition {
+		public ZoomFlipXLeftOver(float t, CCScene s) {
+			super(t, s, tOrientation.kOrientationLeftOver);
+		}
+	}
 
-    static class ZoomFlipYUpOverTransition extends CCZoomFlipYTransition {
-        public ZoomFlipYUpOverTransition(float t, CCScene s) {
-            super(t, s, Orientation.kOrientationUpOver);
-        }
-    }
+	static class ZoomFlipXRightOver extends CCZoomFlipXTransition {
+		public ZoomFlipXRightOver(float t, CCScene s) {
+			super(t, s, tOrientation.kOrientationRightOver);
+		}
+	}
 
-    static class ZoomFlipYDownOverTransition extends CCZoomFlipYTransition {
-        public ZoomFlipYDownOverTransition(float t, CCScene s) {
-            super(t, s, Orientation.kOrientationDownOver);
-        }
-    }
+	static class ZoomFlipYUpOver extends CCZoomFlipYTransition {
+		public ZoomFlipYUpOver(float t, CCScene s) {
+			super(t, s, tOrientation.kOrientationUpOver);
+		}
+	}
 
-    static class ZoomFlipAngularLeftOverTransition extends CCZoomFlipAngularTransition {
-        public ZoomFlipAngularLeftOverTransition(float t, CCScene s) {
-            super(t, s, Orientation.kOrientationLeftOver);
-        }
-    }
+	static class ZoomFlipYDownOver extends CCZoomFlipYTransition {
+		public ZoomFlipYDownOver(float t, CCScene s) {
+			super(t, s, tOrientation.kOrientationDownOver);
+		}
+	}
 
-    static class ZoomFlipAngularRightOverTransition extends CCZoomFlipAngularTransition {
-        public ZoomFlipAngularRightOverTransition(float t, CCScene s) {
-            super(t, s, Orientation.kOrientationRightOver);
-        }
-    }
+	static class ZoomFlipAngularLeftOver extends CCZoomFlipAngularTransition {
+		public ZoomFlipAngularLeftOver(float t, CCScene s) {
+			super(t, s, tOrientation.kOrientationLeftOver);
+		}
+	}
 
-    static int sceneIdx = 0;
-    static Class<?> transitions[] = {
-            CCJumpZoomTransition.class,            
-            CCFadeTRTransition.class,
-            CCFadeBLTransition.class,
-            CCFadeUpTransition.class,
-            CCFadeDownTransition.class,
-            CCTurnOffTilesTransition.class,
-            CCSplitRowsTransition.class,
-            CCSplitColsTransition.class,
-            CCFadeTransition.class,
-            FadeWhiteTransition.class,
-            FlipXLeftOverTransition.class,
-            FlipXRightOverTransition.class,
-            FlipYUpOverTransition.class,
-            FlipYDownOverTransition.class,
-            FlipAngularLeftOverTransition.class,
-            FlipAngularRightOverTransition.class,
-            ZoomFlipXLeftOverTransition.class,
-            ZoomFlipXRightOverTransition.class,
-            ZoomFlipYUpOverTransition.class,
-            ZoomFlipYDownOverTransition.class,
-            ZoomFlipAngularLeftOverTransition.class,
-            ZoomFlipAngularRightOverTransition.class,
-            CCShrinkGrowTransition.class,
-            CCRotoZoomTransition.class,
-            CCMoveInLTransition.class,
-            CCMoveInRTransition.class,
-            CCMoveInTTransition.class,
-            CCMoveInBTransition.class,
-            CCSlideInLTransition.class,
-            CCSlideInRTransition.class,
-            CCSlideInTTransition.class,
-            CCSlideInBTransition.class,
-    };
+	static class ZoomFlipAngularRightOver extends CCZoomFlipAngularTransition {
+		public ZoomFlipAngularRightOver(float t, CCScene s) {
+			super(t, s, tOrientation.kOrientationRightOver);
+		}
+	}
 
-    static CCTransitionScene nextTransition(float d, CCScene s) {
-        sceneIdx++;
-        sceneIdx = sceneIdx % transitions.length;
+	static class PageTransitionForward extends CCPageTurnTransition {
+		public PageTransitionForward(float t, CCScene s) {
+			super(t, s, false);
+		}
+	}
 
-        return restartTransition(d, s);
-    }
+	static class PageTransitionBackward extends CCPageTurnTransition {
+		public PageTransitionBackward(float t, CCScene s) {
+			super(t, s, true);
+		}
+	}
 
-    static CCTransitionScene backTransition(float d, CCScene s) {
-        sceneIdx--;
-        int total = transitions.length;
-        if (sceneIdx < 0)
-            sceneIdx += total;
+	static int sceneIdx = 0;
+	static Class<?> transitions[] = {
+		CCJumpZoomTransition.class,
+		CCCrossFadeTransition.class,
+		CCRadialCCWTransition.class,
+		CCRadialCWTransition.class,
+		PageTransitionForward.class,
+		PageTransitionBackward.class,
+		CCFadeTRTransition.class,
+		CCFadeBLTransition.class,
+		CCFadeUpTransition.class,
+		CCFadeDownTransition.class,
+		CCTurnOffTilesTransition.class,
+		CCSplitRowsTransition.class,
+		CCSplitColsTransition.class,
+		CCFadeTransition.class,
+		FadeWhiteTransition.class,
+		FlipXLeftOver.class,
+		FlipXRightOver.class,
+		FlipYUpOver.class,
+		FlipYDownOver.class,
+		FlipAngularLeftOver.class,
+		FlipAngularRightOver.class,
+		ZoomFlipXLeftOver.class,
+		ZoomFlipXRightOver.class,
+		ZoomFlipYUpOver.class,
+		ZoomFlipYDownOver.class,
+		ZoomFlipAngularLeftOver.class,
+		ZoomFlipAngularRightOver.class,
+		CCShrinkGrowTransition.class,
+		CCRotoZoomTransition.class,
+		CCMoveInLTransition.class,
+		CCMoveInRTransition.class,
+		CCMoveInTTransition.class,
+		CCMoveInBTransition.class,
+		CCSlideInLTransition.class,
+		CCSlideInRTransition.class,
+		CCSlideInTTransition.class,
+		CCSlideInBTransition.class,
+	};
 
-        return restartTransition(d, s);
-    }
+	static Class<?> nextTransition() {
+		sceneIdx++;
+		sceneIdx = sceneIdx % transitions.length;
 
-    static CCTransitionScene restartTransition(float d, CCScene s) {
-        try {
-            Class<?> c = transitions[sceneIdx];
-            Class<?> partypes[] = new Class[2];
-            partypes[0] = Float.TYPE;
-            partypes[1] = s.getClass();
-            Constructor<?> ctor = c.getConstructor(partypes);
-            Object arglist[] = new Object[2];
-            arglist[0] = d;
-            arglist[1] = s;
-            return (CCTransitionScene) ctor.newInstance(arglist);
-        } catch (Exception e) {
-            return null;
-        }
-    }
+		return transitions[sceneIdx];
+	}
 
-    static class TestLayer1 extends CCLayer {
+	static Class<?> backTransition() {
+		sceneIdx--;
+		int total = transitions.length;
+		if (sceneIdx < 0)
+			sceneIdx += total;
 
-        public TestLayer1() {
+		return transitions[sceneIdx];
+	}
 
-            CGSize s = CCDirector.sharedDirector().winSize();
-            float x = s.width;
-            float y = s.height;
+	static Class<?> restartTransition() {
+		return transitions[sceneIdx];
+	}
 
-            CCSprite bg1 = CCSprite.sprite("background1.jpg");
-            bg1.setAnchorPoint(CGPoint.make(0, 0));
-            addChild(bg1, -1);
+	static class TestLayer extends CCLayer {
+		public static CCScene scene() {
+			CCScene s = CCScene.node();
+			TestLayer l = new TestLayer();
+			s.addChild(l);
 
-            CCLabel label = CCLabel.makeLabel("SCENE 1", "DroidSans", 64);
+			return s;
+		}
 
-            label.setPosition(CGPoint.make(x / 2, y / 2));
-            addChild(label);
+		public TestLayer() {
+			CGSize size = CCDirector.sharedDirector().winSize();
+			float x = size.width;
+			float y = size.height;
 
-            // menu
-            CCMenuItemImage item1 = CCMenuItemImage.item("b1.png", "b2.png", this, "backCallback");
-            CCMenuItemImage item2 = CCMenuItemImage.item("r1.png", "r2.png", this, "restartCallback");
-            CCMenuItemImage item3 = CCMenuItemImage.item("f1.png", "f2.png", this, "nextCallback");
+			CCSprite bg1 = CCSprite.sprite("background1.jpg");
+			bg1.setPosition(size.width/2, size.height/2);
+			addChild(bg1, -1);
 
-            CCMenu menu = CCMenu.menu(item1, item2, item3);
-            menu.setPosition(CGPoint.make(0, 0));
-            item1.setPosition(CGPoint.make(s.width / 2 - 100, 30));
-            item2.setPosition(CGPoint.make(s.width / 2, 30));
-            item3.setPosition(CGPoint.make(s.width / 2 + 100, 30));
-            addChild(menu, 1);
-        }
+			CCLabel title = CCLabel.makeLabel(transitions[sceneIdx].toString(), "DroidSans", 40);
+			addChild(title);
+			title.setColor(new ccColor3B(255, 32, 32));
+			title.setPosition(CGPoint.make(x / 2, y-100));
 
-        public void nextCallback(Object sender) {
-            CCScene scene = CCScene.node();
-            scene.addChild(new TestLayer2());
-            CCDirector.sharedDirector().replaceScene(nextTransition(TRANSITION_DURATION, scene));
-        }
+			CCLabel label = CCLabel.makeLabel("SCENE 1", "DroidSans", 64);
+			label.setColor(new ccColor3B(16,16,255));
+			label.setPosition(x/2,y/2);
+			addChild(label);
 
-        public void backCallback(Object sender) {
-            CCScene scene = CCScene.node();
-            scene.addChild(new TestLayer2());
-            CCDirector.sharedDirector().replaceScene(backTransition(TRANSITION_DURATION, scene));
-        }
+			// menu
+			CCMenuItemImage item1 = CCMenuItemImage.item("b1.png", "b2.png", this, "backCallback");
+			CCMenuItemImage item2 = CCMenuItemImage.item("r1.png", "r2.png", this, "restartCallback");
+			CCMenuItemImage item3 = CCMenuItemImage.item("f1.png", "f2.png", this, "nextCallback");
 
-        public void restartCallback(Object sender) {
-            CCScene scene = CCScene.node();
-            scene.addChild(new TestLayer2());
-            CCDirector.sharedDirector().replaceScene(restartTransition(TRANSITION_DURATION, scene));
-        }
-    }
+			CCMenu menu = CCMenu.menu(item1, item2, item3);
+			menu.setPosition(0, 0);
+			item1.setPosition(size.width / 2 - 100, 30);
+			item2.setPosition(size.width / 2, 30);
+			item3.setPosition(size.width / 2 + 100, 30);
+			addChild(menu, 1);
 
-    static class TestLayer2 extends CCLayer {
+			schedule("step", 1.0f);
+		}
 
-        public TestLayer2() {
+		public void step(float dt) {
+			ccMacros.CCLOG(LOG_TAG, "Scene1#step called");
+		}
 
-            CGSize s = CCDirector.sharedDirector().winSize();
-            float x = s.width;
-            float y = s.height;
+		public void onEnter() {
+			super.onEnter();
 
-            CCSprite bg2 = CCSprite.sprite("background2.jpg");
-            bg2.setAnchorPoint(CGPoint.make(0, 0));
-            addChild(bg2, -1);
+			ccMacros.CCLOG(LOG_TAG, "Scene 1 onEnter");
+		}
 
-            CCLabel label = CCLabel.makeLabel("SCENE 2", "DroidSans", 64);
+		public void onEnterTransitionDidFinish() {
+			super.onEnterTransitionDidFinish();
 
-            label.setPosition(CGPoint.make(x / 2, y / 2));
-            addChild(label);
+			ccMacros.CCLOG(LOG_TAG, "Scene 1: transition did finish");
+		}
 
-            // menu
-            CCMenuItemImage item1 = CCMenuItemImage.item("b1.png", "b2.png", this, "backCallback");
-            CCMenuItemImage item2 = CCMenuItemImage.item("r1.png", "r2.png", this, "restartCallback");
-            CCMenuItemImage item3 = CCMenuItemImage.item("f1.png", "f2.png", this, "nextCallback");
+		public void onExit() {
+			ccMacros.CCLOG(LOG_TAG, "Scene 1 onExit");
 
-            CCMenu menu = CCMenu.menu(item1, item2, item3);
-            menu.setPosition(CGPoint.make(0, 0));
-            item1.setPosition(CGPoint.make(s.width / 2 - 100, 30));
-            item2.setPosition(CGPoint.make(s.width / 2, 30));
-            item3.setPosition(CGPoint.make(s.width / 2 + 100, 30));
-            addChild(menu, 1);
+			super.onExit();
+		}
 
-        }
+		@Override
+		public void finalize() throws Throwable {
+			ccMacros.CCLOG(LOG_TAG, "------> Scene#1 dealloc!");
+			super.finalize();
+		}
 
-        public void nextCallback(Object sender) {
-            CCScene scene = CCScene.node();
-            scene.addChild(new TestLayer1());
-            CCDirector.sharedDirector().replaceScene(nextTransition(TRANSITION_DURATION, scene));
-        }
+		public void nextCallback(Object sender) {
+			Class<?> transition = nextTransition();
+			restartCallback(transition);
+		}
 
-        public void backCallback(Object sender) {
-            CCScene scene = CCScene.node();
-            scene.addChild(new TestLayer1());
-            CCDirector.sharedDirector().replaceScene(backTransition(TRANSITION_DURATION, scene));
-        }
+		public void backCallback(Object sender) {
+			Class<?> transition = backTransition();
+			restartCallback(transition);
+		}
 
-        public void restartCallback(Object sender) {
-            CCScene scene = CCScene.node();
-            scene.addChild(new TestLayer1());
-            CCDirector.sharedDirector().replaceScene(restartTransition(TRANSITION_DURATION, scene));
-        }
-    }
+		public void restartCallback(Object sender) {
+			Class<?> transition = restartTransition();
+			CCScene s2 = TestLayer2.scene();
 
+			try {
+				Constructor<?> c = transition.getConstructor(Float.TYPE, CCScene.class);
+				CCScene s = (CCScene) c.newInstance(TRANSITION_DURATION, s2);
+				CCDirector.sharedDirector().replaceScene(s);
+			} catch (SecurityException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (NoSuchMethodException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalArgumentException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InstantiationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InvocationTargetException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+
+	static class TestLayer2 extends CCLayer {
+		public static CCScene scene() {
+			CCScene s = CCScene.node();
+			TestLayer2 l = new TestLayer2();
+			s.addChild(l);
+
+			return s;
+		}
+
+		public TestLayer2() {
+			CGSize size = CCDirector.sharedDirector().winSize();
+			float x = size.width;
+			float y = size.height;
+
+			CCSprite bg2 = CCSprite.sprite("background2.jpg");
+			bg2.setPosition(size.width/2, size.height/2);
+			addChild(bg2, -1);
+
+			CCLabel title = CCLabel.makeLabel(transitions[sceneIdx].toString(), "DroidSans", 40);
+			addChild(title);
+			title.setColor(new ccColor3B(255,32,32));
+			title.setPosition(x/2, y-100);
+
+			CCLabel label = CCLabel.makeLabel("SCENE 2", "DroidSans", 64);
+			label.setColor(new ccColor3B(16,16,255));
+			label.setPosition(x / 2, y / 2);
+			addChild(label);
+
+			// menu
+			CCMenuItemImage item1 = CCMenuItemImage.item("b1.png", "b2.png", this, "backCallback");
+			CCMenuItemImage item2 = CCMenuItemImage.item("r1.png", "r2.png", this, "restartCallback");
+			CCMenuItemImage item3 = CCMenuItemImage.item("f1.png", "f2.png", this, "nextCallback");
+			// menu
+			CCMenu menu = CCMenu.menu(item1, item2, item3);
+			menu.setPosition(0, 0);
+			item1.setPosition(size.width / 2 - 100, 30);
+			item2.setPosition(size.width / 2, 30);
+			item3.setPosition(size.width / 2 + 100, 30);
+			addChild(menu, 1);
+
+			this.schedule("step", 1.0f);
+		}
+
+		public void nextCallback(Object sender) {
+			Class<?> transition = nextTransition();
+			restartCallback(transition);
+		}
+
+		public void backCallback(Object sender) {
+			Class<?> transition = backTransition();
+			restartCallback(transition);
+		}
+
+		public void restartCallback(Object sender) {
+			Class<?> transition = restartTransition();
+			CCScene s2 = TestLayer.scene();
+			try {
+				Constructor<?> c = transition.getConstructor(Float.TYPE, CCScene.class);
+				CCScene s = (CCScene)c.newInstance(TRANSITION_DURATION, s2);
+				CCDirector.sharedDirector().replaceScene(s);
+			} catch (SecurityException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (NoSuchMethodException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalArgumentException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InstantiationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InvocationTargetException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+		public void step(float dt) {
+			ccMacros.CCLOG("TransitionTest", "Scene2#step called");
+		}
+
+		/// callbacks
+		public void onEnter() {
+			super.onEnter();
+			ccMacros.CCLOG("TransitionTest", "Scene 2 onEnter");
+		}
+
+		public void onEnterTransitionDidFinish() {
+			super.onEnterTransitionDidFinish();
+			ccMacros.CCLOG("TransitionTest", "Scene 2: transition did finish");
+		}
+
+		public void onExit() {
+			super.onExit();
+			ccMacros.CCLOG("TransitionTest", "Scene 2 onExit");
+		}
+	}
 }
 

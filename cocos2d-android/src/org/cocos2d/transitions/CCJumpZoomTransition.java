@@ -25,25 +25,26 @@ public class CCJumpZoomTransition extends CCTransitionScene {
         super(t, s);
     }
 
+    @Override
     public void onEnter() {
         super.onEnter();
         CGSize size = CCDirector.sharedDirector().winSize();
         
-        float width = size.getWidth();
+        float width = size.width;
         // float height = size.getHeight();
 
         inScene.setScale(0.5f);
-        inScene.setPosition(CGPoint.make(width, 0));
+        inScene.setPosition(width, 0);
 
-        inScene.setAnchorPoint(CGPoint.make(0.5f, 0.5f));
-        outScene.setAnchorPoint(CGPoint.make(0.5f, 0.5f));
+        inScene.setAnchorPoint(0.5f, 0.5f);
+        outScene.setAnchorPoint(0.5f, 0.5f);
 
         CCIntervalAction jump = CCJumpBy.action(duration / 4, CGPoint.make(-width, 0), width / 4, 2);
         CCIntervalAction scaleIn = CCScaleTo.action(duration / 4, 1.0f);
         CCIntervalAction scaleOut = CCScaleTo.action(duration / 4, 0.5f);
 
         CCIntervalAction jumpZoomOut = CCSequence.actions(scaleOut, jump);
-        CCIntervalAction jumpZoomIn = CCSequence.actions(jump, scaleIn);
+        CCIntervalAction jumpZoomIn = CCSequence.actions(jump.copy(), scaleIn);
 
         CCIntervalAction delay = CCDelayTime.action(duration / 2);
 

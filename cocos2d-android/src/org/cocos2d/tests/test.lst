@@ -1,13 +1,10 @@
-MenuTest.m
+TransitionsTest.m   finished coding, but not tested
 
-
-TransitionsTest.m
 EffectsTest.m
 
 FontTest.m
 IntervalTest.m
 LayerTest.m
-
 
 MotionStreakTest.m
 ParallaxTest.m

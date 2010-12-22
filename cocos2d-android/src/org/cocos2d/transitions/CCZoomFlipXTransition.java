@@ -6,7 +6,9 @@ import org.cocos2d.actions.instant.CCHide;
 import org.cocos2d.actions.instant.CCShow;
 import org.cocos2d.actions.interval.CCDelayTime;
 import org.cocos2d.actions.interval.CCIntervalAction;
+import org.cocos2d.actions.interval.CCScaleTo;
 import org.cocos2d.actions.interval.CCSequence;
+import org.cocos2d.actions.interval.CCSpawn;
 import org.cocos2d.layers.CCScene;
 
 // TODO
@@ -34,7 +36,7 @@ public class CCZoomFlipXTransition extends CCOrientedTransitionScene {
         float inDeltaZ, inAngleZ;
         float outDeltaZ, outAngleZ;
 
-        if (orientation == Orientation.kOrientationRightOver) {
+        if (orientation == tOrientation.kOrientationRightOver) {
             inDeltaZ = 90;
             inAngleZ = 270;
             outDeltaZ = 90;
@@ -48,15 +50,23 @@ public class CCZoomFlipXTransition extends CCOrientedTransitionScene {
 
         inA = CCSequence.actions(
                 CCDelayTime.action(duration / 2),
-                CCShow.action(),
-                CCOrbitCamera.action(duration / 2, 1, 0, inAngleZ, inDeltaZ, 90, 0),
+                CCSpawn.actions(
+				CCOrbitCamera.action(duration/2, 1, 0, inAngleZ, inDeltaZ, 0, 0),
+				CCScaleTo.action(duration/2, 1),
+				CCShow.action()
+			),
                 CCCallFunc.action(this, "finish"));
         outA = CCSequence.actions(
-                CCOrbitCamera.action(duration / 2, 1, 0, outAngleZ, outDeltaZ, 90, 0),
+			CCSpawn.actions(
+				CCOrbitCamera.action(duration/2, 1, 0, outAngleZ, outDeltaZ, 0, 0),
+				CCScaleTo.action(duration/2, 0.5f)
+			),
                 CCHide.action(),
                 CCDelayTime.action(duration / 2));
 
+        inScene.setScale(0.5f);
         inScene.runAction(inA);
         outScene.runAction(outA);
     }
+
 }

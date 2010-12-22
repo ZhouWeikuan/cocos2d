@@ -21,6 +21,7 @@ public class CCSlideInRTransition extends CCSlideInLTransition {
         super(t, s);
     }
 
+    @Override
     public void sceneOrder() {
         inSceneOnTop = true;
     }
@@ -28,14 +29,15 @@ public class CCSlideInRTransition extends CCSlideInLTransition {
     /**
      * initializes the scenes
      */
+    @Override
     protected void initScenes() {
         CGSize s = CCDirector.sharedDirector().winSize();
-        inScene.setPosition(CGPoint.make(s.width-ADJUST_FACTOR, 0));
+        inScene.setPosition(s.width-ADJUST_FACTOR, 0);
     }
 
-    protected CCIntervalAction action() {
+    @Override
+    public CCIntervalAction action() {
         CGSize s = CCDirector.sharedDirector().winSize();
         return CCMoveBy.action(duration, CGPoint.make(-(s.width-ADJUST_FACTOR),0));
     }
-    
 }

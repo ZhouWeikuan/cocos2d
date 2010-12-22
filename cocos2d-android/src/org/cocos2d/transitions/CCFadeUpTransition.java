@@ -1,6 +1,9 @@
 package org.cocos2d.transitions;
 
+import org.cocos2d.actions.interval.CCIntervalAction;
+import org.cocos2d.actions.tile.CCFadeOutUpTiles;
 import org.cocos2d.layers.CCScene;
+import org.cocos2d.types.ccGridSize;
 
 /**
  * FadeUp Transition.
@@ -8,12 +11,11 @@ import org.cocos2d.layers.CCScene;
  */
 public class CCFadeUpTransition extends CCFadeTRTransition {
 
-    public CCFadeUpTransition(float t, CCScene s) {
-        super(t, s);
-    }
+	public CCFadeUpTransition(float t, CCScene s) {
+		super(t, s);
+	}
 
-//	   	protected IntervalAction action(CCGridSize v)
-//		{
-//			return FadeOutUspTiles.action(v, duration);
-//		}
+	protected CCIntervalAction action(ccGridSize v) {
+		return CCFadeOutUpTiles.action(v, duration);
+	}
 }

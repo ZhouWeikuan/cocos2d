@@ -30,10 +30,11 @@ public class CCSlideInTTransition extends CCSlideInLTransition {
      */
     protected void initScenes() {
         CGSize s = CCDirector.sharedDirector().winSize();
-        inScene.setPosition(CGPoint.make(0,s.height-ADJUST_FACTOR));
+        inScene.setPosition(0, s.height-ADJUST_FACTOR);
     }
 
-    protected CCIntervalAction action() {
+    @Override
+    public CCIntervalAction action() {
         CGSize s = CCDirector.sharedDirector().winSize();
         return CCMoveBy.action(duration, CGPoint.make(0,-(s.height-ADJUST_FACTOR)));
     }

@@ -100,7 +100,7 @@ public class SceneTest extends Activity {
         public void onReplaceSceneTransition(Object sender) {
             CCScene s = CCScene.node();
             s.addChild(new Layer3(), 0);
-            CCDirector.sharedDirector().replaceScene(CCFlipXTransition.transition(2.0f, s, CCTransitionScene.Orientation.kOrientationLeftOver));
+            CCDirector.sharedDirector().replaceScene(CCFlipXTransition.transition(2.0f, s, CCTransitionScene.tOrientation.kOrientationLeftOver));
         }
     }
 
