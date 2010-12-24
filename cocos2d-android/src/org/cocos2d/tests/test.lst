@@ -1,18 +1,18 @@
 TransitionsTest.m   finished coding, but not tested
+MotionStreakTest.m  finished coding, but not tested
 
+SchedulerTest.m
 EffectsTest.m
 
 FontTest.m
 IntervalTest.m
 LayerTest.m
 
-MotionStreakTest.m
 ParallaxTest.m
 ProgressActionsTest.m
 RenderTextureTest.m
 RotateWorldTest.m
 SceneTest.m
-SchedulerTest.m
 SpriteTest.m
 Texture2dTest.m
 TileMapTest.m

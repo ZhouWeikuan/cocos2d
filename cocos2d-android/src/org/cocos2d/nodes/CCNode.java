@@ -832,7 +832,7 @@ public class CCNode {
       @since v0.99.3
     */
     public void scheduleUpdate() {
-        this.scheduleUpdateWithPriority(0);
+        this.scheduleUpdate(0);
     }
 
     /** schedules the "update" selector with a custom priority. This selector will be called every frame.
@@ -841,7 +841,7 @@ public class CCNode {
 
       @since v0.99.3
     */
-    public void scheduleUpdateWithPriority(int priority) {
+    public void scheduleUpdate(int priority) {
         CCScheduler.sharedScheduler().scheduleUpdate(this, priority, !isRunning_);
     }
 

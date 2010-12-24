@@ -145,7 +145,17 @@
                 <category android:name="android.intent.category.TEST"/>
             </intent-filter>
         </activity>
-
+        
+        <activity android:name=".tests.SchedulerTest"
+                  android:debuggable="true"
+                  android:launchMode="singleInstance"
+                  android:label="@string/activity_schedulertest">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.TEST"/>
+            </intent-filter>
+        </activity>
+ 
 
 
 

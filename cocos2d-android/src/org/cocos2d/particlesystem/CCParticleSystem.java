@@ -709,7 +709,7 @@ public abstract class CCParticleSystem extends CCNode implements CCTextureProtoc
 		}*/
 
 		// udpate after action in run!
-		this.scheduleUpdateWithPriority(1);
+		this.scheduleUpdate(1);
 	}
 
 	private void initParticle(CCParticle particle) {
