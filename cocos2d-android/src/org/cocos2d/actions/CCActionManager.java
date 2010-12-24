@@ -19,7 +19,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  
  @since v0.8
  */
-public class CCActionManager {
+public class CCActionManager implements UpdateCallback {
     private static final String LOG_TAG = CCActionManager.class.getSimpleName();
 
     static class HashElement {

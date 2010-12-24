@@ -96,7 +96,7 @@ public class CCTransitionScene extends CCScene {
         schedule("setNewScene", 0);
     }
 
-    protected void setNewScene(float dt) {
+    public void setNewScene(float dt) {
         unschedule("setNewScene");
 
         sendCleanupToScene = CCDirector.sharedDirector().getSendCleanupToScene();

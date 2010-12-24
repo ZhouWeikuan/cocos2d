@@ -9,8 +9,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
 
-import javax.microedition.khronos.opengles.GL10;
-
 import org.cocos2d.nodes.CCDirector;
 import org.cocos2d.nodes.CCNode;
 import org.cocos2d.nodes.CCSprite;
@@ -556,8 +554,6 @@ public class CCBitmapFontAtlas extends CCSpriteSheet implements CCLabelProtocol,
         char prev = (char)-1;
 		int kerningAmount = 0;
 
-		CGSize tmpSize = CGSize.zero();
-
 		int longestLine = 0;
 		int totalHeight = 0;
 
@@ -633,16 +629,16 @@ public class CCBitmapFontAtlas extends CCSpriteSheet implements CCLabelProtocol,
 				longestLine = nextFontPositionX;
 		}
 
-		tmpSize.width = longestLine;
-		tmpSize.height = totalHeight;
-
-		setContentSize(tmpSize);
+		// using direct set
+		setContentSize(longestLine, totalHeight);
     }
 
     public void setString(String newString) {	
         string_ = newString;
 
-        for (CCNode child: children_) {
+        int len = children_.size();
+        for (int i = 0; i < len; i++) {
+        	CCNode child = children_.get(i);
             child.setVisible(false);
         }
 

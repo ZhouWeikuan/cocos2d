@@ -1034,7 +1034,7 @@ public class CCNode {
 
     // lazy allocs
     private void childrenAlloc() {
-        children_ =  Collections.synchronizedList(new ArrayList<CCNode>(4));
+        children_ = Collections.synchronizedList(new ArrayList<CCNode>(4));
     }
 
     // helper that reorder a child

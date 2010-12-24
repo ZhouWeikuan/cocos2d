@@ -11,6 +11,11 @@ public class CCTimer {
     private Object target;
     private String selector;
     private Method invocation;
+    
+    /*
+     * Alternative way, use instead of invocation.
+     */
+    private UpdateCallback callback;
 
     /** interval in seconds */
     private float interval;
@@ -19,6 +24,10 @@ public class CCTimer {
     public String getSelector() {
     	return selector;
     }
+    
+    public UpdateCallback getCallback() {
+		return callback;
+	}
     
     /** Initializes a timer with a target and a selector. */
     public CCTimer(Object targ, String s) {
@@ -35,12 +44,21 @@ public class CCTimer {
 
         try {
             Class<?> cls = target.getClass();
-            invocation = cls.getMethod(s, new Class[]{Float.TYPE});
+            invocation = cls.getMethod(s, Float.TYPE);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+    
+    /** Initializes a timer with a target, a callback and an interval in seconds.  */
+    public CCTimer(Object t, UpdateCallback c, float seconds) {
+        target = t;
+        callback = c;
 
+        interval = seconds;
+        elapsed = -1;
+    }
+    
     public void setInterval(float i) {
         interval = i;
     }
@@ -57,11 +75,15 @@ public class CCTimer {
             elapsed += dt;
         }
         if (elapsed >= interval) {
-            try {
-                invocation.invoke(target, new Object[]{elapsed});
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        	if(callback != null) {
+        		callback.update(dt);
+        	} else {
+                try {
+                    invocation.invoke(target, new Object[]{elapsed});
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }        		
+        	}
             elapsed = 0;
         }
     }

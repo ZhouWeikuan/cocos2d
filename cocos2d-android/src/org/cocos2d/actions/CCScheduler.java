@@ -27,6 +27,7 @@ public class CCScheduler {
     private static class tListEntry {
         // struct	_listEntry *prev, *next;
         public Method impMethod;
+        public UpdateCallback callback; // instead of method invocation
         public Object	target;				// not retained (retained by hashUpdateEntry)
         public int		priority;
         public boolean	paused;
@@ -155,12 +156,16 @@ public class CCScheduler {
 	        for (int i = 0; i < len1; i++) {
 	        	tListEntry e = updatesNeg.get(i);
 	            if( ! e.paused ) {
-	            	try {
-						e.impMethod.invoke(e.target, dt);
-					} catch (Exception e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
+	            	if(e.callback !=null) {
+	            		e.callback.update(dt);
+	            	} else {
+		            	try {
+							e.impMethod.invoke(e.target, dt);
+						} catch (Exception e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+	            	}
 	            }
 	        }
         }
@@ -171,12 +176,16 @@ public class CCScheduler {
 	        for(int i=0; i < len2; ++i) {
 	        	tListEntry e = updates0.get(i);
 	            if( ! e.paused ) {
-	                try {
-						e.impMethod.invoke(e.target, dt );
-					} catch (Exception e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
+	            	if(e.callback !=null) {
+	            		e.callback.update(dt);
+	            	} else {
+		                try {
+							e.impMethod.invoke(e.target, dt );
+						} catch (Exception e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+	            	}
 	            }
 	        }
         }
@@ -187,12 +196,16 @@ public class CCScheduler {
 	        for (int i=0; i < len3; i++) {
 	        	tListEntry e = updatesPos.get(i);
 	            if( ! e.paused ) {
-	                try {
-						e.impMethod.invoke(e.target, dt );
-					} catch (Exception e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
+	            	if(e.callback !=null) {
+	            		e.callback.update(dt);
+	            	} else {
+		                try {
+							e.impMethod.invoke(e.target, dt );
+						} catch (Exception e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+	            	}
 	            }
 	        }
         }
@@ -211,12 +224,17 @@ public class CCScheduler {
                     elt.currentTimer = elt.timers.get(elt.timerIndex);
                     elt.currentTimerSalvaged = false;
 
-                    try {
-						impMethod.invoke( elt.currentTimer, dt);
-					} catch (Exception e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
+                    UpdateCallback callback = elt.currentTimer.getCallback();
+	            	if(callback !=null) {
+	            		callback.update(dt);
+	            	} else {
+	                    try {
+							impMethod.invoke( elt.currentTimer, dt);
+						} catch (Exception e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+	            	}
                     
                     if( elt.currentTimerSalvaged ) {
                         // The currentTimer told the remove itself. To prevent the timer from
@@ -299,6 +317,36 @@ public class CCScheduler {
         CCTimer timer = new CCTimer(target, selector, interval);
         element.timers.add(timer);
     }
+    
+    /*
+     * This is java way version, uses interface based callbacks. UpdateCallback in this case.
+     * It would be preffered solution. It is more polite to Java, GC, and obfuscation.  
+     */
+    public void schedule(UpdateCallback callback, Object target, float interval, boolean paused) {
+        assert callback != null: "Argument callback must be non-nil";
+        assert target != null: "Argument target must be non-nil";	
+
+        tHashSelectorEntry element = hashForSelectors.get(target);
+
+        if( element == null ) {
+            element = new tHashSelectorEntry();
+            element.target = target;
+            hashForSelectors.put(target, element);
+            // Is this the 1st element ? Then set the pause level to all the selectors of this target
+            element.paused = paused;
+
+        } else {
+            assert element.paused == paused : "CCScheduler. Trying to schedule a selector with a pause value different than the target";
+        }
+
+        if( element.timers == null) {
+            element.timers = new ArrayList<CCTimer>();
+        }/* else if( element.timers.size() == element.timers )
+            ccArrayDoubleCapacity(element->timers);
+		*/
+        CCTimer timer = new CCTimer(target, callback, interval);
+        element.timers.add(timer);
+    }
 
     /** Unshedules a selector for a given target.
      If you want to unschedule the "update", use unscheudleUpdateForTarget.
@@ -318,6 +366,50 @@ public class CCScheduler {
                 CCTimer timer = element.timers.get(i);
 
                 if(selector == timer.getSelector()) {
+                    if( timer == element.currentTimer && !element.currentTimerSalvaged ) {                        
+                        element.currentTimerSalvaged = true;
+                    }
+                    	
+                    element.timers.remove(i);
+
+                    // update timerIndex in case we are in tick:, looping over the actions
+                    if( element.timerIndex >= i )
+                        element.timerIndex--;
+
+                    if( element.timers.isEmpty()) {
+                        if( currentTarget == element ) {
+                            currentTargetSalvaged = true;						
+                        } else {
+                        	this.removeHashElement(element.target, element);
+                        }
+                    }
+                    return;
+                }
+            }
+        }
+
+        // Not Found
+        //	NSLog(@"CCScheduler#unscheduleSelector:forTarget: selector not found: %@", selString);
+    }
+    
+    /*
+     * This is java way version, uses interface based callbacks. UpdateCallback in this case.
+     * It would be preffered solution. It is more polite to Java, GC, and obfuscation.  
+     */
+    public void unschedule(UpdateCallback callback, Object target) {
+        // explicity handle nil arguments when removing an object
+        if( target==null && callback==null)
+            return;
+
+        assert target != null: "Target MUST not be null";
+        assert callback != null: "Selector MUST not be null";
+
+        tHashSelectorEntry element = hashForSelectors.get(target);
+        if( element != null ) {
+            for( int i=0; i< element.timers.size(); i++ ) {
+                CCTimer timer = element.timers.get(i);
+
+                if(callback == timer.getCallback()) {
                     if( timer == element.currentTimer && !element.currentTimerSalvaged ) {                        
                         element.currentTimerSalvaged = true;
                     }
@@ -483,6 +575,29 @@ public class CCScheduler {
         	this.priority(updatesPos, target, priority, paused);
         }
 	}
+	
+    /*
+     * This is java way version, uses interface based callbacks. UpdateCallback in this case.
+     * It would be preffered solution. It is more polite to Java, GC, and obfuscation. 
+     * Target class must implement UpdateCallback or scheduleUpdate will be used.
+     */
+	public void scheduleUpdate(UpdateCallback target, int priority, boolean paused) {
+        // TODO Auto-generated method stub
+        if (ccConfig.COCOS2D_DEBUG >= 1) {
+        	tHashSelectorEntry hashElement = hashForUpdates.get(target);
+            assert hashElement == null:"CCScheduler: You can't re-schedule an 'update' selector'. Unschedule it first";
+        }
+
+        // most of the updates are going to be 0, that's way there
+        // is an special list for updates with priority 0
+        if( priority == 0 ) {
+        	this.append(updates0, target, paused);
+        } else if( priority < 0 ) {
+        	this.priority(updatesNeg, target, priority, paused);
+        } else { // priority > 0
+        	this.priority(updatesPos, target, priority, paused);
+        }
+	}
 
     /** schedules a Timer.
      It will be fired in every frame.
@@ -524,12 +639,16 @@ public class CCScheduler {
 
         listElement.target = target;
         listElement.paused = paused;
-        try {
-			listElement.impMethod = target.getClass().getMethod(updateSelector, Float.TYPE);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+        if(target instanceof UpdateCallback) {
+        	listElement.callback = (UpdateCallback)target;
+        } else {
+            try {
+    			listElement.impMethod = target.getClass().getMethod(updateSelector, Float.TYPE);
+    		} catch (Exception e) {
+    			// TODO Auto-generated catch block
+    			e.printStackTrace();
+    		}        	
+        }
 
 		synchronized (list) {
 			list.add(listElement);			
@@ -549,12 +668,16 @@ public class CCScheduler {
         listElement.target = target;
         listElement.priority = priority;
         listElement.paused = paused;
-        try {
-			listElement.impMethod = target.getClass().getMethod(updateSelector, Float.TYPE);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+        if(target instanceof UpdateCallback) {
+        	listElement.callback = (UpdateCallback)target;
+        } else {
+	        try {
+				listElement.impMethod = target.getClass().getMethod(updateSelector, Float.TYPE);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+        }
 		
 		synchronized (list) {
 			list.add(listElement);			
