@@ -449,7 +449,9 @@ public class CCBitmapFontAtlas extends CCSpriteSheet implements CCLabelProtocol,
     public void setOpacity(int o) {
         opacity_ = o;
 
-        for (CCNode child: children_) {
+        int len = children_.size();
+        for (int i = 0; i < len; i++) {
+        	CCNode child = children_.get(i);
         	CCRGBAProtocol p = (CCRGBAProtocol)child;
             p.setOpacity(opacity_);
         }
@@ -463,9 +465,11 @@ public class CCBitmapFontAtlas extends CCSpriteSheet implements CCLabelProtocol,
 
     public void setColor(ccColor3B color) {
         color_.set(color);
-        for (CCNode o: children_) {
-        	CCSprite child = (CCSprite)o;
-            child.setColor(color);
+        int len = children_.size();
+        for (int i = 0; i < len; i++) {
+        	CCNode child = children_.get(i);
+        	CCRGBAProtocol p = (CCRGBAProtocol)child;
+            p.setColor(color);
         }
     }
 
@@ -647,7 +651,9 @@ public class CCBitmapFontAtlas extends CCSpriteSheet implements CCLabelProtocol,
 
     public void setOpacityModifyRGB(boolean modify) {
         opacityModifyRGB_ = modify;
-        for (CCNode child : children_) {
+        int len = children_.size();
+        for (int i = 0; i < len; i++) {
+        	CCNode child = children_.get(i);
         	CCRGBAProtocol p = (CCRGBAProtocol)child;
             p.setOpacityModifyRGB(modify);
         }
