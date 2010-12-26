@@ -64,6 +64,9 @@ public class CCScheduler {
 	// Used for "selectors with interval"
     ConcurrentHashMap<Object, tHashSelectorEntry>  hashForSelectors;
     ConcurrentHashMap<Object, tHashSelectorEntry>  hashForUpdates;
+    
+    tListEntry							currentEntry;
+    
 	tHashSelectorEntry	                currentTarget;
 	boolean						        currentTargetSalvaged;
 	
@@ -152,11 +155,13 @@ public class CCScheduler {
         if( timeScale_ != 1.0f )
             dt *= timeScale_;
         
+        currentTargetSalvaged = false;
         // updates with priority < 0
         synchronized (updatesNeg) {
         	int len1 = updatesNeg.size();
 	        for (int i = 0; i < len1; i++) {
 	        	tListEntry e = updatesNeg.get(i);
+	        	currentEntry = e;
 	            if( ! e.paused ) {
 	            	if(e.callback !=null) {
 	            		e.callback.update(dt);
@@ -168,8 +173,14 @@ public class CCScheduler {
 							e1.printStackTrace();
 						}
 	            	}
+	            	if(currentTargetSalvaged) {
+	            		updatesNeg.remove(i);
+	            		i--;
+	            		currentTargetSalvaged = false;
+	            	}
 	            }
 	        }
+	        currentEntry = null;
         }
 
         // updates with priority == 0
@@ -177,6 +188,7 @@ public class CCScheduler {
         	int len2 = updates0.size();
 	        for(int i=0; i < len2; ++i) {
 	        	tListEntry e = updates0.get(i);
+	        	currentEntry = e;
 	            if( ! e.paused ) {
 	            	if(e.callback !=null) {
 	            		e.callback.update(dt);
@@ -188,8 +200,14 @@ public class CCScheduler {
 							e1.printStackTrace();
 						}
 	            	}
+	            	if(currentTargetSalvaged) {
+	            		updates0.remove(i);
+	            		i--;
+	            		currentTargetSalvaged = false;
+	            	}
 	            }
 	        }
+	        currentEntry = null;
         }
         
         // updates with priority > 0
@@ -197,6 +215,7 @@ public class CCScheduler {
         	int len3 = updatesPos.size();
 	        for (int i=0; i < len3; i++) {
 	        	tListEntry e = updatesPos.get(i);
+	        	currentEntry = e;
 	            if( ! e.paused ) {
 	            	if(e.callback !=null) {
 	            		e.callback.update(dt);
@@ -208,8 +227,14 @@ public class CCScheduler {
 							e1.printStackTrace();
 						}
 	            	}
+	            	if(currentTargetSalvaged) {
+	            		updatesPos.remove(i);
+	            		i--;
+	            		currentTargetSalvaged = false;
+	            	}
 	            }
 	        }
+	        currentEntry = null;
         }
         
 //        Set<Map.Entry<Object, tHashSelectorEntry>> set = hashForSelectors.entrySet();
@@ -452,7 +477,11 @@ public class CCScheduler {
         	return;
 
         synchronized (entry.list) {
-			entry.list.remove(entry.entry);
+        	if(currentEntry==entry.entry) {
+        		currentTargetSalvaged = true;
+        	} else {
+        		entry.list.remove(entry.entry);
+        	}
 		}
         
         hashForUpdates.remove(target);
@@ -686,7 +715,25 @@ public class CCScheduler {
         }
 		
 		synchronized (list) {
-			list.add(listElement);			
+			if(list.isEmpty()) {
+				list.add(listElement);
+			} else {
+				boolean added = false;		
+				
+				int len = list.size();
+				for( int i = 0; i < len; i++ ) {
+					tListEntry elem = list.get(i);
+					if( priority < elem.priority ) {
+						list.add(i, listElement);
+						added = true;
+						break;
+					}
+				}
+				
+				// Not added? priority has the higher value. Append it.
+				if( !added )
+					list.add(listElement);
+			}
 		}
 
         tHashSelectorEntry hashElement = new tHashSelectorEntry();
