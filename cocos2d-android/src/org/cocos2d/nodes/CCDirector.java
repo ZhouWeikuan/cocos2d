@@ -17,8 +17,6 @@ import static javax.microedition.khronos.opengles.GL10.GL_SRC_ALPHA;
 import static javax.microedition.khronos.opengles.GL10.GL_TEXTURE_2D;
 
 import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import javax.microedition.khronos.egl.EGL10;
 import javax.microedition.khronos.egl.EGLConfig;
@@ -43,6 +41,7 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.opengl.GLSurfaceView;
 import android.opengl.GLU;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -443,7 +442,7 @@ public class CCDirector implements GLSurfaceView.Renderer {
     // internal timer
     private double animationInterval_;
     private double oldAnimationInterval_;
-    private Timer  animationTimer_;
+//    private Timer  animationTimer_;
 
     public void getAnimationInterval(double interval) {
         animationInterval_ = interval;
@@ -452,10 +451,10 @@ public class CCDirector implements GLSurfaceView.Renderer {
     public void setAnimationInterval(double interval) {
         animationInterval_ = interval;
 
-        if (animationTimer_ != null) {
-            stopAnimation();
-            startAnimation();
-        }
+//        if (animationTimer_ != null) {
+//            stopAnimation();
+//            startAnimation();
+//        }
     }
 
     /**
@@ -468,22 +467,22 @@ public class CCDirector implements GLSurfaceView.Renderer {
         displayFPS = value;
     }
 
-    private static CCDirector _sharedDirector;
+    private static CCDirector _sharedDirector = new CCDirector();
 
     /** returns a shared instance of the director */
     public static CCDirector sharedDirector() {
-        if (_sharedDirector != null)
+//        if (_sharedDirector != null)
             return _sharedDirector;
 
 		//
 		// Default Director is TimerDirector
 		// 
-        synchronized (CCDirector.class) {
-            if (_sharedDirector == null) {
-                _sharedDirector = new CCDirector();
-            }
-            return _sharedDirector;
-        }
+//        synchronized (CCDirector.class) {
+//            if (_sharedDirector == null) {
+//                _sharedDirector = new CCDirector();
+//            }
+//            return _sharedDirector;
+//        }
     }
 
     /** There are 4 types of Director.
@@ -543,7 +542,7 @@ public class CCDirector implements GLSurfaceView.Renderer {
 
     protected CCDirector() {
 	    ccMacros.CCLOG(LOG_TAG, "cocos2d: " + ccConfig.cocos2dVersion);
-        synchronized (CCDirector.class) {
+//        synchronized (CCDirector.class) {
 		    ccMacros.CCLOG(LOG_TAG, "cocos2d: Using Director Type:" + this.getClass());
 
             // default values
@@ -575,7 +574,7 @@ public class CCDirector implements GLSurfaceView.Renderer {
             screenSize_  = CGSize.zero();
         	surfaceSize_ = CGSize.zero();
             isContentScaleSupported_ = false;
-        }
+//        }
     }
 
     /** sets the OpenGL default values */
@@ -645,20 +644,35 @@ public class CCDirector implements GLSurfaceView.Renderer {
     }
 
     public void onDrawFrame(GL10 gl) {
-        synchronized (this) {
-            this.notify();
-        }
-        Thread.yield();
-        
-        synchronized(this) {
-		if (_sharedDirector == null)
-		return;
+//        synchronized (this) {
+//            this.notify();
+//        }
+//        Thread.yield();
+//        
+//        synchronized(this) {
+//		if (_sharedDirector == null)
+//		return;
 		
 		CCTouchDispatcher.sharedDispatcher().update();
 		drawCCScene(gl);
-        }
+		
+		waitForFPS();
+//        }
     }    
 
+    private double sleepInterval = 0;
+    
+	private void waitForFPS() {
+		if (animationInterval_ >= dt) {
+			sleepInterval = animationInterval_ - dt + sleepInterval;
+			SystemClock.sleep( (long)(sleepInterval * 1000) );
+
+		} else {
+			sleepInterval = 0;
+		}
+	}
+
+    
     /** Draw the CCScene.
       This method is called every frame. Don't call it manually.
       */
@@ -713,7 +727,7 @@ public class CCDirector implements GLSurfaceView.Renderer {
             dt = 0;
             nextDeltaTimeZero_ = false;
         } else {
-            dt = (now - lastUpdate_) / 1000.0f;
+            dt = (now - lastUpdate_) * 0.001f;
             dt = Math.max(0, dt);
         }
 
@@ -847,7 +861,7 @@ public class CCDirector implements GLSurfaceView.Renderer {
         if (openGLView_ != view) {
         	openGLView_ = (GLSurfaceView) view;
         	openGLView_.setRenderer(this);
-        	openGLView_.setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
+//        	openGLView_.setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
         }
 //
 //            // check if the view is not attached
@@ -1005,7 +1019,7 @@ public class CCDirector implements GLSurfaceView.Renderer {
         assert runningCCScene_ == null : "You can't run a CCScene if another CCScene is running. Use replaceCCScene or pushCCScene instead";
 
         pushScene(CCScene);
-        startAnimation();
+//        startAnimation();
     }
 
     /** Replaces the running CCScene with a new one. The running CCScene is terminated.
@@ -1070,10 +1084,10 @@ public class CCDirector implements GLSurfaceView.Renderer {
       It doesn't remove the OpenGL view from its parent. You have to do it manually.
     */
     public void end() {
-    	synchronized(this) {
-    		if (_sharedDirector == null) {
-    			return;
-    		}
+//    	synchronized(CCDirector.class) {
+//    		if (_sharedDirector == null) {
+//    			return;
+//    		}
     		if (runningCCScene_ != null) {
     			runningCCScene_.onExit();
     			runningCCScene_.cleanup();
@@ -1089,7 +1103,7 @@ public class CCDirector implements GLSurfaceView.Renderer {
     		// They are needed in case the director is run again
     		CCTouchDispatcher.sharedDispatcher().removeAllDelegates();
 
-    		stopAnimation();
+//    		stopAnimation();
     		// detach();
 
     		// Purge bitmap cache
@@ -1102,11 +1116,11 @@ public class CCDirector implements GLSurfaceView.Renderer {
     		CCTextureCache.purgeSharedTextureCache();
 
     		// OpenGL view
-    		openGLView_ = null;
-    		_sharedDirector = null;
-            if (FPSLabel_ != null)
-                FPSLabel_ = null;
-    	}
+//    		openGLView_ = null;
+//    		_sharedDirector = null;
+//            if (FPSLabel_ != null)
+//                FPSLabel_ = null;
+//    	}
     }
 
     public void setNextScene() {
@@ -1183,31 +1197,31 @@ public class CCDirector implements GLSurfaceView.Renderer {
       Call this function only if [stopAnimation] was called earlier
       @warning Dont' call this function to start the main loop. To run the main loop call runWithCCScene
     */
-    public void startAnimation() {
-        assert animationTimer_ != null : "AnimationTimer must be null. Calling startAnimation twice?";
-
-        lastUpdate_ = System.currentTimeMillis();
-
-        animationTimer_ = new Timer();
-
-        animationTimer_.scheduleAtFixedRate(new TimerTask() {
-            public void run() {
-            	if (openGLView_ != null) {
-            		openGLView_.requestRender();
-            	}
-            }},
-            0L,
-            (long)(animationInterval_ * 1000L)
-        );
-    }
+//    public void startAnimation() {
+//        assert animationTimer_ != null : "AnimationTimer must be null. Calling startAnimation twice?";
+//
+//        lastUpdate_ = System.currentTimeMillis();
+//
+//        animationTimer_ = new Timer();
+//
+//        animationTimer_.scheduleAtFixedRate(new TimerTask() {
+//            public void run() {
+//            	if (openGLView_ != null) {
+//            		openGLView_.requestRender();
+//            	}
+//            }},
+//            0L,
+//            (long)(animationInterval_ * 1000L)
+//        );
+//    }
 
     /** Stops the animation. Nothing will be drawn. The main loop won't be triggered anymore.
       If you wan't to pause your animation call [pause] instead.
     */
-    public void stopAnimation() {
-    	animationTimer_.cancel();
-        animationTimer_ = null;
-    }
+//    public void stopAnimation() {
+//    	animationTimer_.cancel();
+//        animationTimer_ = null;
+//    }
 
     /** enables/disables OpenGL alpha blending */
     public void setAlphaBlending(GL10 gl, boolean on) {

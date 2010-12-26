@@ -3,6 +3,8 @@ package org.cocos2d.actions;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.cocos2d.config.ccConfig;
@@ -131,17 +133,17 @@ public class CCScheduler {
         currentTargetSalvaged = false;
     }
 
-    private void removeHashElement(Object key, tHashSelectorEntry element){
-    	removeHashElement(element);
-        hashForSelectors.remove(key);
-    }
-    
-    private void removeHashElement(tHashSelectorEntry element)
-    {
-    	element.timers.clear();
-        element.timers = null;
-        element.target = null;
-    }
+//    private void removeHashElement(Object key, tHashSelectorEntry element){
+//    	removeHashElement(element);
+//        hashForSelectors.remove(key);
+//    }
+//    
+//    private void removeHashElement(tHashSelectorEntry element)
+//    {
+//    	element.timers.clear();
+//        element.timers = null;
+//        element.target = null;
+//    }
 
     /** 'tick' the scheduler.
       You should NEVER call this method, unless you know what you are doing.
@@ -210,11 +212,11 @@ public class CCScheduler {
 	        }
         }
         
+//        Set<Map.Entry<Object, tHashSelectorEntry>> set = hashForSelectors.entrySet();
+//        set.
         // Iterate all over the  custome selectors
-        Iterator<tHashSelectorEntry> iterator = hashForSelectors.values().iterator();
-        tHashSelectorEntry elt = null;
-        while (iterator.hasNext()) {
-        	elt = iterator.next();
+        for(Map.Entry<Object, tHashSelectorEntry> it : hashForSelectors.entrySet()) {
+        	tHashSelectorEntry elt = it.getValue();
             currentTarget = elt;
             currentTargetSalvaged = false;
             
@@ -253,9 +255,10 @@ public class CCScheduler {
             
             // only delete currentTarget if no actions were scheduled during the cycle (issue #481)
             if( currentTargetSalvaged && currentTarget.timers.isEmpty()) {
-            	removeHashElement(elt);
-            	iterator.remove();
-            	// this.removeHashElement(elt.target, elt);
+//            	removeHashElement(elt);
+//            	iterator.remove();
+            	hashForSelectors.remove(elt.target);
+//            	 this.removeHashElement(elt.target, elt);
                 // [self removeHashElement:currentTarget];
             }
         }
@@ -380,7 +383,8 @@ public class CCScheduler {
                         if( currentTarget == element ) {
                             currentTargetSalvaged = true;						
                         } else {
-                        	this.removeHashElement(element.target, element);
+                        	hashForSelectors.remove(element.target);
+//                        	this.removeHashElement(element.target, element);
                         }
                     }
                     return;
@@ -424,7 +428,8 @@ public class CCScheduler {
                         if( currentTarget == element ) {
                             currentTargetSalvaged = true;						
                         } else {
-                        	this.removeHashElement(element.target, element);
+                        	hashForSelectors.remove(element.target);
+//                        	this.removeHashElement(element.target, element);
                         }
                     }
                     return;
@@ -476,7 +481,8 @@ public class CCScheduler {
             if( currentTarget == element )
                 currentTargetSalvaged = true;
             else {
-            	this.removeHashElement(element.target, element);
+            	hashForSelectors.remove(element.target);
+//            	this.removeHashElement(element.target, element);
                 // [self removeHashElement:element];
             }
         }

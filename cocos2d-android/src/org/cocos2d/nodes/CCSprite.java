@@ -843,8 +843,8 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
     public CCNode addChild(CCNode child, int z, int aTag) {
         super.addChild(child, z, aTag);
         
-        CCSprite sprite = (CCSprite)child;
-        if (sprite!=null && usesSpriteSheet_ ) {
+        if(child instanceof CCSprite && usesSpriteSheet_) {
+        	CCSprite sprite = (CCSprite)child;
             int index = spriteSheet_.atlasIndex(sprite, z);
             spriteSheet_.insertChild(sprite, index);
         }

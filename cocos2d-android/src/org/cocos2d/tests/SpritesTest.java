@@ -135,7 +135,7 @@ public class SpritesTest extends Activity {
 
             // Example:
             // Or you can create an sprite using a filename. PNG, JPEG and BMP files are supported. Probably TIFF too
-            // tamara = CCSprite.sprite("grossinis_sister1.png");
+            tamara = CCSprite.sprite("grossinis_sister1.png");
 
             addChild(grossini, 1);
             // addChild(tamara, 2);
