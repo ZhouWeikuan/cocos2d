@@ -1,6 +1,7 @@
 package org.cocos2d.tests;
 
 import org.cocos2d.actions.CCScheduler;
+import org.cocos2d.actions.UpdateCallback;
 import org.cocos2d.config.ccMacros;
 import org.cocos2d.layers.CCLayer;
 import org.cocos2d.layers.CCScene;
@@ -215,9 +216,27 @@ public class SchedulerTest extends Activity {
 		public SchedulerPauseResume() {
 			super();
 
-			schedule("tick1", 0.5f);
-			schedule("tick2", 1);
-			schedule("pause", 3);
+			schedule(new UpdateCallback() {
+				
+				@Override
+				public void update(float d) {
+					tick1(d);
+				}
+			} , 0.5f);
+			schedule(new UpdateCallback() {
+				
+				@Override
+				public void update(float d) {
+					tick2(d);
+				}
+			} , 1);
+			schedule(new UpdateCallback() {
+				
+				@Override
+				public void update(float d) {
+					pause(d);
+				}
+			} , 3);
 		}
 
 		public void tick1(float dt) {
@@ -363,7 +382,7 @@ public class SchedulerTest extends Activity {
 		}
 	}
 
-	static class TestNode extends CCNode {
+	static class TestNode extends CCNode implements UpdateCallback {
 		String string_;
 
 		public TestNode(String string, int priority) {
@@ -423,13 +442,25 @@ public class SchedulerTest extends Activity {
 	}
 
 
-	static class SchedulerUpdateAndCustom extends SchedulerTestLayer {
+	static class SchedulerUpdateAndCustom extends SchedulerTestLayer implements UpdateCallback {
 		public SchedulerUpdateAndCustom() {
 			super();
 
 			scheduleUpdate();
-			schedule("tick");
-			schedule("stopSelectors", 4.0f);
+			schedule(new UpdateCallback() {
+				
+				@Override
+				public void update(float d) {
+					tick(d);
+				}
+			});
+			schedule(new UpdateCallback() {
+				
+				@Override
+				public void update(float d) {
+					stopSelectors(d);
+				}
+			}, 4.0f);
 		}
 
 		public String title() {
@@ -455,7 +486,7 @@ public class SchedulerTest extends Activity {
 		}
 	}
 
-	static class SchedulerUpdateFromCustom extends SchedulerTestLayer {
+	static class SchedulerUpdateFromCustom extends SchedulerTestLayer implements UpdateCallback {
 		public SchedulerUpdateFromCustom() {
             super();
 

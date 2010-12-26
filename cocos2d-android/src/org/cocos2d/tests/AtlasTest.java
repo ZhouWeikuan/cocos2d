@@ -2,6 +2,7 @@ package org.cocos2d.tests;
 
 import javax.microedition.khronos.opengles.GL10;
 
+import org.cocos2d.actions.UpdateCallback;
 import org.cocos2d.actions.base.CCRepeatForever;
 import org.cocos2d.actions.interval.CCFadeIn;
 import org.cocos2d.actions.interval.CCFadeOut;
@@ -294,7 +295,13 @@ public class AtlasTest extends Activity {
             label2.setPosition(CGPoint.ccp(10,200));
             label2.setOpacity(32);
 
-            schedule("step");
+            schedule(new UpdateCallback() {
+				
+				@Override
+				public void update(float d) {
+					step(d);
+				}
+			});
         }
 
         public void step(float dt) {
@@ -344,7 +351,13 @@ public class AtlasTest extends Activity {
             CCRepeatForever repeat = CCRepeatForever.action(seq);
             label2.runAction(repeat);
 
-            schedule("step");
+            schedule(new UpdateCallback() {
+				
+				@Override
+				public void update(float d) {
+					step(d);
+				}
+			});
         }
 
         public void step(float dt) {
@@ -415,7 +428,13 @@ public class AtlasTest extends Activity {
             label2.setPosition(CGPoint.ccp( s.width/2, s.height/2));
             label3.setPosition(CGPoint.ccp( s.width, s.height));
 
-            schedule("step");
+            schedule(new UpdateCallback() {
+				
+				@Override
+				public void update(float d) {
+					step(d);
+				}
+			});
         }
 
         public void step(float dt) {
@@ -501,7 +520,13 @@ public class AtlasTest extends Activity {
             CCSprite lastChar = (CCSprite)label2.getChild(3);
             lastChar.runAction(rot_4ever.copy());
 
-            schedule("step", 0.1f);
+            schedule(new UpdateCallback() {
+				
+				@Override
+				public void update(float d) {
+					step(d);
+				}
+			}, 0.1f);
         }
 
         public void draw(GL10 gl) {

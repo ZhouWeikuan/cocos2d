@@ -1,5 +1,6 @@
 package org.cocos2d.tests;
 
+import org.cocos2d.actions.UpdateCallback;
 import org.cocos2d.actions.base.CCRepeatForever;
 import org.cocos2d.actions.interval.CCIntervalAction;
 import org.cocos2d.actions.interval.CCMoveBy;
@@ -174,7 +175,7 @@ public class ParticleTest extends Activity {
         }
     }
 
-    static abstract class ParticleDemo extends CCColorLayer {
+    static abstract class ParticleDemo extends CCColorLayer implements UpdateCallback {
         CCTextureAtlas atlas;
         static final int kTagLabelAtlas = 1;
         CCParticleSystem	emitter;

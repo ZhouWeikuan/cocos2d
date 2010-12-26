@@ -2,6 +2,7 @@ package org.cocos2d.tests;
 
 import java.lang.reflect.Method;
 
+import org.cocos2d.actions.UpdateCallback;
 import org.cocos2d.actions.base.CCRepeatForever;
 import org.cocos2d.actions.grid.CCFlipX3D;
 import org.cocos2d.actions.grid.CCFlipY3D;
@@ -244,7 +245,13 @@ public class EffectsTest extends Activity {
 			item3.setPosition(CGPoint.ccp(size.width/2+100,30));
 			addChild(menu, 1);
 
-			this.schedule("checkAnim");
+			this.schedule(new UpdateCallback() {
+				
+				@Override
+				public void update(float d) {
+					checkAnim(d);
+				}
+			});
 		}
 
 		public void checkAnim(float t) {

@@ -1,5 +1,6 @@
 package org.cocos2d.tests;
 
+import org.cocos2d.actions.UpdateCallback;
 import org.cocos2d.actions.base.CCAction;
 import org.cocos2d.actions.base.CCRepeatForever;
 import org.cocos2d.actions.camera.CCOrbitCamera;
@@ -647,7 +648,12 @@ public class CocosNodeTest extends Activity {
             //    		[cam setCenterX:0 centerY:0 centerZ:0];
 
 
-            schedule("updateEye");
+            schedule(new UpdateCallback() {
+				@Override
+				public void update(float d) {
+					updateEye(d);
+				}
+			});
         }
 
         static float z = 0;

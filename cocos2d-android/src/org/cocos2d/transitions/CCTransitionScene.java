@@ -3,6 +3,7 @@ package org.cocos2d.transitions;
 import org.cocos2d.nodes.CCDirector;
 import org.cocos2d.layers.CCScene;
 import org.cocos2d.types.CGPoint;
+import org.cocos2d.actions.UpdateCallback;
 import org.cocos2d.events.CCTouchDispatcher;
 
 import javax.microedition.khronos.opengles.GL10;
@@ -79,6 +80,14 @@ public class CCTransitionScene extends CCScene {
         }
     }
 
+    
+    private UpdateCallback setNewSceneCallback = new UpdateCallback() {
+		@Override
+		public void update(float d) {
+			setNewScene(d);
+		}
+	};
+    
     public void finish() {
         /* clean up */
         inScene.setVisible(true);
@@ -93,11 +102,11 @@ public class CCTransitionScene extends CCScene {
         outScene.setRotation(0.0f);
         outScene.getCamera().restore();
 
-        schedule("setNewScene", 0);
+        schedule(setNewSceneCallback);
     }
 
     public void setNewScene(float dt) {
-        unschedule("setNewScene");
+        unschedule(setNewSceneCallback);
 
         sendCleanupToScene = CCDirector.sharedDirector().getSendCleanupToScene();
         CCDirector.sharedDirector().replaceScene(inScene);

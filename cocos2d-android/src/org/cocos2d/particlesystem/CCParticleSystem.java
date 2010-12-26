@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import javax.microedition.khronos.opengles.GL10;
 
+import org.cocos2d.actions.UpdateCallback;
 import org.cocos2d.config.ccConfig;
 import org.cocos2d.config.ccMacros;
 import org.cocos2d.nodes.CCNode;
@@ -59,7 +60,7 @@ import org.cocos2d.types.ccPointSprite;
  @endcode
 
  */
-public abstract class CCParticleSystem extends CCNode implements CCTextureProtocol {
+public abstract class CCParticleSystem extends CCNode implements CCTextureProtocol, UpdateCallback {
 
 	/** The Particle emitter lives forever */
 	public static final int	kCCParticleDurationInfinity = -1;

@@ -1,5 +1,6 @@
 package org.cocos2d.tests;
 
+import org.cocos2d.actions.UpdateCallback;
 import org.cocos2d.config.ccMacros;
 import org.cocos2d.events.CCTouchDispatcher;
 import org.cocos2d.layers.CCLayer;
@@ -173,12 +174,20 @@ public class Box2dTest extends Activity {
             addChild(label);
         }
 
+        private UpdateCallback tickCallback = new UpdateCallback() {
+			
+			@Override
+			public void update(float d) {
+				tick(d);
+			}
+		};
+        
 		@Override
 		public void onEnter() {
 			super.onEnter();
 			
 			// start ticking (for physics simulation)
-			schedule("tick");
+			schedule(tickCallback);
 		}
 
 		@Override
@@ -186,7 +195,7 @@ public class Box2dTest extends Activity {
 			super.onExit();
 			
 			// stop ticking (for physics simulation)			
-			unschedule("tick");
+			unschedule(tickCallback);
 		}
 
 		private void addNewSpriteWithCoords(CGPoint pos) {

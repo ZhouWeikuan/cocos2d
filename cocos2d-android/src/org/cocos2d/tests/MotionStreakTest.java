@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.Window;
 import android.view.WindowManager;
+
+import org.cocos2d.actions.UpdateCallback;
 import org.cocos2d.actions.base.CCAction;
 import org.cocos2d.actions.base.CCRepeatForever;
 import org.cocos2d.actions.interval.CCIntervalAction;
@@ -190,7 +192,13 @@ public class MotionStreakTest extends Activity {
             streak = new CCMotionStreak(2, 3, "streak.png", 32, 32, new ccColor4B(0, 255, 0, 255));
             addChild(streak);
             // schedule an update on each frame so we can syncronize the streak with the target
-            schedule("onUpdate");
+            schedule(new UpdateCallback() {
+				
+				@Override
+				public void update(float d) {
+					onUpdate(d);
+				}
+			});
 
             CCIntervalAction a1 = CCRotateBy.action(2, 360);
 

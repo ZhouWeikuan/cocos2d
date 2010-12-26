@@ -1,5 +1,6 @@
 package org.cocos2d.nodes;
 
+import org.cocos2d.actions.UpdateCallback;
 import org.cocos2d.opengl.CCTexture2D;
 import org.cocos2d.types.ccBlendFunc;
 import org.cocos2d.types.ccColor4B;
@@ -22,7 +23,7 @@ import org.cocos2d.types.CGPoint;
  *
  * @since v0.8.1
  */
-public class CCMotionStreak extends CCNode /*implements CocosNodeTexture*/ {
+public class CCMotionStreak extends CCNode implements UpdateCallback/*implements CocosNodeTexture*/ {
     CCRibbon ribbon_;
     float segThreshold_;
     float width_;
@@ -52,7 +53,8 @@ public class CCMotionStreak extends CCNode /*implements CocosNodeTexture*/ {
         addChild(ribbon_);
 
         // update ribbon position
-        schedule("update", 0);
+//        schedule("update", 0);
+        scheduleUpdate();
     }
 
     /**

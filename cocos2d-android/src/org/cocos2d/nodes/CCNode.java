@@ -8,6 +8,7 @@ import javax.microedition.khronos.opengles.GL10;
 
 import org.cocos2d.actions.CCActionManager;
 import org.cocos2d.actions.CCScheduler;
+import org.cocos2d.actions.UpdateCallback;
 import org.cocos2d.actions.base.CCAction;
 import org.cocos2d.config.ccConfig;
 import org.cocos2d.config.ccMacros;
@@ -870,14 +871,54 @@ public class CCNode {
         
         CCScheduler.sharedScheduler().schedule(selector, this, interval, !isRunning_);
     }
+    
+    /*
+     * schedules a selector.
+     * The scheduled callback will be ticked every frame.
+     * 
+     * This is java way version, uses interface based callbacks. UpdateCallback in this case.
+     * It would be preffered solution. It is more polite to Java, GC, and obfuscation.  
+     */
+    public void schedule(UpdateCallback callback) {
+        schedule(callback, 0);
+    }
 
-    /** unschedules a custom selector.*/
+    /*
+     * schedules a custom callback with an interval time in seconds.
+     * If time is 0 it will be ticked every frame.
+     * If time is 0, it is recommended to use 'scheduleUpdate' instead.
+     * 
+     * This is java way version, uses interface based callbacks. UpdateCallback in this case.
+     * It would be preffered solution. It is more polite to Java, GC, and obfuscation.  
+     */
+    public void schedule(UpdateCallback callback, float interval) {
+        assert callback != null : "Argument callback must be non-null";
+        assert interval >= 0 : "Argument interval must be positive";
+        
+        CCScheduler.sharedScheduler().schedule(callback, this, interval, !isRunning_);
+    }
+    
+    /* unschedules a custom selector.*/
     public void unschedule(String selector) {
         // explicit null handling
         if (selector == null)
             return;
 
         CCScheduler.sharedScheduler().unschedule(selector, this);
+    }
+    
+    /*
+     * unschedules a custom callback.
+     * 
+     * This is java way version, uses interface based callbacks. UpdateCallback in this case.
+     * It would be preffered solution. It is more polite to Java, GC, and obfuscation.
+     */
+    public void unschedule(UpdateCallback callback) {
+        // explicit null handling
+        if (callback == null)
+            return;
+
+        CCScheduler.sharedScheduler().unschedule(callback, this);
     }
 
     /** unschedule all scheduled selectors: custom selectors, and the 'update' selector.
