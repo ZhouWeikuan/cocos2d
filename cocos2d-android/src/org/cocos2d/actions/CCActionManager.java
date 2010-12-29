@@ -1,12 +1,15 @@
 package org.cocos2d.actions;
 
-import android.util.Log;
+import java.util.ArrayList;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
+
 import org.cocos2d.actions.base.CCAction;
 import org.cocos2d.config.ccMacros;
 import org.cocos2d.nodes.CCNode;
+import org.cocos2d.utils.ConcurrentArrayHashMap;
 
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArrayList;
+import android.util.Log;
 
 
 /** CCActionManager is a singleton that manages all the actions.
@@ -57,7 +60,7 @@ public class CCActionManager implements UpdateCallback {
      * @since v0.8
      */
 
-    private ConcurrentHashMap<CCNode, HashElement> targets;
+    private ConcurrentArrayHashMap<CCNode, HashElement> targets;
 //    private HashElement	currentTarget;
 //    private boolean currentTargetSalvaged;
 
@@ -80,7 +83,7 @@ public class CCActionManager implements UpdateCallback {
 
     private CCActionManager() {
     	CCScheduler.sharedScheduler().scheduleUpdate(this, 0, false);
-    	targets = new ConcurrentHashMap<CCNode, HashElement>(131);
+    	targets = new ConcurrentArrayHashMap<CCNode, HashElement>();
     }
     
     @Override
@@ -163,9 +166,20 @@ public class CCActionManager implements UpdateCallback {
      * Removes all actions from all the targers.
      */
     public void removeAllActions() {
-        for (HashElement element : targets.values()) {
-            removeAllActions(element.target);
+        synchronized (targets) {
+        	ArrayList<HashElement> values = targets.getValuesInArrayList();
+        	int len = values.size();
+	        for(int i = 0; i < len; i++) {
+	        	HashElement element = values.get(i);
+	        	if(element == null)
+	        		continue;
+	        	
+	        	removeAllActions(element.target);
+	        }
         }
+//        for (HashElement element : targets.values()) {
+//            removeAllActions(element.target);
+//        }
     }
 
     /**
@@ -277,29 +291,61 @@ public class CCActionManager implements UpdateCallback {
     }
 
     public void update(float dt) {
-        for (HashElement currentTarget : targets.values()) {
-            if (!currentTarget.paused) {
-                // The 'actions' may change while inside this loop.
-                for (currentTarget.actionIndex = 0; 
-                	currentTarget.actionIndex < currentTarget.actions.size();
-                	currentTarget.actionIndex++) {
-                    
-                	currentTarget.currentAction = currentTarget.actions.get(currentTarget.actionIndex);
+        synchronized (targets) {
+        	ArrayList<HashElement> values = targets.getValuesInArrayList();
+        	int len = values.size();
+	        for(int i = 0; i < len; i++) {
+	        	HashElement currentTarget = values.get(i);
+	        	if(currentTarget == null)
+	        		continue;
+	        	
+	            if (!currentTarget.paused) {
+	                // The 'actions' may change while inside this loop.
+	                for (currentTarget.actionIndex = 0; 
+	                	currentTarget.actionIndex < currentTarget.actions.size();
+	                	currentTarget.actionIndex++) {
+	                    
+	                	currentTarget.currentAction = currentTarget.actions.get(currentTarget.actionIndex);
 
-                    currentTarget.currentAction.step(dt);
-                    if (currentTarget.currentAction.isDone()) {
-                        currentTarget.currentAction.stop();
+	                    currentTarget.currentAction.step(dt);
+	                    if (currentTarget.currentAction.isDone()) {
+	                        currentTarget.currentAction.stop();
 
-                        removeAction(currentTarget.currentAction);
-                    }
-                    
-                    currentTarget.currentAction = null;
-                }
-            }
+	                        removeAction(currentTarget.currentAction);
+	                    }
+	                    
+	                    currentTarget.currentAction = null;
+	                }
+	            }
 
-            if (currentTarget.actions.isEmpty())
-                deleteHashElement(currentTarget);
+	            if (currentTarget.actions.isEmpty())
+	                deleteHashElement(currentTarget);
+	        }
         }
+    	
+//        for (HashElement currentTarget : targets.values()) {
+//            if (!currentTarget.paused) {
+//                // The 'actions' may change while inside this loop.
+//                for (currentTarget.actionIndex = 0; 
+//                	currentTarget.actionIndex < currentTarget.actions.size();
+//                	currentTarget.actionIndex++) {
+//                    
+//                	currentTarget.currentAction = currentTarget.actions.get(currentTarget.actionIndex);
+//
+//                    currentTarget.currentAction.step(dt);
+//                    if (currentTarget.currentAction.isDone()) {
+//                        currentTarget.currentAction.stop();
+//
+//                        removeAction(currentTarget.currentAction);
+//                    }
+//                    
+//                    currentTarget.currentAction = null;
+//                }
+//            }
+//
+//            if (currentTarget.actions.isEmpty())
+//                deleteHashElement(currentTarget);
+//        }
     }
 
 	public void resume(CCNode target) {

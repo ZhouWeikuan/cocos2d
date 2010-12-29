@@ -1,15 +1,18 @@
 package org.cocos2d.utils;
 
+import java.util.Formatter;
+
 public class CCFormatter {
-    private StringBuilder sb;
-    private java.util.Formatter formatter;
+    private static StringBuilder sb = new StringBuilder(50);
+    private static Formatter formatter = new Formatter(sb);
 
-    public CCFormatter() {
-           sb = new StringBuilder();
-           formatter = new java.util.Formatter(sb);
-    }
+//    public CCFormatter() {
+//           sb = new StringBuilder();
+//           formatter = new Formatter(sb);
+//    }
 
-    public String format(java.lang.String s, java.lang.Object... objects) {
+    public synchronized static String format(String s, Object... objects) {
+    	sb.setLength(0);
         formatter.format(s, objects);
         return sb.toString();
     }
