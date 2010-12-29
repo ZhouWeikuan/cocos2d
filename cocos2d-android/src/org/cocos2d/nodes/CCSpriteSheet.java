@@ -1,5 +1,6 @@
 package org.cocos2d.nodes;
 
+import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -296,7 +297,7 @@ public class CCSpriteSheet extends CCNode implements CCTextureProtocol {
 
         // ignore self (spritesheet)
         if( (CCNode)node != (CCNode)this) {
-            node.atlasIndex_ = index;
+            node.atlasIndex = index;
             index++;
         }
 
@@ -312,11 +313,11 @@ public class CCSpriteSheet extends CCNode implements CCTextureProtocol {
     public int highestAtlasIndexInChild(CCSprite sprite) {
         List<CCNode> array = sprite.getChildren();
         if (array == null)
-        	return sprite.atlasIndex_;
+		return sprite.atlasIndex;
         
         int count = array.size();
         if( count == 0 )
-            return sprite.atlasIndex_;
+            return sprite.atlasIndex;
         else
             return highestAtlasIndexInChild((CCSprite)array.get(count - 1));
     }
@@ -325,7 +326,7 @@ public class CCSpriteSheet extends CCNode implements CCTextureProtocol {
         List<CCNode> array = sprite.getChildren();
         int count = array.size();
         if( count == 0 )
-            return sprite.atlasIndex_;
+            return sprite.atlasIndex;
         else
             return lowestAtlasIndexInChild((CCSprite)array.get(0));
     }
@@ -356,9 +357,9 @@ public class CCSpriteSheet extends CCNode implements CCTextureProtocol {
 
             // less than parent and brothers
             if( z < 0 )
-                return p.atlasIndex_;
+                return p.atlasIndex;
             else
-                return p.atlasIndex_+1;
+                return p.atlasIndex+1;
         } else {
             // previous & sprite belong to the same branch
             if( ( previous.getZOrder() < 0 && z < 0 )|| (previous.getZOrder() >= 0 && z >= 0) ) {
@@ -366,14 +367,14 @@ public class CCSpriteSheet extends CCNode implements CCTextureProtocol {
             }
             // else (previous < 0 and sprite >= 0 )
             CCSprite p = (CCSprite) sprite.getParent();
-            return p.atlasIndex_ + 1;
+            return p.atlasIndex + 1;
         }
     }
 
     // add child helper
     protected void insertChild(CCSprite sprite, int index) {
         sprite.useSpriteSheetRender(this);
-        sprite.atlasIndex_ = index;
+        sprite.atlasIndex = index;
         sprite.dirty_ = true;
 
         if(textureAtlas_.getTotalQuads() == textureAtlas_.capacity()) {
@@ -388,7 +389,7 @@ public class CCSpriteSheet extends CCNode implements CCTextureProtocol {
         CCSprite child;
         for(; i<descendants_.size(); i++){
             child = descendants_.get(i);
-            child.atlasIndex_ = child.atlasIndex_ + 1;
+            child.atlasIndex = child.atlasIndex + 1;
         }
 
         // add children recursively
@@ -404,7 +405,7 @@ public class CCSpriteSheet extends CCNode implements CCTextureProtocol {
     // remove child helper
     public void removeSpriteFromAtlas(CCSprite sprite) {
         // remove from TextureAtlas
-        textureAtlas_.removeQuad(sprite.atlasIndex_);
+        textureAtlas_.removeQuad(sprite.atlasIndex);
 
         // Cleanup sprite. It might be reused (issue #569)
         sprite.useSelfRender();
@@ -418,7 +419,7 @@ public class CCSpriteSheet extends CCNode implements CCTextureProtocol {
 
             for(; index < count; index++) {
                 CCSprite s = descendants_.get(index);
-                s.atlasIndex_ = s.atlasIndex_ - 1;
+                s.atlasIndex = s.atlasIndex - 1;
             }
         }
 
@@ -449,6 +450,62 @@ public class CCSpriteSheet extends CCNode implements CCTextureProtocol {
 	public void setBlendFunc(ccBlendFunc blendFunc) {
 		// TODO Auto-generated method stub
 		blendFunc_ = blendFunc;
+	}
+
+
+
+	/* IMPORTANT XXX IMPORTNAT:
+	 * These 2 methods can't be part of CCTMXLayer since they call [super add...], and CCSpriteSheet#add SHALL not be called
+	 */
+	/* Adds a quad into the texture atlas but it won't be added into the children array.
+	 This method should be called only when you are dealing with very big AtlasSrite and when most of the CCSprite won't be updated.
+	 For example: a tile map (CCTMXMap) or a label with lots of characgers (BitmapFontAtlas)
+	 */
+	protected void addQuadFromSprite(CCSprite sprite, int index) {
+		assert(sprite != null): "Argument must be non-nil";
+		assert(sprite.getClass().equals(CCSprite.class)): "CCSpriteSheet only supports CCSprites as children";
+
+		while(index >= textureAtlas_.capacity() || textureAtlas_.capacity() == textureAtlas_.getTotalQuads() )
+			this.increaseAtlasCapacity();
+
+		//
+		// update the quad directly. Don't add the sprite to the scene graph
+		//
+
+		sprite.useSpriteSheetRender(this);
+		sprite.atlasIndex	= index;
+
+		FloatBuffer texCordBuffer = sprite.getTexCoords();
+		FloatBuffer vertexBuffer  = sprite.getVertices();
+		textureAtlas_.insertQuad(texCordBuffer, vertexBuffer, index);
+
+		// XXX: updateTransform will update the textureAtlas too using updateQuad.
+		// XXX: so, it should be AFTER the insertQuad
+		sprite.updateTransform();
+	}
+
+	/* This is the opposite of "addQuadFromSprite.
+	 It add the sprite to the children and descendants array, but it doesn't update add it to the texture atlas
+	 */
+	protected CCSpriteSheet addSpriteWithoutQuad(CCSprite child, int z, int aTag) {
+		assert(child != null): "Argument must be non-nil";
+		assert(child.getClass().equals(CCSprite.class)):"CCSpriteSheet only supports CCSprites as children";
+
+		// quad index is Z
+		child.atlasIndex = z;
+
+		// XXX: optimize with a binary search
+		int i = 0;
+		for (CCSprite c : descendants_ ) {
+			if( c.atlasIndex >= z )
+				break;
+			i++;
+		}
+		descendants_.add(i, child);
+
+		// IMPORTANT: Call super, and not self. Avoid adding it to the texture atlas array
+		super.addChild(child, z, aTag);
+		return this;
 	}
 
 }

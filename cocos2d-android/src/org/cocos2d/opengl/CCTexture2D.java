@@ -539,7 +539,7 @@ public class CCTexture2D {
 
       @since v0.8
       */
-    public static void setAntiAliasTexParameters() {
+    public void setAntiAliasTexParameters() {
         _gTexParams.magFilter = _gTexParams.minFilter = GL_LINEAR;
     }
 

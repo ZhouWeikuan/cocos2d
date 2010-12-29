@@ -73,7 +73,7 @@ public class CCTileMapAtlas extends CCAtlasNode {
         for (int x = 0; x < tgaInfo.width; x++) {
             for (int y = 0; y < tgaInfo.height; y++) {
             	int p = x + y * tgaInfo.width;
-                CCRGBB value = new CCRGBB(tgaInfo.imageData[p + 0],
+                ccColor3B value = new ccColor3B(tgaInfo.imageData[p + 0],
                         tgaInfo.imageData[p + 1],
                         tgaInfo.imageData[p + 2]);
                 if (value.r != 0)
@@ -96,7 +96,7 @@ public class CCTileMapAtlas extends CCAtlasNode {
      * returns a tile from position x,y.
      * For the moment only channel R is used
      */
-    public CCRGBB tile(ccGridSize pos) {
+    public ccColor3B tile(ccGridSize pos) {
         assert tgaInfo != null : "tgaInfo must not be null";
         assert pos.x < tgaInfo.width : "Invalid position.x";
         assert pos.y < tgaInfo.height : "Invalid position.y";
@@ -106,7 +106,7 @@ public class CCTileMapAtlas extends CCAtlasNode {
         ccColor3B value = ptr[pos.x + pos.y * tgaInfo->width];
         */
 
-        CCRGBB value = new CCRGBB(tgaInfo.imageData[pos.x + 0 + pos.y * tgaInfo.width],
+        ccColor3B value = new ccColor3B(tgaInfo.imageData[pos.x + 0 + pos.y * tgaInfo.width],
                 tgaInfo.imageData[pos.x + 1 + pos.y * tgaInfo.width],
                 tgaInfo.imageData[pos.x + 2 + pos.y * tgaInfo.width]);
 
@@ -117,23 +117,23 @@ public class CCTileMapAtlas extends CCAtlasNode {
      * sets a tile at position x,y.
      * For the moment only channel R is used
      */
-    public void setTile(CCRGBB tile, ccGridSize pos) {
+    public void setTile(ccColor3B tile, ccGridSize pos) {
         assert tgaInfo != null : "tgaInfo must not be null";
         assert posToAtlasIndex != null : "posToAtlasIndex must not be nil";
         assert pos.x < tgaInfo.width : "Invalid position.x";
         assert pos.y < tgaInfo.height : "Invalid position.y";
         assert tile.r != 0 : "R component must be non-zero";
 
-        CCRGBB value = new CCRGBB(tgaInfo.imageData[pos.x + 0 + pos.y * tgaInfo.width],
+        ccColor3B value = new ccColor3B(tgaInfo.imageData[pos.x + 0 + pos.y * tgaInfo.width],
                 tgaInfo.imageData[pos.x + 1 + pos.y * tgaInfo.width],
                 tgaInfo.imageData[pos.x + 2 + pos.y * tgaInfo.width]);
 
         if (value.r == 0) {
             Log.w(null, "Value.r must be non-zero.");
         } else {
-            tgaInfo.imageData[pos.x + 0 + pos.y * tgaInfo.width] = tile.r;
-            tgaInfo.imageData[pos.x + 1 + pos.y * tgaInfo.width] = tile.g;
-            tgaInfo.imageData[pos.x + 2 + pos.y * tgaInfo.width] = tile.b;
+            tgaInfo.imageData[pos.x + 0 + pos.y * tgaInfo.width] = (byte) tile.r;
+            tgaInfo.imageData[pos.x + 1 + pos.y * tgaInfo.width] = (byte) tile.g;
+            tgaInfo.imageData[pos.x + 2 + pos.y * tgaInfo.width] = (byte) tile.b;
 
             // TODO: this method consumes a lot of memory
             // a tree of something like that shall be implemented
@@ -142,7 +142,7 @@ public class CCTileMapAtlas extends CCAtlasNode {
         }
     }
     
-    private void updateAtlas(ccGridSize pos, CCRGBB value, int idx) {
+    private void updateAtlas(ccGridSize pos, ccColor3B value, int idx) {
         ccQuad2 texCoord = new ccQuad2();
         ccQuad3 vertex = new ccQuad3();
         int x = pos.x;
@@ -183,7 +183,7 @@ public class CCTileMapAtlas extends CCAtlasNode {
         for (int x = 0; x < tgaInfo.width; x++) {
             for (int y = 0; y < tgaInfo.height; y++) {
                 if (total < itemsToRender) {
-                    CCRGBB value = new CCRGBB(tgaInfo.imageData[x + 0 + y * tgaInfo.width],
+                    ccColor3B value = new ccColor3B(tgaInfo.imageData[x + 0 + y * tgaInfo.width],
                             tgaInfo.imageData[x + 1 + y * tgaInfo.width],
                             tgaInfo.imageData[x + 2 + y * tgaInfo.width]);
 

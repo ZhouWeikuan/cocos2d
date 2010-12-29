@@ -11,4 +11,9 @@ public class CCFormatter {
         formatter.format(s, objects);
         return sb.toString();
     }
+
+    public final static int swapIntToLittleEndian(int v) {
+        return  (v >>> 24) | (v << 24) |
+          ((v << 8) & 0x00FF0000) | ((v >> 8) & 0x0000FF00);
+    }
 }
