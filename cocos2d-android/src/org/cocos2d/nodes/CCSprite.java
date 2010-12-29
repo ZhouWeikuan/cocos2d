@@ -169,7 +169,7 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
 
     /** The index used on the TextureATlas.
      * Don't modify this value unless you know what you are doing */
-	int                     atlasIndex_;			// Absolute (real) Index on the SpriteSheet
+	public		int			atlasIndex;	// Absolute (real) Index on the SpriteSheet
 
     /** weak reference to the CCSpriteSheet that renders the CCSprite */
 	CCSpriteSheet			spriteSheet_;
@@ -449,7 +449,7 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
       @since v0.99.0
       */
     public void useSelfRender() {
-        atlasIndex_ = CCSpriteIndexNotInitialized;
+        atlasIndex = CCSpriteIndexNotInitialized;
         usesSpriteSheet_ = false;
         textureAtlas_ = null;
         spriteSheet_ = null;
@@ -606,9 +606,9 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
         
         // renders using Sprite Manager
         if( usesSpriteSheet_ ) {
-            if( atlasIndex_ != CCSpriteIndexNotInitialized) {
+            if( atlasIndex != CCSpriteIndexNotInitialized) {
             	tmpColor4B.r = color_.r; tmpColor4B.g = color_.g; tmpColor4B.b = color_.b; tmpColor4B.a = opacity_;
-            	textureAtlas_.updateColor(tmpColors, atlasIndex_);
+		textureAtlas_.updateColor(tmpColors, atlasIndex);
             	
             } else {
                 // no need to set it recursively
@@ -990,7 +990,7 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
         texCoords.position(0);
         
         if(usesSpriteSheet_)
-        	textureAtlas_.putTexCoords( texCoords, atlasIndex_);
+		textureAtlas_.putTexCoords( texCoords, atlasIndex);
     }
 
     private final static CGAffineTransform tmpMatrix = CGAffineTransform.identity();
@@ -1007,7 +1007,7 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
         // Optimization: if it is not visible, then do nothing
         if( ! visible_ ) {
         	Arrays.fill(tmpV, 0);
-        	textureAtlas_.putVertex(textureAtlas_.getVertexBuffer(), tmpV, atlasIndex_);
+		textureAtlas_.putVertex(textureAtlas_.getVertexBuffer(), tmpV, atlasIndex);
             dirty_ = recursiveDirty_ = false;
             return ;
         }
@@ -1088,7 +1088,7 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
         tmpV[6] = cx; tmpV[7] = cy; tmpV[8] = vertexZ_;   
         tmpV[9] = bx; tmpV[10] = by; tmpV[11] = vertexZ_;   
 
-        textureAtlas_.putVertex(textureAtlas_.getVertexBuffer(), tmpV, atlasIndex_);
+        textureAtlas_.putVertex(textureAtlas_.getVertexBuffer(), tmpV, atlasIndex);
         dirty_ = recursiveDirty_ = false;
     }
 

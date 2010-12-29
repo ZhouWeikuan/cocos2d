@@ -281,12 +281,12 @@ public class TransitionsTest extends Activity {
 			bg1.setPosition(size.width/2, size.height/2);
 			addChild(bg1, -1);
 
-			CCLabel title = CCLabel.makeLabel(transitions[sceneIdx].toString(), "DroidSans", 40);
+			CCLabel title = CCLabel.makeLabel(transitions[sceneIdx].toString(), "DroidSans", 24);
 			addChild(title);
 			title.setColor(new ccColor3B(255, 32, 32));
 			title.setPosition(CGPoint.make(x / 2, y-100));
 
-			CCLabel label = CCLabel.makeLabel("SCENE 1", "DroidSans", 64);
+			CCLabel label = CCLabel.makeLabel("SCENE 1", "DroidSans", 32);
 			label.setColor(new ccColor3B(16,16,255));
 			label.setPosition(x/2,y/2);
 			addChild(label);
@@ -392,12 +392,12 @@ public class TransitionsTest extends Activity {
 			bg2.setPosition(size.width/2, size.height/2);
 			addChild(bg2, -1);
 
-			CCLabel title = CCLabel.makeLabel(transitions[sceneIdx].toString(), "DroidSans", 40);
+			CCLabel title = CCLabel.makeLabel(transitions[sceneIdx].toString(), "DroidSans", 24);
 			addChild(title);
 			title.setColor(new ccColor3B(255,32,32));
 			title.setPosition(x/2, y-100);
 
-			CCLabel label = CCLabel.makeLabel("SCENE 2", "DroidSans", 64);
+			CCLabel label = CCLabel.makeLabel("SCENE 2", "DroidSans", 32);
 			label.setColor(new ccColor3B(16,16,255));
 			label.setPosition(x / 2, y / 2);
 			addChild(label);
