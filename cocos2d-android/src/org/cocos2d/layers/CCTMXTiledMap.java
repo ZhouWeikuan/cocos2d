@@ -224,7 +224,7 @@ public class CCTMXTiledMap extends CCNode {
 			for (int y=0; y < size.height; y++ ) {
 				for (int x=0; x < size.width; x++ ) {
 					int pos = (int) (x + size.width * y);
-					int gid = layerInfo.tiles[ pos ];
+					int gid = layerInfo.tiles.get(pos);
 
 					// gid are stored in little endian.
 					// if host is big endian, then swap

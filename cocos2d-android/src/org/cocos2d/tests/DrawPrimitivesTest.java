@@ -56,7 +56,6 @@ public class DrawPrimitivesTest extends Activity {
 
         // Make the Scene active
         CCDirector.sharedDirector().runWithScene(scene);
-
     }
 
     @Override
@@ -124,7 +123,7 @@ public class DrawPrimitivesTest extends Activity {
 
             CCMenuItemImage item1 = CCMenuItemImage.item("b1.png", "b2.png", this, "backCallback");
             CCMenuItemImage item2 = CCMenuItemImage.item("r1.png", "r2.png", this, "restartCallback");
-            CCMenuItemImage item3 = CCMenuItemImage.item("f1.png", "f2.png", this, "nextCallbackk");
+            CCMenuItemImage item3 = CCMenuItemImage.item("f1.png", "f2.png", this, "nextCallback");
 
             CCMenu menu = CCMenu.menu(item1, item2, item3);
 
@@ -136,13 +135,18 @@ public class DrawPrimitivesTest extends Activity {
             addChild(menu, -1);
         }
 
+        /*
+         * After setting the screen orientation to landscape,
+         *   the Activity will be restarted, so it seems we should not call setLandscape here
+         *  this is a bug, we should make full use of android's capability, but not partly.  
+         */
         public void restartCallback(Object sender) {
             boolean landscape = CCDirector.sharedDirector().getLandscape();
             CCDirector.sharedDirector().setLandscape(!landscape);
 
             CCScene s = CCScene.node();
             s.addChild(restartAction());
-            CCDirector.sharedDirector().replaceScene(s);
+            CCDirector.sharedDirector().runWithScene(s);
         }
 
         public void nextCallback(Object sender) {
@@ -151,7 +155,7 @@ public class DrawPrimitivesTest extends Activity {
 
             CCScene s = CCScene.node();
             s.addChild(nextAction());
-            CCDirector.sharedDirector().replaceScene(s);
+            CCDirector.sharedDirector().runWithScene(s);
         }
 
         public void backCallback(Object sender) {
@@ -160,7 +164,7 @@ public class DrawPrimitivesTest extends Activity {
 
             CCScene s = CCScene.node();
             s.addChild(backAction());
-            CCDirector.sharedDirector().replaceScene(s);
+            CCDirector.sharedDirector().runWithScene(s);
         }
 
         String title() {

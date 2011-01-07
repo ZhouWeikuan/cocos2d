@@ -1,5 +1,6 @@
 package org.cocos2d.layers;
 
+import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -59,7 +60,7 @@ public class CCTMXLayer extends CCSpriteSheet {
 	public	CGSize				mapTileSize;
 
 	/** pointer to the map of tiles */
-	public	int					tiles[];
+	public	IntBuffer			tiles;
 
 
 	/** Layer orientation, which is the same as the map orientation */
@@ -68,7 +69,7 @@ public class CCTMXLayer extends CCSpriteSheet {
 	/** properties from the layer. They can be added using Tiled */
 	public	HashMap<String, String>		properties;
 
-	char				opacity_; // TMX Layer supports opacity
+	int					opacity_; // TMX Layer supports opacity
 
 	int					minGID_;
 	int					maxGID_;
@@ -188,7 +189,7 @@ public class CCTMXLayer extends CCSpriteSheet {
 		assert( tiles!=null && atlasIndexArray_!=null) :"TMXLayer: the tiles map has been released";
 
 		int idx = (int) (pos.x + pos.y * layerSize.width);
-		return tiles[ idx ];
+		return tiles.get(idx);
 	}
 
 
@@ -219,7 +220,7 @@ public class CCTMXLayer extends CCSpriteSheet {
 				if (sprite != null) {
 					CGRect rect = tileset.rectForGID(gid);
 					sprite.setTextureRect(rect);
-					tiles[z] = gid;
+					tiles.put(z, gid);
 				} else {
 					updateTileForGID(gid, pos);
 				}
@@ -240,7 +241,7 @@ public class CCTMXLayer extends CCSpriteSheet {
 			int atlasIndex = atlasIndexForExistantZ(z);
 
 			// remove tile from GID map
-			tiles[z] = 0;
+			tiles.put(z, 0);
 
 			// remove tile from atlas position array
 			atlasIndexArray_.remove(atlasIndex);
@@ -306,7 +307,7 @@ public class CCTMXLayer extends CCSpriteSheet {
 		for (int y=0; y < layerSize.height; y++) {
 			for (int x=0; x < layerSize.width; x++) {
 				int pos = (int) (x + layerSize.width * y);
-				int gid = tiles[ pos ];
+				int gid = tiles.get(pos);
 
 				// gid are stored in little endian.
 				// if host is big endian, then swap
@@ -348,7 +349,7 @@ public class CCTMXLayer extends CCSpriteSheet {
 
 		int atlasIndex = sprite.atlasIndex;
 		int zz = atlasIndexArray_.get(atlasIndex);
-		tiles[zz] = 0;
+		tiles.put(zz, 0);
 		atlasIndexArray_.remove(atlasIndex);
 
 		super.removeChild(sprite, true);
@@ -485,7 +486,7 @@ public class CCTMXLayer extends CCSpriteSheet {
 				sprite.atlasIndex = ai+1;
 		}
 
-		tiles[z] = gid;
+		tiles.put(z, gid);
 
 		return reusedTile_;
 	}
@@ -510,7 +511,7 @@ public class CCTMXLayer extends CCSpriteSheet {
 
 		reusedTile_.atlasIndex = indexForZ;
 		reusedTile_.updateTransform();
-		tiles[z] = gid;
+		tiles.put(z, gid);
 
 		return reusedTile_;
 	}
@@ -528,7 +529,7 @@ public class CCTMXLayer extends CCSpriteSheet {
 		}
 
 		String alphaFuncVal = propertyNamed("cc_alpha_func");
-		alphaFuncValue_ = Float.parseFloat(alphaFuncVal);
+		alphaFuncValue_ = alphaFuncVal==null?0.0f:Float.parseFloat(alphaFuncVal);
 	}
 
 	// index

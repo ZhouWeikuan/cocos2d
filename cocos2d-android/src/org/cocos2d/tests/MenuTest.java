@@ -157,7 +157,7 @@ public class MenuTest extends Activity {
             int i=0;
             for (CCNode child : menu.getChildren()) {
                 final CGPoint dstPoint = child.getPositionRef();
-                int offset = (int) (s.width/2 + 50);
+                int offset = (int) (s.width/2 + 20);
                 if( i % 2 == 0)
                     offset = -offset;
                 child.setPosition( dstPoint.x + offset, dstPoint.y);

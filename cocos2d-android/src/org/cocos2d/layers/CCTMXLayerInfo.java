@@ -1,5 +1,6 @@
 package org.cocos2d.layers;
 
+import java.nio.IntBuffer;
 import java.util.HashMap;
 import org.cocos2d.types.CGPoint;
 import org.cocos2d.types.CGSize;
@@ -15,9 +16,9 @@ import org.cocos2d.types.CGSize;
 public class CCTMXLayerInfo  {
 	String			name;
 	CGSize			layerSize;
-	int				tiles[];
+	IntBuffer		tiles;
 	boolean			visible;
-	char			opacity;
+	int				opacity;
 	boolean			ownTiles;
 	int				minGID;
 	int				maxGID;

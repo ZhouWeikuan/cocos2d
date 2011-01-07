@@ -1,12 +1,5 @@
 package org.cocos2d.tests;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.os.Bundle;
-import android.view.MotionEvent;
-import android.view.Window;
-import android.view.WindowManager;
-
 import org.cocos2d.actions.UpdateCallback;
 import org.cocos2d.actions.base.CCAction;
 import org.cocos2d.actions.base.CCRepeatForever;
@@ -18,11 +11,21 @@ import org.cocos2d.layers.CCLayer;
 import org.cocos2d.layers.CCScene;
 import org.cocos2d.menus.CCMenu;
 import org.cocos2d.menus.CCMenuItemImage;
-import org.cocos2d.nodes.*;
+import org.cocos2d.nodes.CCDirector;
+import org.cocos2d.nodes.CCLabel;
+import org.cocos2d.nodes.CCMotionStreak;
+import org.cocos2d.nodes.CCNode;
+import org.cocos2d.nodes.CCSprite;
 import org.cocos2d.opengl.CCGLSurfaceView;
-import org.cocos2d.types.ccColor4B;
 import org.cocos2d.types.CGPoint;
 import org.cocos2d.types.CGSize;
+import org.cocos2d.types.ccColor4B;
+
+import android.app.Activity;
+import android.os.Bundle;
+import android.view.MotionEvent;
+import android.view.Window;
+import android.view.WindowManager;
 
 public class MotionStreakTest extends Activity {
     // private static final String LOG_TAG = CocosNodeTest.class.getSimpleName();
@@ -124,7 +127,7 @@ public class MotionStreakTest extends Activity {
         public MotionStreakTestLayer() {
             CGSize s = CCDirector.sharedDirector().winSize();
 
-            CCLabel label = CCLabel.makeLabel(title(), "DroidSans", 24);
+            CCLabel label = CCLabel.makeLabel(title(), "DroidSans", 18);
             addChild(label, kTagLabel);
             label.setPosition(CGPoint.make(s.width / 2, s.height / 2 - 50));
 
