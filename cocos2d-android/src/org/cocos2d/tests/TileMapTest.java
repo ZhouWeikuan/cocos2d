@@ -914,12 +914,13 @@ public class TileMapTest extends Activity {
             CCTMXTiledMap map = CCTMXTiledMap.tiledMap("iso-test-zorder.tmx");
             addChild(map, 0, kTagTileMap);
 
-            map.setPosition(-700,-50);
+            map.setPosition(-1000,-50);
             CGSize s = map.getContentSize();
             ccMacros.CCLOG(LOG_TAG, "ContentSize: " + s.width + "," + s.height);
 
             tamara = CCSprite.sprite("grossinis_sister1.png");
-            map.addChild(tamara, map.getChildren().size());
+            int z = (map.getChildren()!=null?map.getChildren().size():0);
+            map.addChild(tamara, z);
             int mapWidth = (int) (map.getMapSize().width * map.getTileSize().width);
             tamara.setPosition( mapWidth/2, 0);
             tamara.setAnchorPoint(0.5f, 0);

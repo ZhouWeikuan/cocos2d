@@ -3,22 +3,23 @@ package org.cocos2d.layers;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.jar.Attributes;
 import java.util.zip.GZIPInputStream;
 
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
-import org.apache.commons.codec.binary.Base64;
 import org.cocos2d.config.ccMacros;
 import org.cocos2d.nodes.CCDirector;
 import org.cocos2d.types.CGPoint;
 import org.cocos2d.types.CGSize;
+import org.cocos2d.utils.Base64;
+import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
@@ -161,8 +162,9 @@ public class CCTMXMapInfo {
 			// myList = new ArrayList<HashMap<String, String>>();
 		}
 
-		public void startElement(String uri, String localName, String qName, Attributes attributes)
-		throws SAXException {
+		@Override
+	    public void startElement(String uri, String localName, String qName, Attributes attributes) 
+			throws SAXException {
 
 			if (localName.equals("map")) {
 				String version = attributes.getValue("version");
@@ -181,10 +183,10 @@ public class CCTMXMapInfo {
 					ccMacros.CCLOG(LOG_TAG, "cocos2d: TMXFomat: Unsupported orientation: " + orientation);
 				}
 
-				mapSize.width	= Integer.parseInt(attributes.getValue("width"));
-				mapSize.height	= Integer.parseInt(attributes.getValue("height"));
-				tileSize.width	= Integer.parseInt(attributes.getValue("tilewidth"));
-				tileSize.height = Integer.parseInt(attributes.getValue("tileheight"));
+				mapSize = CGSize.make(Integer.parseInt(attributes.getValue("width")),
+						Integer.parseInt(attributes.getValue("height")));
+				tileSize = CGSize.make(Integer.parseInt(attributes.getValue("tilewidth")),
+						Integer.parseInt(attributes.getValue("tileheight")));
 
 				// The parent element is now "map"
 				parentElement = TMXPropertyMap;
@@ -228,18 +230,23 @@ public class CCTMXMapInfo {
 				s.height = Integer.parseInt(attributes.getValue("height"));
 				layer.layerSize = s;
 
-				layer.visible = !(attributes.getValue("visible").equals("0"));
+				String visible = attributes.getValue("visible");
+				layer.visible = visible==null||!(visible.equals("0"));
 
 				if (attributes.getValue("opacity") != null) {
-					layer.opacity = (char) (255 * Float.parseFloat(attributes.getValue("opacity")));
+					layer.opacity = (int) (255 * Float.parseFloat(attributes.getValue("opacity")));
 				} else {
 					layer.opacity = 255;
 				}
 
-				int x = Integer.parseInt(attributes.getValue("x"));
-				int y = Integer.parseInt(attributes.getValue("y"));
+				try {
+					int x = Integer.parseInt(attributes.getValue("x"));
+					int y = Integer.parseInt(attributes.getValue("y"));
 
-				layer.offset = CGPoint.ccp(x,y);
+					layer.offset = CGPoint.ccp(x,y);
+				} catch (Exception e) {
+					layer.offset = CGPoint.zero();
+				}
 
 				layers.add(layer);
 
@@ -261,13 +268,17 @@ public class CCTMXMapInfo {
 				parentElement = TMXPropertyObjectGroup;
 
 			} else if (localName.equals("image")) {
-
 				CCTMXTilesetInfo tileset = tilesets.get(tilesets.size()-1);
 
 				// build full path
 				String imagename = attributes.getValue("source");
-				String path = filename.substring(0, filename.lastIndexOf("/"));
-				tileset.sourceImage = path + "/" + imagename;
+				int idx = filename.lastIndexOf("/");
+				if (idx != -1) {
+					String path = filename.substring(0, idx);
+					tileset.sourceImage = path + "/" + imagename;
+				} else {
+					tileset.sourceImage = imagename;
+				}			
 
 			} else if (localName.equals("data")) {
 				String encoding = attributes.getValue("encoding");
@@ -365,13 +376,19 @@ public class CCTMXMapInfo {
 
 				CCTMXLayerInfo layer = layers.get(layers.size()-1);
 
-				byte[] buffer = Base64.decodeBase64(currentString.toString());
+				byte[] buffer = null;
+				try {
+					buffer = Base64.decode(currentString.toString());
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 				if (buffer == null ) {
 					ccMacros.CCLOG(LOG_TAG, "cocos2d: TiledMap: decode data error");
 					return;
 				}
 
-				if ((layerAttribs & TMXLayerAttribGzip) != 0) {
+				/*if ((layerAttribs & TMXLayerAttribGzip) != 0) {
 					try {
 						byte  deflated[] = new byte [1024];
 						GZIPInputStream gzi = new GZIPInputStream(new ByteArrayInputStream(buffer));
@@ -392,9 +409,13 @@ public class CCTMXMapInfo {
 						return;
 					}
 
-				} else {
+				} else { */
+				// automatically ungzip, so we can make use of it directly.
+				try {
 					ByteBuffer b = ByteBuffer.wrap(buffer);
-					layer.tiles = b.asIntBuffer().array();
+					layer.tiles = b.asIntBuffer();
+				} catch (Exception e) {
+					ccMacros.CCLOG(LOG_TAG, "cocos2d: TiledMap: inflate data error");
 				}
 
 				currentString = new StringBuilder();

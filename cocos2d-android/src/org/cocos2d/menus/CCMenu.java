@@ -195,7 +195,7 @@ public class CCMenu extends CCLayer {
         float y = height / 2.0f;
         for (int i = 0; i < children_.size(); i++) {
             CCMenuItem item = (CCMenuItem) children_.get(i);
-            item.setPosition(CGPoint.make(0, y - item.getContentSize().height * item.getScaleY() / 2.0f));
+            item.setPosition(0, y - item.getContentSize().height * item.getScaleY() / 2.0f);
             y -= item.getContentSize().height * item.getScaleY() + padding;
         }
     }
