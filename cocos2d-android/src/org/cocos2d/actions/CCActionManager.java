@@ -1,13 +1,11 @@
 package org.cocos2d.actions;
 
 import java.util.ArrayList;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.cocos2d.actions.base.CCAction;
-import org.cocos2d.config.ccMacros;
 import org.cocos2d.nodes.CCNode;
-import org.cocos2d.utils.ConcurrentArrayHashMap;
+import org.cocos2d.utils.collections.ConcurrentArrayHashMap;
+import org.cocos2d.utils.pool.ConcOneClassPool;
 
 import android.util.Log;
 
@@ -25,27 +23,25 @@ import android.util.Log;
 public class CCActionManager implements UpdateCallback {
     private static final String LOG_TAG = CCActionManager.class.getSimpleName();
 
-    static class HashElement {
-        CopyOnWriteArrayList<CCAction> actions;
+    private static class HashElement {
+        final ArrayList<CCAction> actions;
         CCNode target;
         int actionIndex;
-        CCAction currentAction;
-        boolean currentActionSalvaged;
+//        CCAction currentAction;
+//        boolean currentActionSalvaged;
         boolean paused;
-
-        HashElement(CCNode t, boolean p) {
-            target = t;
-            paused = p;
-        }
-
-        public String toString() {
-            String s = "target=" + target + ", paused=" + paused + ", actions=" + actions + "\n";
-            for (CCAction a : actions) {
-                s += a.toString() + "\n";
-            }
-            return s;
-        }
+        
+        public HashElement() {
+        	actions = new ArrayList<CCAction>(4);
+		}
     }
+    
+    private ConcOneClassPool<HashElement> pool = new ConcOneClassPool<CCActionManager.HashElement>() {
+    	@Override
+    	protected HashElement allocate() {
+    		return new HashElement();
+    	}
+	};
 
 
     /**
@@ -60,25 +56,18 @@ public class CCActionManager implements UpdateCallback {
      * @since v0.8
      */
 
-    private ConcurrentArrayHashMap<CCNode, HashElement> targets;
+    private final ConcurrentArrayHashMap<CCNode, HashElement> targets;
 //    private HashElement	currentTarget;
 //    private boolean currentTargetSalvaged;
 
     /**
      * returns a shared instance of the ActionManager
      */
-    private static CCActionManager _sharedManager = null;
+    private static CCActionManager _sharedManager = new CCActionManager();
 
     /** returns a shared instance of the CCActionManager */
     public static CCActionManager sharedManager() {
-    	if (_sharedManager != null)
-    		return _sharedManager;
-        synchronized (CCActionManager.class) {
-            if (_sharedManager == null) {
-                _sharedManager = new CCActionManager();
-            }
-            return _sharedManager;
-        }
+		return _sharedManager;
     }
 
     private CCActionManager() {
@@ -86,34 +75,40 @@ public class CCActionManager implements UpdateCallback {
     	targets = new ConcurrentArrayHashMap<CCNode, HashElement>();
     }
     
-    @Override
-    public void finalize ()  throws Throwable {
-    	ccMacros.CCLOGINFO(LOG_TAG, "cocos2d: deallocing " + this.toString());
-    	
-    	this.removeAllActions();
-    	_sharedManager = null;
-
-        super.finalize();
-    }
+//    @Override
+//    public void finalize ()  throws Throwable {
+//    	ccMacros.CCLOGINFO(LOG_TAG, "cocos2d: deallocing " + this.toString());
+//    	
+//    	this.removeAllActions();
+//    	_sharedManager = null;
+//
+//        super.finalize();
+//    }
 
     private void deleteHashElement(HashElement element) {
-        element.actions.clear();
-        targets.remove(element.target);
-    }
-
-    private void actionAlloc(HashElement element) {
-        if (element.actions == null)
-            element.actions = new CopyOnWriteArrayList<CCAction>(); // 4 actions per node by default
+    	synchronized (element.actions) {
+    		element.actions.clear();
+    	}
+    	
+		HashElement removedEl = targets.remove(element.target);//put(element.target, null);
+    	
+    	if(removedEl != null) {
+			pool.free( removedEl );
+    	}
     }
 
     private void removeAction(int index, HashElement element) {
-        element.actions.remove(index);
-        if (element.actionIndex >= index)
-        	element.actionIndex--;
+    	synchronized (element.actions) {
+    		element.actions.remove(index);
+
+	        if (element.actionIndex >= index)
+	        	element.actionIndex--;
+	        
+	        if (element.actions.isEmpty()) {
+	            deleteHashElement(element);
+	        }
         
-        if (element.actions.isEmpty()) {
-            deleteHashElement(element);
-        }
+    	}
     }
 
     // actions
@@ -149,15 +144,21 @@ public class CCActionManager implements UpdateCallback {
 
         HashElement element = targets.get(target);
         if (element == null) {
-            element = new HashElement(target, paused);
-            targets.put(target, element);
+    		element = pool.get();
+    		
+    		element.target = target;
+    		element.paused = paused;
+
+			targets.put(target, element);
         }
 
-        actionAlloc(element);
-
-        assert !element.actions.contains(action) : "runAction: Action already running";
-
-        element.actions.add(action);
+        synchronized (element.actions) {
+        
+	        assert !element.actions.contains(action) : "runAction: Action already running";
+	
+	        element.actions.add(action);
+	        
+        }
 
         action.start(target);
     }    
@@ -166,20 +167,14 @@ public class CCActionManager implements UpdateCallback {
      * Removes all actions from all the targers.
      */
     public void removeAllActions() {
-        synchronized (targets) {
-        	ArrayList<HashElement> values = targets.getValuesInArrayList();
-        	int len = values.size();
-	        for(int i = 0; i < len; i++) {
-	        	HashElement element = values.get(i);
-	        	if(element == null)
-	        		continue;
-	        	
-	        	removeAllActions(element.target);
-	        }
+
+        for(ConcurrentArrayHashMap<CCNode, HashElement>.Entry e = targets.firstValue();
+				e != null; e = targets.nextValue(e)) {
+        	HashElement element = e.getValue();
+
+        	if(element != null)
+        		removeAllActions(element.target);
         }
-//        for (HashElement element : targets.values()) {
-//            removeAllActions(element.target);
-//        }
     }
 
     /**
@@ -197,7 +192,7 @@ public class CCActionManager implements UpdateCallback {
 //                element.currentActionSalvaged = true;
 //            }
 
-            element.actions.clear();
+//            element.actions.clear();
 //            if( currentTarget == element )
 //                currentTargetSalvaged = true;
 //            else
@@ -216,10 +211,14 @@ public class CCActionManager implements UpdateCallback {
     		return;
         HashElement element = targets.get(action.getOriginalTarget());
         if (element != null) {
-            int i = element.actions.indexOf(action);
-            if (i != -1) {
-                removeAction(i, element);
-            }
+        	int i;
+        	synchronized (element.actions) {
+        		i = element.actions.indexOf(action);
+
+	            if (i != -1) {
+	                removeAction(i, element);
+	            }
+        	}
         } else {
             Log.w(LOG_TAG, "removeAction: target not found");
         }
@@ -233,16 +232,14 @@ public class CCActionManager implements UpdateCallback {
 
         HashElement element = targets.get(target);
         if (element != null) {
-            if (element.actions != null) {
+        	synchronized (element.actions) {
                 int limit = element.actions.size();
                 for (int i = 0; i < limit; i++) {
                     CCAction a = element.actions.get(i);
                     if (a.getTag() == tag && a.getOriginalTarget() == target)
                         removeAction(i, element);
                 }
-            } else {
-                // Log.w(LOG_TAG, "removeAction: Action not found");
-            }
+        	}
         } else {
             // Log.w(LOG_TAG, "removeAction: target not found");
         }
@@ -258,16 +255,14 @@ public class CCActionManager implements UpdateCallback {
 
         HashElement element = targets.get(target);
         if (element != null) {
-            if (element.actions != null) {
+        	synchronized (element.actions) {
                 int limit = element.actions.size();
                 for (int i = 0; i < limit; i++) {
                     CCAction a = element.actions.get(i);
                     if (a.getTag() == tag)
                         return a;
                 }
-            } else {
-                // Log.w(LOG_TAG, "getAction: Action not found");
-            }
+        	}
         } else {
             // Log.w(LOG_TAG, "getAction: target not found");
         }
@@ -284,68 +279,50 @@ public class CCActionManager implements UpdateCallback {
     public int numberOfRunningActions(CCNode target) {
         HashElement element = targets.get(target);
         if (element != null) {
-            return element.actions != null ? element.actions.size() : 0;
+        	synchronized (element.actions) {
+        		return element.actions.size();
+        	}
         }
         
         return 0;
     }
 
     public void update(float dt) {
-        synchronized (targets) {
-        	ArrayList<HashElement> values = targets.getValuesInArrayList();
-        	int len = values.size();
-	        for(int i = 0; i < len; i++) {
-	        	HashElement currentTarget = values.get(i);
-	        	if(currentTarget == null)
-	        		continue;
-	        	
-	            if (!currentTarget.paused) {
-	                // The 'actions' may change while inside this loop.
-	                for (currentTarget.actionIndex = 0; 
-	                	currentTarget.actionIndex < currentTarget.actions.size();
-	                	currentTarget.actionIndex++) {
-	                    
-	                	currentTarget.currentAction = currentTarget.actions.get(currentTarget.actionIndex);
 
-	                    currentTarget.currentAction.step(dt);
-	                    if (currentTarget.currentAction.isDone()) {
-	                        currentTarget.currentAction.stop();
-
-	                        removeAction(currentTarget.currentAction);
-	                    }
-	                    
-	                    currentTarget.currentAction = null;
-	                }
-	            }
-
-	            if (currentTarget.actions.isEmpty())
-	                deleteHashElement(currentTarget);
-	        }
-        }
-    	
-//        for (HashElement currentTarget : targets.values()) {
-//            if (!currentTarget.paused) {
-//                // The 'actions' may change while inside this loop.
-//                for (currentTarget.actionIndex = 0; 
-//                	currentTarget.actionIndex < currentTarget.actions.size();
-//                	currentTarget.actionIndex++) {
-//                    
-//                	currentTarget.currentAction = currentTarget.actions.get(currentTarget.actionIndex);
-//
-//                    currentTarget.currentAction.step(dt);
-//                    if (currentTarget.currentAction.isDone()) {
-//                        currentTarget.currentAction.stop();
-//
-//                        removeAction(currentTarget.currentAction);
-//                    }
-//                    
-//                    currentTarget.currentAction = null;
-//                }
-//            }
-//
-//            if (currentTarget.actions.isEmpty())
-//                deleteHashElement(currentTarget);
-//        }
+        for(ConcurrentArrayHashMap<CCNode, HashElement>.Entry e = targets.firstValue();
+				e != null; e = targets.nextValue(e)) {
+        	HashElement currentTarget = e.getValue();
+        	if(currentTarget == null)
+        		continue;
+        	
+		    if (!currentTarget.paused) {
+		    	synchronized (currentTarget.actions) {
+		        // The 'actions' may change while inside this loop.
+			        for (currentTarget.actionIndex = 0; 
+			        	currentTarget.actionIndex < currentTarget.actions.size();
+			        	currentTarget.actionIndex++) {
+			            
+			        	CCAction currentAction = currentTarget.actions.get(currentTarget.actionIndex);
+			
+			            currentAction.step(dt);
+			            if (currentAction.isDone()) {
+			                currentAction.stop();
+			
+//			                removeAction(currentAction);
+			                HashElement element = targets.get(currentTarget.target);
+		                	if (element != null) {
+		                		removeAction(currentTarget.actionIndex, currentTarget);
+		                	}
+			            }
+			            
+//			            currentTarget.currentAction = null;
+			        }
+		    	}
+		    }
+		
+		    if (currentTarget.actions.isEmpty())
+		        deleteHashElement(currentTarget);
+    	}
     }
 
 	public void resume(CCNode target) {

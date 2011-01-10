@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.cocos2d.config.ccConfig;
-import org.cocos2d.utils.ConcurrentArrayHashMap;
+import org.cocos2d.utils.collections.ConcurrentArrayHashMap;
 
 //
 // CCScheduler
@@ -60,7 +60,6 @@ public class CCScheduler {
 	ArrayList<tListEntry>    updatesPos;	// list priority > 0
 		
 	// Used for "selectors with interval"
-//    ConcurrentHashMap<Object, tHashSelectorEntry>  hashForSelectors;
 	ConcurrentArrayHashMap<Object, tHashSelectorEntry>  hashForSelectors;
 	ConcurrentHashMap<Object, tHashSelectorEntry>  hashForUpdates;
     
@@ -237,62 +236,54 @@ public class CCScheduler {
 	        currentEntry = null;
         }
         
-//        Set<Map.Entry<Object, tHashSelectorEntry>> set = hashForSelectors.entrySet();
-//        set.
-        // Iterate all over the  custome selectors
-        synchronized (hashForSelectors) {
-        	ArrayList<tHashSelectorEntry> values = hashForSelectors.getValuesInArrayList();
-        	int len = values.size();
-	        for(int i = 0; i < len; i++) {
-	        	tHashSelectorEntry elt = values.get(i);
-	        	if(elt == null)
-	        		continue;
-	            currentTarget = elt;
-	            currentTargetSalvaged = false;
-	            
-	            if( ! currentTarget.paused ) {                
-	                // The 'timers' ccArray may change while inside this loop.
-	                for( elt.timerIndex = 0; elt.timerIndex < elt.timers.size(); elt.timerIndex++) {
-	                    elt.currentTimer = elt.timers.get(elt.timerIndex);
-	                    elt.currentTimerSalvaged = false;
-	
-	                    UpdateCallback callback = elt.currentTimer.getCallback();
-		            	if(callback !=null) {
-		            		callback.update(dt);
-		            	} else {
-		                    try {
-								impMethod.invoke( elt.currentTimer, dt);
-							} catch (Exception e1) {
-								e1.printStackTrace();
-							}
-		            	}
-	                    
-	                    if( elt.currentTimerSalvaged ) {
-	                        // The currentTimer told the remove itself. To prevent the timer from
-	                        // accidentally deallocating itself before finishing its step, we retained
-	                        // it. Now that step is done, it's safe to release it.
-	                        elt.currentTimer = null;
-	                    }
-	                    
-	                    elt.currentTimer = null;
-	                }			
-	            }
+        for(ConcurrentArrayHashMap<Object, tHashSelectorEntry>.Entry e = hashForSelectors.firstValue();
+        	e != null; e = hashForSelectors.nextValue(e)) {
+        	tHashSelectorEntry elt = e.getValue();
+        	
+        	currentTarget = elt;
+            currentTargetSalvaged = false;
+            
+            if( ! currentTarget.paused ) {                
+                // The 'timers' ccArray may change while inside this loop.
+                for( elt.timerIndex = 0; elt.timerIndex < elt.timers.size(); elt.timerIndex++) {
+                    elt.currentTimer = elt.timers.get(elt.timerIndex);
+                    elt.currentTimerSalvaged = false;
+
+                    UpdateCallback callback = elt.currentTimer.getCallback();
+	            	if(callback !=null) {
+	            		callback.update(dt);
+	            	} else {
+	                    try {
+							impMethod.invoke( elt.currentTimer, dt);
+						} catch (Exception e1) {
+							e1.printStackTrace();
+						}
+	            	}
+                    
+                    if( elt.currentTimerSalvaged ) {
+                        // The currentTimer told the remove itself. To prevent the timer from
+                        // accidentally deallocating itself before finishing its step, we retained
+                        // it. Now that step is done, it's safe to release it.
+                        elt.currentTimer = null;
+                    }
+                    
+                    elt.currentTimer = null;
+                }			
+            }
 	            
 	            // elt, at this moment, is still valid
 	            // so it is safe to ask this here (issue #490)
 	            // elt=elt->hh.next;
 	            
 	            // only delete currentTarget if no actions were scheduled during the cycle (issue #481)
-	            if( currentTargetSalvaged && currentTarget.timers.isEmpty()) {
-	//            	removeHashElement(elt);
-	//            	iterator.remove();
-	            	hashForSelectors.remove(elt.target);
-	//            	 this.removeHashElement(elt.target, elt);
-	                // [self removeHashElement:currentTarget];
-	            }
-	        }
-	        currentTarget = null;
+            if( currentTargetSalvaged && currentTarget.timers.isEmpty()) {
+//            	removeHashElement(elt);
+            	hashForSelectors.remove(elt.target);
+                // [self removeHashElement:currentTarget];
+            }
         }
+        currentTarget = null;
+//        }
     }
 
     static class SchedulerTimerAlreadyScheduled extends RuntimeException {
@@ -531,16 +522,12 @@ public class CCScheduler {
       */
     public void unscheduleAllSelectors() {
         // Custom Selectors
-        synchronized (hashForSelectors) {
-        	ArrayList<tHashSelectorEntry> values = hashForSelectors.getValuesInArrayList();
-        	int len = values.size();
-	        for(int i = 0; i < len; i++) {
-	        	tHashSelectorEntry element = values.get(i);
-	        	if(element == null)
-	        		continue;
-	            Object target = element.target;
-	            unscheduleAllSelectors(target);
-	        }
+        for(ConcurrentArrayHashMap<Object, tHashSelectorEntry>.Entry e = hashForSelectors.firstValue();
+    				e != null; e = hashForSelectors.nextValue(e)) {
+        	tHashSelectorEntry element = e.getValue();
+        	
+            Object target = element.target;
+            unscheduleAllSelectors(target);
         }
         
         // Updates selectors        

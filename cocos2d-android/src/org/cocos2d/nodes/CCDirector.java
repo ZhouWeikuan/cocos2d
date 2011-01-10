@@ -34,7 +34,9 @@ import org.cocos2d.transitions.CCTransitionScene;
 import org.cocos2d.types.CGPoint;
 import org.cocos2d.types.CGRect;
 import org.cocos2d.types.CGSize;
+import org.cocos2d.types.util.CGPointUtil;
 import org.cocos2d.utils.CCFormatter;
+import org.cocos2d.utils.javolution.TextBuilder;
 
 import android.app.Activity;
 import android.content.pm.ActivityInfo;
@@ -703,7 +705,7 @@ public class CCDirector implements GLSurfaceView.Renderer {
         ccMacros.CC_ENABLE_DEFAULT_GL_STATES(gl);
         
         /* draw the CCScene */
-        runningCCScene_.visit(gl);
+    	runningCCScene_.visit(gl);
         if( displayFPS )
         	showFPS(gl);
 
@@ -982,6 +984,40 @@ public class CCDirector implements GLSurfaceView.Renderer {
 		    ret = CGPoint.ccpMult(ret, contentScaleFactor_);
         return ret;
     }
+    
+    /**
+     * Optimizaed version of convertToGL(CGPoint uiPoint).
+     * @param uiPoint - point for conversion
+     * @param ret - result point
+     */
+    public void convertToGL(CGPoint uiPoint, CGPoint ret) {
+    	convertToGL(uiPoint.x, uiPoint.y, ret);
+    }
+    
+    /**
+     * Optimizaed version of convertToGL(CGPoint uiPoint).
+     * @param uiX - X coordinate of point for conversion
+     * @param uiY - Y coordinate of point for conversion
+     * @param ret - result point
+     */
+    public void convertToGL(float uiX, float uiY, CGPoint ret) {
+    	float newX = uiX / surfaceSize_.width * screenSize_.width;
+        float newY = screenSize_.height - uiY / surfaceSize_.height * screenSize_.height;
+        
+        switch (deviceOrientation_) {
+            case kCCDeviceOrientationPortrait:
+                ret.set(newX, newY);
+                break;
+
+            case kCCDeviceOrientationLandscapeLeft:
+                // ret = CGPoint.ccp(uiPoint.y, uiPoint.x);
+            	ret.set(newX, newY);
+                break;
+        }
+
+	    if (contentScaleFactor_ != 1 && isContentScaleSupported_ )
+		    CGPointUtil.mult(ret, contentScaleFactor_);
+    }
 
     /** converts an OpenGL coordinate to a UIKit coordinate
       Useful to convert node points to window points for calls such as glScissor
@@ -1088,32 +1124,33 @@ public class CCDirector implements GLSurfaceView.Renderer {
 //    		if (_sharedDirector == null) {
 //    			return;
 //    		}
-    		if (runningCCScene_ != null) {
-    			runningCCScene_.onExit();
-    			runningCCScene_.cleanup();
-    			runningCCScene_ = null;
-    		}
-    		nextCCScene_ = null;
+		
+		if (runningCCScene_ != null) {
+			runningCCScene_.onExit();
+			runningCCScene_.cleanup();
+			runningCCScene_ = null;
+		}
+		nextCCScene_ = null;
 
-    		// remove all objects.
-    		// runWithCCScene might be executed after 'end'.
-    		CCScenesStack_.clear();
+		// remove all objects.
+		// runWithCCScene might be executed after 'end'.
+		CCScenesStack_.clear();
 
-    		// don't release the event handlers
-    		// They are needed in case the director is run again
-    		CCTouchDispatcher.sharedDispatcher().removeAllDelegates();
+		// don't release the event handlers
+		// They are needed in case the director is run again
+		CCTouchDispatcher.sharedDispatcher().removeAllDelegates();
 
-//    		stopAnimation();
-    		// detach();
+		// stopAnimation();
+		// detach();
 
-    		// Purge bitmap cache
-    		// CCBitmapFontAtlas.purgeCachedData();
+		// Purge bitmap cache
+		// CCBitmapFontAtlas.purgeCachedData();
 
-    		// Purge all managers
-    		CCSpriteFrameCache.purgeSharedSpriteFrameCache();
-    		// CCScheduler.purgeSharedScheduler();
-    		// CCActionManager.purgeSharedManager();
-    		CCTextureCache.purgeSharedTextureCache();
+		// Purge all managers
+		CCSpriteFrameCache.purgeSharedSpriteFrameCache();
+		// CCScheduler.purgeSharedScheduler();
+		// CCActionManager.purgeSharedManager();
+		CCTextureCache.purgeSharedTextureCache();
 
     		// OpenGL view
 //    		openGLView_ = null;
@@ -1304,6 +1341,8 @@ public class CCDirector implements GLSurfaceView.Renderer {
         }
     }
 
+	private TextBuilder fpsBuilder = new TextBuilder();
+	
     private void showFPS(GL10 gl) {
 
         if (FAST_FPS_DISPLAY) {
@@ -1318,7 +1357,15 @@ public class CCDirector implements GLSurfaceView.Renderer {
                 frames_ = 0;
                 accumDt_ = 0;
                 
-                FPSLabel_.setString(CCFormatter.format("%.1f", frameRate_));
+                int fpsInt = (int)frameRate_;
+                int fpsFract = (int)( (frameRate_ - fpsInt) * 10 );
+                
+                fpsBuilder.reset();
+                fpsBuilder.append(fpsInt);
+                fpsBuilder.append('.');
+                fpsBuilder.append(fpsFract);
+                
+                FPSLabel_.setString(fpsBuilder);
             }
             
             FPSLabel_.draw(gl);
@@ -1335,7 +1382,7 @@ public class CCDirector implements GLSurfaceView.Renderer {
                 accumDt_ = 0;
             }
 
-            String str = new CCFormatter().format("%.2f", frameRate_);
+            String str = CCFormatter.format("%.2f", frameRate_);
             CCTexture2D texture = new CCTexture2D();
             // no need to register Loader for this subordinate texture
             texture.initWithText(str, CGSize.make(100, 30), TextAlignment.LEFT, "DroidSans", 24);

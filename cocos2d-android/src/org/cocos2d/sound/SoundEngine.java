@@ -3,6 +3,9 @@ package org.cocos2d.sound;
 import java.io.IOException;
 import java.util.HashMap;
 
+import org.cocos2d.utils.collections.IntMap;
+import org.cocos2d.utils.collections.IntMap.Entry;
+
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -11,10 +14,10 @@ import android.media.SoundPool;
 // TODO: support volume customizations for both effects and background ...
 public class SoundEngine {
 	// effects are sounds that less than 5 seconds, better in 3 seconds
-	HashMap<Integer, Integer> effectsMap = new HashMap<Integer, Integer>();
+	IntMap<Integer> effectsMap = new IntMap<Integer>();
 	
 	// sounds are background sounds, usually longer than 5 seconds
-	HashMap<Integer, MediaPlayer> soundsMap = new HashMap<Integer, MediaPlayer>();
+	IntMap<MediaPlayer> soundsMap = new IntMap<MediaPlayer>();
 	SoundPool sp = new SoundPool(5, AudioManager.STREAM_MUSIC, 0);
 	int lastSndId = -1;
 	
@@ -140,8 +143,9 @@ public class SoundEngine {
 	}
 	
 	public void realesAllSounds() {
-		for(MediaPlayer mp : soundsMap.values()) {
-			mp.release();
+		
+		for(Entry<MediaPlayer> mp : soundsMap) {
+			mp.getValue().release();
 		}
 		
 		soundsMap.clear();

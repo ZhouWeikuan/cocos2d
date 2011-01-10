@@ -119,14 +119,26 @@ public class CCMenuItem extends CCNode {
      * Returns the outside box
      */
     public CGRect rect() {
-    	CGPoint pos = getPosition();
-    	CGPoint pnt = getAnchorPoint();
-    	CGSize size = this.getContentSize();
+    	CGPoint pos = getPositionRef();
+    	CGPoint pnt = getAnchorPointRef();
+    	CGSize size = getContentSizeRef();
         return CGRect.make(pos.x - size.width * pnt.x, pos.y -
                 size.height * pnt.y,
                 size.width, size.height);
     }
 
+    /**
+     * Returns the outside box to
+     * No garbage version.
+     */
+    public void rect(CGRect ret) {
+    	CGPoint pos = getPositionRef();
+    	CGPoint pnt = getAnchorPointRef();
+    	CGSize size = getContentSizeRef();
+        ret.set(pos.x - size.width * pnt.x, pos.y -
+                size.height * pnt.y,
+                size.width, size.height);
+    }
 }
 
 

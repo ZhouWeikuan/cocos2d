@@ -196,8 +196,8 @@ public class CCTextureAtlas {
 
         totalQuads_ = Math.max(index + 1, totalQuads_);
 
-        putTexCoords(this.getTexCoordsBuffer(), texQuad.toFloatArray(), index);
-        putVertex(this.getVertexBuffer(), vertexQuad.toFloatArray(), index);
+        putTexCoords(textureCoordinates, texQuad, index);
+        putVertex(vertexCoordinates, vertexQuad, index);
     }
 
     public void updateColor(ccColor4B[] color, int index) {
@@ -404,11 +404,26 @@ public class CCTextureAtlas {
         return quadT;
     }
 
+    protected void putTexCoords(FloatBuffer dst, ccQuad2 quadT, int index) {
+    	final int base = index * ccQuad2.size;
+    	dst.position(base);
+    	
+    	dst.put(quadT.tl_x);
+    	dst.put(quadT.tl_y);
+    	dst.put(quadT.tr_x);
+    	dst.put(quadT.tr_y);
+    	dst.put(quadT.bl_x);
+    	dst.put(quadT.bl_y);
+    	dst.put(quadT.br_x);
+    	dst.put(quadT.br_y);
+    	
+        dst.position(0);
+    }
+    
     protected void putTexCoords(FloatBuffer dst, float[] quadT, int index) {
     	final int base = index * ccQuad2.size;
-        for (int i = 0; i < ccQuad2.size; i++) {
-            dst.put(base + i, quadT[i]);
-        }
+    	dst.position(base);
+    	dst.put(quadT);
         dst.position(0);
     }
     
@@ -443,12 +458,33 @@ public class CCTextureAtlas {
         }
         return quadV;
     }
+    
+    public void putVertex(FloatBuffer dst, ccQuad3 quadV, int index) {
+    	final int base = index * ccQuad3.size;
+    	
+    	dst.position(base);
 
+    	dst.put(quadV.bl_x);
+    	dst.put(quadV.bl_y);
+    	dst.put(quadV.bl_z);
+    	dst.put(quadV.br_x);
+    	dst.put(quadV.br_y);
+    	dst.put(quadV.br_z);
+    	dst.put(quadV.tl_x);
+    	dst.put(quadV.tl_y);
+    	dst.put(quadV.tl_z);
+    	dst.put(quadV.tr_x);
+    	dst.put(quadV.tr_y);
+    	dst.put(quadV.tr_z);
+    	
+        dst.position(0);
+    }
+    
     public void putVertex(FloatBuffer dst, float[] quadV, int index) {
     	final int base = index * ccQuad3.size;
-        for (int i = 0; i < ccQuad3.size; i++) {
-            dst.put(base +i, quadV[i]);
-        }
+    	
+    	dst.position(base);
+    	dst.put(quadV);
         dst.position(0);
     }
 

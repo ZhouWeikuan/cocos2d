@@ -7,6 +7,8 @@ import org.cocos2d.protocols.CCLabelProtocol;
 import org.cocos2d.types.ccBlendFunc;
 import org.cocos2d.types.ccQuad2;
 import org.cocos2d.types.ccQuad3;
+import org.cocos2d.types.util.PoolHolder;
+import org.cocos2d.utils.javolution.TextBuilder;
 
 /** CCLabelAtlas is a subclass of CCAtlasNode.
  
@@ -22,7 +24,7 @@ import org.cocos2d.types.ccQuad3;
 public class CCLabelAtlas extends CCAtlasNode 
 	    implements CCLabelProtocol, CCNode.CocosNodeSize {
     /// string to render
-    String string_;
+    TextBuilder string_;
 
     /// the first char in the charmap
     char mapStartChar;
@@ -30,15 +32,16 @@ public class CCLabelAtlas extends CCAtlasNode
     /** creates the CCLabelAtlas with a string,
      * a char map file(the atlas), the width and height of each element
      * and the starting char of the atlas */
-    public static CCLabelAtlas label(String theString, String charmapfile, int w, int h, char c) {
+    public static CCLabelAtlas label(CharSequence theString, String charmapfile, int w, int h, char c) {
         return new CCLabelAtlas(theString, charmapfile, w, h, c);
     }
 
     /** initializes the CCLabelAtlas with a string, a char map file(the atlas), the width and height of each element and the starting char of the atlas */
-    protected CCLabelAtlas(String theString, String charmapfile, int w, int h, char c) {
+    protected CCLabelAtlas(CharSequence theString, String charmapfile, int w, int h, char c) {
         super(charmapfile, w, h, theString.length());
 
-        string_ = theString;
+        string_ = new TextBuilder(theString.length());
+        string_.append(theString);
         mapStartChar = c;
 
         updateAtlasValues();
@@ -48,12 +51,13 @@ public class CCLabelAtlas extends CCAtlasNode
     public void updateAtlasValues() {
         int n = string_.length();
 
-        ccQuad2 texCoord = new ccQuad2();
-        ccQuad3 vertex = new ccQuad3();
+        PoolHolder holder = PoolHolder.getInstance();
+        ccQuad2 texCoord = holder.getccQuad2Pool().get(); 
+        ccQuad3 vertex   = holder.getccQuad3Pool().get(); 
 
-        String s = string_;
+//        String s = string_;
         for (int i = 0; i < n; i++) {
-            int a = s.charAt(i) - mapStartChar;
+            int a = string_.charAt(i) - mapStartChar;
             float row = (a % itemsPerRow) * texStepX;
             float col = (a / itemsPerRow) * texStepY;
 
@@ -81,13 +85,17 @@ public class CCLabelAtlas extends CCAtlasNode
 
             textureAtlas_.updateQuad(texCoord, vertex, i);
         }
+        
+        holder.getccQuad2Pool().free(texCoord);
+        holder.getccQuad3Pool().free(vertex);
     }
 
-    public void setString(String newString) {
+    public void setString(CharSequence newString) {
         if (newString.length() > textureAtlas_.getTotalQuads())
             textureAtlas_.resizeCapacity(newString.length());
 
-        string_ = newString;
+        string_.reset();
+        string_.append(newString);
         updateAtlasValues();
 
         setContentSize(string_.length() * itemWidth, itemHeight);

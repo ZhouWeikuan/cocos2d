@@ -226,7 +226,7 @@ public class ParallaxTest extends Activity {
     }
 
     static class Parallax2 extends ParallaxDemo {
-        CGPoint previousLocation;
+        CGPoint previousLocation = new CGPoint();
 
         public Parallax2() {
             setIsTouchEnabled(true);
@@ -284,7 +284,7 @@ public class ParallaxTest extends Activity {
         @Override
         public boolean ccTouchesBegan(MotionEvent event)
         {
-            previousLocation = CGPoint.make(event.getX(), event.getY());
+            previousLocation.set(event.getX(), event.getY());
             return CCTouchDispatcher.kEventHandled;
         }
 

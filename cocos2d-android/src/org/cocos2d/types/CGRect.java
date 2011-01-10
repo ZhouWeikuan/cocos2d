@@ -4,11 +4,11 @@ public class CGRect {
     public CGPoint origin;
     public CGSize size;
 
-    private CGRect() {
+    public CGRect() {
         this(0, 0, 0, 0);
     }
 
-    private CGRect(final CGPoint origin, final CGSize size) {
+    public CGRect(final CGPoint origin, final CGSize size) {
         this(origin.x, origin.y, size.width, size.height);
     }
 

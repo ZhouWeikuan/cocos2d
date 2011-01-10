@@ -30,6 +30,7 @@ import org.cocos2d.types.ccColor3B;
 import org.cocos2d.types.ccColor4B;
 import org.cocos2d.types.ccQuad2;
 import org.cocos2d.types.ccQuad3;
+import org.cocos2d.utils.CCFormatter;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -306,12 +307,12 @@ public class AtlasTest extends Activity {
 
         public void step(float dt) {
         	time += dt;
-        	String string = String.format("%2.2f Test", time);
+        	String string = CCFormatter.format("%2.2f Test", time);
         	CCLabelAtlas label1 = (CCLabelAtlas) getChild(kTagSprite1);
         	label1.setString(string);
 
         	CCLabelAtlas label2 = (CCLabelAtlas) getChild(kTagSprite2);
-        	label2.setString(String.format("%d", (int)time));
+        	label2.setString(CCFormatter.format("%d", (int)time));
         }
 
         @Override
@@ -362,12 +363,12 @@ public class AtlasTest extends Activity {
 
         public void step(float dt) {
             time += dt;
-            String string = String.format("%2.2f Test", time);
+            String string = CCFormatter.format("%2.2f Test", time);
             CCLabelAtlas label1 = (CCLabelAtlas) getChild(kTagSprite1);
             label1.setString(string);
 
             CCLabelAtlas label2 = (CCLabelAtlas) getChild(kTagSprite2);
-            label2.setString(String.format("%d", (int)time));	
+            label2.setString(CCFormatter.format("%d", (int)time));	
         }
 
         public String title() {
@@ -439,7 +440,7 @@ public class AtlasTest extends Activity {
 
         public void step(float dt) {
             time += dt;
-            String string = String.format("%2.2f Test j", time);
+            String string = CCFormatter.format("%2.2f Test j", time);
 
             CCBitmapFontAtlas label1 = (CCBitmapFontAtlas) getChild(kTagBitmapAtlas1);
             label1.setString(string);
@@ -537,7 +538,7 @@ public class AtlasTest extends Activity {
 
         public void step(float dt) {
             time += dt;
-            String string = String.format("%04.1f", time);
+            String string = CCFormatter.format("%04.1f", time);
 
             CCBitmapFontAtlas label1 = (CCBitmapFontAtlas) getChild(kTagBitmapAtlas2);
             label1.setString(string);

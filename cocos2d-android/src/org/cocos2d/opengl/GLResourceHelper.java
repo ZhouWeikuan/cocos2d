@@ -14,17 +14,17 @@ import javax.microedition.khronos.opengles.GL10;
 
 public class GLResourceHelper {
 	
-    private static GLResourceHelper _sharedResourceHelper;
+    private static GLResourceHelper _sharedResourceHelper = new GLResourceHelper();
 
     /** singleton of the CCTouchDispatcher */
     public static GLResourceHelper sharedHelper() {
-        if (_sharedResourceHelper == null) {
-            synchronized (GLResourceHelper.class) {
-                if (_sharedResourceHelper == null) {
-                    _sharedResourceHelper = new GLResourceHelper();
-                }
-            }
-        }
+//        if (_sharedResourceHelper == null) {
+//            synchronized (GLResourceHelper.class) {
+//                if (_sharedResourceHelper == null) {
+//                    _sharedResourceHelper = new GLResourceHelper();
+//                }
+//            }
+//        }
         return _sharedResourceHelper;
     }
     

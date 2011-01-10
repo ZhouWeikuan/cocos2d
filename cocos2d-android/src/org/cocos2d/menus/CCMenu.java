@@ -9,6 +9,9 @@ import org.cocos2d.types.CGPoint;
 import org.cocos2d.types.CGRect;
 import org.cocos2d.types.CGSize;
 import org.cocos2d.types.ccColor3B;
+import org.cocos2d.types.util.CGPointUtil;
+import org.cocos2d.types.util.PoolHolder;
+import org.cocos2d.utils.pool.OneClassPool;
 import org.cocos2d.config.ccMacros;
 import org.cocos2d.events.CCTouchDispatcher;
 
@@ -80,8 +83,9 @@ public class CCMenu extends CCLayer {
     /*
      * override add:
      */
-    public CCNode addChild(CCMenuItem child, int z, int aTag) {
-        return super.addChild(child, z, aTag);
+    @Override
+    public CCNode addChild(CCNode child, int z, int tag) {
+    	return super.addChild((CCMenuItem)child, z, tag);
     }
 
     /** Override synthesized setOpacity to recurse items */
@@ -352,21 +356,36 @@ public class CCMenu extends CCLayer {
     }
 
     private CCMenuItem itemForTouch(MotionEvent event) {
-    	CGPoint touchLocation =	CCDirector.sharedDirector()
-    		.convertToGL(CGPoint.ccp(event.getX(), event.getY()));
+    	PoolHolder holder = PoolHolder.getInstance();
+    	OneClassPool<CGPoint> pointPool = holder.getCGPointPool();
+    	OneClassPool<CGRect>  rectPool  = holder.getCGRectPool();
+    	
+    	CGPoint touchLocation = pointPool.get();
+    	CGPoint local		  = pointPool.get();
+    	CGRect  r			  = rectPool.get();
+    	
+    	CCMenuItem retItem = null;
+    	
+    	CCDirector.sharedDirector().convertToGL(event.getX(), event.getY(), touchLocation);
 
     	for (int i = 0; i < children_.size(); i++) {
     		CCMenuItem item = (CCMenuItem) children_.get(i);
             if (item.getVisible() && item.isEnabled()){
-                CGPoint local = item.convertToNodeSpace(touchLocation.x, touchLocation.y);
-                CGRect r = item.rect();
-                r.origin = CGPoint.zero();
+                item.convertToNodeSpace(touchLocation.x, touchLocation.y, local);
+                item.rect(r);
+                CGPointUtil.zero(r.origin);
                 if (CGRect.containsPoint(r, local)) {
-                    return item;
+                	retItem = item;
+                	break;
                 }
             }
     	}
-    	return null;
+    	
+    	pointPool.free(touchLocation);
+    	pointPool.free(local);
+    	rectPool.free(r);
+    	
+    	return retItem;
     }
     /*
 	CCARRAY_FOREACH(children_, item){

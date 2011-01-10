@@ -38,12 +38,12 @@ public class CCLabel extends CCSprite implements CCLabelProtocol {
     }
 
     /** initializes the CCLabel with a font name and font size */
-    protected CCLabel(String string, String fontname, float fontsize) {
+    protected CCLabel(CharSequence string, String fontname, float fontsize) {
         this(string, CGSize.make(0,0), TextAlignment.CENTER, fontname, fontsize);
     }
 
     /** initializes the CCLabel with a font name, alignment, dimension and font size */
-    protected CCLabel(String string, final CGSize dimensions, TextAlignment alignment,
+    protected CCLabel(CharSequence string, final CGSize dimensions, TextAlignment alignment,
                         String name, float size) {
     	super();
         _dimensions = dimensions;
@@ -58,7 +58,8 @@ public class CCLabel extends CCSprite implements CCLabelProtocol {
      * @warning Changing the string is as expensive as creating a new CCLabel.
         To obtain better performance use CCLabelAtlas
      */
-    public void setString(final String string) {   	
+    public void setString(CharSequence seq) {   	
+    	final String string = seq.toString();
     	final CCTexture2D texture = new CCTexture2D();
     	texture.setLoader(new GLResourceHelper.GLResourceLoader() {
     		@Override

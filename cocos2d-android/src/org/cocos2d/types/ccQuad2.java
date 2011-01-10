@@ -22,7 +22,7 @@ public class ccQuad2 {
     }
 
     public ccQuad2() {
-        this(new float[]{0, 0, 0, 0, 0, 0, 0, 0});
+        this(0, 0, 0, 0, 0, 0, 0, 0);
     }
 
     public ccQuad2(float[] f) {

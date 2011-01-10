@@ -105,7 +105,7 @@ public class CGAffineTransform {
      * The min value equivalent to zero. If absolute value less then ZERO it
      * considered as zero.
      */
-    static final double ZERO = 1E-10;
+    public static final double ZERO = 1E-10;
 
     /**
      * The values of transformation matrix.
@@ -459,8 +459,8 @@ public class CGAffineTransform {
      * @param t the transform that gives the new values.
      */
     public void setTransform(CGAffineTransform t) {
-        type = t.type;
         setTransform(t.m00, t.m10, t.m01, t.m11, t.m02, t.m12);
+        type = t.type;
     }
 
     /**

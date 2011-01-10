@@ -18,6 +18,10 @@ import org.cocos2d.types.CGAffineTransform;
 import org.cocos2d.types.CGPoint;
 import org.cocos2d.types.CGRect;
 import org.cocos2d.types.CGSize;
+import org.cocos2d.types.util.CGAffineTransformUtil;
+import org.cocos2d.types.util.CGPointUtil;
+import org.cocos2d.types.util.PoolHolder;
+import org.cocos2d.utils.pool.OneClassPool;
 
 import android.util.Log;
 import android.view.MotionEvent;
@@ -219,6 +223,10 @@ public class CCNode {
     public CGSize getContentSize() {
         return CGSize.make(contentSize_.width, contentSize_.height);
     }
+    
+    public CGSize getContentSizeRef() {
+        return contentSize_;
+    }
 
     /** anchorPoint is the point around which all transformations and positioning manipulations take place.
       It's like a pin in the node where it is "attached" to its parent.
@@ -248,7 +256,11 @@ public class CCNode {
     public CGPoint getAnchorPoint() {
         return CGPoint.make(anchorPoint_.x, anchorPoint_.y);
     }
-
+    
+    public CGPoint getAnchorPointRef() {
+        return anchorPoint_;
+    }
+    
     // #if	CC_NODE_TRANSFORM_USING_AFFINE_MATRIX
 	private float []	transformGL_; // [16];
 	
@@ -341,7 +353,7 @@ public class CCNode {
     }
 
 	// weakref to parent
-    public CCNode parent_;
+    protected CCNode parent_;
 
     /** A weak reference to the parent */
     public CCNode getParent() {
@@ -981,7 +993,7 @@ public class CCNode {
     */
     public CGAffineTransform parentToNodeTransform() {
         if (isInverseDirty_) {
-            inverse_ = nodeToWorldTransform().getTransformInvert();
+            CGAffineTransformUtil.inverse(nodeToParentTransform(), inverse_);
 
             isInverseDirty_ = false;
         }
@@ -993,7 +1005,7 @@ public class CCNode {
       @since v0.7.1
     */
     private CGAffineTransform nodeToWorldTransform() {
-        CGAffineTransform t = nodeToParentTransform();
+        CGAffineTransform t = new CGAffineTransform(nodeToParentTransform());
 
         for (CCNode p = parent_; p != null; p = p.parent_) {
             // t = t.getTransformConcat(p.nodeToParentTransform());
@@ -1002,20 +1014,72 @@ public class CCNode {
 
         return t;
     }
+    
+    private void nodeToWorldTransform(CGAffineTransform ret) {
+        ret.setTransform(nodeToParentTransform());
 
+        for (CCNode p = parent_; p != null; p = p.parent_) {
+            // t = t.getTransformConcat(p.nodeToParentTransform());
+        	ret.multiply( p.nodeToParentTransform() );
+//            t = t.preConcatenate(p.nodeToParentTransform());
+        }
+    }
+    
     /** Returns the inverse world affine transform matrix
       @since v0.7.1
     */
     private CGAffineTransform worldToNodeTransform() {
         return nodeToWorldTransform().getTransformInvert();
     }
+    
+    /**
+     * This is analog method, result is written to ret. No garbage.
+     */
+    private void worldToNodeTransform(CGAffineTransform ret) {
+    	nodeToWorldTransform(ret);
+        CGAffineTransformUtil.inverse(ret);
+    }
 
     /** converts a world coordinate to local coordinate
       @since v0.7.1
     */
     public CGPoint convertToNodeSpace(float x, float y) {
-        CGPoint worldPoint = CGPoint.make(x, y);
-        return CGPoint.applyAffineTransform(worldPoint, worldToNodeTransform());
+        OneClassPool<CGAffineTransform> pool = PoolHolder.getInstance().getCGAffineTransformPool();
+        
+        CGAffineTransform temp = pool.get();
+        worldToNodeTransform(temp);
+        
+        CGPoint ret = new CGPoint();
+    	CGPointUtil.applyAffineTransform(x, y, temp, ret);
+    	
+        pool.free(temp);
+        return ret;
+    }
+    
+    /** converts a world coordinate to local coordinate
+      @since v0.7.1
+    */
+    public CGPoint convertToNodeSpace(CGPoint p) {
+    	return convertToNodeSpace(p.x, p.y);
+    }
+    
+    /**
+     * This is analog method, result is written to ret. No garbage.
+     */
+    public void convertToNodeSpace(CGPoint p, CGPoint ret) {
+    	convertToNodeSpace(p.x, p.y, ret);
+    }
+    
+    /**
+     * This is analog method, result is written to ret. No garbage.
+     */
+    public void convertToNodeSpace(float x, float y, CGPoint ret) {
+        OneClassPool<CGAffineTransform> pool = PoolHolder.getInstance().getCGAffineTransformPool();
+        
+        CGAffineTransform temp = pool.get();
+        worldToNodeTransform(temp);
+        
+        CGPointUtil.applyAffineTransform(x, y, temp, ret);
     }
 
     /** converts local coordinate to world space
@@ -1050,16 +1114,30 @@ public class CCNode {
       @since v0.7.1
     */
     public CGPoint convertTouchToNodeSpace(MotionEvent event) {
-        CGPoint point = CCDirector.sharedDirector().convertToGL(CGPoint.make(event.getX(), event.getY()));
-        return convertToNodeSpace(point.x, point.y);
+    	OneClassPool<CGPoint> pool = PoolHolder.getInstance().getCGPointPool();
+    	CGPoint point = pool.get();
+    	
+    	CCDirector.sharedDirector().convertToGL(event.getX(), event.getY(), point);
+    	
+    	float x = point.x, y = point.y;
+    	pool.free(point);
+    	
+        return convertToNodeSpace(x, y);
     }
 
     /** converts a UITouch (world coordinates) into a local coordiante. This method is AR (Anchor Relative).
       @since v0.7.1
     */
     public CGPoint convertTouchToNodeSpaceAR(MotionEvent event) {
-        CGPoint point = CCDirector.sharedDirector().convertToGL(CGPoint.make(event.getX(), event.getY()));
-        return convertToNodeSpaceAR(point.x, point.y);
+    	OneClassPool<CGPoint> pool = PoolHolder.getInstance().getCGPointPool();
+    	CGPoint point = pool.get();
+    	
+    	CCDirector.sharedDirector().convertToGL(event.getX(), event.getY(), point);
+    	
+    	float x = point.x, y = point.y;
+    	pool.free(point);
+    	
+        return convertToNodeSpaceAR(x, y);
     }
 
     public CGPoint convertToWindowSpace(CGPoint nodePoint) {

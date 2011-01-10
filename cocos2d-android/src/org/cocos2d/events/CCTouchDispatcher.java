@@ -1,9 +1,9 @@
 package org.cocos2d.events;
 
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.ArrayList;
 
 import org.cocos2d.protocols.CCTouchDelegateProtocol;
+import org.cocos2d.utils.collections.ConcNodeCachingLinkedQueue;
 
 import android.view.MotionEvent;
 
@@ -77,7 +77,7 @@ public class CCTouchDispatcher {
 	struct ccTouchHandlerHelperData handlerHelperData[ccTouchMax];
 }*/
    
-    private CopyOnWriteArrayList<CCTouchHandler> touchHandlers;
+    private ArrayList<CCTouchHandler> touchHandlers;
     /** Whether or not the events are going to be dispatched. Default: YES */
     private boolean dispatchEvents;
 
@@ -89,23 +89,16 @@ public class CCTouchDispatcher {
         dispatchEvents = b;
     }
 
-    private static CCTouchDispatcher _sharedDispatcher;
+    private static CCTouchDispatcher _sharedDispatcher = new CCTouchDispatcher();
 
     /** singleton of the CCTouchDispatcher */
     public static CCTouchDispatcher sharedDispatcher() {
-        if (_sharedDispatcher == null) {
-            synchronized (CCTouchDispatcher.class) {
-                if (_sharedDispatcher == null) {
-                    _sharedDispatcher = new CCTouchDispatcher();
-                }
-            }
-        }
         return _sharedDispatcher;
     }
 
     protected CCTouchDispatcher() {
         dispatchEvents = true;
-        touchHandlers = new CopyOnWriteArrayList<CCTouchHandler>();
+        touchHandlers = new ArrayList<CCTouchHandler>();
     }
 
     //
@@ -121,14 +114,17 @@ public class CCTouchDispatcher {
 
     private void addHandler(CCTouchHandler handler) {
         int i = 0;
-        for( CCTouchHandler h : touchHandlers ) {
-            if( h.getPriority() < handler.getPriority() )
-                i++;
-
-            if( h.getDelegate() == handler.getDelegate() )
-                throw new RuntimeException("Delegate already added to touch dispatcher.");
+        synchronized (touchHandlers) {
+            for( int ind = 0; ind < touchHandlers.size(); ind++ ) {
+            	CCTouchHandler h = touchHandlers.get(ind);
+	            if( h.getPriority() < handler.getPriority() )
+	                i++;
+	
+	            if( h.getDelegate() == handler.getDelegate() )
+	                throw new RuntimeException("Delegate already added to touch dispatcher.");
+	        }
+	        touchHandlers.add(i, handler);
         }
-        touchHandlers.add(i, handler);
     }
 
     public void addDelegate(CCTouchDelegateProtocol delegate, int prio) {
@@ -138,12 +134,15 @@ public class CCTouchDispatcher {
     public void removeDelegate(CCTouchDelegateProtocol delegate) {
         if( delegate == null )
             return;
-
-        for( CCTouchHandler handler : touchHandlers ) {
-            if( handler.getDelegate() == delegate ) {
-                touchHandlers.remove(handler);
-                break;
-            }
+        
+        synchronized (touchHandlers) {
+	        for( int ind = 0; ind < touchHandlers.size(); ind++ ) {
+	        	CCTouchHandler handler = touchHandlers.get(ind);
+	            if( handler.getDelegate() == delegate ) {
+	                touchHandlers.remove(handler);
+	                break;
+	            }
+	        }
         }
     }
 
@@ -158,38 +157,41 @@ public class CCTouchDispatcher {
         if( delegate == null )
             throw new RuntimeException("Got null touch delegate");
 
-        int i = 0;
-        for( CCTouchHandler handler : touchHandlers ) {
-            if( handler.getDelegate() == delegate ) break;
-            i++;
-        }
-
-        if( i == touchHandlers.size() )
-            throw new RuntimeException("Touch delegate not found");
-
-        CCTouchHandler handler = touchHandlers.get(i);
-
-        if( handler.getPriority() != priority ) {
-            handler.setPriority(priority);
-
-            touchHandlers.remove(handler);
-            addHandler(handler);
+        synchronized (touchHandlers) {
+	        int i = 0;
+	        for( int ind = 0; ind < touchHandlers.size(); ind++ ) {
+	        	CCTouchHandler handler = touchHandlers.get(ind);
+	            if( handler.getDelegate() == delegate ) break;
+	            i++;
+	        }
+	
+	        if( i == touchHandlers.size() )
+	            throw new RuntimeException("Touch delegate not found");
+	
+	        CCTouchHandler handler = touchHandlers.get(i);
+	
+	        if( handler.getPriority() != priority ) {
+	            handler.setPriority(priority);
+	
+	            touchHandlers.remove(i);
+	            addHandler(handler);
+	        }
         }
     }
 
-    private ConcurrentLinkedQueue<MotionEvent> eventQueue = new ConcurrentLinkedQueue<MotionEvent>();
+    private final ConcNodeCachingLinkedQueue<MotionEvent> eventQueue = new ConcNodeCachingLinkedQueue<MotionEvent>();
     
     public void queueMotionEvent(MotionEvent event) {
     	// copy event for queue
     	MotionEvent eventForQueue  = MotionEvent.obtain(event);
-    	    	
-    	eventQueue.add(eventForQueue);
+    	
+		eventQueue.push(eventForQueue);			
     }
     
     public void update() {
     	
     	MotionEvent event;
-    	while((event = eventQueue.poll()) != null) {
+    	while( (event = eventQueue.poll()) != null) {
     		
 			switch (event.getAction()) {
 			case MotionEvent.ACTION_CANCEL:
@@ -216,40 +218,52 @@ public class CCTouchDispatcher {
     public void touchesBegan(MotionEvent event) {
         if( dispatchEvents )  {
 
-            for( CCTouchHandler handler : touchHandlers ) {
-                if( handler.ccTouchesBegan(event) == kEventHandled )
-                    break;
-            }
+        	synchronized (touchHandlers) {
+	            for( int ind = 0; ind < touchHandlers.size(); ind++ ) {
+	            	CCTouchHandler handler = touchHandlers.get(ind);
+	                if( handler.ccTouchesBegan(event) == kEventHandled )
+	                    break;
+	            }
+        	}
         }
     }
 
     public void touchesMoved(MotionEvent event) {
         if( dispatchEvents )  {
 
-            for( CCTouchHandler handler : touchHandlers ) {
-                if( handler.ccTouchesMoved(event) == kEventHandled )
-                    break;
-            }
+        	synchronized (touchHandlers) {
+	            for( int ind = 0; ind < touchHandlers.size(); ind++ ) {
+	            	CCTouchHandler handler = touchHandlers.get(ind);
+	                if( handler.ccTouchesMoved(event) == kEventHandled )
+	                    break;
+	            }
+        	}
         }
     }
 
     public void touchesEnded(MotionEvent event) {
         if( dispatchEvents )  {
 
-            for( CCTouchHandler handler : touchHandlers ) {
-                if( handler.ccTouchesEnded(event) == kEventHandled )
-                    break;
-            }
+        	synchronized (touchHandlers) {
+	            for( int ind = 0; ind < touchHandlers.size(); ind++ ) {
+	            	CCTouchHandler handler = touchHandlers.get(ind);
+	                if( handler.ccTouchesEnded(event) == kEventHandled )
+	                    break;
+	            }
+        	}
         }
     }
 
     public void touchesCancelled(MotionEvent event) {
         if( dispatchEvents )  {
 
-            for( CCTouchHandler handler : touchHandlers ) {
-                if( handler.ccTouchesCancelled(event) == kEventHandled )
-                    break;
-            }
+        	synchronized (touchHandlers) {
+	            for( int ind = 0; ind < touchHandlers.size(); ind++ ) {
+	            	CCTouchHandler handler = touchHandlers.get(ind);
+	                if( handler.ccTouchesCancelled(event) == kEventHandled )
+	                    break;
+	            }
+        	}
         }
     }
 }

@@ -210,7 +210,7 @@ public class Box2dTest extends Activity {
     		CCSprite sprite = CCSprite.sprite("blocks.png", CGRect.make(32 * idx,32 * idy,32,32));
     		// sheet.addChild(sprite);
     		this.addChild(sprite);
-    		sprite.setPosition(CGPoint.ccp(pos.x, pos.y));    		
+    		sprite.setPosition(pos);    		
 
     		// Define the dynamic body.
     		//Set up a 1m squared box in the physics world
@@ -253,7 +253,7 @@ public class Box2dTest extends Activity {
         		if (userData != null && userData instanceof CCSprite) {
         			//Synchronize the Sprites position and rotation with the corresponding body
         			CCSprite sprite = (CCSprite)userData;
-        			sprite.setPosition(CGPoint.make(b.getPosition().x * PTM_RATIO, b.getPosition().y * PTM_RATIO));
+        			sprite.setPosition(b.getPosition().x * PTM_RATIO, b.getPosition().y * PTM_RATIO);
         			sprite.setRotation(-1.0f * ccMacros.CC_RADIANS_TO_DEGREES(b.getAngle()));
         		}	
         	}

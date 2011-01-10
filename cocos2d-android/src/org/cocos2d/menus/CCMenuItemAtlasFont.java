@@ -9,7 +9,7 @@ import org.cocos2d.nodes.CCLabelAtlas;
 public class CCMenuItemAtlasFont extends CCMenuItemLabel {
 
     /** creates a menu item from a string and atlas with a target/selector */
-    public static CCMenuItemAtlasFont item(String value, String charMapFile, int itemWidth, int itemHeight, char startCharMap) {
+    public static CCMenuItemAtlasFont item(CharSequence value, String charMapFile, int itemWidth, int itemHeight, char startCharMap) {
         assert value.length() != 0 :"value length must be greater than 0";
 
         CCLabelAtlas label = CCLabelAtlas.label(value, charMapFile, itemWidth, itemHeight, startCharMap);
@@ -17,7 +17,7 @@ public class CCMenuItemAtlasFont extends CCMenuItemLabel {
     }
 
     /** creates a menu item from a string and atlas. Use it with MenuItemToggle */
-    public static CCMenuItemAtlasFont item(String value, String charMapFile, int itemWidth, int itemHeight, char startCharMap, CCNode rec, String cb) {
+    public static CCMenuItemAtlasFont item(CharSequence value, String charMapFile, int itemWidth, int itemHeight, char startCharMap, CCNode rec, String cb) {
         assert value.length() != 0 :"value length must be greater than 0";
 
         CCLabelAtlas label = CCLabelAtlas.label(value, charMapFile, itemWidth, itemHeight, startCharMap);

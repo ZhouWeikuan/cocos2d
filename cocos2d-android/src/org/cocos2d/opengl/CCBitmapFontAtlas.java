@@ -19,6 +19,8 @@ import org.cocos2d.types.CGPoint;
 import org.cocos2d.types.CGRect;
 import org.cocos2d.types.CGSize;
 import org.cocos2d.types.ccColor3B;
+import org.cocos2d.utils.collections.IntMap;
+import org.cocos2d.utils.javolution.TextBuilder;
 
 /** CCBitmapFontAtlas is a subclass of CCSpriteSheet.
 
@@ -99,7 +101,7 @@ public class CCBitmapFontAtlas extends CCSpriteSheet implements CCLabelProtocol,
         // XXX: Creating a public interface so that the bitmapFontArray[] is accesible
         // The characters building up the font
         //public ccBitmapFontDef	bitmapFontArray[] = new ccBitmapFontDef[kCCBitmapFontAtlasMaxChars];
-    	public HashMap<Integer,ccBitmapFontDef>	bitmapFontArray = new HashMap<Integer, ccBitmapFontDef>();
+    	public IntMap<ccBitmapFontDef>	bitmapFontArray = new IntMap<ccBitmapFontDef>();
     	
         // FNTConfig: Common Height
         public int commonHeight;
@@ -111,7 +113,7 @@ public class CCBitmapFontAtlas extends CCSpriteSheet implements CCLabelProtocol,
         public String		atlasName;
 
         // values for kerning
-        public HashMap<Integer, tKerningHashElement> kerningDictionary;
+        public IntMap<tKerningHashElement> kerningDictionary;
 
         /** allocates a CCBitmapFontConfiguration with a FNT file */
         public static CCBitmapFontConfiguration configuration(String FNTfile) {
@@ -121,7 +123,7 @@ public class CCBitmapFontAtlas extends CCSpriteSheet implements CCLabelProtocol,
         /** initializes a BitmapFontConfiguration with a FNT file */
         protected CCBitmapFontConfiguration(String FNTfile) {
             super();
-            kerningDictionary = new HashMap<Integer, tKerningHashElement>();
+            kerningDictionary = new IntMap<tKerningHashElement>();
             parseConfigFile(FNTfile);
         }
 
@@ -188,7 +190,7 @@ public class CCBitmapFontAtlas extends CCSpriteSheet implements CCLabelProtocol,
 				        
 				        // Add the CharDef returned to the charArray
 				        //bitmapFontArray[ characterDefinition.charID ] = characterDefinition;
-				        bitmapFontArray.put(Integer.valueOf(characterDefinition.charID), characterDefinition);
+				        bitmapFontArray.put(characterDefinition.charID, characterDefinition);
 				    }
 				    else if(line.startsWith("kernings count")) {
 				        this.parseKerningCapacity(line);
@@ -434,7 +436,7 @@ public class CCBitmapFontAtlas extends CCSpriteSheet implements CCLabelProtocol,
 
 
 	// string to render
-	String		string_;
+	TextBuilder		string_;
 	
 	static CCBitmapFontConfiguration parsed;
 	CCBitmapFontConfiguration	configuration_;
@@ -484,12 +486,12 @@ public class CCBitmapFontAtlas extends CCSpriteSheet implements CCLabelProtocol,
     }
 
     /** creates a bitmap font altas with an initial string and the FNT file */
-    public static CCBitmapFontAtlas bitmapFontAtlas(String string, String fntFile) {
+    public static CCBitmapFontAtlas bitmapFontAtlas(CharSequence string, String fntFile) {
         return new CCBitmapFontAtlas(string, fntFile);
     }
 
     /** init a bitmap font altas with an initial string and the FNT file */
-    protected CCBitmapFontAtlas(String theString, String fntFile) {
+    protected CCBitmapFontAtlas(CharSequence theString, String fntFile) {
         super((parsed= FNTConfigLoadFile(fntFile)).atlasName , theString.length());
         
         configuration_  = parsed;
@@ -502,6 +504,8 @@ public class CCBitmapFontAtlas extends CCSpriteSheet implements CCLabelProtocol,
         opacityModifyRGB_ = textureAtlas_.getTexture().hasPremultipliedAlpha();
         anchorPoint_ = CGPoint.ccp(0.5f, 0.5f);
 
+        string_ = new TextBuilder();
+        
         setString(theString);
     }
 
@@ -589,7 +593,7 @@ public class CCBitmapFontAtlas extends CCSpriteSheet implements CCLabelProtocol,
 
 			kerningAmount = kerningAmount(prev, c);
 
-			ccBitmapFontDef fontDef = configuration_.bitmapFontArray.get(Integer.valueOf(c));
+			ccBitmapFontDef fontDef = configuration_.bitmapFontArray.get(c);//Integer.valueOf(c));
 			if (fontDef == null)
 				continue;
 
@@ -637,8 +641,9 @@ public class CCBitmapFontAtlas extends CCSpriteSheet implements CCLabelProtocol,
 		setContentSize(longestLine, totalHeight);
     }
 
-    public void setString(String newString) {	
-        string_ = newString;
+    public void setString(CharSequence newString) {	
+        string_.reset();
+        string_.append(newString);
 
         int len = children_.size();
         for (int i = 0; i < len; i++) {

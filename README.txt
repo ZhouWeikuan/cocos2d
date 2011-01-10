@@ -5,6 +5,9 @@ Some rules to keep in mind:
 - call "set" method instead of creating new every time;
 
 Notes:
+- Pools now can help you to reduce garbage of small objects, like CGPoint. org.cocos2d.types.util.PoolHolder keeps some of pools. This class should be used for stack-like objects(number of get() must be higher or equal, but not LESS, then number of free() calls). There is ConcOneClassPool for use in multithreaded classes;
+- org.cocos2d.utils.collections package contains classes mainly for internal usege). They are garbage-free and used in that parts of where changes performed frequently.
+- TextBulder from Javolution included in utils, it can be used instead of standert StringBuilder. why? It is also garbage-free. Look at CCDirector's showFPS(), now it is not garbage generator.
 - CCScheduler now can use interface UpdateCallback instead of scheduling methods for invocation. This is more java way solution and doesn't generate garbage for GC.
 - android have at minimum 2 theads in activity, UI thread should react on user interaction only, the rest of the work should be performed in rendering thread.
 - thread count. There is no multicore CPUs as I know while, we should keep number of theads at minimum.  Deffer long user events from UI thread, and handle them in Render thread. Somehow...

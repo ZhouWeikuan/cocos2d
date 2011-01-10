@@ -25,7 +25,14 @@ public class CCMoveTo extends CCIntervalAction {
         startPosition = CGPoint.zero();
         endPosition = CGPoint.make(pos.x, pos.y);
         delta = CGPoint.zero();
-    }    
+    }
+    
+    /**
+     * Lets extend basic functionality for reuse action.
+     */
+    public void setEndPosition(CGPoint pos) {
+    	endPosition.set(pos);
+    }
 
     @Override
     public CCIntervalAction copy() {

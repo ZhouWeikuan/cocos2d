@@ -11,7 +11,7 @@ public class ccQuad3 {
     public float tr_x, tr_y, tr_z;
 
     public ccQuad3() {
-        this(new float[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0});
+        this(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
     }
 
     public ccQuad3(float[] f) {
