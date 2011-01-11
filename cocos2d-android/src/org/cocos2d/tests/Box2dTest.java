@@ -1,5 +1,7 @@
 package org.cocos2d.tests;
 
+import java.util.Iterator;
+
 import org.cocos2d.actions.UpdateCallback;
 import org.cocos2d.config.ccMacros;
 import org.cocos2d.events.CCTouchDispatcher;
@@ -8,18 +10,27 @@ import org.cocos2d.layers.CCScene;
 import org.cocos2d.nodes.CCDirector;
 import org.cocos2d.nodes.CCLabel;
 import org.cocos2d.nodes.CCSprite;
+import org.cocos2d.nodes.CCSpriteSheet;
 import org.cocos2d.opengl.CCGLSurfaceView;
 import org.cocos2d.types.CGPoint;
 import org.cocos2d.types.CGRect;
 import org.cocos2d.types.CGSize;
 import org.cocos2d.types.ccColor3B;
-import org.jbox2d.collision.AABB;
-import org.jbox2d.collision.shapes.EdgeChainDef;
-import org.jbox2d.collision.shapes.PolygonDef;
-import org.jbox2d.common.Vec2;
-import org.jbox2d.dynamics.Body;
-import org.jbox2d.dynamics.BodyDef;
-import org.jbox2d.dynamics.World;
+
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.badlogic.gdx.physics.box2d.World;
+//import org.jbox2d.collision.AABB;
+//import org.jbox2d.collision.shapes.EdgeChainDef;
+//import org.jbox2d.collision.shapes.PolygonDef;
+//import org.jbox2d.common.Vector2;
+//import org.jbox2d.dynamics.Body;
+//import org.jbox2d.dynamics.BodyDef;
+//import org.jbox2d.dynamics.World;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -43,6 +54,10 @@ import android.view.WindowManager;
 public class Box2dTest extends Activity {
     // private static final String LOG_TAG = JBox2DTest.class.getSimpleName();
     
+	static {
+        System.loadLibrary("gdx");
+	}
+	
     private CCGLSurfaceView mGLSurfaceView;
 
     @Override
@@ -134,15 +149,15 @@ public class Box2dTest extends Activity {
         	CGSize s = CCDirector.sharedDirector().winSize();
 
       		// Define the gravity vector.
-        	Vec2 gravity = new Vec2(0.0f, -10.0f);
+        	Vector2 gravity = new Vector2(0.0f, -10.0f);
 
         	float scaledWidth = s.width/PTM_RATIO;
             float scaledHeight = s.height/PTM_RATIO;
 
-        	Vec2 lower = new Vec2(-BUFFER, -BUFFER);
-        	Vec2 upper = new Vec2(scaledWidth+BUFFER, scaledHeight+BUFFER);
+//        	Vector2 lower = new Vector2(-BUFFER, -BUFFER);
+//        	Vector2 upper = new Vector2(scaledWidth+BUFFER, scaledHeight+BUFFER);
         	        	
-        	bxWorld = new World(new AABB(lower, upper), gravity, true);
+        	bxWorld = new World(gravity, true);
         	bxWorld.setContinuousPhysics(true);
 
     		// Define the ground body.
@@ -152,19 +167,35 @@ public class Box2dTest extends Activity {
     		// Call the body factory which allocates memory for the ground body
     		// from a pool and creates the ground box shape (also from a pool).
     		// The body is also added to the world.
-            Body bxGroundBody = bxWorld.createBody(bxGroundBodyDef);
+            Body groundBody = bxWorld.createBody(bxGroundBodyDef);
 
-            EdgeChainDef bxGroundOutsideEdgeDef = new EdgeChainDef();
-            bxGroundOutsideEdgeDef.addVertex(new Vec2(0f,0f));
-            bxGroundOutsideEdgeDef.addVertex(new Vec2(0f,scaledHeight));
-            bxGroundOutsideEdgeDef.addVertex(new Vec2(scaledWidth,scaledHeight));
-            bxGroundOutsideEdgeDef.addVertex(new Vec2(scaledWidth,0f));            
-            bxGroundOutsideEdgeDef.addVertex(new Vec2(0f,0f));
-            bxGroundBody.createShape(bxGroundOutsideEdgeDef);
-                        
+         // Define the ground box shape.
+            PolygonShape groundBox = new PolygonShape();
+
+            Vector2 bottomLeft = new Vector2(0f,0f);
+            Vector2 topLeft = new Vector2(0f,scaledHeight);
+            Vector2 topRight = new Vector2(scaledWidth,scaledHeight);
+            Vector2 bottomRight = new Vector2(scaledWidth,0f);
+            
+    		// bottom
+    		groundBox.setAsEdge(bottomLeft, bottomRight);
+    		groundBody.createFixture(groundBox,0);
+    		
+    		// top
+    		groundBox.setAsEdge(topLeft, topRight);
+    		groundBody.createFixture(groundBox,0);
+    		
+    		// left
+    		groundBox.setAsEdge(topLeft, bottomLeft);
+    		groundBody.createFixture(groundBox,0);
+    		
+    		// right
+    		groundBox.setAsEdge(topRight, bottomRight);
+    		groundBody.createFixture(groundBox,0);
+                                    
             //Set up sprite
-            // CCSpriteSheet mgr = CCSpriteSheet.spriteSheet("blocks.png", 150);
-            // addChild(mgr, 0, kTagSpriteManager);
+             CCSpriteSheet mgr = CCSpriteSheet.spriteSheet("blocks.png", 150);
+             addChild(mgr, 0, kTagSpriteManager);
     		
             addNewSpriteWithCoords(CGPoint.ccp(s.width / 2.0f, s.height / 2.0f));
             
@@ -199,37 +230,42 @@ public class Box2dTest extends Activity {
 		}
 
 		private void addNewSpriteWithCoords(CGPoint pos) {
-      		// CCSpriteSheet sheet = (CCSpriteSheet)getChild(kTagSpriteManager);
+      		CCSpriteSheet sheet = (CCSpriteSheet)getChild(kTagSpriteManager);
 
     		//We have a 64x64 sprite sheet with 4 different 32x32 images.  The following code is
     		//just randomly picking one of the images
     		int idx = (ccMacros.CCRANDOM_0_1() > .5 ? 0:1);
     		int idy = (ccMacros.CCRANDOM_0_1() > .5 ? 0:1);
    
-    		// CCSprite sprite = CCSprite.sprite(sheet, CGRect.make(32 * idx,32 * idy,32,32));
-    		CCSprite sprite = CCSprite.sprite("blocks.png", CGRect.make(32 * idx,32 * idy,32,32));
-    		// sheet.addChild(sprite);
-    		this.addChild(sprite);
+//    		CCSprite sprite = CCSprite.sprite("blocks.png", CGRect.make(32 * idx,32 * idy,32,32));
+//    		this.addChild(sprite);
+    		CCSprite sprite = CCSprite.sprite(sheet, CGRect.make(32 * idx,32 * idy,32,32));
+    		sheet.addChild(sprite);
+    		
     		sprite.setPosition(pos);    		
 
     		// Define the dynamic body.
     		//Set up a 1m squared box in the physics world
     		BodyDef bodyDef = new BodyDef();
+    		bodyDef.type = BodyType.DynamicBody;
     		bodyDef.position.set(pos.x/PTM_RATIO, pos.y/PTM_RATIO);
-    		bodyDef.userData = sprite;
-    		bodyDef.linearDamping = 0.3f;
     		
     		// Define another box shape for our dynamic body.
-    		PolygonDef dynamicBox = new PolygonDef();
+    		PolygonShape dynamicBox = new PolygonShape();
     		dynamicBox.setAsBox(.5f, .5f);//These are mid points for our 1m box
-    		dynamicBox.density = 1.0f;
-            dynamicBox.friction = 0.3f;
+//    		dynamicBox.density = 1.0f;
+//            dynamicBox.friction = 0.3f;
     		
         	synchronized (bxWorld) {
         		// Define the dynamic body fixture and set mass so it's dynamic.
         		Body body = bxWorld.createBody(bodyDef);
-        		body.createShape(dynamicBox);
-	    		body.setMassFromShapes();
+        		body.setUserData(sprite);
+        		
+        		FixtureDef fixtureDef = new FixtureDef();
+        		fixtureDef.shape = dynamicBox;	
+        		fixtureDef.density = 1.0f;
+        		fixtureDef.friction = 0.3f;
+        		body.createFixture(fixtureDef);
         	}        	
         }
 		
@@ -243,11 +279,13 @@ public class Box2dTest extends Activity {
         	// Instruct the world to perform a simulation step. It is
         	// generally best to keep the time step and iterations fixed.
         	synchronized (bxWorld) {
-        		bxWorld.step(delta, 8);
+        		bxWorld.step(delta, 8, 1);
         	}
 	        	
         	// Iterate over the bodies in the physics world
-        	for (Body b = bxWorld.getBodyList(); b != null; b = b.getNext()) {
+        	Iterator<Body> it = bxWorld.getBodies();
+        	while(it.hasNext()) {
+        		Body b = it.next();
         		Object userData = b.getUserData();
         		
         		if (userData != null && userData instanceof CCSprite) {
@@ -271,6 +309,8 @@ public class Box2dTest extends Activity {
 
         static float prevX=0, prevY=0;
         
+        Vector2 gravity = new Vector2();
+        
 		@Override
 	    public void ccAccelerometerChanged(float accelX, float accelY, float accelZ) {
 
@@ -284,7 +324,7 @@ public class Box2dTest extends Activity {
 			prevY = accY;		
 			
 			// no filtering being done in this demo (just magnify the gravity a bit)
-			Vec2 gravity = new Vec2( accX * -2.0f, accY * -2.00f );
+			gravity.set( accY * 1.0f, accX * -1.0f );
 			bxWorld.setGravity( gravity );			
 		}
 		
