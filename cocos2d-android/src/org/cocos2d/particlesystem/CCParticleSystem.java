@@ -1118,8 +1118,11 @@ public abstract class CCParticleSystem extends CCNode implements CCTextureProtoc
 
             } else {
                 // life < 0
-                if( particleIdx != particleCount-1 )
+                if( particleIdx != particleCount-1 ) {
+                	CCParticle tmp = particles[particleIdx]; 
                     particles[particleIdx] = particles[particleCount-1];
+                    particles[particleCount-1] = tmp;
+                }
                 particleCount--;
 
                 if( particleCount == 0 && autoRemoveOnFinish_ ) {
