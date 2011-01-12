@@ -18,7 +18,7 @@ public class CCTMXLayerInfo  {
 	CGSize			layerSize;
 	IntBuffer		tiles;
 	boolean			visible;
-	int				opacity;
+	int				opacity	= 255;
 	boolean			ownTiles;
 	int				minGID;
 	int				maxGID;

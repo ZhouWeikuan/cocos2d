@@ -210,7 +210,7 @@ public class TileMapTest extends Activity {
 
         public void registerWithTouchDispatcher() {
             // CCTouchDispatcher.sharedDispatcher().addTargetedDelegate(this, 0, true);
-		CCTouchDispatcher.sharedDispatcher().addDelegate(this, 0);
+        	CCTouchDispatcher.sharedDispatcher().addDelegate(this, 0);
         }
 
         @Override
@@ -230,7 +230,9 @@ public class TileMapTest extends Activity {
 
         @Override
         public boolean ccTouchesMoved(MotionEvent event) {
-		final int N = event.getHistorySize() - 1;
+        	final int N = event.getHistorySize() - 1;
+        	if (N <= 0)
+        		return true;
             CGPoint touchLocation = CGPoint.make(event.getX(), event.getY());
             CGPoint prevLocation = CGPoint.make(event.getHistoricalX(N), event.getHistoricalY(N));
 
