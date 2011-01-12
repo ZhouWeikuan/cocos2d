@@ -47,6 +47,11 @@ public class CCPropertyAction extends CCIntervalAction {
         from_	= from;
     }
 
+	@Override
+	public CCPropertyAction copy() {
+		return new CCPropertyAction(duration, key_, from_, to_);
+	}
+
     @Override
     public void start(CCNode aTarget) {
         super.start(aTarget);

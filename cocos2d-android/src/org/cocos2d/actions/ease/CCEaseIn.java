@@ -13,9 +13,19 @@ public class CCEaseIn extends CCEaseRateAction {
         super(action, rate);
     }
 
+	@Override
+	public CCEaseIn copy() {
+		return new CCEaseIn(other.copy(), rate);
+	}
+
     @Override
     public void update(float t) {
         other.update((float) Math.pow(t, rate));
     }
+
+	@Override
+	public CCIntervalAction reverse() {
+		return new CCEaseOut(other.reverse(), rate);
+	}
 
 }

@@ -12,6 +12,11 @@ public class CCEaseSineOut extends CCEaseAction {
         super(action);
     }
 
+	@Override
+	public CCEaseSineOut copy() {
+		return new CCEaseSineOut(other.copy());
+	}
+
     @Override
     public void update(float t) {
         other.update((float)Math.sin(t * (float) Math.PI / 2));
@@ -19,7 +24,7 @@ public class CCEaseSineOut extends CCEaseAction {
 
     @Override
     public CCIntervalAction reverse() {
-        return new CCEaseSineOut(other.reverse());
+        return new CCEaseSineIn(other.reverse());
     }
 
 }

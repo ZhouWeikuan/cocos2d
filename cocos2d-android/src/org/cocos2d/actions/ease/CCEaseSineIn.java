@@ -12,6 +12,11 @@ public class CCEaseSineIn extends CCEaseAction {
         super(action);
     }
 
+	@Override
+	public CCEaseSineIn copy() {
+		return new CCEaseSineIn(other.copy());
+	}
+
     @Override
     public void update(float t) {
         other.update(-1 * (float)Math.cos(t * (float) Math.PI / 2) + 1);
@@ -19,7 +24,7 @@ public class CCEaseSineIn extends CCEaseAction {
 
     @Override
     public CCIntervalAction reverse() {
-        return new CCEaseSineIn(other.reverse());
+        return new CCEaseSineOut(other.reverse());
     }
 
 

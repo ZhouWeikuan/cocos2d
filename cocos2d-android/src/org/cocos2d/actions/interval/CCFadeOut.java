@@ -16,6 +16,11 @@ public class CCFadeOut extends CCIntervalAction {
         super(t);
     }
 
+	@Override
+	public CCFadeOut copy() {
+		return new CCFadeOut(duration);
+	}
+
     @Override
     public void update(float t) {
         ((CCRGBAProtocol) target).setOpacity((int) (255.0f * (1 - t)));

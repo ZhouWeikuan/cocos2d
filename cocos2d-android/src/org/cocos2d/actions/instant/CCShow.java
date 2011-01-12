@@ -12,6 +12,11 @@ public class CCShow extends CCInstantAction {
         return new CCShow();
     }
 
+	@Override
+	public CCShow copy() {
+		return new CCShow();
+	}
+
     @Override
     public void start(CCNode aTarget) {
         super.start(aTarget);

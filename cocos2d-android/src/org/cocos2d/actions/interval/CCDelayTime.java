@@ -13,6 +13,11 @@ public class CCDelayTime extends CCIntervalAction {
         super(t);
     }
 
+	@Override
+	public CCDelayTime copy() {
+		return new CCDelayTime(duration);
+	}
+
     @Override
     public void update(float t) {
     }

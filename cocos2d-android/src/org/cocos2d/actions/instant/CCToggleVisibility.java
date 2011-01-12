@@ -11,6 +11,11 @@ public class CCToggleVisibility extends CCInstantAction {
         return new CCToggleVisibility();
     }
 
+	@Override
+	public CCToggleVisibility copy() {
+		return new CCToggleVisibility();
+	}
+
     @Override
     public void start(CCNode aTarget) {
         super.start(aTarget);
