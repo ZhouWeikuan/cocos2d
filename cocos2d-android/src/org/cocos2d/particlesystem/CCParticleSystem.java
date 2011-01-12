@@ -14,6 +14,10 @@ import org.cocos2d.types.CGPoint;
 import org.cocos2d.types.ccBlendFunc;
 import org.cocos2d.types.ccColor4F;
 import org.cocos2d.types.ccPointSprite;
+import org.cocos2d.types.util.CGPointUtil;
+import org.cocos2d.types.util.PoolHolder;
+import org.cocos2d.types.util.ccColor4FUtil;
+import org.cocos2d.utils.pool.OneClassPool;
 
 // typedef void (*CC_UPDATE_PARTICLE_IMP)(id, SEL, tCCParticle*, CGPoint);
 
@@ -95,7 +99,7 @@ public abstract class CCParticleSystem extends CCNode implements CCTextureProtoc
 	 */
 	static class CCParticle {
 		static class ParticleModeA {
-			CGPoint		dir;
+			CGPoint		dir = new CGPoint();
 			float		radialAccel;
 			float		tangentialAccel;
 		}
@@ -108,11 +112,11 @@ public abstract class CCParticleSystem extends CCNode implements CCTextureProtoc
 			float		deltaRadius;
 		}
 
-		CGPoint				pos;
-		CGPoint				startPos;
+		CGPoint				pos = new CGPoint();
+		CGPoint				startPos = new CGPoint();
 
-		ccColor4F	color;
-		ccColor4F	deltaColor;
+		ccColor4F	color = new ccColor4F();
+		ccColor4F	deltaColor = new ccColor4F();
 
 		float		size;
 		float		deltaSize;
@@ -448,7 +452,7 @@ public abstract class CCParticleSystem extends CCNode implements CCTextureProtoc
 
     public void setGravity(CGPoint g) {
         assert emitterMode == kCCParticleModeGravity:"Particle Mode should be Gravity";
-        modeA.gravity = g;
+        modeA.gravity.set(g);
     }
     
     /**
@@ -719,27 +723,29 @@ public abstract class CCParticleSystem extends CCNode implements CCTextureProtoc
         particle.timeToLive = Math.max(0, life + lifeVar * ccMacros.CCRANDOM_MINUS1_1() );
 
         // position
-        particle.pos = CGPoint.make(centerOfGravity.x + posVar.x * ccMacros.CCRANDOM_MINUS1_1(),
+        particle.pos.set(centerOfGravity.x + posVar.x * ccMacros.CCRANDOM_MINUS1_1(),
         					centerOfGravity.y + posVar.y * ccMacros.CCRANDOM_MINUS1_1());
 
         // Color
-        ccColor4F start = new ccColor4F();
-        start.r = Math.min(1, Math.max(0, startColor.r + startColorVar.r * ccMacros.CCRANDOM_MINUS1_1() ) );
-        start.g = Math.min(1, Math.max(0, startColor.g + startColorVar.g * ccMacros.CCRANDOM_MINUS1_1() ) );
-        start.b = Math.min(1, Math.max(0, startColor.b + startColorVar.b * ccMacros.CCRANDOM_MINUS1_1() ) );
-        start.a = Math.min(1, Math.max(0, startColor.a + startColorVar.a * ccMacros.CCRANDOM_MINUS1_1() ) );
+//        ccColor4F start = new ccColor4F();
+        float start_r = Math.min(1, Math.max(0, startColor.r + startColorVar.r * ccMacros.CCRANDOM_MINUS1_1() ) );
+        float start_g = Math.min(1, Math.max(0, startColor.g + startColorVar.g * ccMacros.CCRANDOM_MINUS1_1() ) );
+        float start_b = Math.min(1, Math.max(0, startColor.b + startColorVar.b * ccMacros.CCRANDOM_MINUS1_1() ) );
+        float start_a = Math.min(1, Math.max(0, startColor.a + startColorVar.a * ccMacros.CCRANDOM_MINUS1_1() ) );
 
-        ccColor4F end = new ccColor4F();
-        end.r = Math.min(1, Math.max(0, endColor.r + endColorVar.r * ccMacros.CCRANDOM_MINUS1_1() ) );
-        end.g = Math.min(1, Math.max(0, endColor.g + endColorVar.g * ccMacros.CCRANDOM_MINUS1_1() ) );
-        end.b = Math.min(1, Math.max(0, endColor.b + endColorVar.b * ccMacros.CCRANDOM_MINUS1_1() ) );
-        end.a = Math.min(1, Math.max(0, endColor.a + endColorVar.a * ccMacros.CCRANDOM_MINUS1_1() ) );
+//        ccColor4F end = new ccColor4F();
+        float end_r = Math.min(1, Math.max(0, endColor.r + endColorVar.r * ccMacros.CCRANDOM_MINUS1_1() ) );
+        float end_g = Math.min(1, Math.max(0, endColor.g + endColorVar.g * ccMacros.CCRANDOM_MINUS1_1() ) );
+        float end_b = Math.min(1, Math.max(0, endColor.b + endColorVar.b * ccMacros.CCRANDOM_MINUS1_1() ) );
+        float end_a = Math.min(1, Math.max(0, endColor.a + endColorVar.a * ccMacros.CCRANDOM_MINUS1_1() ) );
 
-        particle.color = start;
-        particle.deltaColor = new ccColor4F( (end.r - start.r) / particle.timeToLive,
-        		(end.g - start.g) / particle.timeToLive,
-        		(end.b - start.b) / particle.timeToLive,
-        		(end.a - start.a) / particle.timeToLive);
+        ccColor4FUtil.set(particle.color, start_r, start_g, start_b, start_a);
+        
+        ccColor4FUtil.set(particle.deltaColor,
+        		(end_r - start_r) / particle.timeToLive,
+        		(end_g - start_g) / particle.timeToLive,
+        		(end_b - start_b) / particle.timeToLive,
+        		(end_a - start_a) / particle.timeToLive);
 
         // size
         float startS = Math.max(0, startSize + startSizeVar * ccMacros.CCRANDOM_MINUS1_1() ); // no negative size
@@ -761,14 +767,13 @@ public abstract class CCParticleSystem extends CCNode implements CCTextureProtoc
 
         // position
         if( positionType == kCCPositionTypeFree )
-            particle.startPos = this.convertToWorldSpace(0, 0);
+        	this.convertToWorldSpace(0, 0, particle.startPos);
 
         // direction
         float a = ccMacros.CC_DEGREES_TO_RADIANS( angle + angleVar * ccMacros.CCRANDOM_MINUS1_1() );	
 
         // Mode Gravity: A
         if (emitterMode == kCCParticleModeGravity) {
-            CGPoint v = CGPoint.make((float)Math.cos(a), (float)Math.sin(a));
             float s = modeA.speed + modeA.speedVar * ccMacros.CCRANDOM_MINUS1_1();
 
             if (particle.modeA == null) {
@@ -776,7 +781,8 @@ public abstract class CCParticleSystem extends CCNode implements CCTextureProtoc
             }
             
             // direction
-            particle.modeA.dir = CGPoint.ccpMult( v, s );
+            particle.modeA.dir.set((float)Math.cos(a), (float)Math.sin(a));
+            CGPointUtil.mult(particle.modeA.dir, s);
 
             // radial accel
             particle.modeA.radialAccel = modeA.radialAccel + modeA.radialAccelVar * ccMacros.CCRANDOM_MINUS1_1();
@@ -1035,9 +1041,14 @@ public abstract class CCParticleSystem extends CCNode implements CCTextureProtoc
 
         particleIdx = 0;
 
-        CGPoint currentPosition = CGPoint.zero();
+        OneClassPool<CGPoint> pointPool = PoolHolder.getInstance().getCGPointPool();
+        CGPoint currentPosition = pointPool.get();
+        CGPoint tmp = pointPool.get();
+        CGPoint radial = pointPool.get();
+        CGPoint tangential = pointPool.get();
+        
         if( positionType_ == kCCPositionTypeFree )
-            currentPosition = convertToWorldSpace(0, 0);
+            convertToWorldSpace(0, 0, currentPosition);
 
         while( particleIdx < particleCount ) {
             CCParticle p = particles[particleIdx];
@@ -1046,27 +1057,28 @@ public abstract class CCParticleSystem extends CCNode implements CCTextureProtoc
             if( p.timeToLive > 0 ) {
                 // Mode A: gravity, direction, tangential accel & radial accel
                 if( emitterMode == kCCParticleModeGravity ) {
-                    CGPoint tmp, radial, tangential;
+//                    CGPoint tmp, radial, tangential;
 
-                    radial = CGPoint.zero();
+                	CGPointUtil.zero(radial);
                     // radial acceleration
                     if(p.pos.x != 0 || p.pos.y != 0)
-                        radial = CGPoint.ccpNormalize(p.pos);
-                    tangential = radial;
-                    radial = CGPoint.ccpMult(radial, p.modeA.radialAccel);
+                    	CGPointUtil.normalize(p.pos, radial);
+                    tangential.set(radial);
+                    CGPointUtil.mult(radial, p.modeA.radialAccel);
 
                     // tangential acceleration
                     float newy = tangential.x;
                     tangential.x = -tangential.y;
                     tangential.y = newy;
-                    tangential = CGPoint.ccpMult(tangential, p.modeA.tangentialAccel);
+                    CGPointUtil.mult(tangential, p.modeA.tangentialAccel);
 
                     // (gravity + radial + tangential) * dt
-                    tmp = CGPoint.ccpAdd(CGPoint.ccpAdd( radial, tangential), modeA.gravity);
-                    tmp = CGPoint.ccpMult( tmp, dt);
-                    p.modeA.dir = CGPoint.ccpAdd( p.modeA.dir, tmp);
-                    tmp = CGPoint.ccpMult(p.modeA.dir, dt);
-                    p.pos = CGPoint.ccpAdd( p.pos, tmp );
+                    CGPointUtil.add(radial, tangential, tmp);
+                    CGPointUtil.add(tmp, modeA.gravity);
+                    CGPointUtil.mult(tmp, dt);
+                    CGPointUtil.add(p.modeA.dir, tmp);
+                    CGPointUtil.mult(p.modeA.dir, dt, tmp);
+                    CGPointUtil.add( p.pos, tmp );
                 }
                 // Mode B: radius movement
                 else {				
@@ -1093,8 +1105,10 @@ public abstract class CCParticleSystem extends CCNode implements CCTextureProtoc
                 CGPoint	newPos;
 
                 if( positionType_ == kCCPositionTypeFree ) {
-                    CGPoint diff = CGPoint.ccpSub( currentPosition, p.startPos );
-                    newPos = CGPoint.ccpSub(p.pos, diff);
+                    CGPoint diff = tmp;
+                    CGPointUtil.sub(currentPosition, p.startPos, diff);
+                    CGPointUtil.sub(p.pos, diff, diff);
+                    newPos = diff;
                 } else {
                     newPos = p.pos;
                 }
@@ -1118,8 +1132,11 @@ public abstract class CCParticleSystem extends CCNode implements CCTextureProtoc
 
             } else {
                 // life < 0
-                if( particleIdx != particleCount-1 )
+                if( particleIdx != particleCount-1 ) {
+                	CCParticle tmpPart = particles[particleIdx]; 
                     particles[particleIdx] = particles[particleCount-1];
+                    particles[particleCount-1] = tmpPart;
+                }
                 particleCount--;
 
                 if( particleCount == 0 && autoRemoveOnFinish_ ) {
@@ -1129,6 +1146,11 @@ public abstract class CCParticleSystem extends CCNode implements CCTextureProtoc
                 }
             }
         }
+        
+        pointPool.free(currentPosition);
+        pointPool.free(tmp);
+        pointPool.free(radial);
+        pointPool.free(tangential);
 
         postStep();
     }
