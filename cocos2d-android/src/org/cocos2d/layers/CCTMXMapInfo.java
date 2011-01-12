@@ -204,9 +204,11 @@ public class CCTMXMapInfo {
 					CCTMXTilesetInfo tileset = new CCTMXTilesetInfo();
 					tileset.name 		= attributes.getValue("name");
 					tileset.firstGid 	= Integer.parseInt(attributes.getValue("firstgid"));
-					tileset.spacing 	= Integer.parseInt(attributes.getValue("spacing"));
-					tileset.margin 		= Integer.parseInt(attributes.getValue("margin"));
-					CGSize s = CGSize.zero();
+                    String value        = attributes.getValue("spacing"); 
+                    tileset.spacing     = value== null?0:Integer.parseInt(value);
+                    value               = attributes.getValue("margin") ;
+                    tileset.margin      = value== null?0:Integer.parseInt(value);
+                    CGSize s = CGSize.zero();
 					s.width = Integer.parseInt(attributes.getValue("tilewidth"));
 					s.height = Integer.parseInt(attributes.getValue("tileheight"));
 					tileset.tileSize = s;
