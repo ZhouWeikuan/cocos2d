@@ -12,6 +12,11 @@ public class CCEaseExponentialOut extends CCEaseAction {
         super(action);
     }
 
+	@Override
+	public CCEaseExponentialOut copy() {
+		return new CCEaseExponentialOut(other.copy());
+	}
+
     @Override
     public void update(float t) {
         other.update((t == 1) ? 1 : ((float) (-Math.pow(2, -10 * t / 1) + 1)));

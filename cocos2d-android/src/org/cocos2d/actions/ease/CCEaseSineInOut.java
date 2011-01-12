@@ -12,6 +12,11 @@ public class CCEaseSineInOut extends CCEaseAction {
         super(action);
     }
 
+	@Override
+	public CCEaseSineInOut copy() {
+		return new CCEaseSineInOut(other.copy());
+	}
+
     @Override
     public void update(float t) {
         other.update(-0.5f * ((float)Math.cos(Math.PI * t) - 1));

@@ -12,6 +12,11 @@ public class CCHide extends CCInstantAction {
         return new CCHide();
     }
 
+	@Override
+	public CCHide copy() {
+		return new CCHide();
+	}
+
     @Override
     public void start(CCNode aTarget) {
         super.start(aTarget);
