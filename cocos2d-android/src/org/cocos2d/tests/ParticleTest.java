@@ -41,6 +41,8 @@ import org.cocos2d.types.CGSize;
 import org.cocos2d.types.ccColor3B;
 import org.cocos2d.types.ccColor4B;
 import org.cocos2d.types.ccColor4F;
+import org.cocos2d.utils.javolution.MathLib;
+import org.cocos2d.utils.javolution.TextBuilder;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -259,12 +261,29 @@ public class ParticleTest extends Activity {
         	return true;
         }
 
+        private TextBuilder particleCountString = new TextBuilder();
+        
+        // String.format("%4d", emitter.getParticleCount())
+        private TextBuilder getParticleCountString(int c) {
+        	int len = MathLib.digitLength(c);
+        	
+        	int zeros = 4 - len;
+        	
+        	while (zeros-- > 0) {
+				particleCountString.append('0');
+			}
+        	particleCountString.append(c);
+        	
+        	return particleCountString;
+        }
 
         public void update(float dt) {
         	CCLabelAtlas atlas = (CCLabelAtlas) getChild(kTagLabelAtlas);
 
-        	String str = String.format("%4d", emitter.getParticleCount());
-        	atlas.setString(str);
+        	particleCountString.reset();
+        	
+//        	String str = String.format("%4d", emitter.getParticleCount());
+        	atlas.setString(getParticleCountString(emitter.getParticleCount()));
         }
 
         public void toggleCallback(Object sender) {

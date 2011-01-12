@@ -1080,6 +1080,8 @@ public class CCNode {
         worldToNodeTransform(temp);
         
         CGPointUtil.applyAffineTransform(x, y, temp, ret);
+        
+        pool.free(temp);
     }
 
     /** converts local coordinate to world space
@@ -1089,7 +1091,21 @@ public class CCNode {
         CGPoint nodePoint = CGPoint.make(x, y);
         return CGPoint.applyAffineTransform(nodePoint, nodeToWorldTransform());
     }
-
+    
+    /**
+     * This is analog method, result is written to ret. No garbage.
+     */
+    public void convertToWorldSpace(float x, float y , CGPoint ret) {
+        OneClassPool<CGAffineTransform> pool = PoolHolder.getInstance().getCGAffineTransformPool();
+        
+        CGAffineTransform temp = pool.get();
+        nodeToWorldTransform(temp);
+        
+        CGPointUtil.applyAffineTransform(x, y, temp, ret);
+        
+        pool.free(temp);
+    }
+    
     /** converts a world coordinate to local coordinate
       treating the returned/received node point as anchor relative
       @since v0.7.1

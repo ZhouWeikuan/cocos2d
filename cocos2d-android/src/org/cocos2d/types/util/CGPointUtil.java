@@ -10,7 +10,7 @@ public final class CGPointUtil {
 	 * @param v - src/dst point
 	 * @param s - factor value
 	 */
-	public static void mult(CGPoint v, final float s) {
+	public static void mult(CGPoint v, float s) {
 		v.x *= s;
 		v.y *= s;
 	}
@@ -21,7 +21,7 @@ public final class CGPointUtil {
 	 * @param s - factor value
 	 * @param res - dst point
 	 */
-	public static void mult(CGPoint v, final float s, CGPoint res) {
+	public static void mult(CGPoint v, float s, CGPoint res) {
 		res.x = v.x * s;
 		res.y = v.y * s;		
 	}
@@ -38,5 +38,30 @@ public final class CGPointUtil {
 	public static void zero(CGPoint p) {
 		p.x = 0;
 		p.y = 0;
+	}
+
+	public static void normalize(CGPoint src, CGPoint dst) {
+		float invLen = 1 / CGPoint.ccpLength(src);
+		dst.set(src.x * invLen, src.y * invLen);
+	}
+
+	public static void add(CGPoint first, CGPoint second, CGPoint ret) {
+		ret.x = first.x + second.x;
+		ret.y = first.y + second.y;
+	}
+
+	public static void add(CGPoint v, CGPoint toAdd) {
+		v.x += toAdd.x;
+		v.y += toAdd.y;
+	}
+
+	public static void sub(CGPoint first, CGPoint second, CGPoint ret) {
+		ret.x = first.x - second.x;
+		ret.y = first.y - second.y;
+	}
+	
+	public static void sub(CGPoint v, CGPoint toAdd) {
+		v.x -= toAdd.x;
+		v.y -= toAdd.y;
 	}
 }
