@@ -1045,7 +1045,7 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
                 }
 
                 // 3rd: Translate anchor point
-                tmpNewMatrix.translate(-sprP.anchorPoint_.x, -sprP.anchorPoint_.y);
+                tmpNewMatrix.translate(-sprP.anchorPointInPixels_.x, -sprP.anchorPointInPixels_.y);
                 // 4th: Matrix multiplication
                 tmpMatrix.multiply(tmpNewMatrix);
                 prevHonor = sprP.honorParentTransform_;
