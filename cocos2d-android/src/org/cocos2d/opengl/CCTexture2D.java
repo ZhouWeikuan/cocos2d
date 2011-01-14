@@ -20,7 +20,7 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
 import javax.microedition.khronos.opengles.GL10;
-import javax.microedition.khronos.opengles.GL11;
+import javax.microedition.khronos.opengles.GL11ExtensionPack;
 
 import org.cocos2d.nodes.CCDirector;
 import org.cocos2d.nodes.CCLabel;
@@ -249,7 +249,7 @@ public class CCTexture2D {
         // _format = image.getConfig();
         _maxS = mContentSize.width / (float) mWidth;
         _maxT = mContentSize.height / (float) mHeight;
-        _texParams = _gTexParams;
+        _texParams = new CCTexParams(GL_LINEAR, GL_LINEAR, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE);
         ByteBuffer vfb = ByteBuffer.allocateDirect(4 * 3 * 4);
         vfb.order(ByteOrder.nativeOrder());
         mVertices = vfb.asFloatBuffer();
@@ -293,7 +293,7 @@ public class CCTexture2D {
                 CCLabel.TextAlignment.CENTER, fontname, fontSize);
     }
 
-    public static CGSize calculateTextSize(String text, String fontname, float fontSize) {
+    private static CGSize calculateTextSize(String text, String fontname, float fontSize) {
         Typeface typeface = Typeface.create(fontname, Typeface.NORMAL);
 
         Paint textPaint = new Paint();
@@ -308,7 +308,7 @@ public class CCTexture2D {
         return CGSize.make(measuredTextWidth, ascent + descent);
     }
 
-    public static int toPow2(int v) {
+    private static int toPow2(int v) {
         if ((v != 1) && (v & (v - 1)) != 0) {
             int i = 1;
             while (i < v)
@@ -489,23 +489,36 @@ public class CCTexture2D {
     // Use to apply MIN/MAG filter
     //
 
-    private static CCTexParams _gTexParams = new CCTexParams(GL_LINEAR, GL_LINEAR, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE);
-    private static CCTexParams _texParamsCopy;
+//    private static CCTexParams _gTexParams = new CCTexParams(GL_LINEAR, GL_LINEAR, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE);
+//    private static CCTexParams _texParamsCopy;
 
     /** sets the min filter, mag filter, wrap s and wrap t texture parameters.
       If the texture size is NPOT (non power of 2),
              then in can only use GL_CLAMP_TO_EDGE in GL_TEXTURE_WRAP_{S,T}.
       @since v0.8
     */
-    public static void setTexParameters(CCTexParams texParams) {
-        _gTexParams = texParams;
+    public void setTexParameters(CCTexParams texParams) {
+    	_texParams.set(texParams);
+    }
+    
+    public void setTexParameters(int min, int mag, int s, int t) {
+    	_texParams.set(min, mag, s, t);
+    	if(_name != 0) {
+    		GLResourceHelper.sharedHelper().perform(new GLResourceHelper.GLResorceTask() {
+    			
+				@Override
+				public void perform(GL10 gl) {
+					applyTexParameters(gl);
+				}
+    		});
+    	}
     }
 
-    public static CCTexParams texParameters() {
-        return _gTexParams;
-    }
+//    public static CCTexParams texParameters() {
+//        return gTexParams;
+//    }
 
-    public void applyTexParameters(GL10 gl) {
+    private void applyTexParameters(GL10 gl) {
         gl.glBindTexture(GL_TEXTURE_2D, _name);
         gl.glTexParameterx(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, _texParams.minFilter );
         gl.glTexParameterx(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, _texParams.magFilter);
@@ -513,13 +526,13 @@ public class CCTexture2D {
         gl.glTexParameterx(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, _texParams.wrapT);
     }
 
-    public static void restoreTexParameters() {
-        _gTexParams = _texParamsCopy;
-    }
-
-    public static void saveTexParameters() {
-        _texParamsCopy = _gTexParams.copy();
-    }
+//    public static void restoreTexParameters() {
+//        _gTexParams = _texParamsCopy;
+//    }
+//
+//    public static void saveTexParameters() {
+//        _texParamsCopy = _gTexParams.copy();
+//    }
 
 
     /** sets alias texture parameters:
@@ -528,8 +541,8 @@ public class CCTexture2D {
 
       @since v0.8
     */
-    public static void setAliasTexParameters() {
-        _gTexParams.magFilter = _gTexParams.minFilter = GL_NEAREST;
+    public void setAliasTexParameters() {
+    	setTexParameters(GL_NEAREST, GL_NEAREST, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE);
     }
 
 
@@ -540,19 +553,27 @@ public class CCTexture2D {
       @since v0.8
       */
     public void setAntiAliasTexParameters() {
-        _gTexParams.magFilter = _gTexParams.minFilter = GL_LINEAR;
+    	setTexParameters(GL_LINEAR, GL_LINEAR, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE);
     }
 
     /** Generates mipmap images for the texture.
       It only works if the texture size is POT (power of 2).
       @since v0.99.0
       */
-    public void generateMipmap(GL10 gl) {
+    public void generateMipmap() {
         assert ( mWidth == toPow2((int)mWidth) && mHeight == toPow2((int)mHeight))
                 : "Mimpap texture only works in POT textures";
-        gl.glBindTexture( GL_TEXTURE_2D, _name);
-        gl.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_GENERATE_MIPMAP, GL11.GL_TRUE);
-        GLUtils.texImage2D(GL10.GL_TEXTURE_2D, 0, mBitmap, 0);
+        
+		GLResourceHelper.sharedHelper().perform(new GLResourceHelper.GLResorceTask() {
+			
+			@Override
+			public void perform(GL10 gl) {
+				if(_name != 0) {
+					gl.glBindTexture( GL_TEXTURE_2D, _name);
+					((GL11ExtensionPack)gl).glGenerateMipmapOES(GL_TEXTURE_2D);
+				}
+			}
+		});
     }
     
 }

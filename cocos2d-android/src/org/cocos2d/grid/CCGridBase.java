@@ -118,10 +118,11 @@ public abstract class CCGridBase {
 			@Override
 			public void load() {
 		    	CGSize s = CCDirector.sharedDirector().winSize();
-		    	
-		    	int w = CCTexture2D.toPow2((int)s.width);
-		    	int h = CCTexture2D.toPow2((int)s.height);
-		    	int textureSize = Math.max(w, h);
+
+		    	int textureSize = 8;
+		    	while (textureSize < s.width || textureSize < s.height)
+		    		textureSize *= 2;
+
 		    	if (textureSize > 1024) {
 		    		textureSize = 1024;
 		    	}

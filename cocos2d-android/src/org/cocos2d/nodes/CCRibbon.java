@@ -190,7 +190,7 @@ public class CCRibbon extends CCNode {
 
         /* default texture parameter */
         CCTexParams params = new CCTexParams(GL10.GL_LINEAR, GL10.GL_LINEAR, GL10.GL_REPEAT, GL10.GL_REPEAT);
-        CCTexture2D.setTexParameters(params);
+        texture_.setTexParameters(params);
     }
 
     // rotates a point around 0, 0
