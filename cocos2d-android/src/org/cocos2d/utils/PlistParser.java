@@ -19,15 +19,16 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 /*
- * Plist parser. Supports:
- *  - String
- *  - Integer
- *  - Double
- *  - Date
- *  - Boolean
- *  - Byte
- *  - Dict
- *  - Array
+ * Plist parser.
+ * Supports:
+ *  - string     -> String
+ *  - integer    -> Integer
+ *  - real       -> Double
+ *  - date       -> Date
+ *  - true/false -> Boolean
+ *  - data       -> byte[] 
+ *  - dict       -> HashMap<String, Object>
+ *  - array      -> ArrayList<Object>
  */
 
 public class PlistParser extends DefaultHandler {

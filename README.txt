@@ -1,10 +1,10 @@
-This branch was created to show some changes made to cocod2d-android to reduce GC calls in our project, plus some more things. This changes should come to master branch in some form later.
-
-Some rules to keep in mind:
+Some rules to keep in mind to reduce garbage collector:
 - do not create objects outside of constructors, try at least;
 - call "set" method instead of creating new every time;
+- look at CG/cc<Typename>Utils classes they do not generate garbage.
 
 Notes:
+- package org.cocos2d.utils contains PlistParser for reading plists into HashMap.
 - Pools now can help you to reduce garbage of small objects, like CGPoint. org.cocos2d.types.util.PoolHolder keeps some of pools. This class should be used for stack-like objects(number of get() must be higher or equal, but not LESS, then number of free() calls). There is ConcOneClassPool for use in multithreaded classes;
 - org.cocos2d.utils.collections package contains classes mainly for internal usege). They are garbage-free and used in that parts of where changes performed frequently.
 - TextBulder from Javolution included in utils, it can be used instead of standert StringBuilder. why? It is also garbage-free. Look at CCDirector's showFPS(), now it is not garbage generator.
