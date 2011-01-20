@@ -71,6 +71,12 @@ public class CGRect {
                 && (maxX(aRect) >= maxX(bRect))
                 && (maxY(aRect) >= maxY(bRect)));
     }
+    
+    public static boolean intersects(CGRect a, CGRect b)
+    {
+    	return (a.origin.x >= (b.origin.x - a.size.width) && a.origin.x <= (b.origin.x - a.size.width) + (b.size.width + a.size.width)
+    			&& a.origin.y >= (b.origin.y - a.size.height) && a.origin.y <= (b.origin.y - a.size.height) + (b.size.height + a.size.height));
+    }
 
     public static CGRect applyAffineTransform(CGRect aRect, CGAffineTransform matrix) {
         CGRect r = CGRect.make(0, 0, 0, 0);

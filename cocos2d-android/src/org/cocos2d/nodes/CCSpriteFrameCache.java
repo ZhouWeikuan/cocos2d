@@ -2,6 +2,7 @@ package org.cocos2d.nodes;
 
 import java.util.HashMap;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.cocos2d.config.ccMacros;
 import org.cocos2d.opengl.CCTexture2D;
@@ -72,7 +73,7 @@ public class CCSpriteFrameCache {
     /** Adds multiple Sprite Frames with a dictionary.
      * The texture will be associated with the created sprite frames.
      */
-    public void addSpriteFrames(HashMap<String, Object> dictionary, CCTexture2D texture) {
+    public Set<String> addSpriteFrames(HashMap<String, Object> dictionary, CCTexture2D texture) {
     	/*
    	 Supported Zwoptex Formats:
    	 ZWTCoordinatesFormatOptionXMLLegacy = 0, // Flash Version
@@ -169,6 +170,7 @@ public class CCSpriteFrameCache {
     		// add sprite frame
     		spriteFrames.put(frameDictEntry.getKey(), spriteFrame);
     	}
+    	return framesDict.keySet();
     }
 
     /** Adds multiple Sprite Frames from a plist file.
@@ -176,23 +178,23 @@ public class CCSpriteFrameCache {
      * The texture name will composed by replacing the .plist suffix with .png
      * If you want to use another texture, you should use the addSpriteFramesWithFile:texture method.
      */
-    public void addSpriteFrames(String plist) {
+    public Set<String> addSpriteFrames(String plist) {
         String texturePath = null;
         int i = plist.lastIndexOf('.');
         if (i > 0 && i <= plist.length() - 2)
 		      texturePath = plist.substring(0, i) + ".png";
         CCTexture2D texture =
             CCTextureCache.sharedTextureCache().addImage(texturePath);
-        addSpriteFrames(plist, texture);
+        return addSpriteFrames(plist, texture);
     }
 
     /** Adds multiple Sprite Frames from a plist file.
      * The texture will be associated with the created sprite frames.
      */
-    public void addSpriteFrames(String plist, CCTexture2D texture) {
+    public Set<String> addSpriteFrames(String plist, CCTexture2D texture) {
 //		  try {
 			HashMap<String, Object> dict = PlistParser.parse(plist);
-            addSpriteFrames(dict, texture);
+            return addSpriteFrames(dict, texture);
 //        } catch (Exception e) {
 //                ccMacros.CCLOG("CCSpriteFrameCache",
 //					     "Unable to read Zwoptex plist: " + e);
