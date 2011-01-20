@@ -705,7 +705,8 @@ public class CCDirector implements GLSurfaceView.Renderer {
         ccMacros.CC_ENABLE_DEFAULT_GL_STATES(gl);
         
         /* draw the CCScene */
-    	runningCCScene_.visit(gl);
+        if(runningCCScene_ != null)
+        	runningCCScene_.visit(gl);
         if( displayFPS )
         	showFPS(gl);
 
@@ -1140,7 +1141,7 @@ public class CCDirector implements GLSurfaceView.Renderer {
 		// They are needed in case the director is run again
 		CCTouchDispatcher.sharedDispatcher().removeAllDelegates();
 
-		// stopAnimation();
+//		stopAnimation();
 		// detach();
 
 		// Purge bitmap cache

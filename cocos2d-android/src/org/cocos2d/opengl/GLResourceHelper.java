@@ -4,6 +4,8 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 import javax.microedition.khronos.opengles.GL10;
 
+import org.cocos2d.nodes.CCDirector;
+
 /**
  *  This class performs tasks on the side of OpenGL thread.
  *  CCTexture2D calls perform() in finalize method, and texId is queued to be
@@ -84,14 +86,21 @@ public class GLResourceHelper {
 			}
 		});
 	}
-	
+
 	/**
-	 * Add OGL task in queue
+	 * Add OGL task in queue. If perform is called from another task
+	 * then task is performed immediately.
 	 * @param res GL task
 	 */
 	public void perform(GLResorceTask res) {
-		taskQueue.add(res);
+		if(inUpdate) {
+			res.perform(CCDirector.gl);
+		} else {
+			taskQueue.add(res);
+		}
 	}
+
+	private volatile boolean inUpdate = false;
 
 	/**
 	 * Method is called from update cycle,
@@ -100,10 +109,13 @@ public class GLResourceHelper {
 	 */
 	public void update(GL10 gl) {
 		if(taskQueue.size() > 0) {
+			inUpdate = true;
+			
 			GLResorceTask res;
 			while((res = taskQueue.poll()) != null) {
 				res.perform(gl);
 			}
+			inUpdate = false;
 		}
 	}
 }

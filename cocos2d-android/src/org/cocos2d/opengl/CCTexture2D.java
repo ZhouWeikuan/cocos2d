@@ -171,6 +171,7 @@ public class CCTexture2D {
     }
 
     public CCTexture2D() {
+        _texParams = new CCTexParams(GL_LINEAR, GL_LINEAR, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE);
     }
     
     public void setLoader(GLResourceHelper.GLResourceLoader loader) {
@@ -249,7 +250,6 @@ public class CCTexture2D {
         // _format = image.getConfig();
         _maxS = mContentSize.width / (float) mWidth;
         _maxT = mContentSize.height / (float) mHeight;
-        _texParams = new CCTexParams(GL_LINEAR, GL_LINEAR, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE);
         ByteBuffer vfb = ByteBuffer.allocateDirect(4 * 3 * 4);
         vfb.order(ByteOrder.nativeOrder());
         mVertices = vfb.asFloatBuffer();

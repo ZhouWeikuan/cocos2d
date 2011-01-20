@@ -1,12 +1,14 @@
 package org.cocos2d.nodes;
 
 import java.util.HashMap;
-import java.util.Iterator;
+import java.util.Map.Entry;
 
 import org.cocos2d.config.ccMacros;
 import org.cocos2d.opengl.CCTexture2D;
-import org.cocos2d.utils.ZwoptexParser;
-import org.cocos2d.types.*;
+import org.cocos2d.types.CGPoint;
+import org.cocos2d.types.CGRect;
+import org.cocos2d.types.CGSize;
+import org.cocos2d.utils.PlistParser;
 
 /*
  * To create sprite frames and texture atlas, use this tool:
@@ -47,57 +49,126 @@ public class CCSpriteFrameCache {
     	}
     }
 
+	private CGPoint parseCoords(String str) {
+		String coords = str.replaceAll("[{|}]", "");
+		String c[] = coords.split(",");
+		return CGPoint.make(Float.parseFloat(c[0]), Float.parseFloat(c[1]));
+	}
 
+	private CGSize parseCoordsSize(String str) {
+		String coords = str.replaceAll("[{|}]", "");
+		String c[] = coords.split(",");
+		return CGSize.make(Float.parseFloat(c[0]), Float.parseFloat(c[1]));
+	}
+
+	private CGRect parseCoordsRect(String str) {
+		String c[] = str.replaceAll("[{|}]", "").split(",");
+		return CGRect.make(Float.parseFloat(c[0]),
+			Float.parseFloat(c[1]),
+			Float.parseFloat(c[2]),
+			Float.parseFloat(c[3]));
+	}
+    
     /** Adds multiple Sprite Frames with a dictionary.
      * The texture will be associated with the created sprite frames.
      */
     public void addSpriteFrames(HashMap<String, Object> dictionary, CCTexture2D texture) {
+    	/*
+   	 Supported Zwoptex Formats:
+   	 ZWTCoordinatesFormatOptionXMLLegacy = 0, // Flash Version
+   	 ZWTCoordinatesFormatOptionXML1_0 = 1, // Desktop Version 0.0 - 0.4b
+   	 ZWTCoordinatesFormatOptionXML1_1 = 2, // Desktop Version 1.0.0 - 1.0.1
+   	 ZWTCoordinatesFormatOptionXML1_2 = 3, // Desktop Version 1.0.2+
+   	*/
+    	
+		@SuppressWarnings("unchecked")
+		HashMap<String, Object> metadataDict = (HashMap<String, Object>)dictionary.get("metadata");
+		@SuppressWarnings("unchecked")
+		HashMap<String, Object> framesDict = (HashMap<String, Object>)dictionary.get("frames");
+        
+    	int format = 0;
 
-        HashMap<String, Object> metadataDict = (HashMap<String, Object>)dictionary.get("metadata");
-        HashMap<String, Object> framesDict = (HashMap<String, Object>)dictionary.get("frames");
+    	// get the format
+    	if(metadataDict != null)
+    		format = (Integer)metadataDict.get("format");
 
-        Integer format = 0;
+    	// check the format
+      if (!(format >= 0 && format <= 3)) {
+	      ccMacros.CCLOGERROR("CCSpriteFrameCache",
+	          "Unsupported Zwoptex plist file format.");
+      }
 
-        // get the format
-        if (metadataDict != null) {
-            format = (Integer)metadataDict.get("format");
-        }
+    	// add real frames
+    	for(Entry<String, Object> frameDictEntry : framesDict.entrySet()) {
+    		@SuppressWarnings("unchecked")
+			HashMap<String, Object> frameDict = (HashMap<String, Object>)frameDictEntry.getValue();
+    		CCSpriteFrame spriteFrame = null;
+    		if(format == 0) {
+    			float x = ((Number)frameDict.get("x")).floatValue();
+    			float y = ((Number)frameDict.get("y")).floatValue();
+    			float w = ((Number)frameDict.get("width")).floatValue();
+    			float h = ((Number)frameDict.get("height")).floatValue();
+    			float ox = ((Number)frameDict.get("offsetX")).floatValue();
+    			float oy = ((Number)frameDict.get("offsetY")).floatValue();
+    			
+    			int ow = 0;
+    			int oh = 0;
+    			// check ow/oh
+    			try {
+	    			ow = ((Number)frameDict.get("originalWidth")).intValue();
+	    			oh = ((Number)frameDict.get("originalHeight")).intValue();
+    			} catch (Exception e) {
+    				ccMacros.CCLOG("cocos2d", "WARNING: originalWidth/Height not found on the CCSpriteFrame. AnchorPoint won't work as expected. Regenerate the .plist");
+				}
+    			
+    			// abs ow/oh
+    			ow = Math.abs(ow);
+    			oh = Math.abs(oh);
+    			// create frame
 
-        // only format 2 is supported
-        if (format != 2 && format != 3) {
-            ccMacros.CCLOGERROR("CCSpriteFrameCache",
-                "Unsupported Zwoptex plist file format.");
-        }
+    			spriteFrame = CCSpriteFrame.frame(texture, CGRect.make(x, y, w, h), false, CGPoint.make(ox, oy), CGSize.make(ow, oh));
 
-        Iterator<String> fi = framesDict.keySet().iterator();
-        while (fi.hasNext()) {
-        	String frameDictKey = (String)fi.next();
-        	HashMap<String, Object> frameDict = (HashMap<String, Object>)framesDict.get(frameDictKey);
-        	CCSpriteFrame spriteFrame;
+    		} else if(format == 1 || format == 2) {
+    			CGRect frame = parseCoordsRect( (String)frameDict.get("frame") );
+    			boolean rotated = false;
 
-        	if (format == 3)
-        	{
-        		CGSize spriteSize = (CGSize)frameDict.get("spriteSize");
-        		CGPoint spriteOffset = (CGPoint)frameDict.get("spriteOffset");
-        		CGSize spriteSourceSize = (CGSize)frameDict.get("spriteSourceSize");
-        		CGRect textureRect = (CGRect)frameDict.get("textureRect");
-        		Boolean textureRotated = (Boolean)frameDict.get("textureRotated");
+    			// rotation
+    			if(format == 2)
+    				rotated = (Boolean)frameDict.get("rotated");
 
-        		spriteFrame = CCSpriteFrame.frame(texture, 
-        				CGRect.make(textureRect.origin.x, textureRect.origin.y, spriteSize.width, spriteSize.height),
-        				textureRotated, spriteOffset, spriteSourceSize);
-        	} else {
-        		// default behavior  
-        		CGRect frame = (CGRect)frameDict.get("frame");
-        		CGPoint offset = (CGPoint)frameDict.get("offset");
-        		CGSize sourceSize = (CGSize)frameDict.get("sourceSize");
+    			CGPoint offset = parseCoords( (String)frameDict.get("offset") );
+    			CGSize sourceSize = parseCoordsSize( (String)frameDict.get("sourceSize") );
 
-        		spriteFrame =
-        			CCSpriteFrame.frame(texture, frame, offset, sourceSize);
-        	}
+    			// create frame
+    			spriteFrame = CCSpriteFrame.frame(texture, frame, rotated, offset, sourceSize);
+    		} else if(format == 3) {
+    			// get values
+    			CGSize spriteSize = parseCoordsSize( (String)frameDict.get("spriteSize") ); 
+    			CGPoint spriteOffset = parseCoords( (String)frameDict.get("spriteOffset") );
+    			CGSize spriteSourceSize = parseCoordsSize( (String)frameDict.get("spriteSourceSize") );
+    			CGRect textureRect = parseCoordsRect( (String)frameDict.get("textureRect") );
+    			boolean textureRotated = (Boolean)frameDict.get("textureRotated"); 
 
-        	spriteFrames.put(frameDictKey, spriteFrame);
-        }
+// Aliases are not supported in this version while.
+    			
+//    			// get aliases
+//    			ArrayList<Object> aliases = frameDict.get("aliases");
+//    			for(NSString *alias in aliases) {
+//    				if( [spriteFramesAliases_ objectForKey:alias] )
+//    					CCLOG(@"cocos2d: WARNING: an alias with name %@ already exists",alias);
+//
+//    				[spriteFramesAliases_ setObject:frameDictKey forKey:alias];
+//    			}
+
+    			// create frame
+    			spriteFrame = CCSpriteFrame.frame(texture,
+							CGRect.make(textureRect.origin.x, textureRect.origin.y, spriteSize.width, spriteSize.height),
+							textureRotated, spriteOffset, spriteSourceSize);
+    		}
+
+    		// add sprite frame
+    		spriteFrames.put(frameDictEntry.getKey(), spriteFrame);
+    	}
     }
 
     /** Adds multiple Sprite Frames from a plist file.
@@ -119,13 +190,13 @@ public class CCSpriteFrameCache {
      * The texture will be associated with the created sprite frames.
      */
     public void addSpriteFrames(String plist, CCTexture2D texture) {
-		  try {
-            HashMap<String, Object> dict = ZwoptexParser.parseZwoptex(plist);
+//		  try {
+			HashMap<String, Object> dict = PlistParser.parse(plist);
             addSpriteFrames(dict, texture);
-        } catch (Exception e) {
-                ccMacros.CCLOG("CCSpriteFrameCache",
-					     "Unable to read Zwoptex plist: " + e);
-		  }
+//        } catch (Exception e) {
+//                ccMacros.CCLOG("CCSpriteFrameCache",
+//					     "Unable to read Zwoptex plist: " + e);
+//		  }
     }
 
     /** Adds an sprite frame with a given name.

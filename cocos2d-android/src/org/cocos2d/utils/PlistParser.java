@@ -182,33 +182,17 @@ public class PlistParser extends DefaultHandler {
 	@Override
 	public void endElement(String uri, String localName, String qName)
 			throws SAXException {
-		currentElement = TYPE_UNKNOWN;
-//		if(localName.equals(EL_KEY)) {
-//			currentKey = null;
-//		} else 
-		if(localName.equals(EL_DICT) || localName.equals(EL_ARRAY)) {
-			depthDown();
-		}
-	}
-	
-	private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss'Z'");
-	
-	@Override
-	public void characters(char[] _chars, int _start, int _len) {
-
-		String value = new String(_chars, _start, _len);
-		value.trim();
 
 		switch (currentElement) {
 		case TYPE_KEY:
-			currentKey = value;
+			currentKey = characterData.toString().trim();
 			break;
 		case TYPE_STRING:
-			addToCollection(value);
+			addToCollection(characterData.toString().trim());
 			break;
 		case TYPE_DATA:
 			try {
-				addToCollection(Base64.decode(value));
+				addToCollection(Base64.decode(characterData.toString().trim()));
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -216,21 +200,38 @@ public class PlistParser extends DefaultHandler {
 			break;
 		case TYPE_DATE:
 			try {
-				addToCollection(dateFormat.parse(value));
+				addToCollection(dateFormat.parse(characterData.toString().trim()));
 			} catch (ParseException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			break;
 		case TYPE_INTEGER:
-			addToCollection(new Integer(value));
+			addToCollection(new Integer(characterData.toString().trim()));
 			break;
 		case TYPE_REAL:
-			addToCollection(new Double(value));
+			addToCollection(new Double(characterData.toString().trim()));
 			break;
 		default:
 			break;
 		}
+		
+		currentElement = TYPE_UNKNOWN;
+		characterData.setLength(0);
+
+		if(localName.equals(EL_DICT) || localName.equals(EL_ARRAY)) {
+			depthDown();
+		}
+	}
+	
+	private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss'Z'");
+	
+	private StringBuilder characterData = new StringBuilder();
+	
+	@Override
+	public void characters(char[] _chars, int _start, int _len) {
+
+		characterData.append(_chars, _start, _len);
 	}
 	
 }
