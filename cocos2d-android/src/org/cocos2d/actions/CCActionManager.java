@@ -310,7 +310,7 @@ public class CCActionManager implements UpdateCallback {
 			
 //			                removeAction(currentAction);
 			                HashElement element = targets.get(currentTarget.target);
-		                	if (element != null) {
+		                	if (element != null && currentTarget.actionIndex >= 0) {
 		                		removeAction(currentTarget.actionIndex, currentTarget);
 		                	}
 			            }
