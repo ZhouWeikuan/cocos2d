@@ -186,7 +186,7 @@ public class CCQuadParticleSystem extends CCParticleSystem {
 		@since v0.99.4
 	 */
 	public void setDisplayFrame(CCSpriteFrame spriteFrame) {
-		assert CGPoint.equalToPoint( spriteFrame.getOffset() , CGPoint.zero() ):"QuadParticle only supports SpriteFrames with no offsets";
+		assert CGPoint.equalToPoint( spriteFrame.getOffsetRef() , CGPoint.getZero() ):"QuadParticle only supports SpriteFrames with no offsets";
 
 		// update texture before updating texture rect
 		if ( spriteFrame.getTexture() != texture )

@@ -23,10 +23,18 @@ public class CCSpriteFrame {
     	return CGRect.make(rect_);
     }
     
+    public CGRect getRectRef() {
+    	return rect_;
+    }
+    
     /** offset of the frame */
     CGPoint			offset_;
     public CGPoint getOffset() {
     	return CGPoint.make(offset_.x, offset_.y);
+    }
+    
+    public CGPoint getOffsetRef() {
+    	return offset_;
     }
     
     /** original size of the trimmed image */

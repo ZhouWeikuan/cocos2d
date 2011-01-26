@@ -110,7 +110,7 @@ public class CCDirector implements GLSurfaceView.Renderer {
     /** Sets an OpenGL projection
       @since v0.8.2
       */
-    private int projection_;
+    private int projection_ = kCCDirectorProjectionDefault;
 
     public int getProjection() {
         return projection_;
@@ -586,7 +586,7 @@ public class CCDirector implements GLSurfaceView.Renderer {
 
         setAlphaBlending(gl, true);
         setDepthTest(gl, false);
-        setProjection(kCCDirectorProjectionDefault);
+//        setProjection(projection_); is called in onSurfaceChanged()
 
         // set other opengl default values
         gl.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -597,7 +597,7 @@ public class CCDirector implements GLSurfaceView.Renderer {
                 // CCTexture2D.setDefaultAlphaPixelFormat(kCCTexture2DPixelFormat_RGBA4444);
                 FPSLabel_ = CCLabelAtlas.label("00.0", "fps_images.png", 16, 24, '.');
                 // CCTexture2D.setDefaultAlphaPixelFormat(currentFormat);
-                FPSLabel_.setPosition(CGPoint.make(50, 2));
+                FPSLabel_.setPosition(50, 2);
             }
         }	// CC_DIRECTOR_FAST_FPS
     }
@@ -619,16 +619,13 @@ public class CCDirector implements GLSurfaceView.Renderer {
     public void onSurfaceChanged(GL10 gl, int width, int height) {
     	CCDirector.gl = gl;
     	surfaceSize_.set(width, height);
-        CCDirector.gl.glViewport(0, 0, width, height);
-        setProjection(CCDirector.kCCDirectorProjectionDefault);
+        gl.glViewport(0, 0, width, height);
+        setProjection(projection_);
     }
 
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
     	CCDirector.gl = gl;
 
-    	// reload all GL resources here
-    	GLResourceHelper.sharedHelper().reloadResources();
-    	
         /*
          * By default, OpenGL enables features that improve quality
          * but reduce performance. One might want to tweak that
@@ -642,7 +639,10 @@ public class CCDirector implements GLSurfaceView.Renderer {
         */
         gl.glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST);
 
-        setGLDefaultValues(gl);        
+        setGLDefaultValues(gl); 
+
+    	// reload all GL resources here
+    	GLResourceHelper.sharedHelper().reloadResources();    	
     }
 
     public void onDrawFrame(GL10 gl) {

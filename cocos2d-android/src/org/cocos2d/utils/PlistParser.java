@@ -45,9 +45,31 @@ public class PlistParser extends DefaultHandler {
 	}
 	
 	public static HashMap<String, Object> parse(InputStream in) {
-
-        SAXParserFactory factory = SAXParserFactory.newInstance();
+		@SuppressWarnings("unchecked")
+		HashMap<String, Object> ret = (HashMap<String, Object>)parsePlist(in);
+		return ret;
+	}
+	
+	public static ArrayList<Object> parseArray(String filename) {
         try {
+			InputStream in = CCDirector.theApp.getAssets().open(filename);
+			return parseArray(in);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public static ArrayList<Object> parseArray(InputStream in) {
+		@SuppressWarnings("unchecked")
+		ArrayList<Object> ret = (ArrayList<Object>)parsePlist(in);
+		return ret;
+	}
+	
+	private static Object parsePlist(InputStream in) {
+        try {
+        	SAXParserFactory factory = SAXParserFactory.newInstance();
             SAXParser parser = factory.newSAXParser();
             PlistParser handler = new PlistParser();
             
@@ -63,6 +85,7 @@ public class PlistParser extends DefaultHandler {
             throw new RuntimeException(e);
         }
 	}
+	
 	
 	// type is used in characters()
 	private static final int TYPE_UNKNOWN	 = 0;
@@ -91,7 +114,7 @@ public class PlistParser extends DefaultHandler {
 	private static final int COLL_ARRAY = 2;
 	
 	// root hashmap which should be returned finally
-	private HashMap<String, Object> rootDict;
+	private Object rootDict;
 	
 	private String currentKey;
 	
@@ -145,8 +168,8 @@ public class PlistParser extends DefaultHandler {
 		case COLL_ARRAY:
 			((ArrayList<Object>)currentCollection).add(obj);
 			break;
-		case COLL_UNKNOWN:
-			rootDict = (HashMap<String, Object>)obj;
+		case COLL_UNKNOWN: // first call could be array or dict
+			rootDict = obj;
 			break;
 		}
 	}

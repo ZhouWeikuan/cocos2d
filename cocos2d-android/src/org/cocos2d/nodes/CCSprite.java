@@ -309,13 +309,13 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
       The rect used will be the size of the texture.
       The offset will be (0,0).
       */
-    protected CCSprite(CCTexture2D texture) {
+    public CCSprite(CCTexture2D texture) {
         CGSize size = texture.getContentSize();
         CGRect rect = CGRect.make(0, 0, size.width, size.height);
 	    init(texture, rect);
     }
     
-    protected CCSprite(CCTexture2D texture, CGRect rect) {
+    public CCSprite(CCTexture2D texture, CGRect rect) {
     	init(texture, rect);
     }
     
@@ -332,7 +332,7 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
 
     /** Initializes an sprite with an sprite frame.
     */
-    protected CCSprite(CCSpriteFrame spriteFrame) {
+    public CCSprite(CCSpriteFrame spriteFrame) {
     	init(spriteFrame);
     }
     
@@ -349,7 +349,7 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
       If the CCSpriteFrame doesn't exist it will raise an exception.
       @since v0.9
       */
-    protected CCSprite(String spriteFrameName, boolean isFrame) {
+    public CCSprite(String spriteFrameName, boolean isFrame) {
         assert spriteFrameName!=null:"Invalid spriteFrameName for sprite";
         CCSpriteFrame frame = CCSpriteFrameCache.sharedSpriteFrameCache()
             .getSpriteFrame(spriteFrameName);
@@ -360,7 +360,7 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
       The rect used will be the size of the image.
       The offset will be (0,0).
       */
-    protected CCSprite(String filename) {
+    public CCSprite(String filename) {
         assert filename!=null:"Invalid filename for sprite";
 
         CCTexture2D texture = CCTextureCache.sharedTextureCache().addImage(filename);
@@ -373,14 +373,14 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
         }
     }
 
-    protected CCSprite() {
+    public CCSprite() {
     	init();
     }
     
     /** Initializes an sprite with an image filename, and a rect.
       The offset will be (0,0).
       */
-    protected CCSprite(String filename, CGRect rect) {
+    public CCSprite(String filename, CGRect rect) {
         assert filename!=null:"Invalid filename for sprite";
 
         CCTexture2D texture = CCTextureCache.sharedTextureCache().addImage(filename);
@@ -392,7 +392,7 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
     /** Initializes an sprite with a CGImageRef
       @deprecated Use spriteWithCGImage:key: instead. Will be removed in v1.0 final
       */
-    protected CCSprite(Bitmap image) {
+    public CCSprite(Bitmap image) {
         assert image!=null:"Invalid CGImageRef for sprite";
 
         // XXX: possible bug. See issue #349. New API should be added
@@ -411,7 +411,7 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
       If key is nil, then a new texture will be created each time by the CCTextureCache. 
       @since v0.99.0
       */
-    protected CCSprite(Bitmap image, String key) {
+    public CCSprite(Bitmap image, String key) {
         assert image!=null:"Invalid CGImageRef for sprite";
 
         // XXX: possible bug. See issue #349. New API should be added
@@ -425,7 +425,7 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
 
     /** Initializes an sprite with an CCSpriteSheet and a rect
     */
-    protected CCSprite(CCSpriteSheet spritesheet, CGRect rect) {
+    public CCSprite(CCSpriteSheet spritesheet, CGRect rect) {
         init(spritesheet.getTexture(), rect);
         useSpriteSheetRender(spritesheet);
     }
@@ -542,7 +542,7 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
 
         CCTexture2D newTexture = frame.getTexture();
         // update texture before updating texture rect
-        if ( newTexture.name() != texture_.name())
+        if ( texture_ == null || newTexture.name() != texture_.name())
             setTexture(newTexture);
 
         // update rect
@@ -658,8 +658,8 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
 
     /** returns whether or not a CCSpriteFrame is being displayed */
     public boolean isFrameDisplayed(CCSpriteFrame frame) {
-        CGRect r = frame.getRect();
-        CGPoint p = frame.getOffset();
+        CGRect r = frame.rect_;
+        CGPoint p = frame.offset_;
         return (CGRect.equalToRect(r, rect_) &&
                 frame.getTexture().name() == this.getTexture().name() &&
                 CGPoint.equalToPoint(p, offsetPosition_));
