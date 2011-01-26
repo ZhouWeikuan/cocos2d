@@ -580,6 +580,8 @@ public class CCNode {
     */
     public void removeAllChildren(boolean cleanup) {
 	    // not using detachChild improves speed here
+    	if (children_ == null)
+    		return;
     	
     	for (int i=0; i<children_.size(); ++i) {
     		CCNode child = children_.get(i);
