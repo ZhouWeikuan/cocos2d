@@ -1,8 +1,10 @@
 package org.cocos2d.layers;
 
+import org.cocos2d.events.CCKeyDispatcher;
 import org.cocos2d.events.CCTouchDispatcher;
 import org.cocos2d.nodes.CCNode;
 import org.cocos2d.nodes.CCDirector;
+import org.cocos2d.protocols.CCKeyDelegateProtocol;
 import org.cocos2d.protocols.CCTouchDelegateProtocol;
 import org.cocos2d.types.CGPoint;
 import org.cocos2d.types.CGSize;
@@ -13,6 +15,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 
 
@@ -26,7 +29,7 @@ import android.view.MotionEvent;
  - It can receive Accelerometer input
 */
 public class CCLayer extends CCNode 
-    implements CCTouchDelegateProtocol, SensorEventListener {
+    implements CCTouchDelegateProtocol, CCKeyDelegateProtocol, SensorEventListener {
 
     /** whether or not it will receive Touch events. 
      * You can enable / disable touch events with this property. 
@@ -80,6 +83,25 @@ public class CCLayer extends CCNode
         }
     }
     
+	//added by Ishaq 
+	protected boolean isKeyEnabled_;
+
+	//added by Ishaq 
+	public boolean isKeyEnabled() {
+		return isKeyEnabled_;
+	}
+
+	//added by Ishaq 
+	public void setIsKeyEnabled(boolean enabled) {
+		if (isKeyEnabled_ != enabled) {
+			isKeyEnabled_ = enabled;
+			if (enabled)
+				CCKeyDispatcher.sharedDispatcher().addDelegate(this, 0);
+			else
+				CCKeyDispatcher.sharedDispatcher().removeDelegate(this);
+		}
+	}
+
     public static CCLayer node() {
         return new CCLayer();
     }
@@ -143,6 +165,10 @@ public class CCLayer extends CCNode
 
         if( isAccelerometerEnabled_ )
         	registerWithAccelerometer();
+
+		//added by Ishaq 
+		if (isKeyEnabled_)
+			CCKeyDispatcher.sharedDispatcher().addDelegate(this, 0);
     }
 
     @Override
@@ -153,6 +179,10 @@ public class CCLayer extends CCNode
 
         if( isAccelerometerEnabled_ )
         	unregisterWithAccelerometer();
+
+		//added by Ishaq 
+		if (isKeyEnabled_)
+			CCKeyDispatcher.sharedDispatcher().removeDelegate(this);
 
         super.onExit();
     }
@@ -189,6 +219,18 @@ public class CCLayer extends CCNode
 		if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
 			ccAccelerometerChanged(event.values[0], event.values[1], event.values[2]);
 		}
+	}
+
+	//added by Ishaq 
+	public boolean ccKeyDown(int keyCode, KeyEvent event) {
+		assert false : "Layer# ccKeyDown override me";
+		return CCKeyDispatcher.kEventHandled;
+	}
+
+	//added by Ishaq 
+	public boolean ccKeyUp(int keyCode, KeyEvent event) {
+		assert false : "Layer# ccKeyUp override me";
+		return CCKeyDispatcher.kEventHandled;
 	}
 }
 

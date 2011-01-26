@@ -1,7 +1,6 @@
 package org.cocos2d.sound;
 
 import java.io.IOException;
-import java.util.HashMap;
 
 import org.cocos2d.utils.collections.IntMap;
 import org.cocos2d.utils.collections.IntMap.Entry;

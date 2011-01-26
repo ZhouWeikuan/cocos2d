@@ -25,6 +25,7 @@ import javax.microedition.khronos.opengles.GL10;
 import org.cocos2d.actions.CCScheduler;
 import org.cocos2d.config.ccConfig;
 import org.cocos2d.config.ccMacros;
+import org.cocos2d.events.CCKeyDispatcher;
 import org.cocos2d.events.CCTouchDispatcher;
 import org.cocos2d.layers.CCScene;
 import org.cocos2d.nodes.CCLabel.TextAlignment;
@@ -45,6 +46,7 @@ import android.opengl.GLSurfaceView;
 import android.opengl.GLU;
 import android.os.SystemClock;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -656,6 +658,8 @@ public class CCDirector implements GLSurfaceView.Renderer {
 //		return;
 		
 		CCTouchDispatcher.sharedDispatcher().update();
+		//added by Ishaq 
+		CCKeyDispatcher.sharedDispatcher().update();
 		drawCCScene(gl);
 		
 		waitForFPS();
@@ -1405,6 +1409,32 @@ public class CCDirector implements GLSurfaceView.Renderer {
     }
 
     private boolean mTranslucentBackground = false;
+    
+    public boolean onKeyDown(KeyEvent event){
+    	if (!CCKeyDispatcher.sharedDispatcher().getDispatchEvents())
+    		return false;
+    	CCKeyDispatcher.sharedDispatcher().queueMotionEvent(event);
+    	return true;
+    }
+    
+	//added by Ishaq 
+	public boolean onKeyUp(KeyEvent event){
+    	if (!CCKeyDispatcher.sharedDispatcher().getDispatchEvents())
+    		return false;
+
+    	CCKeyDispatcher.sharedDispatcher().queueMotionEvent(event);
+    	return true;
+    }
+	
+	//added by Ishaq 
+	public void setIsEnableKeyEvent(boolean b){
+		CCKeyDispatcher.sharedDispatcher().setDispatchEvents(b);
+	}
+	
+	//added by Ishaq 
+	public boolean isEnableKeyEvent(){
+		return CCKeyDispatcher.sharedDispatcher().getDispatchEvents();
+	}
 
     public static GL10 gl;
 }
