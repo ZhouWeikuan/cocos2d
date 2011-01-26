@@ -33,12 +33,32 @@
 	// always call "super" init
 	// Apple recommends to re-assign "self" with the "super" return value
 	if( (self=[super init] )) {
-		
-		// create and initialize a Label
-		CCLabel* label = [CCLabel labelWithString:@"Hello World" fontName:@"Marker Felt" fontSize:64];
 
 		// ask director the the window size
 		CGSize size = [[CCDirector sharedDirector] winSize];
+
+		CCColorLayer *layer;
+		
+		for( int i=0;i < 5;i++) {
+			layer = [CCColorLayer layerWithColor:ccc4(i*20, i*20, i*20,255)];
+			[layer setContentSize:CGSizeMake(i*100, i*100)];
+			[layer setPosition:ccp(size.width/2, size.height/2)];
+			[layer setAnchorPoint:ccp(0.5f, 0.5f)];
+			[layer setIsRelativeAnchorPoint:YES];
+			[self addChild:layer z:-1-i];
+		}
+		
+
+		// create and initialize a Label
+		CCLabel* label = [CCLabel labelWithString:@"Hello World" fontName:@"Marker Felt" fontSize:64];
+		
+		CCMenuItem *item1 = [CCMenuItemFont itemFromString:@"restart" target:self selector:@selector(restart:)];
+		
+		CCMenu *menu = [CCMenu menuWithItems:item1, nil];
+		[menu alignItemsVertically];
+		[menu setPosition:ccp(size.width/2, 100)];
+		
+		[self addChild:menu];
 	
 		// position the label on the center of the screen
 		label.position =  ccp( size.width /2 , size.height/2 );
@@ -47,6 +67,11 @@
 		[self addChild: label];
 	}
 	return self;
+}
+
+-(void) restart:(id)sender
+{
+	[[CCDirector sharedDirector] replaceScene:[HelloWorld scene]];
 }
 
 // on "dealloc" you need to release all your retained objects
