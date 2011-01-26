@@ -2,6 +2,7 @@ package org.cocos2d.events;
 
 import java.util.ArrayList;
 
+import org.cocos2d.protocols.CCMotionEventProtocol;
 import org.cocos2d.protocols.CCTouchDelegateProtocol;
 import org.cocos2d.utils.collections.ConcNodeCachingLinkedQueue;
 
@@ -76,6 +77,8 @@ public class CCTouchDispatcher {
 	// 4, 1 for each type of event
 	struct ccTouchHandlerHelperData handlerHelperData[ccTouchMax];
 }*/
+    /** Listeners for raw MotionEvents */
+    private ArrayList<CCMotionEventProtocol> motionListeners;
    
     private ArrayList<CCTouchHandler> touchHandlers;
     /** Whether or not the events are going to be dispatched. Default: YES */
@@ -99,6 +102,7 @@ public class CCTouchDispatcher {
     protected CCTouchDispatcher() {
         dispatchEvents = true;
         touchHandlers = new ArrayList<CCTouchHandler>();
+        motionListeners = new ArrayList<CCMotionEventProtocol>();
     }
 
     //
@@ -149,6 +153,30 @@ public class CCTouchDispatcher {
     public void removeAllDelegates() {
         touchHandlers.clear();
     }
+    
+    public void addMotionListener(CCMotionEventProtocol listener)
+    {
+    	synchronized (motionListeners)
+		{
+    		motionListeners.add(listener);
+		}
+    }
+    
+    public void removeMotionListener(CCMotionEventProtocol listener)
+    {
+    	synchronized (motionListeners)
+		{
+    		motionListeners.remove(listener);
+		}
+    }
+    
+    public void removeAllMotionListeners()
+    {
+    	synchronized (motionListeners)
+		{
+    		motionListeners.clear();
+		}
+    }
 
     /** Changes the priority of a previously added delegate. The lower the number,
       the higher the priority */
@@ -192,6 +220,8 @@ public class CCTouchDispatcher {
     	
     	MotionEvent event;
     	while( (event = eventQueue.poll()) != null) {
+    		
+    		proccessTouches(event);
     		
 			switch (event.getAction()) {
 			case MotionEvent.ACTION_CANCEL:
@@ -265,6 +295,15 @@ public class CCTouchDispatcher {
 	            }
         	}
         }
+    }
+    
+    private void proccessTouches(MotionEvent event)
+    {
+    	synchronized (motionListeners)
+		{
+			for (int i = 0; i < motionListeners.size(); i++)
+				motionListeners.get(i).onTouch(event);
+		}
     }
 }
 
