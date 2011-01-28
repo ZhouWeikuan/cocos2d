@@ -1,5 +1,6 @@
 package org.cocos2d.tests;
 
+import org.cocos2d.actions.CCProgressTimer;
 import org.cocos2d.actions.base.CCRepeatForever;
 import org.cocos2d.actions.interval.CCFadeIn;
 import org.cocos2d.actions.interval.CCFadeOut;
@@ -99,6 +100,7 @@ public class ClickAndMoveTest extends Activity {
 
     static class MainLayer extends CCLayer {
         static final int kTagSprite = 1;
+        CCProgressTimer  progressTimer;
 
         public MainLayer() {
 
@@ -121,7 +123,13 @@ public class ClickAndMoveTest extends Activity {
             addChild(lbl2, 1);
             lbl1.setPosition(CGPoint.ccp(160, 240));
             lbl2.setPosition(CGPoint.ccp(160, 200));
-
+            
+            progressTimer = CCProgressTimer.progress("iso.png");
+            this.addChild(progressTimer, 10);
+            progressTimer.setPosition(160, 100);
+            progressTimer.setType(CCProgressTimer.kCCProgressTimerTypeVerticalBarTB);
+            progressTimer.setPercentage(50.0f);
+            
             layer.runAction(CCRepeatForever.action(CCSequence.actions(CCFadeIn.action(1), CCFadeOut.action(1))));
         }
 
@@ -139,6 +147,8 @@ public class ClickAndMoveTest extends Activity {
             float at = CGPoint.ccpCalcRotate(pnt, convertedLocation);
 
             s.runAction(CCRotateTo.action(1, at));
+            
+            progressTimer.setPercentage(10.0f + progressTimer.getPercentage());
 
             return CCTouchDispatcher.kEventHandled;
         }
