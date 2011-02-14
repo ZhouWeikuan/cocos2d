@@ -856,6 +856,48 @@ public class CCDirector implements GLSurfaceView.Renderer {
         */
     }
     
+    /**
+     * attach in UIView using the given frame, and ration.
+     * ratio = width / height
+     * It is the easiest way to port from iPhone ration 480f/320f 
+     * to any android device but not the best.
+     * It will create a EAGLView and use it.
+     * 
+     * @param view
+     * @param ration
+     * @return
+     */
+    
+    public boolean attachInView(View view, float ration)
+    {
+    	return initOpenGLViewWithView(view, getAppFrameRect(ration));
+    }
+    
+    private CGRect getAppFrameRect(float targetRatio)
+    {
+    	 WindowManager w = theApp.getWindowManager();
+    	 CGSize size = CGSize.make(w.getDefaultDisplay().getWidth(), w.getDefaultDisplay().getHeight());
+         
+         float currentRation = size.width / size.height;
+         CGSize newSize = CGSize.make(size.width, size.height);
+         CGPoint offset = CGPoint.make(0, 0);
+         
+         if (currentRation > targetRatio)
+         {
+        	 newSize.width = targetRatio * size.height;
+        	 offset.x = (size.width - newSize.width) / 2;
+         }
+         	else if (currentRation < targetRatio)
+         {
+         		newSize.height = size.width / targetRatio;
+         		offset.y = (size.height - newSize.height) / 2;
+         }
+         
+         CGRect rect = CGRect.make(offset, newSize);
+         
+         return rect;
+    }
+    
 	public void setScreenSize(float width, float height) {
 		screenSize_.set(width, height);
 	}
