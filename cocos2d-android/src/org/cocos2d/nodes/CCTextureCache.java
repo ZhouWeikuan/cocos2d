@@ -58,6 +58,12 @@ public class CCTextureCache {
         assert path != null : "TextureMgr: path must not be null";
 
         CCTexture2D tex = textures.get(path);
+        // removing texture if it is empty, bug fix
+        if (tex != null && tex.name() == 0)
+        {
+        	textures.remove(path);
+        	tex = null;
+        }
 
         if (tex == null) {
             tex = createTextureFromFilePath(path);
