@@ -1,5 +1,6 @@
 package org.cocos2d.nodes;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -61,6 +62,21 @@ public class CCTextureCache {
 
         if (tex == null) {
             tex = createTextureFromFilePath(path);
+            textures.put(path, tex);
+        }
+        return tex;
+    }
+    
+    /**
+     * Returns a Texture2D object given an file image from external path.
+     */
+    public CCTexture2D addImageExternal(String path) {
+        assert path != null : "TextureMgr: path must not be null";
+
+        CCTexture2D tex = textures.get(path);
+
+        if (tex == null) {
+            tex = createTextureFromFilePathExternal(path);
             textures.put(path, tex);
         }
         return tex;
@@ -176,6 +192,28 @@ public class CCTextureCache {
 			public void load() {
 	            try {
 		        	InputStream is = CCDirector.sharedDirector().getActivity().getAssets().open(path);
+		            Bitmap bmp = BitmapFactory.decodeStream(is);
+					is.close();
+					tex.initWithImage(bmp);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		});
+        
+        return tex;
+    }
+    
+    private static CCTexture2D createTextureFromFilePathExternal(final String path) {
+        
+    	final CCTexture2D tex = new CCTexture2D();
+        tex.setLoader(new GLResourceHelper.GLResourceLoader() {
+			
+			@Override
+			public void load() {
+	            try {
+		        	InputStream is = new FileInputStream(path);
 		            Bitmap bmp = BitmapFactory.decodeStream(is);
 					is.close();
 					tex.initWithImage(bmp);

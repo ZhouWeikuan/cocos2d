@@ -29,7 +29,7 @@ public class CCMenu extends CCLayer {
         kMenuStateTrackingTouch
     }
 
-    public static final int kDefaultPadding = 5;
+    private static final int kDefaultPadding = 5;
 
     private CCMenuItem  selectedItem;
 
@@ -50,7 +50,7 @@ public class CCMenu extends CCLayer {
 
     @Override
     protected void registerWithTouchDispatcher() {
-        CCTouchDispatcher.sharedDispatcher().addDelegate(this, ccMacros.INT_MIN+1);
+        CCTouchDispatcher.sharedDispatcher().addTargetedDelegate(this, ccMacros.INT_MIN+1, true);
     }
 
     
@@ -67,7 +67,7 @@ public class CCMenu extends CCLayer {
         CGSize s = CCDirector.sharedDirector().winSize();
 
         setRelativeAnchorPoint(false);
-        setAnchorPoint(CGPoint.make(0.5f, 0.5f));
+        setAnchorPoint(0.5f, 0.5f);
         setContentSize(s);
 		setPosition(CGPoint.ccp(s.width/2, s.height/2));
 
