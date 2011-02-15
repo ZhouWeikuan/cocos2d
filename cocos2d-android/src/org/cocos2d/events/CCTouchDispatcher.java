@@ -288,12 +288,14 @@ public class CCTouchDispatcher {
     		
     		proccessTouches(event);
     		
+    		int action = event.getAction() & MotionEvent.ACTION_MASK;
+    		
     		for( int ind = 0; ind < targetedHandlers.size(); ind++ ) {
     			CCTargetedTouchHandler handler = targetedHandlers.get(ind);
     			
     			boolean claimed = false;
     			
-    			switch (event.getAction()) {
+    			switch (action) {
     			case MotionEvent.ACTION_DOWN:
     				claimed = handler.ccTouchesBegan(event);
     				if(claimed && handler.swallowsTouches)
@@ -312,7 +314,7 @@ public class CCTouchDispatcher {
     				break;
 				default:
 	    			if(supportsMultiTouch) {
-	    				switch (event.getAction()) {
+	    				switch (action) {
 		        			case MotionEvent.ACTION_POINTER_DOWN:
 		        				claimed = handler.ccTouchesBegan(event);
 		        				if(claimed && handler.swallowsTouches)
@@ -335,7 +337,7 @@ public class CCTouchDispatcher {
     		
     		if(touchSwallowedHandler == null) {
 	    		// handle standart delegates
-				switch (event.getAction()) {
+				switch (action) {
 				case MotionEvent.ACTION_DOWN:
 					touchesBegan(event);
 					break;
@@ -350,7 +352,7 @@ public class CCTouchDispatcher {
 					break;
 				default:
 	    			if(supportsMultiTouch) {
-	    				switch (event.getAction()) {
+	    				switch (action) {
 		        			case MotionEvent.ACTION_POINTER_DOWN:
 		        				touchesBegan(event);
 		        				break;
