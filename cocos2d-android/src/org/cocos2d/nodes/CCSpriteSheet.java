@@ -197,7 +197,8 @@ public class CCSpriteSheet extends CCNode implements CCTextureProtocol {
     /** removes a child given a reference. It will also cleanup the running actions depending on the cleanup parameter.
       @warning Removing a child from a CCSpriteSheet is very slow
       */
-    public void removeChild(CCSprite sprite, boolean doCleanup) {
+    public void removeChild(CCNode child, boolean doCleanup) {
+    	CCSprite sprite = (CCSprite)child;
         // explicit nil handling
         if (sprite == null)
             return;

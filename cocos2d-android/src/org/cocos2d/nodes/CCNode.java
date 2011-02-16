@@ -539,7 +539,7 @@ public class CCNode {
     */
     public void removeFromParentAndCleanup(boolean cleanup) {
         if (this.parent_ != null) {
-            this.parent_.removeChild(this, true);
+            this.parent_.removeChild(this, cleanup);
         }
     }
 
