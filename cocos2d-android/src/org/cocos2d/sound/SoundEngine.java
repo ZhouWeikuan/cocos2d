@@ -19,6 +19,11 @@ public class SoundEngine {
 	IntMap<MediaPlayer> soundsMap = new IntMap<MediaPlayer>();
 	SoundPool sp = new SoundPool(5, AudioManager.STREAM_MUSIC, 0);
 	int lastSndId = -1;
+	Float prevEffectsVolume = null;
+	Float prevSoundsVolume = null;
+	Float effectsVolume = null;
+	Float soundsVolume = null;
+	boolean mute = false;
 	
     static SoundEngine _sharedEngine = null;
 
@@ -35,6 +40,56 @@ public class SoundEngine {
         synchronized(SoundEngine.class) {
             _sharedEngine = null;
         }
+    }
+    
+    public void setEffectsVolume(Float volume) {
+    	if (mute)
+    		return;
+    	
+    	effectsVolume = volume;
+    }
+    
+    public Float getEffectsVolume() {
+    	return effectsVolume;
+    }
+    
+    public void setSoundVolume(Float volume) {
+    	if (mute)
+    		return;
+    	
+    	soundsVolume = volume;
+    	for (Entry<MediaPlayer> each : soundsMap)
+    	{
+    		each.getValue().setVolume(soundsVolume, soundsVolume);
+    	}
+    }
+    
+    public Float getSoundsVolume() {
+    	return soundsVolume;
+    }
+    
+    public void mute() {
+    	if (mute)
+    		return;
+    	
+    	prevEffectsVolume = effectsVolume;
+    	prevSoundsVolume = soundsVolume;
+    	effectsVolume = 0f;
+    	setSoundVolume(0f);
+    	mute = true;
+    }
+    
+    public void unmute() {
+    	if (!mute)
+    		return;
+    	
+    	effectsVolume = prevEffectsVolume;
+    	setSoundVolume(prevSoundsVolume);
+    	mute = false;
+    }
+    
+    public boolean isMute() {
+    	return mute;
     }
 
 	public void preloadEffect(Context app, int resId){
@@ -58,7 +113,9 @@ public class SoundEngine {
 			}
 		}
 
-		sp.play(sndId, 1.0f, 1.0f, 0, 0, 1.0f);
+		int streamId = sp.play(sndId, 1.0f, 1.0f, 0, 0, 1.0f);
+		if (effectsVolume != null)
+			sp.setVolume(streamId, effectsVolume, effectsVolume);
 	}
 	
 	public void preloadSound(Context ctxt, int resId) {
@@ -75,7 +132,7 @@ public class SoundEngine {
 	
 	public void playSound(Context ctxt, int resId, boolean loop) {
 		if (lastSndId != -1) {
-			stopSound();
+			pauseSound();
 		}
 		
 		MediaPlayer mp = null;
@@ -97,6 +154,8 @@ public class SoundEngine {
 		}
 		lastSndId = resId;
 		mp.start();
+		if (soundsVolume != null)
+			mp.setVolume(soundsVolume, soundsVolume);
 
 		if (loop)
 			mp.setLooping(true);
@@ -148,6 +207,10 @@ public class SoundEngine {
 		}
 		
 		soundsMap.clear();
+	}
+	
+	public void realesAllEffects() {
+		sp.release();
 	}
 
 }
