@@ -251,17 +251,8 @@ public class CCScheduler {
                     elt.currentTimer = elt.timers.get(elt.timerIndex);
                     elt.currentTimerSalvaged = false;
 
-                    UpdateCallback callback = elt.currentTimer.getCallback();
-	            	if(callback !=null) {
-	            		callback.update(dt);
-	            	} else {
-	                    try {
-							impMethod.invoke( elt.currentTimer, methodArgs);
-						} catch (Exception e1) {
-							e1.printStackTrace();
-						}
-	            	}
-                    
+                    elt.currentTimer.update(dt);
+
                     if( elt.currentTimerSalvaged ) {
                         // The currentTimer told the remove itself. To prevent the timer from
                         // accidentally deallocating itself before finishing its step, we retained
