@@ -9,6 +9,7 @@ import org.cocos2d.opengl.CCTexture2D;
 import org.cocos2d.types.CGPoint;
 import org.cocos2d.types.CGRect;
 import org.cocos2d.types.CGSize;
+import org.cocos2d.utils.GeometryUtil;
 import org.cocos2d.utils.PlistParser;
 
 /*
@@ -50,26 +51,6 @@ public class CCSpriteFrameCache {
     	}
     }
 
-	private CGPoint parseCoords(String str) {
-		String coords = str.replaceAll("[{|}]", "");
-		String c[] = coords.split(",");
-		return CGPoint.make(Float.parseFloat(c[0]), Float.parseFloat(c[1]));
-	}
-
-	private CGSize parseCoordsSize(String str) {
-		String coords = str.replaceAll("[{|}]", "");
-		String c[] = coords.split(",");
-		return CGSize.make(Float.parseFloat(c[0]), Float.parseFloat(c[1]));
-	}
-
-	private CGRect parseCoordsRect(String str) {
-		String c[] = str.replaceAll("[{|}]", "").split(",");
-		return CGRect.make(Float.parseFloat(c[0]),
-			Float.parseFloat(c[1]),
-			Float.parseFloat(c[2]),
-			Float.parseFloat(c[3]));
-	}
-    
     /** Adds multiple Sprite Frames with a dictionary.
      * The texture will be associated with the created sprite frames.
      */
@@ -130,24 +111,24 @@ public class CCSpriteFrameCache {
     			spriteFrame = CCSpriteFrame.frame(texture, CGRect.make(x, y, w, h), false, CGPoint.make(ox, oy), CGSize.make(ow, oh));
 
     		} else if(format == 1 || format == 2) {
-    			CGRect frame = parseCoordsRect( (String)frameDict.get("frame") );
+    			CGRect frame = GeometryUtil.CGRectFromString( (String)frameDict.get("frame") );
     			boolean rotated = false;
 
     			// rotation
     			if(format == 2)
     				rotated = (Boolean)frameDict.get("rotated");
 
-    			CGPoint offset = parseCoords( (String)frameDict.get("offset") );
-    			CGSize sourceSize = parseCoordsSize( (String)frameDict.get("sourceSize") );
+    			CGPoint offset = GeometryUtil.CGPointFromString( (String)frameDict.get("offset") );
+    			CGSize sourceSize = GeometryUtil.CGSizeFromString( (String)frameDict.get("sourceSize") );
 
     			// create frame
     			spriteFrame = CCSpriteFrame.frame(texture, frame, rotated, offset, sourceSize);
     		} else if(format == 3) {
     			// get values
-    			CGSize spriteSize = parseCoordsSize( (String)frameDict.get("spriteSize") ); 
-    			CGPoint spriteOffset = parseCoords( (String)frameDict.get("spriteOffset") );
-    			CGSize spriteSourceSize = parseCoordsSize( (String)frameDict.get("spriteSourceSize") );
-    			CGRect textureRect = parseCoordsRect( (String)frameDict.get("textureRect") );
+    			CGSize spriteSize = GeometryUtil.CGSizeFromString( (String)frameDict.get("spriteSize") ); 
+    			CGPoint spriteOffset = GeometryUtil.CGPointFromString( (String)frameDict.get("spriteOffset") );
+    			CGSize spriteSourceSize = GeometryUtil.CGSizeFromString( (String)frameDict.get("spriteSourceSize") );
+    			CGRect textureRect = GeometryUtil.CGRectFromString( (String)frameDict.get("textureRect") );
     			boolean textureRotated = (Boolean)frameDict.get("textureRotated"); 
 
 // Aliases are not supported in this version while.
