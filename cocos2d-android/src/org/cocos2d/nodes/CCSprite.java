@@ -887,7 +887,9 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
             newBlend = true;
             gl.glBlendFunc( blendFunc_.src, blendFunc_.dst );
         }
-
+        
+        // bug fix in case texture name = 0
+        texture_.checkName();
         // #define kQuadSize sizeof(quad_.bl)
         gl.glBindTexture(GL10.GL_TEXTURE_2D, texture_.name());
 

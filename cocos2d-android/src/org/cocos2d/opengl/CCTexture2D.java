@@ -174,6 +174,11 @@ public class CCTexture2D {
         _texParams = new CCTexParams(GL_LINEAR, GL_LINEAR, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE);
     }
     
+    public void checkName() {
+    	if (mLoader != null && _name == 0)
+    		mLoader.load();
+    }
+    
     public void setLoader(GLResourceHelper.GLResourceLoader loader) {
     	if(loader != null) {
     		loader.load();

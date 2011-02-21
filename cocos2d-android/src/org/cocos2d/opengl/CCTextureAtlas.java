@@ -376,6 +376,8 @@ public class CCTextureAtlas {
     public void draw(GL10 gl, int n) {
         texture_.loadTexture(gl);
 
+        // bug fix in case texture name = 0
+        texture_.checkName();
         gl.glBindTexture(GL10.GL_TEXTURE_2D, texture_.name());
 
         gl.glTexParameterx(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);

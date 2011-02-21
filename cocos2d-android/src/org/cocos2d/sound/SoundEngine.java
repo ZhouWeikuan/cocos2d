@@ -200,6 +200,18 @@ public class SoundEngine {
 		lastSndId = -1;
 	}
 	
+	public void realesSound(int resId)
+	{
+		MediaPlayer mp = null;
+		synchronized(soundsMap) {
+			mp = soundsMap.get(resId);
+			if (mp != null) {
+				mp.release();
+				soundsMap.remove(resId);
+			}
+		}
+	}
+	
 	public void realesAllSounds() {
 		
 		for(Entry<MediaPlayer> mp : soundsMap) {
