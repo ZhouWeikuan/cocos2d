@@ -1142,6 +1142,15 @@ public class CCNode {
     	
         return convertToNodeSpace(x, y);
     }
+    
+    /**
+     * This is analog method, result is written to ret. No garbage.
+     */
+    public void convertTouchToNodeSpace(MotionEvent event, CGPoint ret) {
+    	CCDirector.sharedDirector().convertToGL(event.getX(), event.getY(), ret);
+    	
+        convertToNodeSpace(ret.x, ret.y, ret);
+    }
 
     /** converts a UITouch (world coordinates) into a local coordiante. This method is AR (Anchor Relative).
       @since v0.7.1
