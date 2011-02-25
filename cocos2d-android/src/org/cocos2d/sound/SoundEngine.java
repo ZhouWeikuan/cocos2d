@@ -84,8 +84,8 @@ public class SoundEngine {
     		return;
     	
     	effectsVolume = prevEffectsVolume;
-    	setSoundVolume(prevSoundsVolume);
     	mute = false;
+    	setSoundVolume(prevSoundsVolume);
     }
     
     public boolean isMute() {
