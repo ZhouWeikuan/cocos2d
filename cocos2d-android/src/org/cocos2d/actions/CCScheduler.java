@@ -80,7 +80,6 @@ public class CCScheduler {
       @warning It will affect EVERY scheduled selector / action.
     */
     private float timeScale_;
-    private Object[] methodArgs = new Object[1];
 
     public float getTimeScale() {
         return timeScale_;
@@ -154,7 +153,6 @@ public class CCScheduler {
         if( timeScale_ != 1.0f )
             dt *= timeScale_;
         
-        methodArgs[0] = dt;
         currentTargetSalvaged = false;
         // updates with priority < 0
         synchronized (updatesNeg) {
@@ -167,7 +165,7 @@ public class CCScheduler {
 	            		e.callback.update(dt);
 	            	} else {
 		            	try {
-							e.impMethod.invoke(e.target, methodArgs);
+							e.impMethod.invoke(e.target, dt);
 						} catch (Exception e1) {
 							e1.printStackTrace();
 						}
@@ -194,7 +192,7 @@ public class CCScheduler {
 	            		e.callback.update(dt);
 	            	} else {
 		                try {
-							e.impMethod.invoke(e.target, methodArgs);
+							e.impMethod.invoke(e.target, dt);
 						} catch (Exception e1) {
 							// TODO Auto-generated catch block
 							e1.printStackTrace();
@@ -222,7 +220,7 @@ public class CCScheduler {
 	            		e.callback.update(dt);
 	            	} else {
 		                try {
-							e.impMethod.invoke(e.target, methodArgs);
+							e.impMethod.invoke(e.target, dt);
 						} catch (Exception e1) {
 							e1.printStackTrace();
 						}

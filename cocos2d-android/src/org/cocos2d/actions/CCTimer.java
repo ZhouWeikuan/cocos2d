@@ -67,8 +67,6 @@ public class CCTimer {
         return interval;
     }
 
-    private static Object[] methodArgs = new Object[1];
-    
     /** triggers the timer */
     public void update(float dt) {
         if (elapsed == -1) {
@@ -81,8 +79,7 @@ public class CCTimer {
         		callback.update(dt);
         	} else {
                 try {
-                	methodArgs[0] = elapsed;
-                    invocation.invoke(target, methodArgs);
+                    invocation.invoke(target, elapsed);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }        		
