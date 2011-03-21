@@ -219,7 +219,7 @@ public class CCMenu extends CCLayer {
         float x = -width / 2.0f;
         for (CCNode item : children_) {
             item.setPosition(CGPoint.make(x + item.getContentSize().width * item.getScaleX() / 2.0f, 0));
-            x -= item.getContentSize().width * item.getScaleX() + padding;
+            x += item.getContentSize().width * item.getScaleX() + padding;
         }
     }
 
