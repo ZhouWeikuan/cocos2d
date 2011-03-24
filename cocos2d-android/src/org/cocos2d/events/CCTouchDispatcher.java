@@ -7,10 +7,8 @@ import javax.microedition.khronos.opengles.GL10;
 import org.cocos2d.opengl.GLResourceHelper;
 import org.cocos2d.protocols.CCMotionEventProtocol;
 import org.cocos2d.protocols.CCTouchDelegateProtocol;
-import org.cocos2d.utils.Util7;
 import org.cocos2d.utils.collections.ConcNodeCachingLinkedQueue;
 
-import android.os.Build;
 import android.view.MotionEvent;
 
 /** CCTouchDispatcher.
@@ -90,8 +88,6 @@ public class CCTouchDispatcher {
     /** Whether or not the events are going to be dispatched. Default: YES */
     private boolean dispatchEvents;
     
-    private boolean supportsMultiTouch;
-
     public boolean getDispatchEvents() {
         return dispatchEvents;
     }
@@ -112,10 +108,6 @@ public class CCTouchDispatcher {
         targetedHandlers = new ArrayList<CCTargetedTouchHandler>();
         touchHandlers = new ArrayList<CCTouchHandler>();
         motionListeners = new ArrayList<CCMotionEventProtocol>();
-        
-    	if(Build.VERSION.SDK_INT >= 7) {
-    		supportsMultiTouch = Util7.isMultiTouchSupported();
-    	}
     }
 
     //
@@ -279,8 +271,13 @@ public class CCTouchDispatcher {
 		eventQueue.push(eventForQueue);			
     }
     
+    
     // this is for standart delegates 
     private CCTargetedTouchHandler touchSwallowedHandler = null;
+    
+    private static final int INVALID_POINTER_ID = -1;
+    // The ‘active pointer’ is the one currently moving our object.
+	private int mActivePointerId = INVALID_POINTER_ID;
     
     public void update() {
     	MotionEvent event;
@@ -288,45 +285,38 @@ public class CCTouchDispatcher {
     		
     		proccessTouches(event);
     		
-    		int action = event.getAction() & MotionEvent.ACTION_MASK;
+    		int action = event.getAction();
+    		int actionCode = action & MotionEvent.ACTION_MASK;
+    		int pid = action >> MotionEvent.ACTION_POINTER_ID_SHIFT;     
     		
     		for( int ind = 0; ind < targetedHandlers.size(); ind++ ) {
     			CCTargetedTouchHandler handler = targetedHandlers.get(ind);
     			
     			boolean claimed = false;
     			
-    			switch (action) {
+    			switch (actionCode) {
     			case MotionEvent.ACTION_DOWN:
+    			case MotionEvent.ACTION_POINTER_DOWN:
     				claimed = handler.ccTouchesBegan(event);
-    				if(claimed && handler.swallowsTouches)
+    				if(claimed && handler.swallowsTouches) {
     					touchSwallowedHandler = handler;
+    					mActivePointerId = pid;
+    				}
     				break;
     			case MotionEvent.ACTION_CANCEL:
     				handler.ccTouchesCancelled(event);
-    				touchSwallowedHandler = null;
+    				if(mActivePointerId == pid)
+    					touchSwallowedHandler = null;
     				break;
     			case MotionEvent.ACTION_MOVE:
     				handler.ccTouchesMoved(event);
     				break;
     			case MotionEvent.ACTION_UP:
+    			case MotionEvent.ACTION_POINTER_UP:
     				handler.ccTouchesEnded(event);
-    				touchSwallowedHandler = null;
+    				if(mActivePointerId == pid)
+    					touchSwallowedHandler = null;
     				break;
-				default:
-	    			if(supportsMultiTouch) {
-	    				switch (action) {
-		        			case MotionEvent.ACTION_POINTER_DOWN:
-		        				claimed = handler.ccTouchesBegan(event);
-		        				if(claimed && handler.swallowsTouches)
-		        					touchSwallowedHandler = handler;
-		        				break;
-		        			case MotionEvent.ACTION_POINTER_UP:
-		        				handler.ccTouchesEnded(event);
-		        				touchSwallowedHandler = null;
-		        				break;
-	    				}
-	    			}
-					break;
     			}
 
     			
@@ -337,8 +327,9 @@ public class CCTouchDispatcher {
     		
     		if(touchSwallowedHandler == null) {
 	    		// handle standart delegates
-				switch (action) {
+				switch (actionCode) {
 				case MotionEvent.ACTION_DOWN:
+				case MotionEvent.ACTION_POINTER_DOWN:
 					touchesBegan(event);
 					break;
 				case MotionEvent.ACTION_CANCEL:
@@ -348,19 +339,8 @@ public class CCTouchDispatcher {
 					touchesMoved(event);
 					break;
 				case MotionEvent.ACTION_UP:
+				case MotionEvent.ACTION_POINTER_UP:
 					touchesEnded(event);
-					break;
-				default:
-	    			if(supportsMultiTouch) {
-	    				switch (action) {
-		        			case MotionEvent.ACTION_POINTER_DOWN:
-		        				touchesBegan(event);
-		        				break;
-		        			case MotionEvent.ACTION_POINTER_UP:
-		        				touchesEnded(event);
-		        				break;
-	    				}
-	    			}
 					break;
 				}
     		}
