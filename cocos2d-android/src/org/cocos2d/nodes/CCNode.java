@@ -1021,9 +1021,7 @@ public class CCNode {
         ret.setTransform(nodeToParentTransform());
 
         for (CCNode p = parent_; p != null; p = p.parent_) {
-            // t = t.getTransformConcat(p.nodeToParentTransform());
-        	ret.multiply( p.nodeToParentTransform() );
-//            t = t.preConcatenate(p.nodeToParentTransform());
+        	CGAffineTransformUtil.preConcate(ret, p.nodeToParentTransform());
         }
     }
     

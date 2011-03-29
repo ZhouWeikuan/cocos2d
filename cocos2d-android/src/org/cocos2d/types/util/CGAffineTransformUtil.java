@@ -42,4 +42,25 @@ public final class CGAffineTransformUtil {
 	public static void multiply(CGAffineTransform t, CGAffineTransform m) {
         t.multiply(m);
 	}
+	
+	/**
+	 * preConcate t1 with t2
+	 * @param t1 in/out
+	 * @param t2 in
+	 */
+	public static void preConcate(CGAffineTransform t1, CGAffineTransform t2) {
+		double m00 = t1.m00 * t2.m00 + t1.m10 * t2.m01;
+		double m01 = t1.m00 * t2.m10 + t1.m10 * t2.m11;
+		double m10 = t1.m01 * t2.m00 + t1.m11 * t2.m01;
+		double m11 = t1.m01 * t2.m10 + t1.m11 * t2.m11;
+		double m02 = t1.m02 * t2.m00 + t1.m12 * t2.m01 + t2.m02;
+		double m12 = t1.m02 * t2.m10 + t1.m12 * t2.m11 + t2.m12;
+		
+		t1.m00 = m00;
+		t1.m10 = m10;
+		t1.m01 = m01;
+		t1.m11 = m11;
+		t1.m02 = m02;
+		t1.m12 = m12;
+	}
 }

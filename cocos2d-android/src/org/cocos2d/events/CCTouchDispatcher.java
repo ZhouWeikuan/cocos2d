@@ -7,6 +7,7 @@ import javax.microedition.khronos.opengles.GL10;
 import org.cocos2d.opengl.GLResourceHelper;
 import org.cocos2d.protocols.CCMotionEventProtocol;
 import org.cocos2d.protocols.CCTouchDelegateProtocol;
+import org.cocos2d.utils.Util5;
 import org.cocos2d.utils.collections.ConcNodeCachingLinkedQueue;
 
 import android.os.Build;
@@ -283,7 +284,7 @@ public class CCTouchDispatcher {
     		int pid = action >> MotionEvent.ACTION_POINTER_ID_SHIFT;     
 			        
 			if(Build.VERSION.SDK_INT >= 5) {
-	    		pid = event.getPointerId(pid);
+	    		pid = Util5.getPointerId(event, pid);
 	    	}
     		
 			boolean swallowed = false;
