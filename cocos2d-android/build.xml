@@ -64,4 +64,13 @@
     -->
     <setup/>
 
+    <path id="android.libraries.src"><path refid="project.libraries.src" /></path>
+    <path id="android.libraries.jars"><path refid="project.libraries.jars" /></path>
+
+    <target name="jar">
+      <jar destfile="libs/cocos2d-android.jar">
+        <fileset dir="bin/classes" includes="**/*.class"/>
+        <fileset dir="." includes="assets/fps_images.png"/>
+      </jar>
+    </target>  
 </project>
