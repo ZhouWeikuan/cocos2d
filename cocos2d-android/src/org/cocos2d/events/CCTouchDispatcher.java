@@ -9,6 +9,7 @@ import org.cocos2d.protocols.CCMotionEventProtocol;
 import org.cocos2d.protocols.CCTouchDelegateProtocol;
 import org.cocos2d.utils.collections.ConcNodeCachingLinkedQueue;
 
+import android.os.Build;
 import android.view.MotionEvent;
 
 /** CCTouchDispatcher.
@@ -280,6 +281,10 @@ public class CCTouchDispatcher {
     		int action = event.getAction();
     		int actionCode = action & MotionEvent.ACTION_MASK;
     		int pid = action >> MotionEvent.ACTION_POINTER_ID_SHIFT;     
+			        
+			if(Build.VERSION.SDK_INT >= 5) {
+	    		pid = event.getPointerId(pid);
+	    	}
     		
 			boolean swallowed = false;
 			        
