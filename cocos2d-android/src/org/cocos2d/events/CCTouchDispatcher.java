@@ -271,14 +271,6 @@ public class CCTouchDispatcher {
 		eventQueue.push(eventForQueue);			
     }
     
-    
-    // this is for standart delegates 
-    private CCTargetedTouchHandler touchSwallowedHandler = null;
-    
-    private static final int INVALID_POINTER_ID = -1;
-    // The ‘active pointer’ is the one currently moving our object.
-	private int mActivePointerId = INVALID_POINTER_ID;
-    
     public void update() {
     	MotionEvent event;
     	while( (event = eventQueue.poll()) != null) {
@@ -289,6 +281,8 @@ public class CCTouchDispatcher {
     		int actionCode = action & MotionEvent.ACTION_MASK;
     		int pid = action >> MotionEvent.ACTION_POINTER_ID_SHIFT;     
     		
+			boolean swallowed = false;
+			        
     		for( int ind = 0; ind < targetedHandlers.size(); ind++ ) {
     			CCTargetedTouchHandler handler = targetedHandlers.get(ind);
     			
@@ -298,34 +292,41 @@ public class CCTouchDispatcher {
     			case MotionEvent.ACTION_DOWN:
     			case MotionEvent.ACTION_POINTER_DOWN:
     				claimed = handler.ccTouchesBegan(event);
-    				if(claimed && handler.swallowsTouches) {
-    					touchSwallowedHandler = handler;
-    					mActivePointerId = pid;
+    				if(claimed) {
+    					handler.addClaimed(pid);
     				}
     				break;
     			case MotionEvent.ACTION_CANCEL:
-    				handler.ccTouchesCancelled(event);
-    				if(mActivePointerId == pid)
-    					touchSwallowedHandler = null;
+    				if(handler.hasClaimed(pid)) {
+    					claimed = true;
+    					handler.ccTouchesCancelled(event);
+    					handler.removeClaimed(pid);
+    				}
     				break;
     			case MotionEvent.ACTION_MOVE:
-    				handler.ccTouchesMoved(event);
+    				if(handler.hasClaimed(pid)) {
+    					claimed = true;
+    					handler.ccTouchesMoved(event);
+    				}
     				break;
     			case MotionEvent.ACTION_UP:
     			case MotionEvent.ACTION_POINTER_UP:
-    				handler.ccTouchesEnded(event);
-    				if(mActivePointerId == pid)
-    					touchSwallowedHandler = null;
+    				if(handler.hasClaimed(pid)) {
+    					claimed = true;
+    					handler.ccTouchesEnded(event);
+    					handler.removeClaimed(pid);
+    				}
     				break;
     			}
 
     			
-    			if(touchSwallowedHandler == handler) {
+    			if(claimed && handler.swallowsTouches) {
+    				swallowed = true;
     				break;
     			}
     		}
     		
-    		if(touchSwallowedHandler == null) {
+    		if(!swallowed) {
 	    		// handle standart delegates
 				switch (actionCode) {
 				case MotionEvent.ACTION_DOWN:

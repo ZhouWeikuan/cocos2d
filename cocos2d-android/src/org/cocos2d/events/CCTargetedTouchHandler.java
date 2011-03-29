@@ -1,5 +1,7 @@
 package org.cocos2d.events;
 
+import java.util.ArrayList;
+
 import org.cocos2d.protocols.CCTouchDelegateProtocol;
 
 import android.view.MotionEvent;
@@ -8,45 +10,26 @@ public class CCTargetedTouchHandler extends CCTouchHandler {
 
 	boolean swallowsTouches;
 	
-	private boolean claimed = false;
+//	private boolean claimed = false;
+	
+	private ArrayList<Integer> claimedSet;
 	
 	public CCTargetedTouchHandler(CCTouchDelegateProtocol delegate, int priority, boolean swallow) {
 		super(delegate, priority);
 		swallowsTouches = swallow;
+		claimedSet = new ArrayList<Integer>();
 	}
 	
-	@Override
-	public boolean ccTouchesBegan(MotionEvent event) {
-		claimed = super.ccTouchesBegan(event);
-		return claimed;
+	void addClaimed(int pid) {
+		claimedSet.add(pid);
+	}
+	
+	void removeClaimed(int pid) {
+		int ind = claimedSet.indexOf(pid);
+		claimedSet.remove(ind);
 	}
 
-	// this return shouldn't meen anything
-	@Override
-	public boolean ccTouchesMoved(MotionEvent event) {
-		if(claimed) {
-			return super.ccTouchesMoved(event);
-		}
-		return false;
+	boolean hasClaimed(int pid) {
+		return claimedSet.contains(pid);
 	}
-	
-	// this return shouldn't meen anything
-	@Override
-	public boolean ccTouchesEnded(MotionEvent event) {
-		if(claimed) {
-			claimed = false;
-			return super.ccTouchesEnded(event);
-		}
-		return false;
-	}
-	
-	@Override
-	public boolean ccTouchesCancelled(MotionEvent event) {
-		if(claimed) {
-			claimed = false;
-			return super.ccTouchesCancelled(event);
-		}
-		return false;
-	}
-	
 }
