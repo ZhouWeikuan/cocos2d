@@ -4,13 +4,9 @@ import java.util.ArrayList;
 
 import org.cocos2d.protocols.CCTouchDelegateProtocol;
 
-import android.view.MotionEvent;
-
 public class CCTargetedTouchHandler extends CCTouchHandler {
 
 	boolean swallowsTouches;
-	
-//	private boolean claimed = false;
 	
 	private ArrayList<Integer> claimedSet;
 	
@@ -21,7 +17,9 @@ public class CCTargetedTouchHandler extends CCTouchHandler {
 	}
 	
 	void addClaimed(int pid) {
-		claimedSet.add(pid);
+		if (!claimedSet.contains(pid)) {
+			claimedSet.add(pid);
+		}
 	}
 	
 	void removeClaimed(int pid) {
