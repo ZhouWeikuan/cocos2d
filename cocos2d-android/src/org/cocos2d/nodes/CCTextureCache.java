@@ -134,7 +134,7 @@ public class CCTextureCache {
     	for (CCTexture2D tex : textures.values()) {
     		tex.releaseTexture(CCDirector.gl);    		
     	}
-    	// textures.clear();
+    	textures.clear();
     }
 
     /** Removes unused textures
