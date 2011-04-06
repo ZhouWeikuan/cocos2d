@@ -1,11 +1,7 @@
 package org.cocos2d.nodes;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import javax.microedition.khronos.opengles.GL10;
-
+import android.util.Log;
+import android.view.MotionEvent;
 import org.cocos2d.actions.CCActionManager;
 import org.cocos2d.actions.CCScheduler;
 import org.cocos2d.actions.UpdateCallback;
@@ -23,8 +19,10 @@ import org.cocos2d.types.util.CGPointUtil;
 import org.cocos2d.types.util.PoolHolder;
 import org.cocos2d.utils.pool.OneClassPool;
 
-import android.util.Log;
-import android.view.MotionEvent;
+import javax.microedition.khronos.opengles.GL10;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /** CCNode is the main element. 
  Anything thats gets drawn or contains things that get drawn is a CCNode.

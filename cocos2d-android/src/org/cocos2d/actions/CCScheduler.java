@@ -239,6 +239,9 @@ public class CCScheduler {
         for(ConcurrentArrayHashMap<Object, tHashSelectorEntry>.Entry e = hashForSelectors.firstValue();
         	e != null; e = hashForSelectors.nextValue(e)) {
         	tHashSelectorEntry elt = e.getValue();
+            if (elt == null) {
+                continue;
+            }
         	
         	currentTarget = elt;
             currentTargetSalvaged = false;

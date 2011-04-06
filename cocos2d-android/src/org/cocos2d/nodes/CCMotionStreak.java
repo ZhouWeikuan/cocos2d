@@ -2,9 +2,9 @@ package org.cocos2d.nodes;
 
 import org.cocos2d.actions.UpdateCallback;
 import org.cocos2d.opengl.CCTexture2D;
+import org.cocos2d.types.CGPoint;
 import org.cocos2d.types.ccBlendFunc;
 import org.cocos2d.types.ccColor4B;
-import org.cocos2d.types.CGPoint;
 
 /**
  * CCMotionStreak manages a Ribbon based on it's motion in absolute space.

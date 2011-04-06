@@ -1,16 +1,15 @@
 package org.cocos2d.nodes;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.HashMap;
-
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import org.cocos2d.config.ccMacros;
 import org.cocos2d.opengl.CCTexture2D;
 import org.cocos2d.opengl.GLResourceHelper;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.HashMap;
 
 
 /** Singleton that handles the loading of textures

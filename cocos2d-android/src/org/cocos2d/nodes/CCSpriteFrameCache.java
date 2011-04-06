@@ -1,9 +1,5 @@
 package org.cocos2d.nodes;
 
-import java.util.HashMap;
-import java.util.Map.Entry;
-import java.util.Set;
-
 import org.cocos2d.config.ccMacros;
 import org.cocos2d.opengl.CCTexture2D;
 import org.cocos2d.types.CGPoint;
@@ -11,6 +7,10 @@ import org.cocos2d.types.CGRect;
 import org.cocos2d.types.CGSize;
 import org.cocos2d.utils.GeometryUtil;
 import org.cocos2d.utils.PlistParser;
+
+import java.util.HashMap;
+import java.util.Map.Entry;
+import java.util.Set;
 
 /*
  * To create sprite frames and texture atlas, use this tool:
