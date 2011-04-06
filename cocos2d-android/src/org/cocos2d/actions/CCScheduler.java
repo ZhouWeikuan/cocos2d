@@ -239,14 +239,11 @@ public class CCScheduler {
         for(ConcurrentArrayHashMap<Object, tHashSelectorEntry>.Entry e = hashForSelectors.firstValue();
         	e != null; e = hashForSelectors.nextValue(e)) {
         	tHashSelectorEntry elt = e.getValue();
-            if (elt == null) {
-                continue;
-            }
-        	
+
         	currentTarget = elt;
             currentTargetSalvaged = false;
             
-            if( ! currentTarget.paused ) {                
+            if( ! currentTarget.paused && elt.timers != null) {
                 // The 'timers' ccArray may change while inside this loop.
                 for( elt.timerIndex = 0; elt.timerIndex < elt.timers.size(); elt.timerIndex++) {
                     elt.currentTimer = elt.timers.get(elt.timerIndex);

@@ -10,6 +10,8 @@ import org.cocos2d.protocols.CCTextureProtocol;
 import org.cocos2d.types.*;
 import org.cocos2d.utils.BufferProvider;
 
+import javax.microedition.khronos.egl.EGL10;
+import javax.microedition.khronos.egl.EGLContext;
 import javax.microedition.khronos.opengles.GL10;
 import java.nio.FloatBuffer;
 import java.util.Arrays;
@@ -879,7 +881,8 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
             newBlend = true;
             gl.glBlendFunc( blendFunc_.src, blendFunc_.dst );
         }
-        
+
+//        ((EGL10) gl).eglWaitNative(EGL10.EGL_NATIVE_RENDERABLE, null);
         // bug fix in case texture name = 0
         texture_.checkName();
         // #define kQuadSize sizeof(quad_.bl)
