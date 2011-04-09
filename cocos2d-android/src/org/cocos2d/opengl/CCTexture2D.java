@@ -36,6 +36,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.opengl.GLUtils;
+import android.util.Log;
 
 /** CCTexture2D class.
  * This class allows to easily create OpenGL 2D textures from images, text or raw data.
@@ -299,7 +300,13 @@ public class CCTexture2D {
     }
 
     private static CGSize calculateTextSize(String text, String fontname, float fontSize) {
-        Typeface typeface = Typeface.create(fontname, Typeface.NORMAL);
+//        Typeface typeface = Typeface.create(fontname, Typeface.NORMAL);
+        Typeface typeface;
+    	try{
+    		typeface = Typeface.createFromAsset(CCDirector.theApp.getAssets(), fontname);
+    	} catch (Exception e) {
+    		typeface = Typeface.create(fontname, Typeface.NORMAL);
+		}
 
         Paint textPaint = new Paint();
         textPaint.setTypeface(typeface);
@@ -328,7 +335,13 @@ public class CCTexture2D {
 
     /** Initializes a texture from a string with dimensions, alignment, font name and font size */
     public void initWithText(String text, CGSize dimensions, CCLabel.TextAlignment alignment, String fontname, float fontSize) {
-    	Typeface typeface = Typeface.create(fontname, Typeface.NORMAL);
+    	//Typeface.create(fontname, Typeface.NORMAL);
+    	Typeface typeface;
+    	try{
+    		typeface = Typeface.createFromAsset(CCDirector.theApp.getAssets(), fontname);
+    	} catch (Exception e) {
+    		typeface = Typeface.create(fontname, Typeface.NORMAL);
+		}
 
         Paint textPaint = new Paint();
         textPaint.setTypeface(typeface);

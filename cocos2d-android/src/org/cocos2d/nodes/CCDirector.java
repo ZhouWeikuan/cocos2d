@@ -753,6 +753,10 @@ public class CCDirector implements GLSurfaceView.Renderer {
 
         return s;
     }
+    
+    public CGSize winSizeRef() {
+    	return screenSize_;
+    }
 
     /** returns the display size of the OpenGL view in pixels */
     public CGSize displaySize() {

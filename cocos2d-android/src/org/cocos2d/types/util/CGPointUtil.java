@@ -64,4 +64,10 @@ public final class CGPointUtil {
 		v.x -= toAdd.x;
 		v.y -= toAdd.y;
 	}
+
+	public static float distance(CGPoint p1, CGPoint p2) {
+		float dx = p2.x - p1.x;
+		float dy = p2.y - p1.y;
+		return (float)Math.sqrt(dx * dx + dy * dy);
+	}
 }
