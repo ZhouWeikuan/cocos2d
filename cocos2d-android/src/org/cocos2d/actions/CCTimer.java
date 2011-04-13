@@ -76,7 +76,7 @@ public class CCTimer {
         }
         if (elapsed >= interval) {
         	if(callback != null) {
-        		callback.update(dt);
+        		callback.update(elapsed);
         	} else {
                 try {
                     invocation.invoke(target, elapsed);
