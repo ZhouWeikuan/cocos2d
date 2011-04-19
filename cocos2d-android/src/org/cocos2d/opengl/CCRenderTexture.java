@@ -7,6 +7,7 @@ import org.cocos2d.config.ccMacros;
 import org.cocos2d.nodes.CCDirector;
 import org.cocos2d.nodes.CCNode;
 import org.cocos2d.nodes.CCSprite;
+import org.cocos2d.opengl.GLResourceHelper.Resource;
 import org.cocos2d.types.CGSize;
 
 import android.graphics.Bitmap;
@@ -57,9 +58,9 @@ public class CCRenderTexture extends CCNode {
 		texture_ = new CCTexture2D();
 		texture_.setLoader(new GLResourceHelper.GLResourceLoader() {
 			@Override
-			public void load() {
+			public void load(Resource res) {
 				Bitmap bmp = Bitmap.createBitmap(finPow, finPow, Config.ARGB_8888);
-				texture_.initWithImage(bmp);
+				((CCTexture2D)res).initWithImage(bmp);
 			}
 		});
 

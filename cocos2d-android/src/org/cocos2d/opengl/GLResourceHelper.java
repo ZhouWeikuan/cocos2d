@@ -1,5 +1,9 @@
 package org.cocos2d.opengl;
 
+import java.util.Collections;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.WeakHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import javax.microedition.khronos.opengles.GL10;
@@ -34,6 +38,14 @@ public class GLResourceHelper {
     	void perform(GL10 gl);
     }
     
+    /**
+     * 
+     * GL resources should implement this
+     *
+     */
+    public interface Resource {
+    }
+    
 	/**
 	 * These objects are stored in reloadQueue,
 	 * they should be removed manually,
@@ -41,35 +53,39 @@ public class GLResourceHelper {
 	 * GLResourceLoader is called in finalize()
 	 */
 	public interface GLResourceLoader {
-		void load();
+		void load(Resource res);
 	}
 
 	private ConcurrentLinkedQueue<GLResorceTask> taskQueue;
-    private ConcurrentLinkedQueue<GLResourceLoader> reloadQueue;
+	private Map<Resource, GLResourceLoader> reloadMap;
+//    private ConcurrentLinkedQueue<GLResourceLoader> reloadQueue;
 
 	
 	public GLResourceHelper() {
 		taskQueue = new ConcurrentLinkedQueue<GLResorceTask>();
-		reloadQueue = new ConcurrentLinkedQueue<GLResourceLoader>();
+		reloadMap = Collections.synchronizedMap(new WeakHashMap<GLResourceHelper.Resource, GLResourceHelper.GLResourceLoader>());
+//		reloadQueue = new ConcurrentLinkedQueue<GLResourceLoader>();
 	}
 
-    public void addLoader(final GLResourceLoader loader, boolean addTask) {
+    public void addLoader(final Resource res, final GLResourceLoader loader, boolean addTask) {
     	if(addTask) {
 	    	taskQueue.add(new GLResorceTask() {
 				@Override
 				public void perform(GL10 gl) {
-					loader.load();
-					reloadQueue.add(loader);
+					loader.load(res);
+					reloadMap.put(res, loader);
+//					reloadQueue.add(loader);
 				}
 			});
     	} else {
-    		reloadQueue.add(loader);
+    		reloadMap.put(res, loader);
+//    		reloadQueue.add(loader);
     	}
     }
     
-    public void removeLoader(GLResourceLoader loader) {
-    	reloadQueue.remove(loader);
-	}
+//    public void removeLoader(GLResourceLoader loader) {
+//    	reloadQueue.remove(loader);
+//	}
 
     /**
      * This should be called only when recreating GL context
@@ -78,11 +94,16 @@ public class GLResourceHelper {
 		taskQueue.add(new GLResorceTask() {
 			@Override
 			public void perform(GL10 gl) {
-				if(reloadQueue.size() > 0) {
-					for(GLResourceLoader res : reloadQueue) {
-						res.load();
-					}
+				for(Entry<Resource, GLResourceLoader> entry : reloadMap.entrySet()) {
+					Resource res = entry.getKey();
+					if(res != null)
+						entry.getValue().load(res);
 				}
+//				if(reloadQueue.size() > 0) {
+//					for(GLResourceLoader res : reloadQueue) {
+//						res.load();
+//					}
+//				}
 			}
 		});
 	}

@@ -12,6 +12,7 @@ import org.cocos2d.nodes.CCDirector;
 import org.cocos2d.nodes.CCSpriteFrame;
 import org.cocos2d.opengl.CCTexture2D;
 import org.cocos2d.opengl.GLResourceHelper;
+import org.cocos2d.opengl.GLResourceHelper.Resource;
 import org.cocos2d.types.CGPoint;
 import org.cocos2d.types.CGRect;
 import org.cocos2d.types.ccBlendFunc;
@@ -31,7 +32,7 @@ import org.cocos2d.utils.BufferProvider;
   - It supports subrects
  @since v0.8
  */
-public class CCQuadParticleSystem extends CCParticleSystem {
+public class CCQuadParticleSystem extends CCParticleSystem implements Resource {
 	// ccV2F_C4F_T2F_Quad	quads;		// quads to be rendered
 
 	FloatBuffer         texCoords;
@@ -42,7 +43,7 @@ public class CCQuadParticleSystem extends CCParticleSystem {
 	int					quadsIDs[];	// VBO id
 	public static final int QuadSize = 3;
 	
-	private GLResourceHelper.GLResourceLoader  mLoader;
+//	private GLResourceHelper.GLResourceLoader  mLoader;
 
 	// overriding the init method
 	public CCQuadParticleSystem(int numberOfParticles) {
@@ -65,9 +66,9 @@ public class CCQuadParticleSystem extends CCParticleSystem {
 		initTexCoordsWithRect(CGRect.make(0, 0, 10, 10));
 		initIndices();
 
-		mLoader = new GLResourceHelper.GLResourceLoader() {
+		GLResourceHelper.GLResourceLoader mLoader = new GLResourceHelper.GLResourceLoader() {
 			@Override
-			public void load() {
+			public void load(Resource res) {
 				GL11 gl = (GL11)CCDirector.gl;
 				// create the VBO buffer
 				quadsIDs = new int[QuadSize];
@@ -90,15 +91,15 @@ public class CCQuadParticleSystem extends CCParticleSystem {
 				gl.glBindBuffer(GL11.GL_ARRAY_BUFFER, 0);
 			}
 		};
-		GLResourceHelper.sharedHelper().addLoader(mLoader, true);
+		GLResourceHelper.sharedHelper().addLoader(this, mLoader, true);
 	}
 
 	@Override
 	public void finalize() throws Throwable {
 
-    	if(mLoader != null) {
-    		GLResourceHelper.sharedHelper().removeLoader(mLoader);
-    	}
+//    	if(mLoader != null) {
+//    		GLResourceHelper.sharedHelper().removeLoader(mLoader);
+//    	}
     	
 		GLResourceHelper.sharedHelper().perform(new GLResourceHelper.GLResorceTask() {
 			

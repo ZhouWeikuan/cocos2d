@@ -51,6 +51,7 @@ import org.cocos2d.opengl.CCDrawingPrimitives;
 import org.cocos2d.opengl.CCGLSurfaceView;
 import org.cocos2d.opengl.CCTexture2D;
 import org.cocos2d.opengl.GLResourceHelper;
+import org.cocos2d.opengl.GLResourceHelper.Resource;
 import org.cocos2d.types.CCBezierConfig;
 import org.cocos2d.types.CGPoint;
 import org.cocos2d.types.CGRect;
@@ -214,12 +215,12 @@ public class ActionsTest extends Activity {
 			final Bitmap bmpCopy = bmp.copy(bmp.getConfig(), false);
 			bmp.recycle();
 			
-			final CCTexture2D tex = new CCTexture2D();
+			CCTexture2D tex = new CCTexture2D();
 			tex.setLoader(new GLResourceHelper.GLResourceLoader() {
 				@Override
-				public void load() {
+				public void load(Resource res) {
 					Bitmap bmpForInit = bmpCopy.copy(bmpCopy.getConfig(), false);
-					tex.initWithImage(bmpForInit);
+					((CCTexture2D)res).initWithImage(bmpForInit);
 				}
 			});
 			grossini = CCSprite.sprite(tex);

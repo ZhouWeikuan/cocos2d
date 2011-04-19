@@ -24,6 +24,7 @@ import javax.microedition.khronos.opengles.GL11ExtensionPack;
 
 import org.cocos2d.nodes.CCDirector;
 import org.cocos2d.nodes.CCLabel;
+import org.cocos2d.opengl.GLResourceHelper.Resource;
 import org.cocos2d.types.CCTexParams;
 import org.cocos2d.types.CGAffineTransform;
 import org.cocos2d.types.CGPoint;
@@ -46,7 +47,7 @@ import android.util.Log;
  * and (maxS, maxT) != (1.0, 1.0).
  * Be aware that the content of the generated textures will be upside-down!
 */
-public class CCTexture2D {
+public class CCTexture2D implements Resource {
     // private static final String LOG_TAG = CCTexture2D.class.getSimpleName();
 	
 	public static final int kMaxTextureSize = 1024;
@@ -152,9 +153,9 @@ public class CCTexture2D {
     
     @Override
     protected void finalize() throws Throwable {
-    	if(mLoader != null) {
-    		GLResourceHelper.sharedHelper().removeLoader(mLoader);
-    	}
+//    	if(mLoader != null) {
+//    		GLResourceHelper.sharedHelper().removeLoader(mLoader);
+//    	}
     	if (_name != 0) {
     		GLResourceHelper.sharedHelper().perform(new GLResourceHelper.GLResorceTask() {
     			
@@ -177,17 +178,17 @@ public class CCTexture2D {
     
     public void checkName() {
     	if (mLoader != null && _name == 0)
-    		mLoader.load();
+    		mLoader.load(this);
     }
     
     public void setLoader(GLResourceHelper.GLResourceLoader loader) {
     	if(loader != null) {
-    		loader.load();
+    		loader.load(this);
     		
-        	if(mLoader != null) {
-        		GLResourceHelper.sharedHelper().removeLoader(mLoader);
-        	}
-        	GLResourceHelper.sharedHelper().addLoader(loader, false);
+//        	if(mLoader != null) {
+//        		GLResourceHelper.sharedHelper().removeLoader(mLoader);
+//        	}
+        	GLResourceHelper.sharedHelper().addLoader(this, loader, false);
     	}
     	mLoader = loader;
     }
