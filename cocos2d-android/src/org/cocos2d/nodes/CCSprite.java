@@ -112,9 +112,11 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
 	boolean		opacityModifyRGB_;
 
     public void setOpacityModifyRGB(boolean modify) {
-        ccColor3B oldColor	= this.color_;
-        opacityModifyRGB_	= modify;
-        setColor(oldColor);
+        if (opacityModifyRGB_ != modify) {
+            ccColor3B oldColor	= this.color_;
+            opacityModifyRGB_	= modify;
+            setColor(oldColor);
+        }
     }
 
     public ccColor3B getColor() {
