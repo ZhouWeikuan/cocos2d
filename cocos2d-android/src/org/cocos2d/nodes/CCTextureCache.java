@@ -72,6 +72,39 @@ public class CCTextureCache {
         return tex;
     }
     
+    /** Returns a Texture2D object given an file name
+     * If the file image was not previously loaded, it will create a new CCTexture2D
+     *  object and it will return it. It will use the filename as a key.
+     * Otherwise it will return a reference of a previosly loaded image.
+     * Supported image extensions: .png, .bmp, .tiff, .jpeg, .pvr, .gif
+     * 
+     * BE AWARE OF the fact that if you do not specify a start path
+     * then it will return the first found file of the given name.
+     * 
+     * Search the entire assets folder for "test.png"
+     * addImage("", "test.png") || addImage(null, "test.png")
+     * 
+     * Search the folder "Image" in assets for file "test.png"
+     * addImage("Image/", "test.png")
+     */
+    public CCTexture2D addImage(String pathStart, String fileName) {
+        assert fileName != null : "TextureMgr: fileName must not be null";
+        
+        String path = findFilePathInAssets(fileName, pathStart);
+        assert path != null : "TextureMgr: filePath could not be found from fileName or pathStart";
+        	
+        SoftReference<CCTexture2D> texSR = textures.get(path);
+        CCTexture2D tex = null;
+        if(texSR != null)
+        	tex = texSR.get();
+
+        if (tex == null) {
+            tex = createTextureFromFilePath(path);
+            textures.put(path, new SoftReference<CCTexture2D>(tex));
+        }
+        return tex;
+    }
+    
     /**
      * Returns a Texture2D object given an file image from external path.
      */
@@ -218,6 +251,40 @@ public class CCTextureCache {
         
         return tex;
     }
+    
+    private static String findFilePathInAssets(String fileName, String startPath)
+	{
+    	if (startPath == null)
+    		startPath = "";
+		try 
+		{
+			String[] list = CCDirector.sharedDirector().getActivity().getAssets().list(startPath);
+			if (list == null || list.length <= 0)
+				return null;
+			
+			for (String asset : list)
+			{
+				String filePath = (startPath.equals("") ? asset : startPath + "/" + asset);
+				
+				if (fileName.equals(asset))
+				{
+					return filePath;
+				}
+				else
+				{
+					String finalPath = findFilePathInAssets(fileName, filePath);
+					if (finalPath != null)
+						return finalPath;
+				}
+			}
+		}
+		catch (IOException e) 
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
     
     private static CCTexture2D createTextureFromFilePathExternal(final String path) {
         

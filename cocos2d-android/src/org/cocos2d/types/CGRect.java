@@ -11,6 +11,15 @@ public class CGRect {
     public CGRect(final CGPoint origin, final CGSize size) {
         this(origin.x, origin.y, size.width, size.height);
     }
+    
+    private static final CGRect ZERO_RECT = new CGRect(0, 0, 0, 0);
+    public static CGRect getZero() {
+    	return ZERO_RECT;
+    }
+    
+    public static CGRect zero() {
+        return new CGRect(0, 0, 0, 0);
+    }
 
     public static CGRect make(final CGPoint origin, final CGSize size) {
         return new CGRect(origin.x, origin.y, size.width, size.height);
