@@ -26,7 +26,7 @@ public class CCActionManager implements UpdateCallback {
     private static class HashElement {
         final ArrayList<CCAction> actions;
         CCNode target;
-        int actionIndex;
+        int actionIndex = -1;
 //        CCAction currentAction;
 //        boolean currentActionSalvaged;
         boolean paused;
@@ -89,6 +89,7 @@ public class CCActionManager implements UpdateCallback {
     	synchronized (element.actions) {
     		element.actions.clear();
     	}
+    	element.actionIndex = -1;
     	
 		HashElement removedEl = targets.remove(element.target);//put(element.target, null);
     	
@@ -303,7 +304,7 @@ public class CCActionManager implements UpdateCallback {
 			        	currentTarget.actionIndex++) {
 			            
 			        	CCAction currentAction = currentTarget.actions.get(currentTarget.actionIndex);
-			
+			        	
 			            currentAction.step(dt);
 			            if (currentAction.isDone()) {
 			                currentAction.stop();
@@ -317,6 +318,7 @@ public class CCActionManager implements UpdateCallback {
 			            
 //			            currentTarget.currentAction = null;
 			        }
+			        currentTarget.actionIndex = -1;
 		    	}
 		    }
 		
