@@ -6,6 +6,7 @@ import org.cocos2d.types.CGSize;
 
 import android.app.Activity;
 import android.content.Context;
+import android.opengl.GLSurfaceView;
 import android.view.MotionEvent;
 
 public class CCGLSurfaceView extends GLSurfaceView {

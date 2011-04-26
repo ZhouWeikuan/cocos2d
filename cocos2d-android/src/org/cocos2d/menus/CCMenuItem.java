@@ -34,14 +34,14 @@ public class CCMenuItem extends CCNode {
 
 
     /** Creates a CCMenuItem with a target/selector */
-    public CCMenuItem item(Object target, String selector) {
+    public static CCMenuItem item(Object target, String selector) {
         return new CCMenuItem(target, selector);
     }
 
     /**
      * Initializes a menu item with a target/selector
      */
-    protected CCMenuItem(Object rec, String cb) {
+    public CCMenuItem(Object rec, String cb) {
         targetCallback = rec;
         selector = cb;
 

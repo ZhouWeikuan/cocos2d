@@ -31,7 +31,6 @@ import org.cocos2d.layers.CCScene;
 import org.cocos2d.nodes.CCLabel.TextAlignment;
 import org.cocos2d.opengl.CCTexture2D;
 import org.cocos2d.opengl.GLResourceHelper;
-import org.cocos2d.opengl.GLSurfaceView;
 import org.cocos2d.transitions.CCTransitionScene;
 import org.cocos2d.types.CGPoint;
 import org.cocos2d.types.CGRect;
@@ -50,6 +49,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.opengl.GLSurfaceView;
 
 /**Class that creates and handle the main Window and manages how
 and when to execute the Scenes.
@@ -657,10 +657,14 @@ public class CCDirector implements GLSurfaceView.Renderer {
 //		if (_sharedDirector == null)
 //		return;
 		
+    	GLResourceHelper.sharedHelper().setInUpdate(true);
+    	
 		CCTouchDispatcher.sharedDispatcher().update();
 		//added by Ishaq 
 		CCKeyDispatcher.sharedDispatcher().update();
 		drawCCScene(gl);
+		
+		GLResourceHelper.sharedHelper().setInUpdate(false);
 		
 		waitForFPS();
 //        }
@@ -678,7 +682,6 @@ public class CCDirector implements GLSurfaceView.Renderer {
 		}
 	}
 
-    
     /** Draw the CCScene.
       This method is called every frame. Don't call it manually.
       */

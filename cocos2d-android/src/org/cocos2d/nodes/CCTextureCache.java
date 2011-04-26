@@ -13,6 +13,7 @@ import org.cocos2d.opengl.GLResourceHelper.Resource;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 
 
 /** Singleton that handles the loading of textures
@@ -206,8 +207,13 @@ public class CCTextureCache {
 			public void load(Resource res) {
 	            try {
 		        	InputStream is = CCDirector.sharedDirector().getActivity().getAssets().open(path);
-		            Bitmap bmp = BitmapFactory.decodeStream(is);
+		        	
+		        	BitmapFactory.Options opts = new BitmapFactory.Options();
+		        	opts.inPreferredConfig = ((CCTexture2D)res).pixelFormat();
+		            Bitmap bmp = BitmapFactory.decodeStream(is, null, opts);
+//		            Bitmap bmp = BitmapFactory.decodeStream(is);
 					is.close();
+					Log.v("CCTextureCache", "Bitmap: " + path + " for texture " + (CCTexture2D)res + " loaded.");
 					((CCTexture2D)res).initWithImage(bmp);
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
@@ -228,7 +234,11 @@ public class CCTextureCache {
 			public void load(Resource res) {
 	            try {
 		        	InputStream is = new FileInputStream(path);
-		            Bitmap bmp = BitmapFactory.decodeStream(is);
+		        	
+		        	BitmapFactory.Options opts = new BitmapFactory.Options();
+		        	opts.inPreferredConfig = ((CCTexture2D)res).pixelFormat();
+		            Bitmap bmp = BitmapFactory.decodeStream(is, null, opts);
+//		            Bitmap bmp = BitmapFactory.decodeStream(is);
 					is.close();
 					((CCTexture2D)res).initWithImage(bmp);
 				} catch (IOException e) {
