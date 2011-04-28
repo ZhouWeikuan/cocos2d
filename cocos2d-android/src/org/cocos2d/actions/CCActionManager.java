@@ -94,6 +94,7 @@ public class CCActionManager implements UpdateCallback {
 		HashElement removedEl = targets.remove(element.target);//put(element.target, null);
     	
     	if(removedEl != null) {
+			removedEl.target = null;
 			pool.free( removedEl );
     	}
     }
