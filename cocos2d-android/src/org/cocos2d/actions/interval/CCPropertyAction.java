@@ -1,5 +1,6 @@
 package org.cocos2d.actions.interval;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import org.cocos2d.nodes.CCNode;
@@ -67,7 +68,13 @@ public class CCPropertyAction extends CCIntervalAction {
         	setMethod_.invoke(target, new Object[] {
         			to_  - delta_ * (1 - dt)
         	});
-		} catch (Exception e) {
+    	} catch (NoSuchMethodException e) {
+    		e.printStackTrace();
+    	} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
 			e.printStackTrace();
 		}
     }

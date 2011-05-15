@@ -26,8 +26,9 @@ public class CCCallFuncND extends CCCallFuncN {
             	Object.class, Object.class,
             };
             invocation = cls.getMethod(selector, partypes);
-        } catch (Exception e) {
-        }
+    	} catch (NoSuchMethodException e) {
+    		e.printStackTrace();
+    	}
     }
 
     /**

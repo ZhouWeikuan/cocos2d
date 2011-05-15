@@ -32,8 +32,9 @@ public class CCCallFunc extends CCInstantAction {
         try {
             Class<?> cls = targetCallback.getClass();
             invocation = cls.getMethod(selector);
-        } catch (Exception e) {
-        }
+    	} catch (NoSuchMethodException e) {
+    		e.printStackTrace();
+    	}
     }
 
     public CCCallFunc copy() {

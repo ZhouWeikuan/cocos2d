@@ -20,8 +20,9 @@ public class CCCallFuncN extends CCCallFunc {
             Class<?> cls = targetCallback.getClass();
             Class<?> partypes[] = new Class[] { Object.class };
             invocation = cls.getMethod(selector, partypes);
-        } catch (NoSuchMethodException e) {
-        }
+    	} catch (NoSuchMethodException e) {
+    		e.printStackTrace();
+    	}
     }
 
     /**
