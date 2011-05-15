@@ -274,21 +274,6 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
         return new CCSprite(filepath, rect);
     }
     
-    /** Creates an sprite with an image filename.
-    The rect used will be the size of the image.
-    The offset will be (0,0).
-    */
-    public static CCSprite sprite(String filepathstart, String filename) {
-        return new CCSprite(filepathstart, filename);
-    }
-
-    /** Creates an sprite with an image filename and a rect.
-      The offset will be (0,0).
-      */
-    public static CCSprite sprite(String filepathstart, String filename, CGRect rect) {
-        return new CCSprite(filepathstart, filename, rect);
-    }	
-
     /** Creates an sprite with a CGImageRef.
      * BE AWARE OF the fact that copy of image is stored in memory,
      * use assets method if you can.
@@ -387,24 +372,6 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
 		ccMacros.CCLOGERROR("CCSprite", "Unable to load texture from file: " + filepath);
         }
     }
-    
-    /** Initializes an sprite with an image filename
-    found by searching through the specified filepath.
-    The rect used will be the size of the image.
-    The offset will be (0,0).
-    */
-	  public CCSprite(String filepathstart, String filename) {
-	      assert filename!=null:"Invalid filename for sprite";
-	
-	      CCTexture2D texture = CCTextureCache.sharedTextureCache().addImage(filepathstart, filename);
-	      if( texture != null) {
-	          CGRect rect = CGRect.make(0, 0, 0, 0);
-	          rect.size = texture.getContentSize();
-	          init(texture, rect);
-	      } else {
-			ccMacros.CCLOGERROR("CCSprite", "Unable to load texture from file: " + filename);
-	      }
-	  }
 
     public CCSprite() {
     	init();
@@ -417,19 +384,6 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
         assert filepath!=null:"Invalid filename for sprite";
 
         CCTexture2D texture = CCTextureCache.sharedTextureCache().addImage(filepath);
-        if( texture != null) {
-            init(texture, rect);
-        }
-    }
-    
-    /** Initializes an sprite with an image filename found by 
-    searching through the specified filepath, and a rect.
-    The offset will be (0,0).
-    */
-    public CCSprite(String filepathstart, String filename, CGRect rect) {
-        assert filename!=null:"Invalid filename for sprite";
-
-        CCTexture2D texture = CCTextureCache.sharedTextureCache().addImage(filepathstart, filename);
         if( texture != null) {
             init(texture, rect);
         }
