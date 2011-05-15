@@ -340,19 +340,22 @@ public class CCTMXLayer extends CCSpriteSheet {
 		return null;
 	}
 
-	public void removeChild(CCSprite sprite, boolean cleanup) {
+	public void removeChild(CCNode node, boolean cleanup) {
 		// allows removing nil objects
-		if( sprite == null)
+		if( node == null)
 			return;
 
-		assert(children_.contains(sprite)):"Tile does not belong to TMXLayer";
+		assert(children_.contains(node)):"Tile does not belong to TMXLayer";
 
-		int atlasIndex = sprite.atlasIndex;
-		int zz = atlasIndexArray_.get(atlasIndex);
-		tiles.put(zz, 0);
-		atlasIndexArray_.remove(atlasIndex);
+		if (node instanceof CCSprite) {
+			CCSprite sprite = (CCSprite) node;
+			int atlasIndex = sprite.atlasIndex;
+			int zz = atlasIndexArray_.get(atlasIndex);
+			tiles.put(zz, 0);
+			atlasIndexArray_.remove(atlasIndex);
+		}
 
-		super.removeChild(sprite, true);
+		super.removeChild(node, true);
 	}
 
 

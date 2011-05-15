@@ -182,7 +182,7 @@ public class CCSpriteSheet extends CCNode implements CCTextureProtocol {
     }
 
     // override reorderChild
-    public void reorderChild(CCSprite child, int z) {
+    public void reorderChild(CCNode child, int z) {
         // NSAssert( child != nil, @"Child must be non-nil");
         // NSAssert( [children_ containsObject:child], @"Child doesn't belong to Sprite" );
 

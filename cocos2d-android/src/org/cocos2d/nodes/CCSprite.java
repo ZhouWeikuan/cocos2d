@@ -869,7 +869,7 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
         super.setRelativeAnchorPoint(relative);
     }
 
-    public void reorderChild(CCSprite child, int z) {
+    public void reorderChild(CCNode child, int z) {
         // assert child != null: "Child must be non-nil";
         // assert children_.has(child): "Child doesn't belong to Sprite";
 
@@ -900,11 +900,13 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
         return this;
     }
 
-    public void removeChild(CCSprite sprite, boolean doCleanup) {
-        if( usesSpriteSheet_ )
+    public void removeChild(CCNode node, boolean doCleanup) {
+        if( usesSpriteSheet_ ) {
+        	CCSprite sprite = (CCSprite) node;
             spriteSheet_.removeSpriteFromAtlas(sprite);
+        }
 
-        super.removeChild(sprite, doCleanup);
+        super.removeChild(node, doCleanup);
 
         hasChildren_ = (children_.size() > 0);
     }
