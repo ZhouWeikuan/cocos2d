@@ -239,8 +239,13 @@ public class CCTextureCache {
 			public void load(Resource res) {
 	            try {
 		        	InputStream is = CCDirector.sharedDirector().getActivity().getAssets().open(path);
-		            Bitmap bmp = BitmapFactory.decodeStream(is);
+		        	
+		        	BitmapFactory.Options opts = new BitmapFactory.Options();
+		        	opts.inPreferredConfig = ((CCTexture2D)res).pixelFormat();
+		        	Bitmap bmp = BitmapFactory.decodeStream(is, null, opts);
+		            
 					is.close();
+
 					((CCTexture2D)res).initWithImage(bmp);
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
@@ -295,7 +300,11 @@ public class CCTextureCache {
 			public void load(Resource res) {
 	            try {
 		        	InputStream is = new FileInputStream(path);
-		            Bitmap bmp = BitmapFactory.decodeStream(is);
+		        	
+		        	BitmapFactory.Options opts = new BitmapFactory.Options();
+		        	opts.inPreferredConfig = ((CCTexture2D)res).pixelFormat();
+		            Bitmap bmp = BitmapFactory.decodeStream(is, null, opts);
+//		            Bitmap bmp = BitmapFactory.decodeStream(is);
 					is.close();
 					((CCTexture2D)res).initWithImage(bmp);
 				} catch (IOException e) {

@@ -114,7 +114,8 @@ public class GLResourceHelper {
 	 * @param res GL task
 	 */
 	public void perform(GLResorceTask res) {
-		if(inUpdate) {
+//		long curThread = Thread.currentThread().getId();
+		if(inUpdate) {  //curThread == glThreadId) { //
 			res.perform(CCDirector.gl);
 		} else {
 			taskQueue.add(res);
@@ -130,13 +131,19 @@ public class GLResourceHelper {
 	 */
 	public void update(GL10 gl) {
 		if(taskQueue.size() > 0) {
-			inUpdate = true;
+//			inUpdate = true;
 			
 			GLResorceTask res;
 			while((res = taskQueue.poll()) != null) {
 				res.perform(gl);
 			}
-			inUpdate = false;
+//			inUpdate = false;
 		}
+	}
+
+//	private long glThreadId = -1;
+	
+	public void setInUpdate(boolean inUpd) {
+		inUpdate = inUpd;
 	}
 }

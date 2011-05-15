@@ -61,6 +61,7 @@ public class CCLabel extends CCSprite implements CCLabelProtocol {
     public void setString(CharSequence seq) {   	
     	final String string = seq.toString();
     	CCTexture2D texture = new CCTexture2D();
+    	setTexture(texture);
     	texture.setLoader(new GLResourceHelper.GLResourceLoader() {
     		@Override
     		public void load(GLResourceHelper.Resource res) {
@@ -70,7 +71,7 @@ public class CCLabel extends CCSprite implements CCLabelProtocol {
     	    		((CCTexture2D)res).initWithText(string, _dimensions, _alignment, _fontName, _fontSize);
     	    	}
     	        
-    	        setTexture(((CCTexture2D)res));
+//    	        setTexture(((CCTexture2D)res));
 
     		    CGSize size = texture_.getContentSize();
     		    setTextureRect(CGRect.make(0, 0, size.width, size.height));

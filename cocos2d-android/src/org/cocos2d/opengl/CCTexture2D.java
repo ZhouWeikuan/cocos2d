@@ -14,6 +14,7 @@ import static javax.microedition.khronos.opengles.GL10.GL_TEXTURE_WRAP_T;
 import static javax.microedition.khronos.opengles.GL10.GL_TRIANGLE_STRIP;
 import static javax.microedition.khronos.opengles.GL10.GL_VERTEX_ARRAY;
 
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
@@ -26,7 +27,6 @@ import org.cocos2d.nodes.CCDirector;
 import org.cocos2d.nodes.CCLabel;
 import org.cocos2d.opengl.GLResourceHelper.Resource;
 import org.cocos2d.types.CCTexParams;
-import org.cocos2d.types.CGAffineTransform;
 import org.cocos2d.types.CGPoint;
 import org.cocos2d.types.CGRect;
 import org.cocos2d.types.CGSize;
@@ -37,7 +37,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.opengl.GLUtils;
-import android.util.Log;
 
 /** CCTexture2D class.
  * This class allows to easily create OpenGL 2D textures from images, text or raw data.
@@ -51,6 +50,11 @@ public class CCTexture2D implements Resource {
     // private static final String LOG_TAG = CCTexture2D.class.getSimpleName();
 	
 	public static final int kMaxTextureSize = 1024;
+
+	/** pixel format of the texture */
+	public Bitmap.Config pixelFormat() {
+		return _format;
+	}
 
     /**
      * width in pixels
@@ -127,7 +131,8 @@ public class CCTexture2D implements Resource {
 
     /** hight in pixels */
     private int mHeight;
-    // private Bitmap.Config _format;
+    
+    private Bitmap.Config _format;
 
     /** texture max S */
     private float _maxS;
@@ -174,6 +179,7 @@ public class CCTexture2D implements Resource {
 
     public CCTexture2D() {
         _texParams = new CCTexParams(GL_LINEAR, GL_LINEAR, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE);
+        _format = defaultAlphaPixelFormat_;
     }
     
     public void checkName() {
@@ -201,29 +207,44 @@ public class CCTexture2D implements Resource {
     public void initWithImage(Bitmap image) {
 
         CGSize imageSize = CGSize.make(image.getWidth(), image.getHeight());
-        CGAffineTransform transform = CGAffineTransform.identity();
+        CGSize realSize = CGSize.make(image.getWidth(), image.getHeight());
+//        CGAffineTransform transform = CGAffineTransform.identity();
 
         int width = toPow2((int) imageSize.width);
         int height = toPow2((int) imageSize.height);
 
+        boolean needDownScale = false;
+        float factor = 1;
         while (width > kMaxTextureSize || height > kMaxTextureSize) {
             width /= 2;
             height /= 2;
-            transform = transform.getTransformScale(0.5f, 0.5f);
+//            transform = transform.getTransformScale(0.5f, 0.5f);
             imageSize.width *= 0.5f;
             imageSize.height *= 0.5f;
+            
+            factor *= 2;
+            
+            needDownScale = true;
+        }
+        
+        if(needDownScale) {
+        	Bitmap bitmap = Bitmap.createScaledBitmap(image, (int)imageSize.width, (int)imageSize.height, false);
+        	image.recycle();
+        	image = bitmap;
         }
 
         if (imageSize.width != width || imageSize.height != height) {
             Bitmap bitmap = Bitmap.createBitmap(width, height,
-                    image.hasAlpha() ? Bitmap.Config.ARGB_8888 : Bitmap.Config.RGB_565);
+                    image.hasAlpha() ? image.getConfig() : Bitmap.Config.RGB_565); //Bitmap.Config.ARGB_8888
             Canvas canvas = new Canvas(bitmap);
             canvas.drawBitmap(image, 0, 0, null);
             image.recycle();
             image = bitmap;
         }
 
-        init(image, imageSize, imageSize);
+        init(image, realSize, realSize);//imageSize, imageSize);
+        mWidth = (int) (image.getWidth() * factor);
+        mHeight = (int) (image.getHeight() * factor);
     }
 
     public void initWithImage(Bitmap image, CGSize imageSize) {
@@ -278,8 +299,7 @@ public class CCTexture2D implements Resource {
 		if(_name != 0) {
 			_name = 0;
 			loadTexture(CCDirector.gl);
-		}
-		else {
+		} else {
     		GLResourceHelper.sharedHelper().perform(new GLResourceHelper.GLResorceTask() {
     			
 				@Override
@@ -303,11 +323,20 @@ public class CCTexture2D implements Resource {
     private static CGSize calculateTextSize(String text, String fontname, float fontSize) {
 //        Typeface typeface = Typeface.create(fontname, Typeface.NORMAL);
         Typeface typeface;
-    	try{
-    		typeface = Typeface.createFromAsset(CCDirector.theApp.getAssets(), fontname);
-    	} catch (Exception e) {
-    		typeface = Typeface.create(fontname, Typeface.NORMAL);
-		}
+        try {
+        	CCDirector.theApp.getAssets().open(fontname);
+        	typeface = Typeface.createFromAsset(CCDirector.theApp.getAssets(), fontname);
+        } catch(IOException e) {
+        	typeface = Typeface.create(fontname, Typeface.NORMAL);
+        }
+//        
+//        typeface = Typeface.
+//    	try{
+//    		typeface = Typeface.createFromAsset(CCDirector.theApp.getAssets(), fontname);
+//    	} catch (Exception e) {
+//    		typeface = Typeface.create(fontname, Typeface.NORMAL);
+//		}
+//    	typeface = Typeface.DEFAULT;
 
         Paint textPaint = new Paint();
         textPaint.setTypeface(typeface);
@@ -328,9 +357,9 @@ public class CCTexture2D implements Resource {
                 i *= 2;
             v = i;
         }
-        if (v > CCTexture2D.kMaxTextureSize) {
-        	v = CCTexture2D.kMaxTextureSize;
-        }
+//        if (v > CCTexture2D.kMaxTextureSize) {
+//        	v = CCTexture2D.kMaxTextureSize;
+//        }
         return v;
     }
 
@@ -338,11 +367,18 @@ public class CCTexture2D implements Resource {
     public void initWithText(String text, CGSize dimensions, CCLabel.TextAlignment alignment, String fontname, float fontSize) {
     	//Typeface.create(fontname, Typeface.NORMAL);
     	Typeface typeface;
-    	try{
-    		typeface = Typeface.createFromAsset(CCDirector.theApp.getAssets(), fontname);
-    	} catch (Exception e) {
-    		typeface = Typeface.create(fontname, Typeface.NORMAL);
-		}
+    	try {
+        	CCDirector.theApp.getAssets().open(fontname);
+        	typeface = Typeface.createFromAsset(CCDirector.theApp.getAssets(), fontname);
+        } catch(IOException e) {
+        	typeface = Typeface.create(fontname, Typeface.NORMAL);
+        }
+//    	try{
+//    		typeface = Typeface.createFromAsset(CCDirector.theApp.getAssets(), fontname);
+//    	} catch (Exception e) {
+//    		typeface = Typeface.create(fontname, Typeface.NORMAL);
+//		}
+//    	typeface = Typeface.DEFAULT;
 
         Paint textPaint = new Paint();
         textPaint.setTypeface(typeface);
@@ -399,9 +435,9 @@ public class CCTexture2D implements Resource {
 
             // this shouldn't be so never, but if so, needs to be found where
             // texture reloading is in progress 
-        	if(mBitmap ==null)
+        	if(mBitmap == null)
         		return;
-        	
+
             GLUtils.texImage2D(GL_TEXTURE_2D, 0, mBitmap, 0);
             mBitmap.recycle();
             mBitmap = null;
@@ -594,6 +630,35 @@ public class CCTexture2D implements Resource {
 			}
 		});
     }
+    
+    static Bitmap.Config defaultAlphaPixelFormat_ = Bitmap.Config.ARGB_8888;
+    
+    /** sets the default pixel format for UIImages that contains alpha channel.
+    If the UIImage contains alpha channel, then the options are:
+   	- generate 32-bit textures: kCCTexture2DPixelFormat_RGBA8888 (default one)
+   	- generate 16-bit textures: kCCTexture2DPixelFormat_RGBA4444
+   	- generate 16-bit textures: kCCTexture2DPixelFormat_RGB5A1
+   	- generate 16-bit textures: kCCTexture2DPixelFormat_RGB565
+   	- generate 8-bit textures: kCCTexture2DPixelFormat_A8 (only use it if you use just 1 color)
+
+    How does it work ?
+      - If the image is an RGBA (with Alpha) then the default pixel format will be used (it can be a 8-bit, 16-bit or 32-bit texture)
+      - If the image is an RGB (without Alpha) then an RGB565 texture will be used (16-bit texture)
+    
+    This parameter is not valid for PVR images.
+    
+    @since v0.8
+    */
+   public static void setDefaultAlphaPixelFormat(Bitmap.Config format) {
+	   defaultAlphaPixelFormat_ = format;
+   }
+
+   /** returns the alpha pixel format
+    @since v0.8
+    */
+   public static Bitmap.Config defaultAlphaPixelFormat() {
+	   return defaultAlphaPixelFormat_;
+   }
     
 }
 
