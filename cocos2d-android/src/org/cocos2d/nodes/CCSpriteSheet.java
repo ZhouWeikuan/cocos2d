@@ -213,7 +213,7 @@ public class CCSpriteSheet extends CCNode implements CCTextureProtocol {
     /** removes a child given a certain index. It will also cleanup the running actions depending on the cleanup parameter.
       @warning Removing a child from a CCSpriteSheet is very slow
       */
-    public void removeChild(int index, boolean doCleanup) {
+    public void removeChildAtIndex(int index, boolean doCleanup) {
     	CCSprite sprite = (CCSprite)children_.get(index);
         removeChild(sprite, doCleanup);
     }

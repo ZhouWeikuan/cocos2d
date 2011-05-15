@@ -564,10 +564,10 @@ public class CCNode {
       It will also cleanup all running actions depending on the cleanup parameter
       @since v0.7.1
     */
-    public void removeChild(int tag, boolean cleanup) {
+    public void removeChildByTag(int tag, boolean cleanup) {
 	    assert tag != kCCNodeTagInvalid: "Invalid tag";
 
-        CCNode child = getChild(tag);
+        CCNode child = getChildByTag(tag);
         if (child == null)
             Log.w(LOG_TAG, "removeChild: child not found");
         else
@@ -601,7 +601,7 @@ public class CCNode {
       @return returns a CCNode object
       @since v0.7.1
     */
-    public CCNode getChild(int tag) {
+    public CCNode getChildByTag(int tag) {
         assert tag != kCCNodeTagInvalid : "Invalid tag_";
 
         if (children_ != null)

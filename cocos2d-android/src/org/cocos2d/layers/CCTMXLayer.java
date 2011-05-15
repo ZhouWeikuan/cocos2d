@@ -160,7 +160,7 @@ public class CCTMXLayer extends CCSpriteSheet {
 		// if GID == 0, then no tile is present
 		if (gid != 0) {
 			int z = (int) (pos.x + pos.y * layerSize.width);
-			tile = (CCSprite)getChild(z);
+			tile = (CCSprite)getChildByTag(z);
 
 			// tile not created yet. create it
 			if (tile == null) {
@@ -216,7 +216,7 @@ public class CCTMXLayer extends CCSpriteSheet {
 			// modifying an existing tile with a non-empty tile
 			else {
 				int z = (int) (pos.x + pos.y * layerSize.width);
-				CCSprite sprite = (CCSprite) getChild(z);
+				CCSprite sprite = (CCSprite) getChildByTag(z);
 				if (sprite != null) {
 					CGRect rect = tileset.rectForGID(gid);
 					sprite.setTextureRect(rect);
@@ -247,7 +247,7 @@ public class CCTMXLayer extends CCSpriteSheet {
 			atlasIndexArray_.remove(atlasIndex);
 
 			// remove it from sprites and/or texture atlas
-			CCSprite sprite = (CCSprite) getChild(z);
+			CCSprite sprite = (CCSprite) getChildByTag(z);
 			if (sprite!=null)
 				super.removeChild(sprite, true);
 			else {

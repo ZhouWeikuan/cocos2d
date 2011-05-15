@@ -262,7 +262,7 @@ public class EffectsTest extends Activity {
 		}
 
 		public void checkAnim(float t) {
-			CCNode s2 = getChild(kTagBackground);
+			CCNode s2 = getChildByTag(kTagBackground);
 			if ( s2.numberOfRunningActions() == 0 && s2.getGrid() != null )
 				s2.setGrid(null);
 		}
