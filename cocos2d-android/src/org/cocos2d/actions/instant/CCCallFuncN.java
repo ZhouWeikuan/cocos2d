@@ -7,22 +7,15 @@ package org.cocos2d.actions.instant;
 public class CCCallFuncN extends CCCallFunc {
 
     public static CCCallFuncN action(Object t, String s) {
-        return new CCCallFuncN(t, s);
+        return new CCCallFuncN(t, s, new Class[] { Object.class });
     }
 
     /**
      * creates the action with the callback
+     * @param classes 
      */
-    protected CCCallFuncN(Object t, String s) {
-        super(t, s);
-
-        try {
-            Class<?> cls = targetCallback.getClass();
-            Class<?> partypes[] = new Class[] { Object.class };
-            invocation = cls.getMethod(selector, partypes);
-    	} catch (NoSuchMethodException e) {
-    		e.printStackTrace();
-    	}
+    protected CCCallFuncN(Object t, String s, Class<?>[] p) {
+        super(t, s, p);
     }
 
     /**
