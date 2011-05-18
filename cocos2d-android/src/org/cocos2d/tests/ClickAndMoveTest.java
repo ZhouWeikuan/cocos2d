@@ -138,7 +138,7 @@ public class ClickAndMoveTest extends Activity {
             CGPoint convertedLocation = CCDirector.sharedDirector()
             	.convertToGL(CGPoint.make(event.getX(), event.getY()));
 
-            CCNode s = getChild(kTagSprite);
+            CCNode s = getChildByTag(kTagSprite);
             s.stopAllActions();
             s.runAction(CCMoveTo.action(1.0f, convertedLocation));
            

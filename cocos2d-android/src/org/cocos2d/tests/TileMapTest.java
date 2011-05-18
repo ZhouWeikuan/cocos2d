@@ -241,7 +241,7 @@ public class TileMapTest extends Activity {
 
             CGPoint diff = CGPoint.ccpSub(touchLocation, prevLocation);
 
-            CCNode node = getChild(kTagTileMap);
+            CCNode node = getChildByTag(kTagTileMap);
             CGPoint currentPos = node.getPosition();
             node.setPosition(CGPoint.ccpAdd(currentPos, diff));
             return true;
@@ -338,7 +338,7 @@ public class TileMapTest extends Activity {
             //   The only limitation is that you cannot change an empty, or assign an empty tile to a tile
             //   The value 0 not rendered so don't assign or change a tile with value 0
 
-            CCTileMapAtlas tilemap = (CCTileMapAtlas)getChild(kTagTileMap);
+            CCTileMapAtlas tilemap = (CCTileMapAtlas)getChildByTag(kTagTileMap);
 
             //
             // For example you can iterate over all the tiles
@@ -501,7 +501,7 @@ public class TileMapTest extends Activity {
         public void removeSprite(float dt) {
             unschedule("removeSprite");
 
-            CCTMXTiledMap map = (CCTMXTiledMap) getChild(kTagTileMap);
+            CCTMXTiledMap map = (CCTMXTiledMap) getChildByTag(kTagTileMap);
             CCTMXLayer layer = map.layerNamed("Layer 0");
             CGSize s = layer.layerSize;
 
@@ -583,8 +583,8 @@ public class TileMapTest extends Activity {
         }
 
         public void updateCol(float dt) {
-            CCNode map = getChild(kTagTileMap);
-            CCTMXLayer layer = (CCTMXLayer) map.getChild(0);
+            CCNode map = getChildByTag(kTagTileMap);
+            CCTMXLayer layer = (CCTMXLayer) map.getChildByTag(0);
 
             ccMacros.CCLOG(LOG_TAG, "++++atlas quantity: " + layer.getTextureAtlas().getTotalQuads());
             ccMacros.CCLOG(LOG_TAG, "++++children: " + layer.getChildren().size());
@@ -597,8 +597,8 @@ public class TileMapTest extends Activity {
         }
 
         public void repaintWithGID(float dt) {
-            CCNode map = getChild(kTagTileMap);
-            CCTMXLayer layer = (CCTMXLayer) map.getChild(0);
+            CCNode map = getChildByTag(kTagTileMap);
+            CCTMXLayer layer = (CCTMXLayer) map.getChildByTag(0);
 
             CGSize s = layer.layerSize;
             for( int x=0; x<s.width; x++) {
@@ -611,8 +611,8 @@ public class TileMapTest extends Activity {
         public void removeTiles(float dt) {
             unschedule("removeTiles");
 
-            CCNode map = getChild(kTagTileMap);
-            CCTMXLayer layer = (CCTMXLayer) map.getChild(0);
+            CCNode map = getChildByTag(kTagTileMap);
+            CCTMXLayer layer = (CCTMXLayer) map.getChildByTag(0);
             CGSize s = layer.layerSize;
             for (int y=0; y<s.height; y++) {
                 layer.removeTileAt(CGPoint.ccp(5,y));
@@ -801,7 +801,7 @@ public class TileMapTest extends Activity {
         }
 
         public void draw(GL10 gl) {
-            CCTMXTiledMap map = (CCTMXTiledMap) getChild(kTagTileMap);
+            CCTMXTiledMap map = (CCTMXTiledMap) getChildByTag(kTagTileMap);
             CCTMXObjectGroup group = map.objectGroupNamed("Object Group 1");
             for (HashMap<String, String> dict : group.objects) {
                 int x = Integer.parseInt(dict.get("x"));
@@ -848,7 +848,7 @@ public class TileMapTest extends Activity {
         }
 
         public void draw(GL10 gl) {
-            CCTMXTiledMap map = (CCTMXTiledMap) getChild(kTagTileMap);
+            CCTMXTiledMap map = (CCTMXTiledMap) getChildByTag(kTagTileMap);
             CCTMXObjectGroup group = map.objectGroupNamed("Object Group 1");
             for (HashMap<String, String> dict : group.objects) {
                 int x = Integer.parseInt(dict.get("x"));
@@ -937,7 +937,7 @@ public class TileMapTest extends Activity {
 
         public void repositionSprite(float dt) {
             CGPoint p = tamara.getPosition();
-            CCNode map = getChild(kTagTileMap);
+            CCNode map = getChildByTag(kTagTileMap);
 
             // there are only 4 layers. (grass and 3 trees layers)
             // if tamara < 48, z=4
@@ -987,7 +987,7 @@ public class TileMapTest extends Activity {
 
         public void repositionSprite(float dt) {
             CGPoint p = tamara.getPosition();
-            CCNode map = getChild(kTagTileMap);
+            CCNode map = getChildByTag(kTagTileMap);
 
             // there are only 4 layers. (grass and 3 trees layers)
             // if tamara < 81, z=4

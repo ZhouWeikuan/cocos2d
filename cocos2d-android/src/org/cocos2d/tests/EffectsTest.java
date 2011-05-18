@@ -1,5 +1,6 @@
 package org.cocos2d.tests;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import org.cocos2d.actions.UpdateCallback;
@@ -208,9 +209,15 @@ public class EffectsTest extends Activity {
 				Method method = effectClass.getMethod("action", new Class[] {Float.TYPE} );
 				CCIntervalAction act = (CCIntervalAction) method.invoke(null, 3.0f);
 				bg.runAction(act);
-			} catch (Exception e) {
+			} catch (NoSuchMethodException e) {
+        		e.printStackTrace();
+        	} catch (IllegalArgumentException e) {
 				e.printStackTrace();
-			}			
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+			} catch (InvocationTargetException e) {
+				e.printStackTrace();
+			}		
 			
 			addChild(bg, 0, kTagBackground);			
 
@@ -255,7 +262,7 @@ public class EffectsTest extends Activity {
 		}
 
 		public void checkAnim(float t) {
-			CCNode s2 = getChild(kTagBackground);
+			CCNode s2 = getChildByTag(kTagBackground);
 			if ( s2.numberOfRunningActions() == 0 && s2.getGrid() != null )
 				s2.setGrid(null);
 		}

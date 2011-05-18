@@ -308,10 +308,10 @@ public class AtlasTest extends Activity {
         public void step(float dt) {
         	time += dt;
         	String string = CCFormatter.format("%2.2f Test", time);
-        	CCLabelAtlas label1 = (CCLabelAtlas) getChild(kTagSprite1);
+        	CCLabelAtlas label1 = (CCLabelAtlas) getChildByTag(kTagSprite1);
         	label1.setString(string);
 
-        	CCLabelAtlas label2 = (CCLabelAtlas) getChild(kTagSprite2);
+        	CCLabelAtlas label2 = (CCLabelAtlas) getChildByTag(kTagSprite2);
         	label2.setString(CCFormatter.format("%d", (int)time));
         }
 
@@ -364,10 +364,10 @@ public class AtlasTest extends Activity {
         public void step(float dt) {
             time += dt;
             String string = CCFormatter.format("%2.2f Test", time);
-            CCLabelAtlas label1 = (CCLabelAtlas) getChild(kTagSprite1);
+            CCLabelAtlas label1 = (CCLabelAtlas) getChildByTag(kTagSprite1);
             label1.setString(string);
 
-            CCLabelAtlas label2 = (CCLabelAtlas) getChild(kTagSprite2);
+            CCLabelAtlas label2 = (CCLabelAtlas) getChildByTag(kTagSprite2);
             label2.setString(CCFormatter.format("%d", (int)time));	
         }
 
@@ -442,13 +442,13 @@ public class AtlasTest extends Activity {
             time += dt;
             String string = CCFormatter.format("%2.2f Test j", time);
 
-            CCBitmapFontAtlas label1 = (CCBitmapFontAtlas) getChild(kTagBitmapAtlas1);
+            CCBitmapFontAtlas label1 = (CCBitmapFontAtlas) getChildByTag(kTagBitmapAtlas1);
             label1.setString(string);
 
-            CCBitmapFontAtlas label2 = (CCBitmapFontAtlas) getChild(kTagBitmapAtlas2);
+            CCBitmapFontAtlas label2 = (CCBitmapFontAtlas) getChildByTag(kTagBitmapAtlas2);
             label2.setString(string);
 
-            CCBitmapFontAtlas label3 = (CCBitmapFontAtlas) getChild(kTagBitmapAtlas3);
+            CCBitmapFontAtlas label3 = (CCBitmapFontAtlas) getChildByTag(kTagBitmapAtlas3);
             label3.setString(string);
         }
 
@@ -486,9 +486,9 @@ public class AtlasTest extends Activity {
             label.setAnchorPoint(CGPoint.ccp(0.5f, 0.5f));
 
 
-            CCSprite BChar = (CCSprite) label.getChild(0);
-            CCSprite FChar = (CCSprite) label.getChild(7);
-            CCSprite AChar = (CCSprite) label.getChild(12);
+            CCSprite BChar = (CCSprite) label.getChildByTag(0);
+            CCSprite FChar = (CCSprite) label.getChildByTag(7);
+            CCSprite AChar = (CCSprite) label.getChildByTag(12);
 
 
             CCRotateBy rotate = CCRotateBy.action(2, 360);
@@ -518,7 +518,7 @@ public class AtlasTest extends Activity {
             addChild(label2, 0, kTagBitmapAtlas2);
             label2.setPosition(CGPoint.ccp(s.width/2.0f, 80));
 
-            CCSprite lastChar = (CCSprite)label2.getChild(3);
+            CCSprite lastChar = (CCSprite)label2.getChildByTag(3);
             lastChar.runAction(rot_4ever.copy());
 
             schedule(new UpdateCallback() {
@@ -540,7 +540,7 @@ public class AtlasTest extends Activity {
             time += dt;
             String string = CCFormatter.format("%04.1f", time);
 
-            CCBitmapFontAtlas label1 = (CCBitmapFontAtlas) getChild(kTagBitmapAtlas2);
+            CCBitmapFontAtlas label1 = (CCBitmapFontAtlas) getChildByTag(kTagBitmapAtlas2);
             label1.setString(string);
         }
 

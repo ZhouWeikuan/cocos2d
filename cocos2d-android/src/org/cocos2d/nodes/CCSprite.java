@@ -259,21 +259,21 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
         return new CCSprite(spriteFrameName, isFrame);
     }
 
-    /** Creates an sprite with an image filename.
+    /** Creates an sprite with an image filepath.
       The rect used will be the size of the image.
       The offset will be (0,0).
       */
-    public static CCSprite sprite(String filename) {
-        return new CCSprite(filename);
+    public static CCSprite sprite(String filepath) {
+        return new CCSprite(filepath);
     }
 
-    /** Creates an sprite with an image filename and a rect.
+    /** Creates an sprite with an image filepath and a rect.
       The offset will be (0,0).
       */
-    public static CCSprite sprite(String filename, CGRect rect) {
-        return new CCSprite(filename, rect);
+    public static CCSprite sprite(String filepath, CGRect rect) {
+        return new CCSprite(filepath, rect);
     }
-
+    
     /** Creates an sprite with a CGImageRef.
      * BE AWARE OF the fact that copy of image is stored in memory,
      * use assets method if you can.
@@ -356,20 +356,20 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
         init(frame);
     }
 
-    /** Initializes an sprite with an image filename.
+    /** Initializes an sprite with an image filepath.
       The rect used will be the size of the image.
       The offset will be (0,0).
       */
-    public CCSprite(String filename) {
-        assert filename!=null:"Invalid filename for sprite";
+    public CCSprite(String filepath) {
+        assert filepath!=null:"Invalid filename for sprite";
 
-        CCTexture2D texture = CCTextureCache.sharedTextureCache().addImage(filename);
+        CCTexture2D texture = CCTextureCache.sharedTextureCache().addImage(filepath);
         if( texture != null) {
             CGRect rect = CGRect.make(0, 0, 0, 0);
             rect.size = texture.getContentSize();
             init(texture, rect);
         } else {
-		ccMacros.CCLOGERROR("CCSprite", "Unable to load texture from file: " + filename);
+		ccMacros.CCLOGERROR("CCSprite", "Unable to load texture from file: " + filepath);
         }
     }
 
@@ -377,13 +377,13 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
     	init();
     }
     
-    /** Initializes an sprite with an image filename, and a rect.
+    /** Initializes an sprite with an image filepath, and a rect.
       The offset will be (0,0).
       */
-    public CCSprite(String filename, CGRect rect) {
-        assert filename!=null:"Invalid filename for sprite";
+    public CCSprite(String filepath, CGRect rect) {
+        assert filepath!=null:"Invalid filename for sprite";
 
-        CCTexture2D texture = CCTextureCache.sharedTextureCache().addImage(filename);
+        CCTexture2D texture = CCTextureCache.sharedTextureCache().addImage(filepath);
         if( texture != null) {
             init(texture, rect);
         }
@@ -823,7 +823,7 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
         super.setRelativeAnchorPoint(relative);
     }
 
-    public void reorderChild(CCSprite child, int z) {
+    public void reorderChild(CCNode child, int z) {
         // assert child != null: "Child must be non-nil";
         // assert children_.has(child): "Child doesn't belong to Sprite";
 
@@ -854,11 +854,13 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
         return this;
     }
 
-    public void removeChild(CCSprite sprite, boolean doCleanup) {
-        if( usesSpriteSheet_ )
+    public void removeChild(CCNode node, boolean doCleanup) {
+        if( usesSpriteSheet_ ) {
+        	CCSprite sprite = (CCSprite) node;
             spriteSheet_.removeSpriteFromAtlas(sprite);
+        }
 
-        super.removeChild(sprite, doCleanup);
+        super.removeChild(node, doCleanup);
 
         hasChildren_ = (children_.size() > 0);
     }

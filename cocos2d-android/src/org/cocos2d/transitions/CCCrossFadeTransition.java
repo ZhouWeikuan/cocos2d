@@ -102,7 +102,7 @@ public class CCCrossFadeTransition extends CCTransitionScene {
 	// clean up on exit
 	public void onExit() {
 		// remove our layer and release all containing objects
-		removeChild(kSceneFade, false);
+		removeChildByTag(kSceneFade, false);
 
 		super.onExit();
 	}

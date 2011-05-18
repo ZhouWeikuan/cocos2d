@@ -19,6 +19,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
+import java.util.ArrayList;
 
 import javax.microedition.khronos.opengles.GL10;
 import javax.microedition.khronos.opengles.GL11ExtensionPack;
@@ -365,33 +366,24 @@ public class CCTexture2D implements Resource {
 
     /** Initializes a texture from a string with dimensions, alignment, font name and font size */
     public void initWithText(String text, CGSize dimensions, CCLabel.TextAlignment alignment, String fontname, float fontSize) {
-    	//Typeface.create(fontname, Typeface.NORMAL);
     	Typeface typeface;
-    	try {
+        try {
         	CCDirector.theApp.getAssets().open(fontname);
         	typeface = Typeface.createFromAsset(CCDirector.theApp.getAssets(), fontname);
         } catch(IOException e) {
         	typeface = Typeface.create(fontname, Typeface.NORMAL);
         }
-//    	try{
-//    		typeface = Typeface.createFromAsset(CCDirector.theApp.getAssets(), fontname);
-//    	} catch (Exception e) {
-//    		typeface = Typeface.create(fontname, Typeface.NORMAL);
-//		}
-//    	typeface = Typeface.DEFAULT;
 
         Paint textPaint = new Paint();
         textPaint.setTypeface(typeface);
         textPaint.setTextSize(fontSize);
         textPaint.setAntiAlias(true);
 
-        int ascent = (int) Math.ceil(-textPaint.ascent());  // Paint.ascent is negative, so negate it
-        int descent = (int) Math.ceil(textPaint.descent());
-        int measuredTextWidth = (int) Math.ceil(textPaint.measureText(text));
+        float ascent = -textPaint.ascent();  // Paint.ascent is negative, so negate it
+        float descent = textPaint.descent();
 
-
-        int textWidth = measuredTextWidth;
-        int textHeight = ascent + descent;
+        int textHeight = (int)(ascent + descent);
+        int spacing = (int) Math.ceil((ascent + descent) * 0.1f);
 
         int width = toPow2((int)dimensions.width);
         int height = toPow2((int) dimensions.height);
@@ -401,27 +393,71 @@ public class CCTexture2D implements Resource {
         Canvas canvas = new Canvas(bitmap);
         bitmap.eraseColor(Color.TRANSPARENT);
 
-        int centerOffsetHeight = ((int) dimensions.height - textHeight) / 2;
-        int centerOffsetWidth = ((int) dimensions.width - textWidth) / 2;
+        ArrayList<String> wrapped = WrapText(textPaint, text, dimensions.width);
 
-        switch (alignment) {
-            case LEFT:
-                centerOffsetWidth = 0;
-                break;
-            case CENTER:
-                //centerOffsetWidth = (effectiveTextWidth - textWidth) / 2;
-                break;
-            case RIGHT:
-                centerOffsetWidth = (int) dimensions.width - textWidth;
-                break;
+        float blockHeight = (ascent + descent) * wrapped.size();
+
+        for(int i = 0; i < wrapped.size(); ++i)
+        {
+        	String str = wrapped.get(i);
+        	float offset = 0;
+        	float vOffset = 0;
+
+	        switch (alignment) {
+	            case LEFT:
+	                offset = 0;
+	                break;
+	            case CENTER:
+	            	offset = (dimensions.width - textPaint.measureText(str)) * 0.5f;
+	            	vOffset = (dimensions.height - blockHeight) * 0.5f;
+	                break;
+	            case RIGHT:
+	            	offset = (dimensions.width - textPaint.measureText(str));
+	                break;
+	        }
+
+	        canvas.drawText(str,
+	                offset,
+	                vOffset + ascent + ((textHeight + spacing) * i),
+	                textPaint);
         }
 
-        canvas.drawText(text,
-                centerOffsetWidth,
-                ascent + centerOffsetHeight,
-                textPaint);
-
         init(bitmap, dimensions, dimensions);
+    }
+
+    protected ArrayList<String> WrapText(Paint textPaint, String text, float width)
+    {
+        float spaceLeft = width;
+
+        String [] words = text.split(" ");
+        ArrayList<String> lines = new ArrayList<String>();
+        float spaceWidth = textPaint.measureText(" ");
+        StringBuilder tempLine = new StringBuilder("");
+
+        for(String word : words)
+        {
+            float wordWidth = textPaint.measureText(word);
+
+            if (wordWidth > spaceLeft)
+            {
+                lines.add(tempLine.toString());
+                tempLine = new StringBuilder("");
+                tempLine.append(word);
+
+                spaceLeft = width - (wordWidth + spaceWidth);
+            }
+            else
+            {
+                tempLine.append(word);
+                spaceLeft -= (wordWidth + spaceWidth);
+            }
+
+            tempLine.append(" ");
+        }
+
+        lines.add(tempLine.toString());
+
+        return lines;
     }
 
     public void loadTexture(GL10 gl) {

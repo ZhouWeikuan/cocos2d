@@ -601,7 +601,7 @@ public class CCBitmapFontAtlas extends CCSpriteSheet implements CCLabelProtocol,
 
 			CCSprite fontChar;
 
-			fontChar = (CCSprite)getChild(i);
+			fontChar = (CCSprite)getChildByTag(i);
 			if( fontChar == null ) {
 				fontChar = CCSprite.sprite(this, rect);
 				addChild(fontChar, 0, i);

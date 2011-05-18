@@ -182,7 +182,7 @@ public class CCSpriteSheet extends CCNode implements CCTextureProtocol {
     }
 
     // override reorderChild
-    public void reorderChild(CCSprite child, int z) {
+    public void reorderChild(CCNode child, int z) {
         // NSAssert( child != nil, @"Child must be non-nil");
         // NSAssert( [children_ containsObject:child], @"Child doesn't belong to Sprite" );
 
@@ -213,7 +213,7 @@ public class CCSpriteSheet extends CCNode implements CCTextureProtocol {
     /** removes a child given a certain index. It will also cleanup the running actions depending on the cleanup parameter.
       @warning Removing a child from a CCSpriteSheet is very slow
       */
-    public void removeChild(int index, boolean doCleanup) {
+    public void removeChildAtIndex(int index, boolean doCleanup) {
     	CCSprite sprite = (CCSprite)children_.get(index);
         removeChild(sprite, doCleanup);
     }

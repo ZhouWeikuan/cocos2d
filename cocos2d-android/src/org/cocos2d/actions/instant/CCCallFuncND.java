@@ -6,37 +6,30 @@ package org.cocos2d.actions.instant;
  * ND means: Node Data
  */
 public class CCCallFuncND extends CCCallFuncN {
-    protected Object data;
+	protected Object data;
 
-    /** creates the action with the callback and the data to pass as an argument */
-    public static CCCallFuncND action(Object t, String s, Object d) {
-        return new CCCallFuncND(t, s, d);
-    }
+	/** creates the action with the callback and the data to pass as an argument */
+	public static CCCallFuncND action(Object t, String s, Object d) {
+		return new CCCallFuncND(t, s, d, new Class<?>[] {
+				Object.class, Object.class,
+		});
+	}
 
-    /**
-     * creates the action with the callback and the data to pass as an argument
-     */
-    protected CCCallFuncND(Object t, String s, Object d) {
-        super(t, s);
-        data = d;
+	/**
+	 * creates the action with the callback and the data to pass as an argument
+	 */
+	protected CCCallFuncND(Object t, String s, Object d, Class<?>[] p) {
+		super(t, s, p);
+		data = d;
+	}
 
-        try {
-            Class<?> cls = targetCallback.getClass();
-            Class<?> partypes[] = new Class<?>[] {
-            	Object.class, Object.class,
-            };
-            invocation = cls.getMethod(selector, partypes);
-        } catch (Exception e) {
-        }
-    }
-
-    /**
-     * executes the callback
-     */
-    public void execute() {
-        try {
-            invocation.invoke(targetCallback, new Object[]{target, data});
-        } catch (Exception e) {
-        }
-    }
+	/**
+	 * executes the callback
+	 */
+	public void execute() {
+		try {
+			invocation.invoke(targetCallback, new Object[]{target, data});
+		} catch (Exception e) {
+		}
+	}
 }

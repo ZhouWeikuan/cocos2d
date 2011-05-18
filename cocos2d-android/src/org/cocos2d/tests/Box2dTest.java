@@ -230,7 +230,7 @@ public class Box2dTest extends Activity {
 		}
 
 		private void addNewSpriteWithCoords(CGPoint pos) {
-      		CCSpriteSheet sheet = (CCSpriteSheet)getChild(kTagSpriteManager);
+      		CCSpriteSheet sheet = (CCSpriteSheet) getChildByTag(kTagSpriteManager);
 
     		//We have a 64x64 sprite sheet with 4 different 32x32 images.  The following code is
     		//just randomly picking one of the images
