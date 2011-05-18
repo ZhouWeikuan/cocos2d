@@ -270,14 +270,14 @@ public class CocosNodeTest extends Activity {
 		}
 
 		public void delay2(float dt) {
-			CCNode node = getChild(2);
+			CCNode node = getChildByTag(2);
 			CCIntervalAction action1 = CCRotateBy.action(1, 360);
 			node.runAction(action1);
 		}
 
 		public void delay4(float dt) {
 			unschedule("delay4");
-			removeChild(3, false);
+			removeChildByTag(3, false);
 		}
 
 		public String title() {
@@ -315,8 +315,8 @@ public class CocosNodeTest extends Activity {
 		}
 
 		public void addAndRemove(float dt) {
-			CCNode sp1 = getChild(kTagSprite1);
-			CCNode sp2 = getChild(kTagSprite2);
+			CCNode sp1 = getChildByTag(kTagSprite1);
+			CCNode sp2 = getChildByTag(kTagSprite2);
 
 			removeChild(sp1, false);
 			removeChild(sp2, true);
@@ -367,8 +367,8 @@ public class CocosNodeTest extends Activity {
 		}
 
 		public void addAndRemove(float dt) {
-			CCNode sp1 = getChild(kTagSprite1);
-			CCNode sp2 = getChild(kTagSprite2);
+			CCNode sp1 = getChildByTag(kTagSprite1);
+			CCNode sp2 = getChildByTag(kTagSprite2);
 
 			removeChild(sp1, false);
 			removeChild(sp2, true);
@@ -465,7 +465,7 @@ public class CocosNodeTest extends Activity {
 
 		public void shouldNotLeak(float dt) {
 			unschedule("shouldNotLeak");
-			CCNode sublayer = getChild(kTagSprite1);
+			CCNode sublayer = getChildByTag(kTagSprite1);
 			sublayer.removeAllChildren(true);
 		}
 
@@ -664,11 +664,11 @@ public class CocosNodeTest extends Activity {
 
 			z += dt * 100;
 
-			sprite = getChild(20);
+			sprite = getChildByTag(20);
 			cam = sprite.getCamera();
 			cam.setEye(0, 0, z);
 
-			sprite = getChild(40);
+			sprite = getChildByTag(40);
 			cam = sprite.getCamera();
 			cam.setEye(0, 0, z);
 		}

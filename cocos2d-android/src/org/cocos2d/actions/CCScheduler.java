@@ -118,9 +118,10 @@ public class CCScheduler {
         updateSelector = "update";
         try {
 			impMethod = CCTimer.class.getMethod(updateSelector, Float.TYPE);
-		} catch (Exception e) {
-			impMethod = null;
-		}
+    	} catch (NoSuchMethodException e) {
+    		impMethod = null;
+    		e.printStackTrace();
+    	}
 
         // updates with priority
         updates0   = new ArrayList<tListEntry>();
@@ -668,10 +669,9 @@ public class CCScheduler {
         } else {
             try {
     			listElement.impMethod = target.getClass().getMethod(updateSelector, Float.TYPE);
-    		} catch (Exception e) {
-    			// TODO Auto-generated catch block
-    			e.printStackTrace();
-    		}        	
+            } catch (NoSuchMethodException e) {
+        		e.printStackTrace();
+        	}       	
         }
 
 		synchronized (list) {
@@ -697,10 +697,9 @@ public class CCScheduler {
         } else {
 	        try {
 				listElement.impMethod = target.getClass().getMethod(updateSelector, Float.TYPE);
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+	        } catch (NoSuchMethodException e) {
+        		e.printStackTrace();
+        	}
         }
 		
 		synchronized (list) {

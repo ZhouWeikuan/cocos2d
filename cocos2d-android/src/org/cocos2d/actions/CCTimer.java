@@ -45,9 +45,9 @@ public class CCTimer {
         try {
             Class<?> cls = target.getClass();
             invocation = cls.getMethod(s, Float.TYPE);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        } catch (NoSuchMethodException e) {
+    		e.printStackTrace();
+    	}
     }
     
     /** Initializes a timer with a target, a callback and an interval in seconds.  */

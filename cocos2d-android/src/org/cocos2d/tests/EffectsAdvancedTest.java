@@ -240,7 +240,7 @@ public class EffectsAdvancedTest extends Activity {
 		public void onEnter() {
 			super.onEnter();
 
-			CCNode target = getChild(kTagBackground);
+			CCNode target = getChildByTag(kTagBackground);
 
 			// To reuse a grid the grid size and the grid type must be the same.
 			// in this case:
@@ -270,7 +270,7 @@ public class EffectsAdvancedTest extends Activity {
 		public void onEnter() {
 			super.onEnter();
 
-			CCNode target = getChild(kTagBackground);
+			CCNode target = getChildByTag(kTagBackground);
 
 			// To reuse a grid the grid size and the grid type must be the same.
 			// in this case:
@@ -306,9 +306,9 @@ public class EffectsAdvancedTest extends Activity {
 		public void onEnter() {
 			super.onEnter();
 
-			CCNode bg = getChild(kTagBackground);
-			CCNode target1 = bg.getChild(kTagSprite1);
-			CCNode target2 = bg.getChild(kTagSprite2);	
+			CCNode bg = getChildByTag(kTagBackground);
+			CCNode target1 = bg.getChildByTag(kTagSprite1);
+			CCNode target2 = bg.getChildByTag(kTagSprite2);	
 
 			CCWaves waves = CCWaves.action(5, 20, true, false, ccGridSize.ccg(15,10), 5);
 			CCShaky3D shaky = CCShaky3D.action(4, false, ccGridSize.ccg(15,10), 5);
@@ -363,7 +363,7 @@ public class EffectsAdvancedTest extends Activity {
 				effect.copy()
 			);
 
-			CCNode bg = getChild(kTagBackground);
+			CCNode bg = getChildByTag(kTagBackground);
 			bg.runAction(stopEffect);
 		}
 
@@ -382,7 +382,7 @@ public class EffectsAdvancedTest extends Activity {
 			CCSequence effect = CCSequence.actions(CCDelayTime.action(2.0f), CCShaky3D.action(16, false, ccGridSize.ccg(5, 5), 5.0f));
 
 			// cleanup
-			CCNode bg = getChild(kTagBackground);
+			CCNode bg = getChildByTag(kTagBackground);
 			removeChild(bg, true);
 
 			// background

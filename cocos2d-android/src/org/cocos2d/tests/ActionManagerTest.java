@@ -283,7 +283,7 @@ public class ActionManagerTest extends Activity {
 
 		public void unpause(float dt) {
 			unschedule("unpause");
-			CCNode node = getChild(kTagGrossini);
+			CCNode node = getChildByTag(kTagGrossini);
 			CCActionManager.sharedManager().resume(node);
 		}
 
@@ -316,7 +316,7 @@ public class ActionManagerTest extends Activity {
 		}
 
 		public void stopAction(Object sender) {
-			CCNode sprite = getChild(kTagGrossini);
+			CCNode sprite = getChildByTag(kTagGrossini);
 			sprite.stopAction(kTagSequence);
 		}
 
@@ -364,7 +364,7 @@ public class ActionManagerTest extends Activity {
 		public void resumeGrossini(float dt) {
 			this.unschedule("resumeGrossini");
 
-			CCNode grossini = this.getChild(kTagGrossini); 
+			CCNode grossini = this.getChildByTag(kTagGrossini); 
 			CCActionManager.sharedManager().resume(grossini);
 		}
 	}

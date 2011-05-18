@@ -278,7 +278,7 @@ public class ParticleTest extends Activity {
         }
 
         public void update(float dt) {
-        	CCLabelAtlas atlas = (CCLabelAtlas) getChild(kTagLabelAtlas);
+        	CCLabelAtlas atlas = (CCLabelAtlas) getChildByTag(kTagLabelAtlas);
 
         	particleCountString.reset();
         	

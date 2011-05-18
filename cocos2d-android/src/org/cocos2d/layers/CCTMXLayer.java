@@ -160,7 +160,7 @@ public class CCTMXLayer extends CCSpriteSheet {
 		// if GID == 0, then no tile is present
 		if (gid != 0) {
 			int z = (int) (pos.x + pos.y * layerSize.width);
-			tile = (CCSprite)getChild(z);
+			tile = (CCSprite)getChildByTag(z);
 
 			// tile not created yet. create it
 			if (tile == null) {
@@ -216,7 +216,7 @@ public class CCTMXLayer extends CCSpriteSheet {
 			// modifying an existing tile with a non-empty tile
 			else {
 				int z = (int) (pos.x + pos.y * layerSize.width);
-				CCSprite sprite = (CCSprite) getChild(z);
+				CCSprite sprite = (CCSprite) getChildByTag(z);
 				if (sprite != null) {
 					CGRect rect = tileset.rectForGID(gid);
 					sprite.setTextureRect(rect);
@@ -247,7 +247,7 @@ public class CCTMXLayer extends CCSpriteSheet {
 			atlasIndexArray_.remove(atlasIndex);
 
 			// remove it from sprites and/or texture atlas
-			CCSprite sprite = (CCSprite) getChild(z);
+			CCSprite sprite = (CCSprite) getChildByTag(z);
 			if (sprite!=null)
 				super.removeChild(sprite, true);
 			else {
@@ -340,19 +340,22 @@ public class CCTMXLayer extends CCSpriteSheet {
 		return null;
 	}
 
-	public void removeChild(CCSprite sprite, boolean cleanup) {
+	public void removeChild(CCNode node, boolean cleanup) {
 		// allows removing nil objects
-		if( sprite == null)
+		if( node == null)
 			return;
 
-		assert(children_.contains(sprite)):"Tile does not belong to TMXLayer";
+		assert(children_.contains(node)):"Tile does not belong to TMXLayer";
 
-		int atlasIndex = sprite.atlasIndex;
-		int zz = atlasIndexArray_.get(atlasIndex);
-		tiles.put(zz, 0);
-		atlasIndexArray_.remove(atlasIndex);
+		if (node instanceof CCSprite) {
+			CCSprite sprite = (CCSprite) node;
+			int atlasIndex = sprite.atlasIndex;
+			int zz = atlasIndexArray_.get(atlasIndex);
+			tiles.put(zz, 0);
+			atlasIndexArray_.remove(atlasIndex);
+		}
 
-		super.removeChild(sprite, true);
+		super.removeChild(node, true);
 	}
 
 

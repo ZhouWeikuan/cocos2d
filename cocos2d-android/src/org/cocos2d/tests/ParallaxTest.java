@@ -313,7 +313,7 @@ public class ParallaxTest extends Activity {
             diff.x = location.x-prevLocation.x;
             diff.y = location.y-prevLocation.y;
 
-            CCNode node = getChild(kTagNode);
+            CCNode node = getChildByTag(kTagNode);
             node.setPosition(CGPoint.ccpAdd(node.getPosition(), diff));
 
             previousLocation = touchLocation;

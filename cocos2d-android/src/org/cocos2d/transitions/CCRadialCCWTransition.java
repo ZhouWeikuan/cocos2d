@@ -82,7 +82,7 @@ public class CCRadialCCWTransition extends CCTransitionScene {
 	// clean up on exit
 	public void onExit () {
 		// remove our layer and release all containing objects
-		removeChild(kSceneRadial, false);
+		removeChildByTag(kSceneRadial, false);
 		super.onExit();
 	}
 }

@@ -53,10 +53,8 @@ public class CCMenuItem extends CCNode {
         	try {
         		invocation = cls.getMethod(cb, Object.class);
         	} catch (SecurityException e) {
-        		// TODO Auto-generated catch block
         		e.printStackTrace();
         	} catch (NoSuchMethodException e) {
-        		// TODO Auto-generated catch block
         		e.printStackTrace();
         	}
         }

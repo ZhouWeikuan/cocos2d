@@ -57,7 +57,7 @@ public class CCFadeTransition extends CCTransitionScene {
         addChild(l, 2, kSceneFade);
 
 
-        CCNode f = getChild(kSceneFade);
+        CCNode f = getChildByTag(kSceneFade);
 
         CCIntervalAction a = CCSequence.actions(
                 CCFadeIn.action(duration / 2),
@@ -70,7 +70,7 @@ public class CCFadeTransition extends CCTransitionScene {
     @Override
     public void onExit() {
         super.onExit();
-        removeChild(kSceneFade, false);
+        removeChildByTag(kSceneFade, false);
     }
 
 }

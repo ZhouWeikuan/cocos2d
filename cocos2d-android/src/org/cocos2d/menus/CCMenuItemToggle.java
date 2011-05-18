@@ -54,7 +54,7 @@ public class CCMenuItemToggle extends CCMenuItem {
     public void setSelectedIndex(int index) {
         if (index != selectedIndex_) {
             selectedIndex_ = index;
-            removeChild(kCurrentItem, false);
+            removeChildByTag(kCurrentItem, false);
 
             CCMenuItem item = subItems_.get(selectedIndex_);
             addChild(item, 0, kCurrentItem);

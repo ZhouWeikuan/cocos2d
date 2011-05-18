@@ -14,30 +14,45 @@ import java.lang.reflect.Method;
 public class CCCallFunc extends CCInstantAction {
     protected Object targetCallback;
     protected String selector;
+    protected Class<?> partypes[];
 
     protected Method invocation;
 
     /** creates the action with the callback */
     public static CCCallFunc action(Object target, String selector) {
-        return new CCCallFunc(target, selector);
+        return new CCCallFunc(target, selector, null);
     }
 
     /**
      * creates an action with a callback
      */
-    protected CCCallFunc(Object t, String s) {
+    protected CCCallFunc(Object t, String s, Class<?>[] p) {
         targetCallback = t;
         selector = s;
+        partypes = p;
 
-        try {
-            Class<?> cls = targetCallback.getClass();
-            invocation = cls.getMethod(selector);
-        } catch (Exception e) {
+        if (partypes == null)
+        {
+	        try {
+	            Class<?> cls = targetCallback.getClass();
+	            invocation = cls.getMethod(selector);
+	    	} catch (NoSuchMethodException e) {
+	    		e.printStackTrace();
+	    	}
+	    }
+        else
+        {
+        	try {
+                Class<?> cls = targetCallback.getClass();
+                invocation = cls.getMethod(selector, partypes);
+        	} catch (NoSuchMethodException e) {
+        		e.printStackTrace();
+        	}
         }
     }
 
     public CCCallFunc copy() {
-        return new CCCallFunc(targetCallback, selector);
+        return new CCCallFunc(targetCallback, selector, partypes);
     }
 
     @Override
