@@ -269,87 +269,92 @@ public class CCTouchDispatcher {
     public void queueMotionEvent(MotionEvent event) {
     	// copy event for queue
     	MotionEvent eventForQueue  = MotionEvent.obtain(event);
-    	
+
 		eventQueue.push(eventForQueue);			
     }
     
     public void update() {
     	MotionEvent event;
+
     	while( (event = eventQueue.poll()) != null) {
     		
-    		proccessTouches(event);
-    		
-    		int action = event.getAction();
-    		int actionCode = action & MotionEvent.ACTION_MASK;
-    		int pid = action >> MotionEvent.ACTION_POINTER_ID_SHIFT;     
-			        
-			if(Build.VERSION.SDK_INT >= 5) {
-	    		pid = Util5.getPointerId(event, pid);
-	    	}
-    		
-			boolean swallowed = false;
-			        
-    		for( int ind = 0; ind < targetedHandlers.size(); ind++ ) {
-    			CCTargetedTouchHandler handler = targetedHandlers.get(ind);
-    			
-    			boolean claimed = false;
-    			
-    			switch (actionCode) {
-    			case MotionEvent.ACTION_DOWN:
-    			case MotionEvent.ACTION_POINTER_DOWN:
-    				claimed = handler.ccTouchesBegan(event);
-    				if(claimed) {
-    					handler.addClaimed(pid);
-    				}
-    				break;
-    			case MotionEvent.ACTION_CANCEL:
-    				if(handler.hasClaimed(pid)) {
-    					claimed = true;
-    					handler.ccTouchesCancelled(event);
-    					handler.removeClaimed(pid);
-    				}
-    				break;
-    			case MotionEvent.ACTION_MOVE:
-    				if(handler.hasClaimed(pid)) {
-    					claimed = true;
-    					handler.ccTouchesMoved(event);
-    				}
-    				break;
-    			case MotionEvent.ACTION_UP:
-    			case MotionEvent.ACTION_POINTER_UP:
-    				if(handler.hasClaimed(pid)) {
-    					claimed = true;
-    					handler.ccTouchesEnded(event);
-    					handler.removeClaimed(pid);
-    				}
-    				break;
-    			}
+    		if(dispatchEvents) {
 
-    			
-    			if(claimed && handler.swallowsTouches) {
-    				swallowed = true;
-    				break;
-    			}
-    		}
+	    		proccessTouches(event);
+	    		
+	    		int action = event.getAction();
+	    		int actionCode = action & MotionEvent.ACTION_MASK;
+	    		int pid = action >> MotionEvent.ACTION_POINTER_ID_SHIFT;     
+				        
+				if(Build.VERSION.SDK_INT >= 5) {
+		    		pid = Util5.getPointerId(event, pid);
+		    	}
+	    		
+				boolean swallowed = false;
+				        
+	    		for( int ind = 0; ind < targetedHandlers.size(); ind++ ) {
+	    			CCTargetedTouchHandler handler = targetedHandlers.get(ind);
+	    			
+	    			boolean claimed = false;
+	    			
+	    			switch (actionCode) {
+	    			case MotionEvent.ACTION_DOWN:
+	    			case MotionEvent.ACTION_POINTER_DOWN:
+	    				claimed = handler.ccTouchesBegan(event);
+	    				if(claimed) {
+	    					handler.addClaimed(pid);
+	    				}
+	    				break;
+	    			case MotionEvent.ACTION_CANCEL:
+	    				if(handler.hasClaimed(pid)) {
+	    					claimed = true;
+	    					handler.ccTouchesCancelled(event);
+	    					handler.removeClaimed(pid);
+	    				}
+	    				break;
+	    			case MotionEvent.ACTION_MOVE:
+	    				if(handler.hasClaimed(pid)) {
+	    					claimed = true;
+	    					handler.ccTouchesMoved(event);
+	    				}
+	    				break;
+	    			case MotionEvent.ACTION_UP:
+	    			case MotionEvent.ACTION_POINTER_UP:
+	    				if(handler.hasClaimed(pid)) {
+	    					claimed = true;
+	    					handler.ccTouchesEnded(event);
+	    					handler.removeClaimed(pid);
+	    				}
+	    				break;
+	    			}
+	
+	    			
+	    			if(claimed && handler.swallowsTouches) {
+	    				swallowed = true;
+	    				break;
+	    			}
+	    		}
+	    		
+	    		if(!swallowed) {
+		    		// handle standart delegates
+					switch (actionCode) {
+					case MotionEvent.ACTION_DOWN:
+					case MotionEvent.ACTION_POINTER_DOWN:
+						touchesBegan(event);
+						break;
+					case MotionEvent.ACTION_CANCEL:
+						touchesCancelled(event);
+						break;
+					case MotionEvent.ACTION_MOVE:
+						touchesMoved(event);
+						break;
+					case MotionEvent.ACTION_UP:
+					case MotionEvent.ACTION_POINTER_UP:
+						touchesEnded(event);
+						break;
+					}
+	    		}
     		
-    		if(!swallowed) {
-	    		// handle standart delegates
-				switch (actionCode) {
-				case MotionEvent.ACTION_DOWN:
-				case MotionEvent.ACTION_POINTER_DOWN:
-					touchesBegan(event);
-					break;
-				case MotionEvent.ACTION_CANCEL:
-					touchesCancelled(event);
-					break;
-				case MotionEvent.ACTION_MOVE:
-					touchesMoved(event);
-					break;
-				case MotionEvent.ACTION_UP:
-				case MotionEvent.ACTION_POINTER_UP:
-					touchesEnded(event);
-					break;
-				}
     		}
     		
 			event.recycle();
