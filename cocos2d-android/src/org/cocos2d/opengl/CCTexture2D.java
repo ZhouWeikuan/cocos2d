@@ -38,7 +38,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.opengl.GLUtils;
-import android.util.Log;
 
 /** CCTexture2D class.
  * This class allows to easily create OpenGL 2D textures from images, text or raw data.
