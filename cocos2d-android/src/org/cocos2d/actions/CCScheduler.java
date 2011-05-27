@@ -69,7 +69,7 @@ public class CCScheduler {
 	boolean						        currentTargetSalvaged;
 	
 	// Optimization
-	Method			    impMethod;
+//	Method			    impMethod;
 	String				updateSelector;
 
     /** Modifies the time of all scheduled callbacks.
@@ -116,12 +116,12 @@ public class CCScheduler {
 
         // used to trigger CCTimer#update
         updateSelector = "update";
-        try {
-			impMethod = CCTimer.class.getMethod(updateSelector, Float.TYPE);
-    	} catch (NoSuchMethodException e) {
-    		impMethod = null;
-    		e.printStackTrace();
-    	}
+//        try {
+//			impMethod = CCTimer.class.getMethod(updateSelector, Float.TYPE);
+//    	} catch (NoSuchMethodException e) {
+//    		impMethod = null;
+//    		e.printStackTrace();
+//    	}
 
         // updates with priority
         updates0   = new ArrayList<tListEntry>();

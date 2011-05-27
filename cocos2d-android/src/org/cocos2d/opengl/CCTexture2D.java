@@ -38,6 +38,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.opengl.GLUtils;
+import android.util.Log;
 
 /** CCTexture2D class.
  * This class allows to easily create OpenGL 2D textures from images, text or raw data.
@@ -394,7 +395,7 @@ public class CCTexture2D implements Resource {
         bitmap.eraseColor(Color.TRANSPARENT);
 
         ArrayList<String> wrapped = WrapText(textPaint, text, dimensions.width);
-
+        
         float blockHeight = (ascent + descent) * wrapped.size();
 
         for(int i = 0; i < wrapped.size(); ++i)
@@ -438,9 +439,13 @@ public class CCTexture2D implements Resource {
         {
             float wordWidth = textPaint.measureText(word);
 
-            if (wordWidth > spaceLeft)
-            {
+            if (wordWidth > spaceLeft) {
+            	if(tempLine.length() > 0) {
+                	tempLine.deleteCharAt(tempLine.length() - 1);
+                }
+            	
                 lines.add(tempLine.toString());
+                
                 tempLine = new StringBuilder("");
                 tempLine.append(word);
 
@@ -453,6 +458,10 @@ public class CCTexture2D implements Resource {
             }
 
             tempLine.append(" ");
+        }
+        
+        if(tempLine.length() > 0) {
+        	tempLine.deleteCharAt(tempLine.length() - 1);
         }
 
         lines.add(tempLine.toString());
