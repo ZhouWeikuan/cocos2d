@@ -267,10 +267,12 @@ public class CCTouchDispatcher {
     private final ConcNodeCachingLinkedQueue<MotionEvent> eventQueue = new ConcNodeCachingLinkedQueue<MotionEvent>();
     
     public void queueMotionEvent(MotionEvent event) {
-    	// copy event for queue
-    	MotionEvent eventForQueue  = MotionEvent.obtain(event);
+    	if(dispatchEvents) {
+	    	// copy event for queue
+	    	MotionEvent eventForQueue  = MotionEvent.obtain(event);
 
-		eventQueue.push(eventForQueue);			
+	    	eventQueue.push(eventForQueue);
+    	}
     }
     
     public void update() {
