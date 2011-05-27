@@ -448,8 +448,8 @@ public class CCDirector implements GLSurfaceView.Renderer {
     private double oldAnimationInterval_;
 //    private Timer  animationTimer_;
 
-    public void getAnimationInterval(double interval) {
-        animationInterval_ = interval;
+    public double getAnimationInterval() {
+        return animationInterval_;
     }
 
     public void setAnimationInterval(double interval) {
