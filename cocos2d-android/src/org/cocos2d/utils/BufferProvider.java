@@ -38,39 +38,39 @@ public class BufferProvider {
 		}
 	}
 	
-    public static void drawQuads(GL10 gl, FloatBuffer fbVert, FloatBuffer fbCoord) {
+    public static void drawQuads(GL10 gl, FastFloatBuffer fbVert, FastFloatBuffer fbCoord) {
         fbVert.position(0);
         fbCoord.position(0);
 
         gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
         gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
-        gl.glVertexPointer(3, GL10.GL_FLOAT, 0, fbVert);
-        gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, fbCoord);
+        gl.glVertexPointer(3, GL10.GL_FLOAT, 0, fbVert.bytes);
+        gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, fbCoord.bytes);
         gl.glDrawArrays(GL10.GL_TRIANGLE_STRIP, 0, 4);
         gl.glDisableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
         gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
 
     }
 
-    public static void fillFloatBuffer(FloatBuffer fb, float[] arr) {
+    public static void fillFloatBuffer(FastFloatBuffer fb, float[] arr) {
         fb.position(0);
         fb.put(arr);
     }
 
-    public static FloatBuffer makeFloatBuffer(float[] arr) {
+    public static FastFloatBuffer makeFloatBuffer(float[] arr) {
         ByteBuffer bb = BufferProvider.allocateDirect(arr.length * 4);
         bb.order(ByteOrder.nativeOrder());
-        FloatBuffer fb = bb.asFloatBuffer();
+        FastFloatBuffer fb = FastFloatBuffer.createBuffer(bb);
         fb.put(arr);
         fb.position(0);
         return fb;
     }
 
-    public static FloatBuffer createFloatBuffer(int arrayElementCount) {
+    public static FastFloatBuffer createFloatBuffer(int arrayElementCount) {
         ByteBuffer temp = BufferProvider.allocateDirect(4 * arrayElementCount);
         temp.order(ByteOrder.nativeOrder());
         
-        return temp.asFloatBuffer();
+        return FastFloatBuffer.createBuffer(temp);
     }
     
     public static ByteBuffer createByteBuffer(int arrayElementCount) {
