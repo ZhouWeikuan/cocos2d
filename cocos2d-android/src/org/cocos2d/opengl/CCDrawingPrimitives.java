@@ -1,13 +1,23 @@
 package org.cocos2d.opengl;
 
-import org.cocos2d.types.CGPoint;
-import org.cocos2d.types.CGRect;
+import static javax.microedition.khronos.opengles.GL10.GL_COLOR_ARRAY;
+import static javax.microedition.khronos.opengles.GL10.GL_FLOAT;
+import static javax.microedition.khronos.opengles.GL10.GL_LINES;
+import static javax.microedition.khronos.opengles.GL10.GL_LINE_LOOP;
+import static javax.microedition.khronos.opengles.GL10.GL_LINE_STRIP;
+import static javax.microedition.khronos.opengles.GL10.GL_POINTS;
+import static javax.microedition.khronos.opengles.GL10.GL_TEXTURE_2D;
+import static javax.microedition.khronos.opengles.GL10.GL_TEXTURE_COORD_ARRAY;
 
-import javax.microedition.khronos.opengles.GL10;
-import static javax.microedition.khronos.opengles.GL10.*;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
+
+import javax.microedition.khronos.opengles.GL10;
+
+import org.cocos2d.types.CGPoint;
+import org.cocos2d.types.CGRect;
+import org.cocos2d.utils.FastFloatBuffer;
 
 /**
  @file
@@ -24,13 +34,13 @@ import java.nio.FloatBuffer;
 */
 public class CCDrawingPrimitives {
 	
-	private static FloatBuffer tmpFloatBuf;
+	private static FastFloatBuffer tmpFloatBuf;
 	
-	private static FloatBuffer getVertices(int size) {
+	private static FastFloatBuffer getVertices(int size) {
 		if(tmpFloatBuf == null || tmpFloatBuf.capacity() < size) {
 	        ByteBuffer vbb = ByteBuffer.allocateDirect(4 * size);
 	        vbb.order(ByteOrder.nativeOrder());
-	        tmpFloatBuf = vbb.asFloatBuffer();
+	        tmpFloatBuf = FastFloatBuffer.createBuffer(vbb);
 		}
 		tmpFloatBuf.rewind();
 		return tmpFloatBuf;
@@ -41,7 +51,7 @@ public class CCDrawingPrimitives {
 //        ByteBuffer vbb = ByteBuffer.allocateDirect(4 * 2 * 1);
 //        vbb.order(ByteOrder.nativeOrder());
 //        FloatBuffer vertices = vbb.asFloatBuffer();
-        FloatBuffer vertices = getVertices(2 * 1);
+        FastFloatBuffer vertices = getVertices(2 * 1);
 
         vertices.put(pnt.x);
         vertices.put(pnt.y);
@@ -54,7 +64,7 @@ public class CCDrawingPrimitives {
         gl.glDisableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
         gl.glDisableClientState(GL10.GL_COLOR_ARRAY);
 
-        gl.glVertexPointer(2, GL_FLOAT, 0, vertices);
+        gl.glVertexPointer(2, GL_FLOAT, 0, vertices.bytes);
         gl.glDrawArrays(GL_POINTS, 0, 1);
 
         // restore default state
@@ -70,7 +80,7 @@ public class CCDrawingPrimitives {
 //        ByteBuffer vbb = ByteBuffer.allocateDirect(4 * 2 * numberOfPoints);
 //        vbb.order(ByteOrder.nativeOrder());
 //        FloatBuffer vertices = vbb.asFloatBuffer();
-        FloatBuffer vertices = getVertices(2 * numberOfPoints);
+        FastFloatBuffer vertices = getVertices(2 * numberOfPoints);
 
         for (int i = 0; i < numberOfPoints; i++) {
             vertices.put(points[i].x);
@@ -85,7 +95,7 @@ public class CCDrawingPrimitives {
         gl.glDisableClientState(GL_TEXTURE_COORD_ARRAY);
         gl.glDisableClientState(GL_COLOR_ARRAY);
 
-        gl.glVertexPointer(2, GL_FLOAT, 0, vertices);
+        gl.glVertexPointer(2, GL_FLOAT, 0, vertices.bytes);
         gl.glDrawArrays(GL_POINTS, 0, numberOfPoints);
 
         // restore default state
@@ -99,7 +109,7 @@ public class CCDrawingPrimitives {
 //        ByteBuffer vbb = ByteBuffer.allocateDirect(4 * 2 * 2);
 //        vbb.order(ByteOrder.nativeOrder());
 //        FloatBuffer vertices = vbb.asFloatBuffer();
-        FloatBuffer vertices = getVertices(2 * 2);
+        FastFloatBuffer vertices = getVertices(2 * 2);
 
         vertices.put(origin.x);
         vertices.put(origin.y);
@@ -114,7 +124,7 @@ public class CCDrawingPrimitives {
         gl.glDisableClientState(GL_TEXTURE_COORD_ARRAY);
         gl.glDisableClientState(GL_COLOR_ARRAY);
 
-        gl.glVertexPointer(2, GL_FLOAT, 0, vertices);
+        gl.glVertexPointer(2, GL_FLOAT, 0, vertices.bytes);
         gl.glDrawArrays(GL_LINES, 0, 2);
 
         // restore default state
@@ -142,7 +152,7 @@ public class CCDrawingPrimitives {
 //        ByteBuffer vbb = ByteBuffer.allocateDirect(4 * 2 * numberOfPoints);
 //        vbb.order(ByteOrder.nativeOrder());
 //        FloatBuffer vertices = vbb.asFloatBuffer();
-        FloatBuffer vertices = getVertices(2 * numberOfPoints);
+        FastFloatBuffer vertices = getVertices(2 * numberOfPoints);
 
         for (int i = 0; i < numberOfPoints; i++) {
             vertices.put(poli[i].x);
@@ -157,7 +167,7 @@ public class CCDrawingPrimitives {
         gl.glDisableClientState(GL_TEXTURE_COORD_ARRAY);
         gl.glDisableClientState(GL_COLOR_ARRAY);
 
-        gl.glVertexPointer(2, GL_FLOAT, 0, vertices);
+        gl.glVertexPointer(2, GL_FLOAT, 0, vertices.bytes);
         if (closePolygon)
             gl.glDrawArrays(GL_LINE_LOOP, 0, numberOfPoints);
         else
@@ -176,7 +186,7 @@ public class CCDrawingPrimitives {
 //        ByteBuffer vbb = ByteBuffer.allocateDirect(4 * 2 * (segments + 2));
 //        vbb.order(ByteOrder.nativeOrder());
 //        FloatBuffer vertices = vbb.asFloatBuffer();
-        FloatBuffer vertices = getVertices(2 * (segments + 2));
+        FastFloatBuffer vertices = getVertices(2 * (segments + 2));
 
         int additionalSegment = 1;
 
@@ -204,7 +214,7 @@ public class CCDrawingPrimitives {
         gl.glDisableClientState(GL_TEXTURE_COORD_ARRAY);
         gl.glDisableClientState(GL_COLOR_ARRAY);
 
-        gl.glVertexPointer(2, GL_FLOAT, 0, vertices);
+        gl.glVertexPointer(2, GL_FLOAT, 0, vertices.bytes);
         gl.glDrawArrays(GL_LINE_STRIP, 0, segments + additionalSegment);
 
         // restore default state
@@ -220,7 +230,7 @@ public class CCDrawingPrimitives {
 //        ByteBuffer vbb = ByteBuffer.allocateDirect(4 * 2 * (segments + 1));
 //        vbb.order(ByteOrder.nativeOrder());
 //        FloatBuffer vertices = vbb.asFloatBuffer();
-        FloatBuffer vertices = getVertices(2 * (segments + 1));
+        FastFloatBuffer vertices = getVertices(2 * (segments + 1));
         
         float t = 0.0f;
         for(int i = 0; i < segments; i++) {
@@ -242,7 +252,7 @@ public class CCDrawingPrimitives {
         gl.glDisableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
         gl.glDisableClientState(GL10.GL_COLOR_ARRAY);
 
-        gl.glVertexPointer(2, GL_FLOAT, 0, vertices);
+        gl.glVertexPointer(2, GL_FLOAT, 0, vertices.bytes);
         gl.glDrawArrays(GL_LINE_STRIP, 0, segments + 1);
 
         // restore default state
@@ -261,7 +271,7 @@ public class CCDrawingPrimitives {
 //        ByteBuffer vbb = ByteBuffer.allocateDirect(4 * 2 * (segments + 1));
 //        vbb.order(ByteOrder.nativeOrder());
 //        FloatBuffer vertices = vbb.asFloatBuffer();
-        FloatBuffer vertices = getVertices(2 * (segments + 1));
+        FastFloatBuffer vertices = getVertices(2 * (segments + 1));
 
         float t = 0;
         for(int i = 0; i < segments; i++)
@@ -284,7 +294,7 @@ public class CCDrawingPrimitives {
         gl.glDisableClientState(GL_TEXTURE_COORD_ARRAY);
         gl.glDisableClientState(GL_COLOR_ARRAY);
 
-        gl.glVertexPointer(2, GL_FLOAT, 0, vertices);
+        gl.glVertexPointer(2, GL_FLOAT, 0, vertices.bytes);
         gl.glDrawArrays(GL_LINE_STRIP, 0, segments + 1);
         
         // restore default state

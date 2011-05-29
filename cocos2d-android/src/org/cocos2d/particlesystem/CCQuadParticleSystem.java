@@ -1,6 +1,5 @@
 package org.cocos2d.particlesystem;
 
-import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
 
 import javax.microedition.khronos.opengles.GL10;
@@ -17,6 +16,7 @@ import org.cocos2d.types.CGPoint;
 import org.cocos2d.types.CGRect;
 import org.cocos2d.types.ccBlendFunc;
 import org.cocos2d.utils.BufferProvider;
+import org.cocos2d.utils.FastFloatBuffer;
 
 /** CCQuadParticleSystem is a subclass of CCParticleSystem
 
@@ -35,9 +35,9 @@ import org.cocos2d.utils.BufferProvider;
 public class CCQuadParticleSystem extends CCParticleSystem implements Resource {
 	// ccV2F_C4F_T2F_Quad	quads;		// quads to be rendered
 
-	FloatBuffer         texCoords;
-	FloatBuffer         vertices;
-	FloatBuffer         colors;
+	FastFloatBuffer         texCoords;
+	FastFloatBuffer         vertices;
+	FastFloatBuffer         colors;
 
 	ShortBuffer			indices;	// indices
 	int					quadsIDs[];	// VBO id
@@ -51,9 +51,9 @@ public class CCQuadParticleSystem extends CCParticleSystem implements Resource {
 
 		// allocating data space
 		// quads = malloc( sizeof(quads[0]) * totalParticles );
-		texCoords	= BufferProvider.createFloatBuffer(4 * 2 * totalParticles);
-		vertices 	= BufferProvider.createFloatBuffer(4 * 2 * totalParticles);
-		colors  	= BufferProvider.createFloatBuffer(4 * 4 * totalParticles);
+		texCoords	= new FastFloatBuffer(4 * 2 * totalParticles);
+		vertices 	= new FastFloatBuffer(4 * 2 * totalParticles);
+		colors  	= new FastFloatBuffer(4 * 4 * totalParticles);
 		
 		indices = BufferProvider.createShortBuffer(totalParticles * 6 );
 
@@ -77,15 +77,15 @@ public class CCQuadParticleSystem extends CCParticleSystem implements Resource {
 				// initial binding
 				// for texCoords
 				gl.glBindBuffer(GL11.GL_ARRAY_BUFFER, quadsIDs[0]);
-				gl.glBufferData(GL11.GL_ARRAY_BUFFER, texCoords.capacity() * 4, texCoords, GL11.GL_DYNAMIC_DRAW);	
+				gl.glBufferData(GL11.GL_ARRAY_BUFFER, texCoords.capacity() * 4, texCoords.bytes, GL11.GL_DYNAMIC_DRAW);	
 				
 				// for vertices
 				gl.glBindBuffer(GL11.GL_ARRAY_BUFFER, quadsIDs[1]);
-				gl.glBufferData(GL11.GL_ARRAY_BUFFER, vertices.capacity() * 4, vertices, GL11.GL_DYNAMIC_DRAW);	
+				gl.glBufferData(GL11.GL_ARRAY_BUFFER, vertices.capacity() * 4, vertices.bytes, GL11.GL_DYNAMIC_DRAW);	
 				
 				// for colors
 				gl.glBindBuffer(GL11.GL_ARRAY_BUFFER, quadsIDs[2]);
-				gl.glBufferData(GL11.GL_ARRAY_BUFFER, colors.capacity() * 4, colors, GL11.GL_DYNAMIC_DRAW);	
+				gl.glBufferData(GL11.GL_ARRAY_BUFFER, colors.capacity() * 4, colors.bytes, GL11.GL_DYNAMIC_DRAW);	
 				
 				// restore the elements, arrays
 				gl.glBindBuffer(GL11.GL_ARRAY_BUFFER, 0);
@@ -284,15 +284,15 @@ public class CCQuadParticleSystem extends CCParticleSystem implements Resource {
 
 		// for texCoords
 		gl.glBindBuffer(GL11.GL_ARRAY_BUFFER, quadsIDs[0]);
-		gl.glBufferSubData(GL11.GL_ARRAY_BUFFER, 0, texCoords.capacity() * 4, texCoords);	
+		gl.glBufferSubData(GL11.GL_ARRAY_BUFFER, 0, texCoords.capacity() * 4, texCoords.bytes);	
 		
 		// for vertices
 		gl.glBindBuffer(GL11.GL_ARRAY_BUFFER, quadsIDs[1]);
-		gl.glBufferSubData(GL11.GL_ARRAY_BUFFER, 0, vertices.capacity() * 4, vertices);	
+		gl.glBufferSubData(GL11.GL_ARRAY_BUFFER, 0, vertices.capacity() * 4, vertices.bytes);	
 		
 		// for colors
 		gl.glBindBuffer(GL11.GL_ARRAY_BUFFER, quadsIDs[2]);
-		gl.glBufferSubData(GL11.GL_ARRAY_BUFFER, 0, colors.capacity() * 4, colors);	
+		gl.glBufferSubData(GL11.GL_ARRAY_BUFFER, 0, colors.capacity() * 4, colors.bytes);	
 		
 		// restore the elements, arrays
 		gl.glBindBuffer(GL11.GL_ARRAY_BUFFER, 0);

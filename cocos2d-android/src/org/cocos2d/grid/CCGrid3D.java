@@ -11,17 +11,18 @@ import org.cocos2d.types.CCVertex3D;
 import org.cocos2d.types.CGPoint;
 import org.cocos2d.types.ccGridSize;
 import org.cocos2d.types.ccQuad3;
+import org.cocos2d.utils.FastFloatBuffer;
 
 
 /**
  CCGrid3D is a 3D grid implementation. Each vertex has 3 dimensions: x,y,z
  */
 public class CCGrid3D extends CCGridBase {
-	protected FloatBuffer texCoordinates;
-	protected FloatBuffer vertices;
-	protected FloatBuffer originalVertices;
+	protected FastFloatBuffer texCoordinates;
+	protected FastFloatBuffer vertices;
+	protected FastFloatBuffer originalVertices;
     protected ShortBuffer indices;
-    protected FloatBuffer mVertexBuffer;
+    protected FastFloatBuffer mVertexBuffer;
 
     public CCGrid3D(ccGridSize gSize) {
         super(gSize);
@@ -40,7 +41,7 @@ public class CCGrid3D extends CCGridBase {
         ByteBuffer vbb = ByteBuffer.allocateDirect(vertices.limit()*3*4);
         //System.out.printf("vertices limit = %d\n", vertices.limit());
         vbb.order(ByteOrder.nativeOrder());
-        mVertexBuffer = vbb.asFloatBuffer();            
+        mVertexBuffer = FastFloatBuffer.createBuffer(vbb);            
         mVertexBuffer.clear();          
         mVertexBuffer.position(0);
         for (int i = 0; i < vertices.limit(); i=i+3) {            
@@ -49,9 +50,9 @@ public class CCGrid3D extends CCGridBase {
             mVertexBuffer.put(vertices.get(i+2));
         }
         mVertexBuffer.position(0);
-        gl.glVertexPointer(3, GL10.GL_FLOAT, 0, mVertexBuffer);
+        gl.glVertexPointer(3, GL10.GL_FLOAT, 0, mVertexBuffer.bytes);
         // gl.glVertexPointer(3, GL10.GL_FLOAT, 0, vertices);
-        gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, texCoordinates);
+        gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, texCoordinates.bytes);
         indices.position(0);
 
         gl.glDrawElements(GL10.GL_TRIANGLES, n * 6, GL10.GL_UNSIGNED_SHORT, indices);
@@ -70,17 +71,17 @@ public class CCGrid3D extends CCGridBase {
 
         ByteBuffer vfb = ByteBuffer.allocateDirect(ccQuad3.size * (gridSize_.x + 1) * (gridSize_.y + 1) * 4);
         vfb.order(ByteOrder.nativeOrder());
-        vertices = vfb.asFloatBuffer();
+        vertices = FastFloatBuffer.createBuffer(vfb);
         // vertices = BufferProvider.createFloatBuffer(ccQuad3.size * (gridSize_.x + 1) * (gridSize_.y + 1));
 
         ByteBuffer ofb = ByteBuffer.allocateDirect(ccQuad3.size * (gridSize_.x + 1) * (gridSize_.y + 1) * 4);
         ofb.order(ByteOrder.nativeOrder());
-        originalVertices = ofb.asFloatBuffer();
+        originalVertices = FastFloatBuffer.createBuffer(ofb);
         // originalVertices = BufferProvider.createFloatBuffer(ccQuad3.size * (gridSize_.x + 1) * (gridSize_.y + 1));
                 
         ByteBuffer tfb = ByteBuffer.allocateDirect(2 * (gridSize_.x + 1) * (gridSize_.y + 1) * 4);
         tfb.order(ByteOrder.nativeOrder());
-        texCoordinates = tfb.asFloatBuffer();
+        texCoordinates = FastFloatBuffer.createBuffer(tfb);
         // texCoordinates = BufferProvider.createFloatBuffer(2 * (gridSize_.x + 1) * (gridSize_.y + 1));
         
         ByteBuffer isb = ByteBuffer.allocateDirect(6 * (gridSize_.x + 1) * (gridSize_.y + 1) * 2);

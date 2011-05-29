@@ -31,6 +31,7 @@ import org.cocos2d.types.CCTexParams;
 import org.cocos2d.types.CGPoint;
 import org.cocos2d.types.CGRect;
 import org.cocos2d.types.CGSize;
+import org.cocos2d.utils.FastFloatBuffer;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -112,8 +113,8 @@ public class CCTexture2D implements Resource {
         return premultipliedAlpha;
     }
     
-    private FloatBuffer mVertices;
-    private FloatBuffer mCoordinates;
+    private FastFloatBuffer mVertices;
+    private FastFloatBuffer mCoordinates;
 //    private ShortBuffer mIndices;
 
     /** this mBitmap should be created when we call load(),
@@ -281,11 +282,11 @@ public class CCTexture2D implements Resource {
         _maxT = mContentSize.height / (float) mHeight;
         ByteBuffer vfb = ByteBuffer.allocateDirect(4 * 3 * 4);
         vfb.order(ByteOrder.nativeOrder());
-        mVertices = vfb.asFloatBuffer();
+        mVertices = FastFloatBuffer.createBuffer(vfb);
 
         ByteBuffer tfb = ByteBuffer.allocateDirect(4 * 2 * 4);
         tfb.order(ByteOrder.nativeOrder());
-        mCoordinates = tfb.asFloatBuffer();
+        mCoordinates = FastFloatBuffer.createBuffer(tfb);
         
         // GLUtils.texImage2D makes premultiplied alpha
 		if(mBitmap.getConfig() == Bitmap.Config.ARGB_8888)
@@ -519,8 +520,8 @@ public class CCTexture2D implements Resource {
         gl.glTexParameterx(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
         gl.glTexParameterx(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-        gl.glVertexPointer(3, GL_FLOAT, 0, mVertices);
-        gl.glTexCoordPointer(2, GL_FLOAT, 0, mCoordinates);
+        gl.glVertexPointer(3, GL_FLOAT, 0, mVertices.bytes);
+        gl.glTexCoordPointer(2, GL_FLOAT, 0, mCoordinates.bytes);
         gl.glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
         // Clear the vertex and color arrays
@@ -565,8 +566,8 @@ public class CCTexture2D implements Resource {
         gl.glTexParameterx(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
         gl.glTexParameterx(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-        gl.glVertexPointer(2, GL_FLOAT, 0, mVertices);
-        gl.glTexCoordPointer(2, GL_FLOAT, 0, mCoordinates);
+        gl.glVertexPointer(2, GL_FLOAT, 0, mVertices.bytes);
+        gl.glTexCoordPointer(2, GL_FLOAT, 0, mCoordinates.bytes);
         gl.glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
         // Clear the vertex and color arrays
