@@ -92,6 +92,9 @@ public class ConcurrentArrayHashMap<K,V> {
 		if(lastInd != 0)
 			array.get(lastInd - 1).next = null;
 		Entry removedEntry = array.remove(lastInd);
+		// should check for primitive type?
+		removedEntry.key = null;
+		removedEntry.value = null;
 		pool.free(removedEntry);
 		return ret;
 	}
