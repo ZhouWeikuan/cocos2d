@@ -6,14 +6,12 @@ import java.io.InputStream;
 import java.lang.ref.SoftReference;
 import java.util.HashMap;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import org.cocos2d.config.ccMacros;
 import org.cocos2d.opengl.CCTexture2D;
 import org.cocos2d.opengl.GLResourceHelper;
 import org.cocos2d.opengl.GLResourceHelper.Resource;
-
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-
 
 /** Singleton that handles the loading of textures
  * Once the texture is loaded, the next time it will return

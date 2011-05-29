@@ -40,7 +40,7 @@ import android.graphics.Typeface;
 import android.opengl.GLUtils;
 
 /** CCTexture2D class.
- * This class allows to easily create OpenGL 2D textures from images, text or raw data.
+ * This class allows easy creation of OpenGL 2D textures from images, text or raw data.
  * The created CCTexture2D object will always have power-of-two dimensions. 
  * Depending on how you create the CCTexture2D object, the actual image area of the texture
  * might be smaller than the texture dimensions i.e. "contentSize" != (pixelsWide, pixelsHigh)
@@ -117,7 +117,7 @@ public class CCTexture2D implements Resource {
 //    private ShortBuffer mIndices;
 
     /** this mBitmap should be created when we call load(),
-     * then we create texture, mBitmap is destroyed
+     * when we create the texture mBitmap is destroyed
      */
     private Bitmap mBitmap;
 
@@ -487,6 +487,11 @@ public class CCTexture2D implements Resource {
             mBitmap = null;
         }
     }
+
+    public boolean isLoaded() {
+        return mBitmap == null && _name != 0;
+    }
+
 
 
     /**

@@ -1,7 +1,5 @@
 package org.cocos2d.nodes;
 
-import javax.microedition.khronos.opengles.GL10;
-
 import org.cocos2d.config.ccConfig;
 import org.cocos2d.opengl.CCTexture2D;
 import org.cocos2d.opengl.CCTextureAtlas;
@@ -10,6 +8,8 @@ import org.cocos2d.protocols.CCTextureProtocol;
 import org.cocos2d.types.CGSize;
 import org.cocos2d.types.ccBlendFunc;
 import org.cocos2d.types.ccColor3B;
+
+import javax.microedition.khronos.opengles.GL10;
 
 /**
  * AtlasNode is a subclass of CocosNode that implements CocosNodeOpacity, CocosNodeRGB and

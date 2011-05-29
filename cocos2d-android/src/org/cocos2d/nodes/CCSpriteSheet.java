@@ -1,11 +1,5 @@
 package org.cocos2d.nodes;
 
-import java.nio.FloatBuffer;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.microedition.khronos.opengles.GL10;
-
 import org.cocos2d.config.ccConfig;
 import org.cocos2d.config.ccMacros;
 import org.cocos2d.opengl.CCDrawingPrimitives;
@@ -15,6 +9,11 @@ import org.cocos2d.protocols.CCTextureProtocol;
 import org.cocos2d.types.CGPoint;
 import org.cocos2d.types.CGRect;
 import org.cocos2d.types.ccBlendFunc;
+
+import javax.microedition.khronos.opengles.GL10;
+import java.nio.FloatBuffer;
+import java.util.ArrayList;
+import java.util.List;
 
 /** CCSpriteSheet is like a batch node: if it contains children, it will draw them in 1 single OpenGL call
  * (often known as "batch draw").

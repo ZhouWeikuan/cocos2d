@@ -1,27 +1,21 @@
 package org.cocos2d.nodes;
 
-import java.nio.FloatBuffer;
-import java.util.Arrays;
-import java.util.HashMap;
-
-import javax.microedition.khronos.opengles.GL10;
-
+import android.graphics.Bitmap;
 import org.cocos2d.config.ccConfig;
 import org.cocos2d.config.ccMacros;
 import org.cocos2d.opengl.CCTexture2D;
 import org.cocos2d.opengl.CCTextureAtlas;
 import org.cocos2d.protocols.CCRGBAProtocol;
 import org.cocos2d.protocols.CCTextureProtocol;
-import org.cocos2d.types.CGAffineTransform;
-import org.cocos2d.types.CGPoint;
-import org.cocos2d.types.CGRect;
-import org.cocos2d.types.CGSize;
-import org.cocos2d.types.ccBlendFunc;
-import org.cocos2d.types.ccColor3B;
-import org.cocos2d.types.ccColor4B;
+import org.cocos2d.types.*;
 import org.cocos2d.utils.BufferProvider;
 
-import android.graphics.Bitmap;
+import javax.microedition.khronos.egl.EGL10;
+import javax.microedition.khronos.egl.EGLContext;
+import javax.microedition.khronos.opengles.GL10;
+import java.nio.FloatBuffer;
+import java.util.Arrays;
+import java.util.HashMap;
 
 /** CCSprite is a 2d image ( http://en.wikipedia.org/wiki/Sprite_(computer_graphics) )
  *
@@ -118,9 +112,11 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
 	boolean		opacityModifyRGB_;
 
     public void setOpacityModifyRGB(boolean modify) {
-        ccColor3B oldColor	= this.color_;
-        opacityModifyRGB_	= modify;
-        setColor(oldColor);
+        if (opacityModifyRGB_ != modify) {
+            ccColor3B oldColor	= this.color_;
+            opacityModifyRGB_	= modify;
+            setColor(oldColor);
+        }
     }
 
     public ccColor3B getColor() {
@@ -889,7 +885,8 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
             newBlend = true;
             gl.glBlendFunc( blendFunc_.src, blendFunc_.dst );
         }
-        
+
+//        ((EGL10) gl).eglWaitNative(EGL10.EGL_NATIVE_RENDERABLE, null);
         // bug fix in case texture name = 0
         texture_.checkName();
         // #define kQuadSize sizeof(quad_.bl)

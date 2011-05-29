@@ -240,11 +240,11 @@ public class CCScheduler {
         for(ConcurrentArrayHashMap<Object, tHashSelectorEntry>.Entry e = hashForSelectors.firstValue();
         	e != null; e = hashForSelectors.nextValue(e)) {
         	tHashSelectorEntry elt = e.getValue();
-        	
+
         	currentTarget = elt;
             currentTargetSalvaged = false;
-            
-            if( ! currentTarget.paused ) {                
+
+            if( ! currentTarget.paused && elt.timers != null) {
                 // The 'timers' ccArray may change while inside this loop.
                 for( elt.timerIndex = 0; elt.timerIndex < elt.timers.size(); elt.timerIndex++) {
                     elt.currentTimer = elt.timers.get(elt.timerIndex);
@@ -590,7 +590,7 @@ public class CCScheduler {
             assert hashElement == null:"CCScheduler: You can't re-schedule an 'update' selector'. Unschedule it first";
         }
 
-        // most of the updates are going to be 0, that's way there
+        // most of the updates are going to be 0, that's why there
         // is an special list for updates with priority 0
         if( priority == 0 ) {
         	this.append(updates0, target, paused);
