@@ -9,9 +9,9 @@ import org.cocos2d.protocols.CCTextureProtocol;
 import org.cocos2d.types.CGPoint;
 import org.cocos2d.types.CGRect;
 import org.cocos2d.types.ccBlendFunc;
+import org.cocos2d.utils.FastFloatBuffer;
 
 import javax.microedition.khronos.opengles.GL10;
-import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -475,8 +475,8 @@ public class CCSpriteSheet extends CCNode implements CCTextureProtocol {
 		sprite.useSpriteSheetRender(this);
 		sprite.atlasIndex	= index;
 
-		FloatBuffer texCordBuffer = sprite.getTexCoords();
-		FloatBuffer vertexBuffer  = sprite.getVertices();
+		FastFloatBuffer texCordBuffer = sprite.getTexCoords();
+		FastFloatBuffer vertexBuffer  = sprite.getVertices();
 		textureAtlas_.insertQuad(texCordBuffer, vertexBuffer, index);
 
 		// XXX: updateTransform will update the textureAtlas too using updateQuad.

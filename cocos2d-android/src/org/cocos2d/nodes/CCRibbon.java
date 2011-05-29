@@ -6,11 +6,11 @@ import org.cocos2d.types.CCTexParams;
 import org.cocos2d.types.CGPoint;
 import org.cocos2d.types.ccBlendFunc;
 import org.cocos2d.types.ccColor4B;
+import org.cocos2d.utils.FastFloatBuffer;
 
 import javax.microedition.khronos.opengles.GL10;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.nio.FloatBuffer;
 import java.util.ArrayList;
 
 /**
@@ -42,22 +42,22 @@ public class CCRibbon extends CCNode {
         int end;
         int begin;
 
-        FloatBuffer mVertices;
-        FloatBuffer mCoordinates;
-        FloatBuffer mColors;
+        FastFloatBuffer mVertices;
+        FastFloatBuffer mCoordinates;
+        FastFloatBuffer mColors;
 
         public CCRibbonSegment() {
             ByteBuffer vfb = ByteBuffer.allocateDirect(COUNT * 3 * 2 * 4);
             vfb.order(ByteOrder.nativeOrder());
-            mVertices = vfb.asFloatBuffer();
+            mVertices = FastFloatBuffer.createBuffer(vfb);
 
             ByteBuffer tfb = ByteBuffer.allocateDirect(COUNT * 2 * 2 * 4);
             tfb.order(ByteOrder.nativeOrder());
-            mCoordinates = tfb.asFloatBuffer();
+            mCoordinates = FastFloatBuffer.createBuffer(tfb);
 
             ByteBuffer cbb = ByteBuffer.allocateDirect(COUNT * 4 * 2 * 4);
             cbb.order(ByteOrder.nativeOrder());
-            mColors = cbb.asFloatBuffer();
+            mColors = FastFloatBuffer.createBuffer(cbb);
 
             reset();
         }
@@ -106,18 +106,18 @@ public class CCRibbon extends CCNode {
                     mColors.put(colors, begin * 4 * 2, (end - begin) * 4 * 2);
                     mColors.position(0);
 
-                    gl.glColorPointer(4, GL10.GL_FLOAT, 0, mColors);
+                    gl.glColorPointer(4, GL10.GL_FLOAT, 0, mColors.bytes);
                 }
 
                 mVertices.put(verts, begin * 3 * 2, (end - begin) * 3 * 2);
                 mVertices.position(0);
 
-                gl.glVertexPointer(3, GL10.GL_FLOAT, 0, mVertices);
+                gl.glVertexPointer(3, GL10.GL_FLOAT, 0, mVertices.bytes);
 
                 mCoordinates.put(coords, begin * 2 * 2, (end - begin) * 2 * 2);
                 mCoordinates.position(0);
 
-                gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, mCoordinates);
+                gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, mCoordinates.bytes);
                 gl.glDrawArrays(GL10.GL_TRIANGLE_STRIP, 0, (end - begin) * 2);
             } else
                 finished = true;

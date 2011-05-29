@@ -1,7 +1,5 @@
 package org.cocos2d.actions;
 
-import java.nio.FloatBuffer;
-
 import javax.microedition.khronos.opengles.GL10;
 
 import org.cocos2d.config.ccConfig;
@@ -12,7 +10,7 @@ import org.cocos2d.opengl.CCTexture2D;
 import org.cocos2d.types.CGPoint;
 import org.cocos2d.types.CGSize;
 import org.cocos2d.types.ccColor4F;
-import org.cocos2d.utils.BufferProvider;
+import org.cocos2d.utils.FastFloatBuffer;
 
 
 /**
@@ -66,18 +64,18 @@ public class CCProgressTimer extends CCNode {
         return sprite_;
     }
 
-    protected FloatBuffer textureCoordinates	= null;
-    protected FloatBuffer vertexCoordinates		= null;
-    protected FloatBuffer colors				= null;
+    protected FastFloatBuffer textureCoordinates	= null;
+    protected FastFloatBuffer vertexCoordinates		= null;
+    protected FastFloatBuffer colors				= null;
 	protected int		  vertexDataCount_		= 0;
 	// ccV2F_C4F_T2F	[]  vertexData_;
 
 	protected void setVertexDataCount(int cnt) {
 		vertexDataCount_ = cnt;
 		
-		textureCoordinates = BufferProvider.createFloatBuffer(2 * vertexDataCount_);
-		vertexCoordinates  = BufferProvider.createFloatBuffer(2 * vertexDataCount_);
-        colors    = BufferProvider.createFloatBuffer(4 * vertexDataCount_);
+		textureCoordinates = new FastFloatBuffer(2 * vertexDataCount_);
+		vertexCoordinates  = new FastFloatBuffer(2 * vertexDataCount_);
+        colors    = new FastFloatBuffer(4 * vertexDataCount_);
 	}
 	
 	protected void resetVertex() {
@@ -559,9 +557,9 @@ public class CCProgressTimer extends CCNode {
         
         gl.glBindTexture(GL10.GL_TEXTURE_2D, sprite_.getTexture().name());
 
-        gl.glVertexPointer(2, GL10.GL_FLOAT, 0, this.vertexCoordinates);
-        gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, this.textureCoordinates);
-        gl.glColorPointer(4, GL10.GL_FLOAT, 0, this.colors);
+        gl.glVertexPointer(2, GL10.GL_FLOAT, 0, this.vertexCoordinates.bytes);
+        gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, this.textureCoordinates.bytes);
+        gl.glColorPointer(4, GL10.GL_FLOAT, 0, this.colors.bytes);
 
         if (type_ == kCCProgressTimerTypeRadialCCW || type_ == kCCProgressTimerTypeRadialCW){
             gl.glDrawArrays(GL10.GL_TRIANGLE_FAN, 0, vertexDataCount_);

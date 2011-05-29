@@ -1,19 +1,23 @@
 package org.cocos2d.nodes;
 
-import android.graphics.Bitmap;
 import org.cocos2d.config.ccConfig;
 import org.cocos2d.config.ccMacros;
 import org.cocos2d.opengl.CCTexture2D;
 import org.cocos2d.opengl.CCTextureAtlas;
 import org.cocos2d.protocols.CCRGBAProtocol;
 import org.cocos2d.protocols.CCTextureProtocol;
-import org.cocos2d.types.*;
-import org.cocos2d.utils.BufferProvider;
+import org.cocos2d.types.CGAffineTransform;
+import org.cocos2d.types.CGPoint;
+import org.cocos2d.types.CGRect;
+import org.cocos2d.types.CGSize;
+import org.cocos2d.types.ccBlendFunc;
+import org.cocos2d.types.ccColor3B;
+import org.cocos2d.types.ccColor4B;
+import org.cocos2d.utils.FastFloatBuffer;
 
-import javax.microedition.khronos.egl.EGL10;
-import javax.microedition.khronos.egl.EGLContext;
+import android.graphics.Bitmap;
+
 import javax.microedition.khronos.opengles.GL10;
-import java.nio.FloatBuffer;
 import java.util.Arrays;
 import java.util.HashMap;
 
@@ -186,31 +190,31 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
 	// vertex coords, texture coords and color info
     /** buffers that are going to be rendered */
     /** the quad (tex coords, vertex coords and color) information */
-    private FloatBuffer texCoords;
+    private FastFloatBuffer texCoords;
     public float[] getTexCoordsArray() {
     	float ret[] = new float[texCoords.limit()];
     	texCoords.get(ret, 0, texCoords.limit());
     	return ret;
     }
     
-    private FloatBuffer vertexes;
+    private FastFloatBuffer vertexes;
     public float[] getVertexArray() {
     	float ret[] = new float[vertexes.limit()];
     	vertexes.get(ret, 0, vertexes.limit());
     	return ret;
     }
     
-    public FloatBuffer getTexCoords() {
+    public FastFloatBuffer getTexCoords() {
     	texCoords.position(0);
     	return texCoords;
     }
     
-    public FloatBuffer getVertices() {
+    public FastFloatBuffer getVertices() {
     	vertexes.position(0);
     	return vertexes;
     }
     
-    private FloatBuffer colors;
+    private FastFloatBuffer colors;
 
 	// whether or not it's parent is a CCSpriteSheet
     /** whether or not the Sprite is rendered using a CCSpriteSheet */
@@ -482,9 +486,9 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
     }
 
     protected void init() {
-        texCoords = BufferProvider.createFloatBuffer(4 * 2);
-        vertexes  = BufferProvider.createFloatBuffer(4 * 3);
-        colors    = BufferProvider.createFloatBuffer(4 * 4);
+        texCoords = new FastFloatBuffer(4 * 2);
+        vertexes  = new FastFloatBuffer(4 * 3);
+        colors    = new FastFloatBuffer(4 * 4);
     	
 		dirty_ = false;
         recursiveDirty_ = false;
@@ -896,15 +900,15 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
 
         // vertex
         // int diff = offsetof( ccV3F_C4B_T2F, vertices);
-        gl.glVertexPointer(3, GL10.GL_FLOAT, 0 , vertexes);
+        gl.glVertexPointer(3, GL10.GL_FLOAT, 0 , vertexes.bytes);
 
         // color
         // diff = offsetof( ccV3F_C4B_T2F, colors);
-        gl.glColorPointer(4, GL10.GL_FLOAT, 0, colors);
+        gl.glColorPointer(4, GL10.GL_FLOAT, 0, colors.bytes);
 
         // tex coords
         // diff = offsetof( ccV3F_C4B_T2F, texCoords);
-        gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, texCoords);
+        gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, texCoords.bytes);
 
         gl.glDrawArrays(GL10.GL_TRIANGLE_STRIP, 0, 4);
 

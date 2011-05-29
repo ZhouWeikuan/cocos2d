@@ -79,7 +79,7 @@ public class Box2dTest extends Activity {
         CCDirector.sharedDirector().setDisplayFPS(true);
 
         // frames per second
-        CCDirector.sharedDirector().setAnimationInterval(1.0f / 30.0f);
+        CCDirector.sharedDirector().setAnimationInterval(1.0f / 60.0f);
 
         CCScene scene = CCScene.node();
         scene.addChild(new Box2DTestLayer());
@@ -138,6 +138,10 @@ public class Box2dTest extends Activity {
         // Simulation space should be larger than window per Box2D recommendation.
         protected static final float BUFFER = 1.0f;
         
+        //FPS for the PhysicsWorld to sync to
+        protected static final float FPS = (float)CCDirector.sharedDirector().getAnimationInterval();
+        private static float rdelta = 0;
+        
         protected final World bxWorld;
         
         public Box2DTestLayer() {
@@ -149,7 +153,7 @@ public class Box2dTest extends Activity {
         	CGSize s = CCDirector.sharedDirector().winSize();
 
       		// Define the gravity vector.
-        	Vector2 gravity = new Vector2(0.0f, -10.0f);
+        	Vector2 gravity = new Vector2(9.8f, -9.8f);
 
         	float scaledWidth = s.width/PTM_RATIO;
             float scaledHeight = s.height/PTM_RATIO;
@@ -271,6 +275,8 @@ public class Box2dTest extends Activity {
 		
 
         public synchronized void tick(float delta) {
+        	if ((rdelta += delta) < FPS) return;
+        	
         	// It is recommended that a fixed time step is used with Box2D for stability
         	// of the simulation, however, we are using a variable time step here.
         	// You need to make an informed choice, the following URL is useful
@@ -279,9 +285,11 @@ public class Box2dTest extends Activity {
         	// Instruct the world to perform a simulation step. It is
         	// generally best to keep the time step and iterations fixed.
         	synchronized (bxWorld) {
-        		bxWorld.step(delta, 8, 1);
+        		bxWorld.step(FPS, 8, 1);
         	}
 	        	
+        	rdelta = 0;
+        	
         	// Iterate over the bodies in the physics world
         	Iterator<Body> it = bxWorld.getBodies();
         	while(it.hasNext()) {
@@ -324,7 +332,7 @@ public class Box2dTest extends Activity {
 			prevY = accY;		
 			
 			// no filtering being done in this demo (just magnify the gravity a bit)
-			gravity.set( accY * 1.0f, accX * -1.0f );
+			gravity.set( accY * 9.8f, accX * -9.8f );
 			bxWorld.setGravity( gravity );			
 		}
 		
