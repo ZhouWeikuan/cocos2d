@@ -25,6 +25,7 @@ public class CCLabel extends CCSprite implements CCLabelProtocol {
     private TextAlignment _alignment;
     private String _fontName;
     private float _fontSize;
+    private String _string; 
 
     /** creates a CCLabel from a fontname, alignment, dimension and font size */
     public static CCLabel makeLabel(String string, final CGSize dimensions, TextAlignment alignment, 
@@ -59,7 +60,11 @@ public class CCLabel extends CCSprite implements CCLabelProtocol {
         To obtain better performance use CCLabelAtlas
      */
     public void setString(CharSequence seq) {   	
+    	if(_string != null && _string.equals(seq))
+    		return;
+    		
     	final String string = seq.toString();
+    	_string = string;
     	CCTexture2D texture = new CCTexture2D();
     	setTexture(texture);
     	texture.setLoader(new GLResourceHelper.GLResourceLoader() {
