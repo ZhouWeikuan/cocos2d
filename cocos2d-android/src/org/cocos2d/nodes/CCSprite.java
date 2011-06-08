@@ -433,6 +433,7 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
     /** updates the texture rect of the CCSprite.
     */
 
+    
 	public void setTextureRect(float x, float y, float w, float h, Boolean rotated) {
     	setTextureRect(x, y, w, h, w, h, rotated);
     }
