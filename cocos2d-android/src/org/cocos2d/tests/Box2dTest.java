@@ -298,8 +298,9 @@ public class Box2dTest extends Activity {
         		
         		if (userData != null && userData instanceof CCSprite) {
         			//Synchronize the Sprites position and rotation with the corresponding body
-        			CCSprite sprite = (CCSprite)userData;
-        			sprite.setPosition(b.getPosition().x * PTM_RATIO, b.getPosition().y * PTM_RATIO);
+        			final CCSprite sprite = (CCSprite)userData;
+        			final Vector2 pos = b.getPosition();
+        			sprite.setPosition(pos.x * PTM_RATIO, pos.y * PTM_RATIO);
         			sprite.setRotation(-1.0f * ccMacros.CC_RADIANS_TO_DEGREES(b.getAngle()));
         		}	
         	}
