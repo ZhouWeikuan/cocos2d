@@ -59,6 +59,10 @@ public class CCMenu extends CCLayer {
         return new CCMenu(items);
     }
 
+    public static CCMenu menu() {
+    	return new CCMenu((CCMenuItem[])null);
+    }
+    
     /** initializes a CCMenu with it's items */
     protected CCMenu(CCMenuItem... items) {
         isTouchEnabled_ = true;
@@ -71,10 +75,12 @@ public class CCMenu extends CCLayer {
         setContentSize(s);
 		setPosition(CGPoint.ccp(s.width/2, s.height/2));
 
-        for (int i = 0; i < items.length; i++) {
-            CCMenuItem item = items[i];
-            addChild(item, i);
-        }
+		if (items != null) {
+			for (int i = 0; i < items.length; i++) {
+				CCMenuItem item = items[i];
+				addChild(item, i);
+			}
+		}
 
         selectedItem = null;
         state = MenuState.kMenuStateWaiting;
@@ -387,16 +393,4 @@ public class CCMenu extends CCLayer {
     	
     	return retItem;
     }
-    /*
-	CCARRAY_FOREACH(children_, item){
-		// ignore invisible and disabled items: issue #779, #866
-		if ( [item visible] && [item isEnabled] ) {
-			CGPoint local = [item convertToNodeSpace:touchLocation];
-			CGRect r = [item rect];
-			r.origin = CGPointZero;
-			if( CGRectContainsPoint( r, local ) )
-				return item;
-		}
-	}
-    */
 }

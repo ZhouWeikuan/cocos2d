@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?xml version="1.0" encoding="GB2312" standalone="no"?>
 <jardesc>
     <jar path="cocos2d_android/libs/cocos2d-android.jar"/>
     <options buildIfNeeded="true" compress="true" descriptionLocation="/cocos2d_android/libs/cocos2d-android.jardesc" exportErrors="true" exportWarnings="true" includeDirectoryEntries="false" overwrite="false" saveDescription="true" storeRefactorings="false" useSourceFolders="false"/>
@@ -13,15 +13,14 @@
     <selectedElements exportClassFiles="true" exportJavaFiles="false" exportOutputFolder="false">
         <javaElement handleIdentifier="=cocos2d_android/src&lt;org.cocos2d.actions.interval"/>
         <file path="/cocos2d_android/default.properties"/>
-        <javaElement handleIdentifier="=cocos2d_android/src&lt;org.box2d.collision.shapes"/>
-        <javaElement handleIdentifier="=cocos2d_android/src&lt;org.box2d.collision"/>
+        <javaElement handleIdentifier="=cocos2d_android/src&lt;org.cocos2d.types.util"/>
         <javaElement handleIdentifier="=cocos2d_android/src&lt;org.cocos2d.types"/>
-        <javaElement handleIdentifier="=cocos2d_android/src&lt;org.cocos2d.box2d"/>
         <javaElement handleIdentifier="=cocos2d_android/src&lt;org.cocos2d.utils"/>
         <javaElement handleIdentifier="=cocos2d_android/src&lt;org.cocos2d.actions.tile"/>
         <javaElement handleIdentifier="=cocos2d_android/src&lt;org.cocos2d.grid"/>
         <javaElement handleIdentifier="=cocos2d_android/src&lt;org.cocos2d.events"/>
         <javaElement handleIdentifier="=cocos2d_android/src&lt;org.cocos2d.actions.camera"/>
+        <javaElement handleIdentifier="=cocos2d_android/src&lt;org.cocos2d.utils.collections"/>
         <file path="/cocos2d_android/build.properties"/>
         <javaElement handleIdentifier="=cocos2d_android/src&lt;org.cocos2d.opengl"/>
         <file path="/cocos2d_android/.classpath"/>
@@ -29,17 +28,15 @@
         <file path="/cocos2d_android/assets/fps_images.png"/>
         <javaElement handleIdentifier="=cocos2d_android/src&lt;org.cocos2d.menus"/>
         <javaElement handleIdentifier="=cocos2d_android/src&lt;org.cocos2d.layers"/>
-        <javaElement handleIdentifier="=cocos2d_android/src&lt;org.box2d.dynamics.joints"/>
         <javaElement handleIdentifier="=cocos2d_android/src&lt;org.cocos2d.sound"/>
         <file path="/cocos2d_android/AUTHORS"/>
         <javaElement handleIdentifier="=cocos2d_android/src&lt;org.cocos2d"/>
         <file path="/cocos2d_android/build.xml"/>
         <javaElement handleIdentifier="=cocos2d_android/src&lt;org.cocos2d.actions.grid"/>
+        <javaElement handleIdentifier="=cocos2d_android/src&lt;org.cocos2d.utils.pool"/>
+        <javaElement handleIdentifier="=cocos2d_android/src&lt;org.cocos2d.utils.javolution"/>
         <javaElement handleIdentifier="=cocos2d_android/src&lt;org.cocos2d.transitions"/>
-        <javaElement handleIdentifier="=cocos2d_android/src&lt;org.box2d.dynamics.contacts"/>
-        <javaElement handleIdentifier="=cocos2d_android/src&lt;org.box2d.common"/>
         <javaElement handleIdentifier="=cocos2d_android/src&lt;org.cocos2d.actions"/>
-        <javaElement handleIdentifier="=cocos2d_android/src&lt;org.box2d.dynamics"/>
         <file path="/cocos2d_android/README.0.82"/>
         <javaElement handleIdentifier="=cocos2d_android/src&lt;org.cocos2d.nodes"/>
         <javaElement handleIdentifier="=cocos2d_android/src&lt;org.cocos2d.actions.base"/>

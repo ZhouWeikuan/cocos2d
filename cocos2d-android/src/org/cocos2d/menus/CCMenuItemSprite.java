@@ -20,11 +20,31 @@ import javax.microedition.khronos.opengles.GL10;
 public class CCMenuItemSprite extends CCMenuItem implements CCRGBAProtocol {
     /** the image used when the item is not selected */
     protected CCNode normalImage_;
+    public void setNormalImage(CCNode normalImage) {
+    	normalImage_ = normalImage;
+    }
+    public CCNode getNormalImage() {
+    	return normalImage_;
+    }
+    
     /** the image used when the item is selected */
     protected CCNode selectedImage_;
+    public void setSelectedImage(CCNode selImage) {
+    	selectedImage_ = selImage;
+    }
+    public CCNode getSelectedImage() {
+    	return selectedImage_;
+    }
+    
     /** the image used when the item is disabled */
     protected CCNode disabledImage_;
-
+    public void setDisabledImage(CCNode disabled) {
+    	disabledImage_ = disabled;
+    }
+    public CCNode getDisabledImage(){
+    	return disabledImage_;
+    }
+    
     /** creates a menu item with a normal and selected image*/
     public static CCMenuItemSprite item(CCNode normalSprite, CCNode selectedSprite) {
         return new CCMenuItemSprite(normalSprite, selectedSprite, null, null, null);

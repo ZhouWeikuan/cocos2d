@@ -542,6 +542,13 @@ public class CCNode {
             this.parent_.removeChild(this, cleanup);
         }
     }
+    
+    /**
+     * Remove myself from the parent, for action CCCallFunc
+     */
+    public void removeSelf() {
+    	this.removeFromParentAndCleanup(true);
+    }
 
     /** Removes a child from the container.
        It will also cleanup all running actions depending on the cleanup parameter.

@@ -196,6 +196,16 @@
                 <category android:name="android.intent.category.TEST"/>
             </intent-filter>
         </activity>
+        
+        <activity android:name=".tests.SoundEngineTest"
+                  android:debuggable="true"
+                  android:launchMode="singleInstance"
+                  android:label="@string/activity_soundenginetest">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.TEST"/>
+            </intent-filter>
+        </activity>
 
         <activity android:name=".tests.SpritesTest"
                   android:debuggable="true"
