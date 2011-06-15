@@ -904,7 +904,7 @@ public class ActionsTest extends Activity {
 			addChild(label);
 		}
 		
-		public void callback3(Object sender, String data) {
+		public void callback3(Object sender, Object data) {
 			// NSLog(@"callback 3 called from:%@ with data:%x",sender,(int)data);
 			CGSize s = CCDirector.sharedDirector().winSize();
 			CCLabel label = CCLabel.makeLabel("callback 3 called", "DroidSans", 16);
@@ -926,9 +926,18 @@ public class ActionsTest extends Activity {
 
 			CCSequence action = CCSequence.actions(
 				CCMoveBy.action(2, CGPoint.ccp(200,0)),
-				CCCallFuncND.action(grossini, "removeFromParentAndCleanup", Boolean.valueOf(true))
+				CCCallFuncND.action(this, "callbackND", "a different implemetation of CCCallFuncND from iphone version")
 				);
 			grossini.runAction(action);
+		}
+		
+		public void callbackND(Object sender, Object data) {
+			// the action runner, grossini, is the sender.
+			CCSprite obj = (CCSprite)sender;
+			String msg   = (String)data;
+			
+			obj.removeFromParentAndCleanup(true);
+			ccMacros.CCLOGINFO("callbackND", msg);
 		}
 
 		public String title() {
@@ -936,7 +945,7 @@ public class ActionsTest extends Activity {
 		}
 
 		public String subtitle() {
-			return "CallFuncND + removeFromParentAndCleanup. Grossini dissapears in 2s";
+			return "CallFuncND + remove sprite. Grossini dissapears in 2s";
 		}
 
 	}
