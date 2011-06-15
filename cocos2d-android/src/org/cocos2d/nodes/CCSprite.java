@@ -892,8 +892,8 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
         }
 
 //        ((EGL10) gl).eglWaitNative(EGL10.EGL_NATIVE_RENDERABLE, null);
-        // bug fix in case texture name = 0
-        texture_.checkName();
+//        // bug fix in case texture name = 0
+//        texture_.checkName();
         // #define kQuadSize sizeof(quad_.bl)
         gl.glBindTexture(GL10.GL_TEXTURE_2D, texture_.name());
 

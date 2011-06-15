@@ -1,8 +1,12 @@
 package org.cocos2d.nodes;
 
-import android.os.Build;
-import android.util.Log;
-import android.view.MotionEvent;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
+import javax.microedition.khronos.opengles.GL10;
+
 import org.cocos2d.actions.CCActionManager;
 import org.cocos2d.actions.CCScheduler;
 import org.cocos2d.actions.UpdateCallback;
@@ -21,10 +25,9 @@ import org.cocos2d.types.util.PoolHolder;
 import org.cocos2d.utils.Util5;
 import org.cocos2d.utils.pool.OneClassPool;
 
-import javax.microedition.khronos.opengles.GL10;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import android.os.Build;
+import android.util.Log;
+import android.view.MotionEvent;
 
 /** CCNode is the main element. 
  Anything thats gets drawn or contains things that get drawn is a CCNode.
@@ -1206,22 +1209,45 @@ public class CCNode {
         children_ = Collections.synchronizedList(new ArrayList<CCNode>(4));
     }
 
+    private static Comparator<CCNode> zOrderComparator = new Comparator<CCNode>() {
+
+		@Override
+		public int compare(CCNode o1, CCNode o2) {
+			return o1.zOrder_ - o2.zOrder_;
+		}
+	};
+	
     // helper that reorder a child
     private void insertChild(CCNode node, int z) {
-        int index = 0;
-        boolean added = false;
-        for (int i=0; i<children_.size(); ++i) {
-        	CCNode child = children_.get(i);
-            if (child.getZOrder() > z) {
-                added = true;
-                children_.add(index, node);
-                break;
-            }
-            ++index;
-        }
-        if (!added)
-            children_.add(node);
-        node._setZOrder(z);
+    	node._setZOrder(z);
+    	int ind = Collections.binarySearch(children_, node, zOrderComparator);
+    	// let's find new index
+		if(ind >= 0) { // go to last if index is found
+			int size = children_.size();
+			CCNode prev;
+			
+			do {
+				prev = children_.get(ind);
+				ind++;
+			} while(ind < size && children_.get(ind).zOrder_ == prev.zOrder_);
+		} else { // index not found
+			ind = -(ind + 1);
+		}
+		children_.add(ind, node);
+//        int index = 0;
+//        boolean added = false;
+//        for (int i=0; i<children_.size(); ++i) {
+//        	CCNode child = children_.get(i);
+//            if (child.getZOrder() > z) {
+//                added = true;
+//                children_.add(index, node);
+//                break;
+//            }
+//            ++index;
+//        }
+//        if (!added)
+//            children_.add(node);
+//        node._setZOrder(z);
     }
 
     /** Stops all running actions and schedulers

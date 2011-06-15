@@ -211,6 +211,15 @@ public class FastFloatBuffer {
     public int limit() {
         return floats.limit();
     }
+    
+    /**
+     * @return See {@link FloatBuffer#limit(int)}
+     */
+    public void limit(int limit) {
+    	bytes.limit(4 * limit);
+        floats.limit(limit);
+        ints.limit(limit);
+    }
 
     /**
      * See {@link FloatBuffer#clear()}

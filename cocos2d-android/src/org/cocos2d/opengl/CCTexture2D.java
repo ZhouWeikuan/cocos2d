@@ -19,6 +19,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.microedition.khronos.opengles.GL10;
 import javax.microedition.khronos.opengles.GL11ExtensionPack;
@@ -143,8 +144,8 @@ public class CCTexture2D implements Resource {
 
     private CCTexParams _texParams;
     
-    /** this object is responsible for loading Bitmap for texture */
-    private GLResourceHelper.GLResourceLoader mLoader;
+//    /** this object is responsible for loading Bitmap for texture */
+//    private GLResourceHelper.GLResourceLoader mLoader;
 
     public final CGSize getContentSize() {
         return mContentSize;
@@ -183,10 +184,10 @@ public class CCTexture2D implements Resource {
         _format = defaultAlphaPixelFormat_;
     }
     
-    public void checkName() {
-    	if (mLoader != null && _name == 0)
-    		mLoader.load(this);
-    }
+//    public void checkName() {
+//    	if (mLoader != null && _name == 0)
+//    		mLoader.load(this);
+//    }
     
     public void setLoader(GLResourceHelper.GLResourceLoader loader) {
     	if(loader != null) {
@@ -197,7 +198,7 @@ public class CCTexture2D implements Resource {
 //        	}
         	GLResourceHelper.sharedHelper().addLoader(this, loader, false);
     	}
-    	mLoader = loader;
+//    	mLoader = loader;
     }
     
     /**
@@ -323,13 +324,18 @@ public class CCTexture2D implements Resource {
 
     private static CGSize calculateTextSize(String text, String fontname, float fontSize) {
 //        Typeface typeface = Typeface.create(fontname, Typeface.NORMAL);
-        Typeface typeface;
-        try {
-        	CCDirector.theApp.getAssets().open(fontname);
-        	typeface = Typeface.createFromAsset(CCDirector.theApp.getAssets(), fontname);
-        } catch(IOException e) {
-        	typeface = Typeface.create(fontname, Typeface.NORMAL);
-        }
+    	Typeface typeface;
+    	if(!typefaces.containsKey(fontname)) {
+	        try {
+	        	CCDirector.theApp.getAssets().open(fontname);
+	        	typeface = Typeface.createFromAsset(CCDirector.theApp.getAssets(), fontname);
+	        } catch(IOException e) {
+	        	typeface = Typeface.create(fontname, Typeface.NORMAL);
+	        }
+	        typefaces.put(fontname, typeface);
+    	} else {
+    		typeface = typefaces.get(fontname);
+    	}
 //        
 //        typeface = Typeface.
 //    	try{
@@ -364,15 +370,21 @@ public class CCTexture2D implements Resource {
         return v;
     }
 
+    private static HashMap<String, Typeface> typefaces = new HashMap<String, Typeface>();
     /** Initializes a texture from a string with dimensions, alignment, font name and font size */
     public void initWithText(String text, CGSize dimensions, CCLabel.TextAlignment alignment, String fontname, float fontSize) {
     	Typeface typeface;
-        try {
-        	CCDirector.theApp.getAssets().open(fontname);
-        	typeface = Typeface.createFromAsset(CCDirector.theApp.getAssets(), fontname);
-        } catch(IOException e) {
-        	typeface = Typeface.create(fontname, Typeface.NORMAL);
-        }
+    	if(!typefaces.containsKey(fontname)) {
+	        try {
+	        	CCDirector.theApp.getAssets().open(fontname);
+	        	typeface = Typeface.createFromAsset(CCDirector.theApp.getAssets(), fontname);
+	        } catch(IOException e) {
+	        	typeface = Typeface.create(fontname, Typeface.NORMAL);
+	        }
+	        typefaces.put(fontname, typeface);
+    	} else {
+    		typeface = typefaces.get(fontname);
+    	}
 
         Paint textPaint = new Paint();
         textPaint.setTypeface(typeface);
