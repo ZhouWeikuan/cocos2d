@@ -681,12 +681,12 @@ public class CCDirector implements GLSurfaceView.Renderer {
 
         gl.glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
+        GLResourceHelper.sharedHelper().update(gl);
+        
         /* to avoid flickr, nextCCScene MUST be here: after tick and before draw.
          XXX: Which bug is this one. It seems that it can't be reproduced with v0.9 */
         if( nextCCScene_ != null)
         	setNextScene();
-        
-        GLResourceHelper.sharedHelper().update(gl);
         
         gl.glPushMatrix();
 
