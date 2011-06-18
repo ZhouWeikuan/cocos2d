@@ -24,13 +24,6 @@ public class GLResourceHelper {
 
     /** singleton of the CCTouchDispatcher */
     public static GLResourceHelper sharedHelper() {
-//        if (_sharedResourceHelper == null) {
-//            synchronized (GLResourceHelper.class) {
-//                if (_sharedResourceHelper == null) {
-//                    _sharedResourceHelper = new GLResourceHelper();
-//                }
-//            }
-//        }
         return _sharedResourceHelper;
     }
     
@@ -58,13 +51,11 @@ public class GLResourceHelper {
 
 	private ConcurrentLinkedQueue<GLResorceTask> taskQueue;
 	private Map<Resource, GLResourceLoader> reloadMap;
-//    private ConcurrentLinkedQueue<GLResourceLoader> reloadQueue;
 
 	
 	public GLResourceHelper() {
 		taskQueue = new ConcurrentLinkedQueue<GLResorceTask>();
 		reloadMap = Collections.synchronizedMap(new WeakHashMap<GLResourceHelper.Resource, GLResourceHelper.GLResourceLoader>());
-//		reloadQueue = new ConcurrentLinkedQueue<GLResourceLoader>();
 	}
 
     public void addLoader(final Resource res, final GLResourceLoader loader, boolean addTask) {
@@ -74,38 +65,29 @@ public class GLResourceHelper {
 				public void perform(GL10 gl) {
 					loader.load(res);
 					reloadMap.put(res, loader);
-//					reloadQueue.add(loader);
 				}
 			});
     	} else {
     		reloadMap.put(res, loader);
-//    		reloadQueue.add(loader);
     	}
     }
     
-//    public void removeLoader(GLResourceLoader loader) {
-//    	reloadQueue.remove(loader);
-//	}
-
     /**
      * This should be called only when recreating GL context
      */
 	public void reloadResources() {
-		taskQueue.add(new GLResorceTask() {
-			@Override
-			public void perform(GL10 gl) {
+//		taskQueue.add(new GLResorceTask() {
+//			@Override
+//			public void perform(GL10 gl) {
+				inUpdate = true;
 				for(Entry<Resource, GLResourceLoader> entry : reloadMap.entrySet()) {
 					Resource res = entry.getKey();
 					if(res != null)
 						entry.getValue().load(res);
 				}
-//				if(reloadQueue.size() > 0) {
-//					for(GLResourceLoader res : reloadQueue) {
-//						res.load();
-//					}
-//				}
-			}
-		});
+				inUpdate = false;
+//			}
+//		});
 	}
 
 	/**
@@ -114,8 +96,7 @@ public class GLResourceHelper {
 	 * @param res GL task
 	 */
 	public void perform(GLResorceTask res) {
-//		long curThread = Thread.currentThread().getId();
-		if(inUpdate) {  //curThread == glThreadId) { //
+		if(inUpdate) {
 			res.perform(CCDirector.gl);
 		} else {
 			taskQueue.add(res);
@@ -131,18 +112,14 @@ public class GLResourceHelper {
 	 */
 	public void update(GL10 gl) {
 		if(taskQueue.size() > 0) {
-//			inUpdate = true;
-			
+	
 			GLResorceTask res;
 			while((res = taskQueue.poll()) != null) {
 				res.perform(gl);
 			}
-//			inUpdate = false;
 		}
 	}
 
-//	private long glThreadId = -1;
-	
 	public void setInUpdate(boolean inUpd) {
 		inUpdate = inUpd;
 	}
