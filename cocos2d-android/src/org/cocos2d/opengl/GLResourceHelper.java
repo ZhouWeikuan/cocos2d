@@ -72,22 +72,26 @@ public class GLResourceHelper {
     	}
     }
     
+    private boolean reloadTaskIsInQueue;
     /**
      * This should be called only when recreating GL context
      */
 	public void reloadResources() {
-//		taskQueue.add(new GLResorceTask() {
-//			@Override
-//			public void perform(GL10 gl) {
-				inUpdate = true;
+		if(reloadTaskIsInQueue)
+			return;
+			
+		reloadTaskIsInQueue = true;
+		taskQueue.add(new GLResorceTask() {
+			@Override
+			public void perform(GL10 gl) {
 				for(Entry<Resource, GLResourceLoader> entry : reloadMap.entrySet()) {
 					Resource res = entry.getKey();
 					if(res != null)
 						entry.getValue().load(res);
 				}
-				inUpdate = false;
-//			}
-//		});
+				reloadTaskIsInQueue = false;
+			}
+		});
 	}
 
 	/**
