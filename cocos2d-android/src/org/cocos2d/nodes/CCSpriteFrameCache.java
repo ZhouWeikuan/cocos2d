@@ -38,8 +38,8 @@ public class CCSpriteFrameCache {
         spriteFrames = new HashMap<String, CCSpriteFrame>();
     }
 
-    public static CCSpriteFrame spriteFrameByName(String name) {
-        return CCSpriteFrameCache.sharedSpriteFrameCache().getSpriteFrame(name);
+    public CCSpriteFrame spriteFrameByName(String name) {
+        return getSpriteFrame(name);
     }
 
     /** Purges the cache. It releases all the Sprite Frames and the retained instance.

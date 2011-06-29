@@ -14,6 +14,7 @@ import android.media.SoundPool;
 public class SoundEngine {
 	// effects are sounds that less than 5 seconds, better in 3 seconds
 	IntMap<Integer> effectsMap = new IntMap<Integer>();
+	IntMap<Integer> streamsMap = new IntMap<Integer>();
 	
 	// sounds are background sounds, usually longer than 5 seconds
 	IntMap<MediaPlayer> soundsMap = new IntMap<MediaPlayer>();
@@ -114,8 +115,17 @@ public class SoundEngine {
 		}
 
 		int streamId = sp.play(sndId, 1.0f, 1.0f, 0, 0, 1.0f);
-		if (effectsVolume != null)
+		if (effectsVolume != null) {
 			sp.setVolume(streamId, effectsVolume, effectsVolume);
+		}
+		streamsMap.put(resId, streamId);
+	}
+	
+	public void stopEffect(Context app, int resId) {
+		Integer sid = streamsMap.get(resId);
+		if (sid != null) {
+			sp.stop(sid);
+		}
 	}
 	
 	public void preloadSound(Context ctxt, int resId) {
@@ -185,19 +195,6 @@ public class SoundEngine {
 				return;
 		}
 		mp.start();
-	}
-	
-	public void stopSound() {
-		if (lastSndId == -1)
-			return;
-		MediaPlayer mp = null;
-		synchronized(soundsMap) {
-			mp = soundsMap.get(lastSndId);
-			if (mp == null)
-				return;
-		}
-		mp.stop();
-		lastSndId = -1;
 	}
 	
 	public void realesSound(int resId)

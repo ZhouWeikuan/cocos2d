@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="GB2312" standalone="no"?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <jardesc>
     <jar path="cocos2d_android/libs/cocos2d-android.jar"/>
     <options buildIfNeeded="true" compress="true" descriptionLocation="/cocos2d_android/libs/cocos2d-android.jardesc" exportErrors="true" exportWarnings="true" includeDirectoryEntries="false" overwrite="false" saveDescription="true" storeRefactorings="false" useSourceFolders="false"/>

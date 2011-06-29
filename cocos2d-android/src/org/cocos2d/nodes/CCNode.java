@@ -1038,7 +1038,7 @@ public class CCNode {
     /** Returns the inverse world affine transform matrix
       @since v0.7.1
     */
-    private CGAffineTransform worldToNodeTransform() {
+    public CGAffineTransform worldToNodeTransform() {
         return nodeToWorldTransform().getTransformInvert();
     }
     

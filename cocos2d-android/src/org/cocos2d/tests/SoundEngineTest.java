@@ -110,7 +110,7 @@ public class SoundEngineTest extends Activity {
         
         @Override
         public void onExit() {
-        	SoundEngine.sharedEngine().stopSound();
+        	SoundEngine.sharedEngine().pauseSound();
         	
         	super.onExit();
         }
