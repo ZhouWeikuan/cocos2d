@@ -1,5 +1,11 @@
 package org.cocos2d.nodes;
 
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.util.ArrayList;
+
+import javax.microedition.khronos.opengles.GL10;
+
 import org.cocos2d.config.ccConfig;
 import org.cocos2d.opengl.CCTexture2D;
 import org.cocos2d.types.CCTexParams;
@@ -7,11 +13,6 @@ import org.cocos2d.types.CGPoint;
 import org.cocos2d.types.ccBlendFunc;
 import org.cocos2d.types.ccColor4B;
 import org.cocos2d.utils.FastFloatBuffer;
-
-import javax.microedition.khronos.opengles.GL10;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.util.ArrayList;
 
 /**
  * A ribbon is a dynamically generated list of polygons drawn as a single or series

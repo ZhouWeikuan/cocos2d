@@ -1,13 +1,14 @@
 package org.cocos2d.opengl;
 
-import android.opengl.GLSurfaceView;
-import android.util.Log;
-
-import javax.microedition.khronos.opengles.GL;
-import javax.microedition.khronos.opengles.GL10;
 import java.nio.Buffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
+
+import javax.microedition.khronos.opengles.GL;
+import javax.microedition.khronos.opengles.GL10;
+
+import android.opengl.GLSurfaceView;
+import android.util.Log;
 
 
 public class GLDebugWrapper implements GLSurfaceView.GLWrapper {

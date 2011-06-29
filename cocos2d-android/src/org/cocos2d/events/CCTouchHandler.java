@@ -1,8 +1,7 @@
 package org.cocos2d.events;
 
-import org.cocos2d.protocols.CCTouchDelegateProtocol;
-import org.cocos2d.events.CCTouchDispatcher;
 import org.cocos2d.events.CCTouchDispatcher.ccTouchSelectorFlag;
+import org.cocos2d.protocols.CCTouchDelegateProtocol;
 
 import android.view.MotionEvent;
 

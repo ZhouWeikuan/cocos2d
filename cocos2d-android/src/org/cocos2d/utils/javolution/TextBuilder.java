@@ -12,6 +12,8 @@ package org.cocos2d.utils.javolution;
 import java.io.IOException;
 import java.io.Writer;
 
+import org.w3c.dom.Text;
+
 /**
  * <p> This class represents an {@link Appendable} text whose capacity expands 
  *     gently without incurring expensive resize/copy operations ever.</p>

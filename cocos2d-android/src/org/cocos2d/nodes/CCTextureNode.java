@@ -1,5 +1,11 @@
 package org.cocos2d.nodes;
 
+import static javax.microedition.khronos.opengles.GL10.GL_TEXTURE_2D;
+import static javax.microedition.khronos.opengles.GL10.GL_TEXTURE_COORD_ARRAY;
+import static javax.microedition.khronos.opengles.GL10.GL_VERTEX_ARRAY;
+
+import javax.microedition.khronos.opengles.GL10;
+
 import org.cocos2d.config.ccConfig;
 import org.cocos2d.opengl.CCTexture2D;
 import org.cocos2d.protocols.CCRGBAProtocol;
@@ -7,10 +13,6 @@ import org.cocos2d.types.CGPoint;
 import org.cocos2d.types.CGSize;
 import org.cocos2d.types.ccBlendFunc;
 import org.cocos2d.types.ccColor3B;
-
-import javax.microedition.khronos.opengles.GL10;
-
-import static javax.microedition.khronos.opengles.GL10.*;
 
 
 public class CCTextureNode extends CCNode implements CCRGBAProtocol, CCNode.CocosNodeSize {

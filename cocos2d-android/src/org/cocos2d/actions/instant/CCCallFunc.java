@@ -1,8 +1,8 @@
 package org.cocos2d.actions.instant;
 
-import org.cocos2d.nodes.CCNode;
-
 import java.lang.reflect.Method;
+
+import org.cocos2d.nodes.CCNode;
 
 //
 // CallFunc

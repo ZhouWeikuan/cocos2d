@@ -1,13 +1,13 @@
 package org.cocos2d.menus;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import org.cocos2d.nodes.CCNode;
 import org.cocos2d.protocols.CCRGBAProtocol;
 import org.cocos2d.types.CGPoint;
 import org.cocos2d.types.CGSize;
 import org.cocos2d.types.ccColor3B;
-
-import java.util.ArrayList;
-import java.util.Arrays;
 
 
 /** A CCMenuItemToggle

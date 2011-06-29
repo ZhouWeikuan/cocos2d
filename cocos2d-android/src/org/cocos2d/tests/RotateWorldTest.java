@@ -1,19 +1,26 @@
 package org.cocos2d.tests;
 
+import org.cocos2d.actions.base.CCAction;
+import org.cocos2d.actions.interval.CCIntervalAction;
+import org.cocos2d.actions.interval.CCJumpBy;
+import org.cocos2d.actions.interval.CCRepeat;
+import org.cocos2d.actions.interval.CCRotateBy;
+import org.cocos2d.actions.interval.CCSequence;
+import org.cocos2d.layers.CCColorLayer;
+import org.cocos2d.layers.CCLayer;
+import org.cocos2d.layers.CCScene;
+import org.cocos2d.nodes.CCDirector;
+import org.cocos2d.nodes.CCNode;
+import org.cocos2d.nodes.CCSprite;
+import org.cocos2d.opengl.CCGLSurfaceView;
+import org.cocos2d.types.CGPoint;
+import org.cocos2d.types.CGSize;
+import org.cocos2d.types.ccColor4B;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.Window;
 import android.view.WindowManager;
-import org.cocos2d.actions.base.CCAction;
-import org.cocos2d.actions.interval.*;
-import org.cocos2d.layers.CCColorLayer;
-import org.cocos2d.layers.CCLayer;
-import org.cocos2d.layers.CCScene;
-import org.cocos2d.nodes.*;
-import org.cocos2d.opengl.CCGLSurfaceView;
-import org.cocos2d.types.CGPoint;
-import org.cocos2d.types.ccColor4B;
-import org.cocos2d.types.CGSize;
 
 public class RotateWorldTest extends Activity {
     // private static final String LOG_TAG = RotateWorldTest.class.getSimpleName();

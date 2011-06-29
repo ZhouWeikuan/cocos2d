@@ -5,7 +5,6 @@ import javax.microedition.khronos.opengles.GL10;
 import org.cocos2d.nodes.CCDirector;
 import org.cocos2d.opengl.CCGLSurfaceView;
 import org.cocos2d.opengl.GLSurfaceView;
-//import org.cocos2d.opengl.GLSurfaceView;
 
 import android.app.Activity;
 import android.util.Log;

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.cocos2d.protocols.CCKeyDelegateProtocol;
 import org.cocos2d.utils.collections.ConcNodeCachingLinkedQueue;
+
 import android.view.KeyEvent;
 
 public class CCKeyDispatcher {

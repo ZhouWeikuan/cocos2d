@@ -1,6 +1,9 @@
 package org.cocos2d.menus;
 
-import android.view.MotionEvent;
+import java.util.ArrayList;
+
+import org.cocos2d.config.ccMacros;
+import org.cocos2d.events.CCTouchDispatcher;
 import org.cocos2d.layers.CCLayer;
 import org.cocos2d.nodes.CCDirector;
 import org.cocos2d.nodes.CCNode;
@@ -12,10 +15,8 @@ import org.cocos2d.types.ccColor3B;
 import org.cocos2d.types.util.CGPointUtil;
 import org.cocos2d.types.util.PoolHolder;
 import org.cocos2d.utils.pool.OneClassPool;
-import org.cocos2d.config.ccMacros;
-import org.cocos2d.events.CCTouchDispatcher;
 
-import java.util.ArrayList;
+import android.view.MotionEvent;
 
 /** A CCMenu
  * 

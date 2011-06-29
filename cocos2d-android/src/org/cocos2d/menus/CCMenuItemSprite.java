@@ -1,11 +1,11 @@
 package org.cocos2d.menus;
 
+import javax.microedition.khronos.opengles.GL10;
+
 import org.cocos2d.nodes.CCNode;
 import org.cocos2d.protocols.CCRGBAProtocol;
 import org.cocos2d.types.CGSize;
 import org.cocos2d.types.ccColor3B;
-
-import javax.microedition.khronos.opengles.GL10;
 
 /**
  * MenuItemSprite accepts CocosNode<CocosNodeRGBA> objects as items.

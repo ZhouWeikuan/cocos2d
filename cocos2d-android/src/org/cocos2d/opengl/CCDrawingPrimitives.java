@@ -11,7 +11,6 @@ import static javax.microedition.khronos.opengles.GL10.GL_TEXTURE_COORD_ARRAY;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.nio.FloatBuffer;
 
 import javax.microedition.khronos.opengles.GL10;
 
