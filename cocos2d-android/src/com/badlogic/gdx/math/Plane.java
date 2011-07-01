@@ -12,7 +12,6 @@
  */
 package com.badlogic.gdx.math;
 
-import com.badlogic.gdx.math.Plane.PlaneSide;
 
 /**
  * A plane defined via a unit length normal and the distance from the origin, as

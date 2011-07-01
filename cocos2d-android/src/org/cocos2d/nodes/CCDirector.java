@@ -1,16 +1,27 @@
 package org.cocos2d.nodes;
 
-import android.app.Activity;
-import android.content.pm.ActivityInfo;
-import android.content.res.Configuration;
-import android.opengl.GLSurfaceView;
-import android.opengl.GLU;
-import android.os.SystemClock;
-import android.util.Log;
-import android.view.KeyEvent;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.WindowManager;
+import static javax.microedition.khronos.opengles.GL10.GL_BLEND;
+import static javax.microedition.khronos.opengles.GL10.GL_COLOR_ARRAY;
+import static javax.microedition.khronos.opengles.GL10.GL_COLOR_BUFFER_BIT;
+import static javax.microedition.khronos.opengles.GL10.GL_DEPTH_BUFFER_BIT;
+import static javax.microedition.khronos.opengles.GL10.GL_DEPTH_TEST;
+import static javax.microedition.khronos.opengles.GL10.GL_DITHER;
+import static javax.microedition.khronos.opengles.GL10.GL_FASTEST;
+import static javax.microedition.khronos.opengles.GL10.GL_LEQUAL;
+import static javax.microedition.khronos.opengles.GL10.GL_MODELVIEW;
+import static javax.microedition.khronos.opengles.GL10.GL_NICEST;
+import static javax.microedition.khronos.opengles.GL10.GL_ONE_MINUS_SRC_ALPHA;
+import static javax.microedition.khronos.opengles.GL10.GL_PERSPECTIVE_CORRECTION_HINT;
+import static javax.microedition.khronos.opengles.GL10.GL_PROJECTION;
+import static javax.microedition.khronos.opengles.GL10.GL_SRC_ALPHA;
+import static javax.microedition.khronos.opengles.GL10.GL_TEXTURE_2D;
+
+import java.util.ArrayList;
+
+import javax.microedition.khronos.egl.EGL10;
+import javax.microedition.khronos.egl.EGLConfig;
+import javax.microedition.khronos.opengles.GL10;
+
 import org.cocos2d.actions.CCScheduler;
 import org.cocos2d.config.ccConfig;
 import org.cocos2d.config.ccMacros;
@@ -20,6 +31,7 @@ import org.cocos2d.layers.CCScene;
 import org.cocos2d.nodes.CCLabel.TextAlignment;
 import org.cocos2d.opengl.CCTexture2D;
 import org.cocos2d.opengl.GLResourceHelper;
+import org.cocos2d.opengl.GLSurfaceView;
 import org.cocos2d.transitions.CCTransitionScene;
 import org.cocos2d.types.CGPoint;
 import org.cocos2d.types.CGRect;
@@ -28,12 +40,16 @@ import org.cocos2d.types.util.CGPointUtil;
 import org.cocos2d.utils.CCFormatter;
 import org.cocos2d.utils.javolution.TextBuilder;
 
-import javax.microedition.khronos.egl.EGL10;
-import javax.microedition.khronos.egl.EGLConfig;
-import javax.microedition.khronos.opengles.GL10;
-import java.util.ArrayList;
-
-import static javax.microedition.khronos.opengles.GL10.*;
+import android.app.Activity;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
+import android.opengl.GLU;
+import android.os.SystemClock;
+import android.util.Log;
+import android.view.KeyEvent;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 
 /**Class that creates and handle the main Window and manages how
 and when to execute the Scenes.

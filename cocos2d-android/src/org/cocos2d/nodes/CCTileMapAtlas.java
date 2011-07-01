@@ -1,12 +1,18 @@
 package org.cocos2d.nodes;
 
-import android.util.Log;
-import org.cocos2d.opengl.TGA;
-import org.cocos2d.types.*;
-import org.cocos2d.utils.CCFormatter;
-
 import java.io.IOException;
 import java.util.HashMap;
+
+import org.cocos2d.opengl.TGA;
+import org.cocos2d.types.CGSize;
+import org.cocos2d.types.ccBlendFunc;
+import org.cocos2d.types.ccColor3B;
+import org.cocos2d.types.ccGridSize;
+import org.cocos2d.types.ccQuad2;
+import org.cocos2d.types.ccQuad3;
+import org.cocos2d.utils.CCFormatter;
+
+import android.util.Log;
 
 /** CCTileMapAtlas is a subclass of CCAtlasNode.
  

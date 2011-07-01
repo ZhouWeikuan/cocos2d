@@ -5,17 +5,16 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 
+import org.cocos2d.config.ccMacros;
+import org.cocos2d.nodes.CCDirector;
+import org.cocos2d.types.CGPoint;
+import org.cocos2d.types.CGRect;
+import org.cocos2d.types.CGSize;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.helpers.XMLReaderFactory;
-
-import org.cocos2d.nodes.CCDirector;
-import org.cocos2d.config.ccMacros;
-import org.cocos2d.types.CGPoint;
-import org.cocos2d.types.CGRect;
-import org.cocos2d.types.CGSize;
 
 public class ZwoptexParser extends DefaultHandler {
 

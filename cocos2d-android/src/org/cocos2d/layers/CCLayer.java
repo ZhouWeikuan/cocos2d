@@ -2,8 +2,8 @@ package org.cocos2d.layers;
 
 import org.cocos2d.events.CCKeyDispatcher;
 import org.cocos2d.events.CCTouchDispatcher;
-import org.cocos2d.nodes.CCNode;
 import org.cocos2d.nodes.CCDirector;
+import org.cocos2d.nodes.CCNode;
 import org.cocos2d.protocols.CCKeyDelegateProtocol;
 import org.cocos2d.protocols.CCTouchDelegateProtocol;
 import org.cocos2d.types.CGPoint;

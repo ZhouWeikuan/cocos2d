@@ -1,7 +1,7 @@
 package org.cocos2d.menus;
 
-import org.cocos2d.nodes.CCNode;
 import org.cocos2d.nodes.CCLabel;
+import org.cocos2d.nodes.CCNode;
 
 /** A CCMenuItemFont
  Helper class that creates a CCMenuItemLabel class with a Label

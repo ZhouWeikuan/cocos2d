@@ -1,12 +1,12 @@
 package org.cocos2d.transitions;
 
-import org.cocos2d.nodes.CCDirector;
-import org.cocos2d.layers.CCScene;
-import org.cocos2d.types.CGPoint;
+import javax.microedition.khronos.opengles.GL10;
+
 import org.cocos2d.actions.UpdateCallback;
 import org.cocos2d.events.CCTouchDispatcher;
-
-import javax.microedition.khronos.opengles.GL10;
+import org.cocos2d.layers.CCScene;
+import org.cocos2d.nodes.CCDirector;
+import org.cocos2d.types.CGPoint;
 
 public class CCTransitionScene extends CCScene {
 

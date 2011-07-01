@@ -17,6 +17,12 @@ import org.cocos2d.types.CGRect;
 import org.cocos2d.types.CGSize;
 import org.cocos2d.types.ccColor3B;
 
+import android.app.Activity;
+import android.os.Bundle;
+import android.view.MotionEvent;
+import android.view.Window;
+import android.view.WindowManager;
+
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -24,19 +30,6 @@ import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
-//import org.jbox2d.collision.AABB;
-//import org.jbox2d.collision.shapes.EdgeChainDef;
-//import org.jbox2d.collision.shapes.PolygonDef;
-//import org.jbox2d.common.Vector2;
-//import org.jbox2d.dynamics.Body;
-//import org.jbox2d.dynamics.BodyDef;
-//import org.jbox2d.dynamics.World;
-
-import android.app.Activity;
-import android.os.Bundle;
-import android.view.MotionEvent;
-import android.view.Window;
-import android.view.WindowManager;
 
 /** 
  * A test that demonstrates basic JBox2D integration by using AtlasSprites connected to physics bodies.

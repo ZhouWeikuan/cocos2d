@@ -1,10 +1,10 @@
 package org.cocos2d.nodes;
 
+import java.util.ArrayList;
+
 import org.cocos2d.opengl.CCTexture2D;
 import org.cocos2d.types.CGPoint;
 import org.cocos2d.types.CGRect;
-
-import java.util.ArrayList;
 
 /** an Animation object used within Sprites to perform animations */
 public class CCAnimation {

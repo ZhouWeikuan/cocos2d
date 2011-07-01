@@ -1,21 +1,30 @@
 package org.cocos2d.tests;
 
-import android.app.Activity;
-import android.os.Bundle;
-import android.view.Window;
-import android.view.WindowManager;
-import android.view.MotionEvent;
 import org.cocos2d.actions.base.CCRepeatForever;
-import org.cocos2d.actions.interval.*;
+import org.cocos2d.actions.interval.CCIntervalAction;
+import org.cocos2d.actions.interval.CCMoveBy;
+import org.cocos2d.actions.interval.CCSequence;
+import org.cocos2d.events.CCTouchDispatcher;
 import org.cocos2d.layers.CCLayer;
 import org.cocos2d.layers.CCScene;
 import org.cocos2d.menus.CCMenu;
 import org.cocos2d.menus.CCMenuItemImage;
-import org.cocos2d.nodes.*;
+import org.cocos2d.nodes.CCDirector;
+import org.cocos2d.nodes.CCLabel;
+import org.cocos2d.nodes.CCNode;
+import org.cocos2d.nodes.CCParallaxNode;
+import org.cocos2d.nodes.CCSprite;
+import org.cocos2d.nodes.CCTileMapAtlas;
 import org.cocos2d.opengl.CCGLSurfaceView;
 import org.cocos2d.opengl.CCTextureAtlas;
-import org.cocos2d.types.*;
-import org.cocos2d.events.CCTouchDispatcher;
+import org.cocos2d.types.CGPoint;
+import org.cocos2d.types.CGSize;
+
+import android.app.Activity;
+import android.os.Bundle;
+import android.view.MotionEvent;
+import android.view.Window;
+import android.view.WindowManager;
 
 public class ParallaxTest extends Activity {
     // private static final String LOG_TAG = AtlasSpriteTest.class.getSimpleName();

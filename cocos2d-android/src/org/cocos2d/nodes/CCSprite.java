@@ -1,5 +1,10 @@
 package org.cocos2d.nodes;
 
+import java.util.Arrays;
+import java.util.HashMap;
+
+import javax.microedition.khronos.opengles.GL10;
+
 import org.cocos2d.config.ccConfig;
 import org.cocos2d.config.ccMacros;
 import org.cocos2d.opengl.CCTexture2D;
@@ -16,10 +21,6 @@ import org.cocos2d.types.ccColor4B;
 import org.cocos2d.utils.FastFloatBuffer;
 
 import android.graphics.Bitmap;
-
-import javax.microedition.khronos.opengles.GL10;
-import java.util.Arrays;
-import java.util.HashMap;
 
 /** CCSprite is a 2d image ( http://en.wikipedia.org/wiki/Sprite_(computer_graphics) )
  *

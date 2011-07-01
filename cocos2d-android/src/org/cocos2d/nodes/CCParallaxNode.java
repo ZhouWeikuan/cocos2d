@@ -1,9 +1,10 @@
 package org.cocos2d.nodes;
 
-import org.cocos2d.types.CGPoint;
+import java.util.ArrayList;
 
 import javax.microedition.khronos.opengles.GL10;
-import java.util.ArrayList;
+
+import org.cocos2d.types.CGPoint;
 
 /** CCParallaxNode: A node that simulates a parallax scroller
  * The children will be moved faster / slower than the parent according the the parallax ratio.

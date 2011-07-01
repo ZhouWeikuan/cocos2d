@@ -1,6 +1,5 @@
 package org.cocos2d.actions.base;
 
-import org.cocos2d.config.ccMacros;
 import org.cocos2d.nodes.CCDirector;
 import org.cocos2d.nodes.CCNode;
 import org.cocos2d.types.CGPoint;
