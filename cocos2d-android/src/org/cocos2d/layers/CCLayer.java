@@ -83,6 +83,12 @@ public class CCLayer extends CCNode
         }
     }
     
+    //added by DustinEwan
+    public void enableAccelerometerWithRate(int rate) {
+    	accelerometerUpdateRate = rate;
+    	setIsAccelerometerEnabled(true);
+    }
+    
 	//added by Ishaq 
 	protected boolean isKeyEnabled_;
 
@@ -150,6 +156,9 @@ public class CCLayer extends CCNode
     	if (accelerometer != null) {
     		sensorManager.unregisterListener(this, accelerometer);
     	}
+    	
+    	/** reset the poll rate to GAME default */
+    	accelerometerUpdateRate = SensorManager.SENSOR_DELAY_GAME;
     }
     
     @Override
