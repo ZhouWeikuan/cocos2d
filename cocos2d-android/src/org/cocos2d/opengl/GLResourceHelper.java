@@ -60,13 +60,14 @@ public class GLResourceHelper {
 
     public void addLoader(final Resource res, final GLResourceLoader loader, boolean addTask) {
     	if(addTask) {
-	    	taskQueue.add(new GLResorceTask() {
+    		GLResorceTask task = new GLResorceTask() {
 				@Override
 				public void perform(GL10 gl) {
 					loader.load(res);
 					reloadMap.put(res, loader);
 				}
-			});
+			};
+    		perform(task);
     	} else {
     		reloadMap.put(res, loader);
     	}
