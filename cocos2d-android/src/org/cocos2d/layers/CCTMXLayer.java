@@ -562,6 +562,7 @@ public class CCTMXLayer extends CCSpriteSheet {
 
 	@Override
 	public void draw(GL10 gl) {
+		gl.glDisableClientState(GL10.GL_COLOR_ARRAY);
 		if( useAutomaticVertexZ_ ) {
 			gl.glEnable(GL10.GL_ALPHA_TEST);
 			gl.glAlphaFunc(GL10.GL_GREATER, alphaFuncValue_);
@@ -572,6 +573,7 @@ public class CCTMXLayer extends CCSpriteSheet {
 		if( useAutomaticVertexZ_ ) {
 			gl.glDisable(GL10.GL_ALPHA_TEST);
 		}
+		gl.glEnableClientState(GL10.GL_COLOR_ARRAY);
 	}
 
 }
