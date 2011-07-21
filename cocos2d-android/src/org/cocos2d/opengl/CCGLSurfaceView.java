@@ -89,6 +89,5 @@ public class CCGLSurfaceView extends GLSurfaceView {
     	
         return true;
     }
-    
 }
 

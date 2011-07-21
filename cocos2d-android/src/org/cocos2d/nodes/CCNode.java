@@ -23,6 +23,7 @@ import org.cocos2d.types.util.CGAffineTransformUtil;
 import org.cocos2d.types.util.CGPointUtil;
 import org.cocos2d.types.util.PoolHolder;
 import org.cocos2d.utils.Util5;
+import org.cocos2d.utils.javolution.MathLib;
 import org.cocos2d.utils.pool.OneClassPool;
 
 import android.os.Build;
@@ -48,6 +49,7 @@ import android.view.MotionEvent;
  Features of CCNode:
  - position
  - scale (x, y)
+ - skew (x by degrees, y by degrees)
  - rotation (in degrees, clockwise)
  - CCCamera (an interface to gluLookAt )
  - CCGridBase (to do mesh transformations)
@@ -60,6 +62,7 @@ import android.view.MotionEvent;
  Default values:
   - rotation: 0
   - position: (x=0,y=0)
+  - skew: (x=0, y=0)
   - scale: (x=1,y=1)
   - contentSize: (x=0,y=0)
   - anchorPoint: (x=0,y=0)
@@ -70,12 +73,14 @@ import android.view.MotionEvent;
  Order in transformations with grid disabled
  -# The node will be translated (position)
  -# The node will be rotated (rotation)
+ -# The node will be skewed (skew)
  -# The node will be scaled (scale)
  -# The node will be moved according to the camera values (camera)
  
  Order in transformations with grid enabled
  -# The node will be translated (position)
  -# The node will be rotated (rotation)
+ -# The node will be skewed (skew)
  -# The node will be scaled (scale)
  -# The grid will capture the screen
  -# The node will be moved according to the camera values (camera)
@@ -113,6 +118,7 @@ public class CCNode {
 	// scaling factors
     protected float scaleX_;
     protected float scaleY_;
+    
 
     /** The scale factor of the node. 
        1.0 is the default scale factor. It only modifies the X scale factor.
@@ -163,7 +169,42 @@ public class CCNode {
         }
         return 0;
     }
-
+    
+    // skewing factors
+    
+	private float skewX_;
+	private float skewY_;
+    
+    /** The horizontal skew factor of the node.
+     *  0.0 is the default skew factor.
+     */
+    public void setSkewX(float s) {
+    	skewX_ = s;
+    	isTransformDirty_ = isInverseDirty_ = true;
+    	if (ccConfig.CC_NODE_TRANSFORM_USING_AFFINE_MATRIX) {
+    		isTransformGLDirty_ = true;
+    	}
+    }
+    
+    public float getSkewX() {
+    	return skewX_;
+    }
+    
+    /** The vertical skew factor of the node.
+     *  0.0 is the default skew factor.
+     */
+    public void setSkewY(float s) {
+    	skewY_ = s;
+    	isTransformDirty_ = isInverseDirty_ = true;
+    	if (ccConfig.CC_NODE_TRANSFORM_USING_AFFINE_MATRIX) {
+    		isTransformGLDirty_ = true;
+    	}
+    }
+    
+    public float getSkewY() {
+    	return skewY_;
+    }
+    
 	// anchor point in pixels
 	protected CGPoint anchorPointInPixels_;	
 
@@ -454,8 +495,8 @@ public class CCNode {
         isRunning_ = false;
 
         rotation_ = 0.0f;
-        scaleX_ = 1.0f;
-        scaleY_ = 1.0f;
+        scaleX_ = scaleY_ = 1.0f;
+        skewX_ = skewY_ = 0.0f;
         position_ = CGPoint.ccp(0, 0);
 
         transform_ = CGAffineTransform.identity();
@@ -987,6 +1028,13 @@ public class CCNode {
             
             if (rotation_ != 0)
             	transform_.rotate(-ccMacros.CC_DEGREES_TO_RADIANS(rotation_));
+            
+            if (skewX_ != 0 || skewY_ != 0) {
+            	/** create a skewed coordinate system */
+            	CGAffineTransform skew = CGAffineTransform.make(1.0f, MathLib.tan(ccMacros.CC_DEGREES_TO_RADIANS(skewY_)), MathLib.tan(ccMacros.CC_DEGREES_TO_RADIANS(skewX_)), 1.0f, 0.0f, 0.0f);
+            	/** apply the skew to the transform */
+            	transform_ = transform_.getTransformConcat(skew);
+            }
             
             if( ! (scaleX_ == 1 && scaleY_ == 1) ) 
             	transform_.scale(scaleX_, scaleY_);

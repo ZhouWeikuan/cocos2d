@@ -295,8 +295,8 @@ public class CCDirector implements GLSurfaceView.Renderer {
     // rotates the screen if an orientation differnent than Portrait is used
     private void applyOrientation(GL10 gl) {
         CGSize s = surfaceSize_;
-        // float h = s.height / 2;
-        // float w = s.width / 2;
+         float h = s.height / 2;
+         float w = s.width / 2;
 
         // XXX it's using hardcoded values.
         // What if the the screen size changes in the future?
@@ -310,6 +310,8 @@ public class CCDirector implements GLSurfaceView.Renderer {
                 // gl.glTranslatef(-h, -w, 0);
                 break;
         }
+        
+        gl.glFlush();
     }
 
     /* display FPS ? */
@@ -1023,6 +1025,7 @@ public class CCDirector implements GLSurfaceView.Renderer {
         switch (deviceOrientation_) {
             case kCCDeviceOrientationPortrait:
                 ret = CGPoint.ccp(newX, newY);
+            	//ret = CGPoint.ccp(newY, newX);
                 break;
 
             case kCCDeviceOrientationLandscapeLeft:
@@ -1061,6 +1064,7 @@ public class CCDirector implements GLSurfaceView.Renderer {
         switch (deviceOrientation_) {
             case kCCDeviceOrientationPortrait:
                 ret.set(newX, newY);
+            	//ret.set(newY, newX);
                 break;
 
             case kCCDeviceOrientationLandscapeLeft:
@@ -1084,6 +1088,7 @@ public class CCDirector implements GLSurfaceView.Renderer {
         switch ( deviceOrientation_) {
             case kCCDeviceOrientationPortrait:
                 uiPoint = CGPoint.ccp(glPoint.x, oppositeY);
+            	//uiPoint = CGPoint.ccp(oppositeY, glPoint.x);
                 break;
 
             case kCCDeviceOrientationLandscapeLeft:
@@ -1094,7 +1099,7 @@ public class CCDirector implements GLSurfaceView.Renderer {
                 return null;
         }
 
-	    uiPoint = CGPoint.ccpMult(uiPoint, 1/contentScaleFactor_);
+        uiPoint = CGPoint.ccpMult(uiPoint, 1/contentScaleFactor_);
         return uiPoint;
     }
 

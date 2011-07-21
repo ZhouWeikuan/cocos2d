@@ -196,7 +196,10 @@ public class CCTexture2D implements Resource {
 //        	if(mLoader != null) {
 //        		GLResourceHelper.sharedHelper().removeLoader(mLoader);
 //        	}
-        	GLResourceHelper.sharedHelper().addLoader(this, loader, false);
+    		
+    		/** maybe this is causing a threading issue?  I think we should use true.. */
+        	//GLResourceHelper.sharedHelper().addLoader(this, loader, false);
+    		GLResourceHelper.sharedHelper().addLoader(this, loader, true);
     	}
 //    	mLoader = loader;
     }
