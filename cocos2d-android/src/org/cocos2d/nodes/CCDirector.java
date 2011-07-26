@@ -910,8 +910,8 @@ public class CCDirector implements GLSurfaceView.Renderer {
 	}
 	
     private boolean initOpenGLViewWithView(View view, CGRect rect) {
-        surfaceSize_ = rect.size;
-        screenSize_ = CGSize.make(surfaceSize_.getWidth(), surfaceSize_.getHeight());
+        surfaceSize_.set(rect.size);
+        screenSize_.set(surfaceSize_);
         
 //        try {
         if (openGLView_ != view) {
