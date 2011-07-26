@@ -4,6 +4,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.ref.SoftReference;
+import java.lang.ref.WeakReference;
 import java.util.HashMap;
 
 import org.cocos2d.config.ccMacros;
@@ -19,7 +20,7 @@ import android.graphics.BitmapFactory;
  * a reference of the previously loaded texture reducing GPU & CPU memory
  */
 public class CCTextureCache {
-    private HashMap<String, SoftReference<CCTexture2D> > textures;
+    private HashMap<String, WeakReference<CCTexture2D> > textures;
 
     private static CCTextureCache _sharedTextureCache;
 
@@ -46,7 +47,7 @@ public class CCTextureCache {
         assert _sharedTextureCache == null : "Attempted to allocate a second instance of a singleton.";
 
         synchronized (CCTextureCache.class) {
-            textures = new HashMap<String, SoftReference<CCTexture2D> >(10);
+            textures = new HashMap<String, WeakReference<CCTexture2D> >(10);
         }
     }
 
@@ -59,14 +60,14 @@ public class CCTextureCache {
     public CCTexture2D addImage(String path) {
         assert path != null : "TextureMgr: path must not be null";
 
-        SoftReference<CCTexture2D> texSR = textures.get(path);
+        WeakReference<CCTexture2D> texSR = textures.get(path);
         CCTexture2D tex = null;
         if(texSR != null)
         	tex = texSR.get();
 
         if (tex == null) {
             tex = createTextureFromFilePath(path);
-            textures.put(path, new SoftReference<CCTexture2D>(tex));
+            textures.put(path, new WeakReference<CCTexture2D>(tex));
         }
         return tex;
     }
@@ -77,14 +78,14 @@ public class CCTextureCache {
     public CCTexture2D addImageExternal(String path) {
         assert path != null : "TextureMgr: path must not be null";
 
-        SoftReference<CCTexture2D> texSR = textures.get(path);
+        WeakReference<CCTexture2D> texSR = textures.get(path);
         CCTexture2D tex = null;
         if(texSR != null)
         	tex = texSR.get();
 
         if (tex == null) {
             tex = createTextureFromFilePathExternal(path);
-            textures.put( path, new SoftReference<CCTexture2D>(tex) );
+            textures.put( path, new WeakReference<CCTexture2D>(tex) );
         }
         return tex;
     }
@@ -102,7 +103,7 @@ public class CCTextureCache {
     public CCTexture2D addImage(Bitmap image, String key) {
         assert (image != null) : "TextureCache: image must not be null";
 
-        SoftReference<CCTexture2D> texSR = textures.get(key);
+        WeakReference<CCTexture2D> texSR = textures.get(key);
         CCTexture2D tex = null;
         if(texSR != null)
         	tex = texSR.get();
@@ -123,7 +124,7 @@ public class CCTextureCache {
 				}
 			});
 	    	if( key!= null ) {
-	    		textures.put(key, new SoftReference<CCTexture2D>(texNew) );
+	    		textures.put(key, new WeakReference<CCTexture2D>(texNew) );
 	    	}
 	    	
 	    	return texNew;
@@ -142,7 +143,7 @@ public class CCTextureCache {
     */
     public void removeAllTextures() {
     	/* Do nothing, or do all.*/
-    	for (SoftReference<CCTexture2D> texSR : textures.values()) {
+    	for (WeakReference<CCTexture2D> texSR : textures.values()) {
     		CCTexture2D tex = texSR.get();
     		if(tex != null)
     			tex.releaseTexture(CCDirector.gl);    		
@@ -184,7 +185,13 @@ public class CCTextureCache {
     public void addTexture(CCTexture2D tex) {
     	if (tex == null)
     		return;
-    	textures.put(String.valueOf(tex.hashCode()), new SoftReference<CCTexture2D>(tex));
+    	textures.put(String.valueOf(tex.hashCode()), new WeakReference<CCTexture2D>(tex));
+    }
+    
+    public void addTexture(CCTexture2D tex, String name) {
+    	if (tex == null)
+    		return;
+    	textures.put(name, new WeakReference<CCTexture2D>(tex));
     }
 
     /** Deletes a texture from the cache given a its key name
