@@ -310,8 +310,6 @@ public class CCDirector implements GLSurfaceView.Renderer {
                 // gl.glTranslatef(-h, -w, 0);
                 break;
         }
-        
-        gl.glFlush();
     }
 
     /* display FPS ? */
