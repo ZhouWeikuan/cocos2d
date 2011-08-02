@@ -369,7 +369,7 @@ public class CCScheduler {
     */
     public void unschedule(String selector, Object target) {
         // explicity handle nil arguments when removing an object
-        if( target==null && selector==null)
+        if( target==null || selector==null)
             return;
 
         assert target != null: "Target MUST not be null";
@@ -380,7 +380,7 @@ public class CCScheduler {
             for( int i=0; i< element.timers.size(); i++ ) {
                 CCTimer timer = element.timers.get(i);
 
-                if(selector == timer.getSelector()) {
+                if(selector.equals(timer.getSelector())) {
                     if( timer == element.currentTimer && !element.currentTimerSalvaged ) {                        
                         element.currentTimerSalvaged = true;
                     }
@@ -414,7 +414,7 @@ public class CCScheduler {
      */
     public void unschedule(UpdateCallback callback, Object target) {
         // explicity handle nil arguments when removing an object
-        if( target==null && callback==null)
+        if( target==null || callback==null)
             return;
 
         assert target != null: "Target MUST not be null";
