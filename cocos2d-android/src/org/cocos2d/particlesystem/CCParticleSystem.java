@@ -400,9 +400,8 @@ public abstract class CCParticleSystem extends CCNode implements CCTextureProtoc
 	//  particle idx
 	protected int particleIdx;
 	
-	protected boolean autoRemoveOnFinish;
 	public void setAutoRemoveOnFinish(boolean ar) {
-		autoRemoveOnFinish = ar;
+		autoRemoveOnFinish_ = ar;
 	}
 
     //! whether or not the system is full
@@ -696,7 +695,7 @@ public abstract class CCParticleSystem extends CCNode implements CCTextureProtoc
 		// XXX: not used
 		//	colorModulate = YES;
 
-		autoRemoveOnFinish = false;
+		autoRemoveOnFinish_ = false;
 
 		// profiling
 		// Optimization: compile udpateParticle method
