@@ -1111,12 +1111,19 @@ public class CGAffineTransform {
 	}
     
     public void multiply(CGAffineTransform t) {
-    	m00 = this.m00 * t.m00 + this.m10 * t.m01;
-		m01 = this.m00 * t.m10 + this.m10 * t.m11;
-		m10 = this.m01 * t.m00 + this.m11 * t.m01;
-		m11 = this.m01 * t.m10 + this.m11 * t.m11;
-		m02 = this.m02 * t.m00 + this.m12 * t.m01 + t.m02;
-		m12 = this.m02 * t.m10 + this.m12 * t.m11 + t.m12;
+    	double m00 = this.m00 * t.m00 + this.m10 * t.m01;
+		double m01 = this.m00 * t.m10 + this.m10 * t.m11;
+		double m10 = this.m01 * t.m00 + this.m11 * t.m01;
+		double m11 = this.m01 * t.m10 + this.m11 * t.m11;
+		double m02 = this.m02 * t.m00 + this.m12 * t.m01 + t.m02;
+		double m12 = this.m02 * t.m10 + this.m12 * t.m11 + t.m12;
+
+		this.m00 = m00;
+		this.m01 = m01;
+		this.m10 = m10;
+		this.m11 = m11;
+		this.m02 = m02;
+		this.m12 = m12;
     }
 
 //    /**
