@@ -102,7 +102,11 @@ public class GLResourceHelper {
 	 */
 	public void perform(GLResorceTask res) {
 		if(inUpdate) {
-			res.perform(CCDirector.gl);
+			
+			/** check if the taskQueue is locked */
+			synchronized(taskQueue) {
+				res.perform(CCDirector.gl);
+			}
 		} else {
 			taskQueue.add(res);
 		}
@@ -115,16 +119,42 @@ public class GLResourceHelper {
 	 * perform all tasks in GL thread
 	 * @param gl
 	 */
-	public void update(GL10 gl) {
-		if(taskQueue.size() > 0) {
-	
-			GLResorceTask res;
-			while((res = taskQueue.poll()) != null) {
-				res.perform(gl);
-			}
+	public void update(final GL10 gl) {
+		r.setGL(gl);
+		
+		/** lock the taskQueue and force the update to run on the GL thread */
+		synchronized (taskQueue) {
+			CCDirector.sharedDirector().getOpenGLView().queueEvent(r);
 		}
 	}
+	
+	
+	/** custom runnable for doing the GL Update */
+	private class GLRunner implements Runnable {
 
+		GL10 gl;
+		
+		@Override
+		public void run() {				
+			if(taskQueue.size() > 0) {
+				
+				GLResorceTask res;
+				while((res = taskQueue.poll()) != null) {
+					res.perform(gl);
+				}
+			}
+		}
+		
+		public void setGL(GL10 gl) {
+			this.gl = gl;
+		}
+		
+	}
+
+	final GLRunner r = new GLRunner() {};
+	
+	
+	
 	public void setInUpdate(boolean inUpd) {
 		inUpdate = inUpd;
 	}
