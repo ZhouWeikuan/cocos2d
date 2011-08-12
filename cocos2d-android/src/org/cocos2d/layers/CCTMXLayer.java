@@ -293,6 +293,9 @@ public class CCTMXLayer extends CCSpriteSheet {
 	public void setupTiles() {
 		// Optimization: quick hack that sets the image size on the tileset
 		tileset.imageSize = textureAtlas_.getTexture().getContentSize();
+		if (tileset.imageSize == null) {
+			tileset.imageSize = CGSize.zero();
+		}
 
 		// By default all the tiles are aliased
 		// pros:

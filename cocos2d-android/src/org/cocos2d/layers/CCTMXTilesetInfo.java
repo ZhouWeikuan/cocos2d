@@ -35,6 +35,9 @@ public class CCTMXTilesetInfo {
 		gid = gid - firstGid;
 
 		int max_x = (int) ((imageSize.width - margin*2 + spacing) / (tileSize.width + spacing));
+		if (max_x == 0) {
+			max_x = 1;
+		}
 
 		rect.origin.x = (gid % max_x) * (tileSize.width + spacing) + margin;
 		rect.origin.y = (gid / max_x) * (tileSize.height + spacing) + margin;
