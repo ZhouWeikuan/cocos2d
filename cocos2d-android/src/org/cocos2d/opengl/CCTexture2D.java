@@ -224,7 +224,7 @@ public class CCTexture2D implements Resource {
             needDownScale = true;
         }
         
-        if(needDownScale) {
+        if (needDownScale) {
         	Bitmap bitmap = Bitmap.createScaledBitmap(image, (int)imageSize.width, (int)imageSize.height, false);
         	image.recycle();
         	image = bitmap;

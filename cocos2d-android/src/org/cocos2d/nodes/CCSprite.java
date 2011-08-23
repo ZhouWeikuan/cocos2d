@@ -160,7 +160,7 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
       @since v0.99.0
     */
 	CGPoint	offsetPosition_;	// absolute
-	CGPoint unflippedOffsetPositionFromCenter_;
+	CGPoint unflippedOffsetPositionFromCenter_ = new CGPoint();
 
 	//
 	// Data used when the sprite is rendered using a CCSpriteSheet
@@ -497,7 +497,6 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
 		
 		// zwoptex default values
 		offsetPosition_ = CGPoint.zero();
-		unflippedOffsetPositionFromCenter_ = new CGPoint();
         rect_ = CGRect.make(0, 0, 1, 1);
 		
 		// by default use "Self Render".

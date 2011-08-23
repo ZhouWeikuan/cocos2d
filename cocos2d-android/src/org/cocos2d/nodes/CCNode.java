@@ -593,6 +593,10 @@ public class CCNode {
     public void removeSelf() {
     	this.removeFromParentAndCleanup(true);
     }
+    
+    public void removeSelf(Object sender) {
+    	this.removeFromParentAndCleanup(true);
+    }
 
     /** Removes a child from the container.
        It will also cleanup all running actions depending on the cleanup parameter.

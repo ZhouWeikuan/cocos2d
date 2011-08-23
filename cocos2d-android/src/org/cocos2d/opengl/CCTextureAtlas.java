@@ -386,8 +386,12 @@ public class CCTextureAtlas {
         gl.glVertexPointer(3, GL10.GL_FLOAT, 0, vertexCoordinates.bytes);
         gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, textureCoordinates.bytes);
 
-        if (withColorArray_)
+        if (withColorArray_) {
+        	gl.glEnableClientState(GL10.GL_COLOR_ARRAY);
             gl.glColorPointer(4, GL10.GL_FLOAT, 0, colors.bytes);
+        } else {
+        	gl.glDisableClientState(GL10.GL_COLOR_ARRAY);
+        }
 
         if (ccConfig.CC_TEXTURE_ATLAS_USE_TRIANGLE_STRIP) {
         	gl.glDrawElements(GL10.GL_TRIANGLE_STRIP, n * 6, GL10.GL_UNSIGNED_SHORT, indices);
@@ -395,6 +399,9 @@ public class CCTextureAtlas {
         	gl.glDrawElements(GL10.GL_TRIANGLES, n * 6, GL10.GL_UNSIGNED_SHORT, indices);
         }
 
+        if (!withColorArray_) {
+        	gl.glEnableClientState(GL10.GL_COLOR_ARRAY);
+        }
     }
     
     private float[] getTexCoords(FastFloatBuffer src, int index) {
