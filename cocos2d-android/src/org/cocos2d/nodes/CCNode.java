@@ -22,7 +22,6 @@ import org.cocos2d.types.CGSize;
 import org.cocos2d.types.util.CGAffineTransformUtil;
 import org.cocos2d.types.util.CGPointUtil;
 import org.cocos2d.types.util.PoolHolder;
-import org.cocos2d.utils.Util5;
 import org.cocos2d.utils.javolution.MathLib;
 import org.cocos2d.utils.pool.OneClassPool;
 
@@ -1196,13 +1195,10 @@ public class CCNode {
     	CGPoint point = pool.get();
     	
     	int action = event.getAction();
-		int pid = action >> MotionEvent.ACTION_POINTER_ID_SHIFT;
-        if(Build.VERSION.SDK_INT >= 5) {
-        	CCDirector.sharedDirector().convertToGL(Util5.getX(event, pid), Util5.getY(event, pid), point);
-        } else {
-        	CCDirector.sharedDirector().convertToGL(event.getX(), event.getY(), point);
-        }
-    	
+		int pid = action;
+        
+		CCDirector.sharedDirector().convertToGL(event.getX(), event.getY(), point);
+      
     	float x = point.x, y = point.y;
     	pool.free(point);
     	
@@ -1214,13 +1210,10 @@ public class CCNode {
      */
     public void convertTouchToNodeSpace(MotionEvent event, CGPoint ret) {
     	int action = event.getAction();
-		int pid = action >> MotionEvent.ACTION_POINTER_ID_SHIFT;
-        if(Build.VERSION.SDK_INT >= 5) {
-        	CCDirector.sharedDirector().convertToGL(Util5.getX(event, pid), Util5.getY(event, pid), ret);
-        } else {
-        	CCDirector.sharedDirector().convertToGL(event.getX(), event.getY(), ret);
-        }
-    	
+		int pid = action;
+        
+		CCDirector.sharedDirector().convertToGL(event.getX(), event.getY(), ret);
+        
         convertToNodeSpace(ret.x, ret.y, ret);
     }
 
@@ -1232,12 +1225,9 @@ public class CCNode {
     	CGPoint point = pool.get();
     	
     	int action = event.getAction();
-		int pid = action >> MotionEvent.ACTION_POINTER_ID_SHIFT;
-        if(Build.VERSION.SDK_INT >= 5) {
-        	CCDirector.sharedDirector().convertToGL(Util5.getX(event, pid), Util5.getY(event, pid), point);
-        } else {
-        	CCDirector.sharedDirector().convertToGL(event.getX(), event.getY(), point);
-        }
+		int pid = action;
+
+        CCDirector.sharedDirector().convertToGL(event.getX(), event.getY(), point);
     	
     	float x = point.x, y = point.y;
     	pool.free(point);

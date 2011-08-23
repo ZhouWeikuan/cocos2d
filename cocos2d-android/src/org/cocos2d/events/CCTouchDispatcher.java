@@ -7,10 +7,8 @@ import javax.microedition.khronos.opengles.GL10;
 import org.cocos2d.opengl.GLResourceHelper;
 import org.cocos2d.protocols.CCMotionEventProtocol;
 import org.cocos2d.protocols.CCTouchDelegateProtocol;
-import org.cocos2d.utils.Util5;
 import org.cocos2d.utils.collections.ConcNodeCachingLinkedQueue;
 
-import android.os.Build;
 import android.view.MotionEvent;
 
 /** CCTouchDispatcher.
@@ -285,13 +283,9 @@ public class CCTouchDispatcher {
 	    		proccessTouches(event);
 	    		
 	    		int action = event.getAction();
-	    		int actionCode = action & MotionEvent.ACTION_MASK;
-	    		int pid = action >> MotionEvent.ACTION_POINTER_ID_SHIFT;     
-				        
-				if(Build.VERSION.SDK_INT >= 5) {
-		    		pid = Util5.getPointerId(event, pid);
-		    	}
-	    		
+	    		int actionCode = action;
+	    		int pid = action;     
+				
 				boolean swallowed = false;
 				        
 	    		for( int ind = 0; ind < targetedHandlers.size(); ind++ ) {
@@ -301,7 +295,6 @@ public class CCTouchDispatcher {
 	    			
 	    			switch (actionCode) {
 	    			case MotionEvent.ACTION_DOWN:
-	    			case MotionEvent.ACTION_POINTER_DOWN:
 	    				claimed = handler.ccTouchesBegan(event);
 	    				if(claimed) {
 	    					handler.addClaimed(pid);
@@ -321,7 +314,6 @@ public class CCTouchDispatcher {
 	    				}
 	    				break;
 	    			case MotionEvent.ACTION_UP:
-	    			case MotionEvent.ACTION_POINTER_UP:
 	    				if(handler.hasClaimed(pid)) {
 	    					claimed = true;
 	    					handler.ccTouchesEnded(event);
@@ -341,7 +333,6 @@ public class CCTouchDispatcher {
 		    		// handle standart delegates
 					switch (actionCode) {
 					case MotionEvent.ACTION_DOWN:
-					case MotionEvent.ACTION_POINTER_DOWN:
 						touchesBegan(event);
 						break;
 					case MotionEvent.ACTION_CANCEL:
@@ -351,7 +342,6 @@ public class CCTouchDispatcher {
 						touchesMoved(event);
 						break;
 					case MotionEvent.ACTION_UP:
-					case MotionEvent.ACTION_POINTER_UP:
 						touchesEnded(event);
 						break;
 					}
