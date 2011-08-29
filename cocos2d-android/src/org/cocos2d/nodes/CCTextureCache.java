@@ -3,9 +3,9 @@ package org.cocos2d.nodes;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.ref.SoftReference;
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.cocos2d.config.ccMacros;
 import org.cocos2d.opengl.CCTexture2D;
@@ -20,7 +20,7 @@ import android.graphics.BitmapFactory;
  * a reference of the previously loaded texture reducing GPU & CPU memory
  */
 public class CCTextureCache {
-    private HashMap<String, WeakReference<CCTexture2D> > textures;
+    private ConcurrentHashMap<String, WeakReference<CCTexture2D>> textures;
 
     private static CCTextureCache _sharedTextureCache;
 
@@ -47,7 +47,7 @@ public class CCTextureCache {
         assert _sharedTextureCache == null : "Attempted to allocate a second instance of a singleton.";
 
         synchronized (CCTextureCache.class) {
-            textures = new HashMap<String, WeakReference<CCTexture2D> >(10);
+            textures = new ConcurrentHashMap<String, WeakReference<CCTexture2D> >(10);
         }
     }
 

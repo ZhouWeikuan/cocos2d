@@ -69,7 +69,9 @@ public class GLResourceHelper {
 			};
     		perform(task);
     	} else {
-    		reloadMap.put(res, loader);
+    		synchronized(reloadMap) {
+    			reloadMap.put(res, loader);
+    		}
     	}
     }
     
@@ -85,10 +87,12 @@ public class GLResourceHelper {
 		taskQueue.add(new GLResorceTask() {
 			@Override
 			public void perform(GL10 gl) {
-				for(Entry<Resource, GLResourceLoader> entry : reloadMap.entrySet()) {
-					Resource res = entry.getKey();
-					if(res != null)
-						entry.getValue().load(res);
+				synchronized(reloadMap) {
+					for(Entry<Resource, GLResourceLoader> entry : reloadMap.entrySet()) {
+						Resource res = entry.getKey();
+						if(res != null)
+							entry.getValue().load(res);
+					}
 				}
 				reloadTaskIsInQueue = false;
 			}

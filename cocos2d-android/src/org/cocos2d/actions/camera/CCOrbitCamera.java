@@ -45,14 +45,14 @@ public class CCOrbitCamera extends CCCameraAction {
         return new CCOrbitCamera(duration, radius, deltaRadius, angleZ, deltaAngleZ, angleX, deltaAngleX);
     }
 
+    float[] rad = new float[1], zenith = new float[1], azimuth = new float[1];
     @Override
     public void start(CCNode aTarget) {
         super.start(aTarget);
-        float[] r = new float[1], zenith = new float[1], azimuth = new float[1];
 
-        spherical(r, zenith, azimuth);
+        spherical(rad, zenith, azimuth);
         if (Float.isNaN(radius))
-            radius = r[0];
+            radius = rad[0];
         if (Float.isNaN(angleZ))
             angleZ = ccMacros.CC_RADIANS_TO_DEGREES(zenith[0]);
         if (Float.isNaN(angleX))
@@ -62,27 +62,24 @@ public class CCOrbitCamera extends CCCameraAction {
         radX = ccMacros.CC_DEGREES_TO_RADIANS(angleX);
     }
 
+    float x, y, z, r, s, za, xa, i, j, k;
     @Override
     public void update(float t) {
-        float r = (radius + deltaRadius * t) * CCCamera.getZEye();
-        float za = radZ + radDeltaZ * t;
-        float xa = radX + radDeltaX * t;
+        r = (radius + deltaRadius * t) * CCCamera.getZEye();
+        za = radZ + radDeltaZ * t;
+        xa = radX + radDeltaX * t;
 
-        float i = (float) Math.sin(za) * (float) Math.cos(xa) * r + centerXOrig;
-        float j = (float) Math.sin(za) * (float) Math.sin(xa) * r + centerYOrig;
-        float k = (float) Math.cos(za) * r + centerZOrig;
+        i = (float) Math.sin(za) * (float) Math.cos(xa) * r + centerXOrig;
+        j = (float) Math.sin(za) * (float) Math.sin(xa) * r + centerYOrig;
+        k = (float) Math.cos(za) * r + centerZOrig;
 
         target.getCamera().setEye(i, j, k);
     }
 
+    float[] ex = new float[1], ey = new float[1], ez = new float[1];
+    float[] cx = new float[1], cy = new float[1], cz = new float[1];
     /** positions the camera according to spherical coordinates */
     private void spherical(float newRadius[], float zenith[], float azimuth[]) {
-        float[] ex = new float[1], ey = new float[1], ez = new float[1];
-        float[] cx = new float[1], cy = new float[1], cz = new float[1];
-        float x, y, z;
-        float r; // radius
-        float s;
-
         target.getCamera().getEye(ex, ey, ez);
         target.getCamera().getCenter(cx, cy, cz);
 

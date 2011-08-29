@@ -1,5 +1,6 @@
 package org.cocos2d.nodes;
 
+import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +15,6 @@ import org.cocos2d.protocols.CCTextureProtocol;
 import org.cocos2d.types.CGPoint;
 import org.cocos2d.types.CGRect;
 import org.cocos2d.types.ccBlendFunc;
-import org.cocos2d.utils.FastFloatBuffer;
 
 /** CCSpriteSheet is like a batch node: if it contains children, it will draw them in 1 single OpenGL call
  * (often known as "batch draw").
@@ -231,6 +231,10 @@ public class CCSpriteSheet extends CCNode implements CCTextureProtocol {
         textureAtlas_.removeAllQuads();
     }
 
+    CGRect rect;
+    CCSprite child;
+    CGPoint vertices[] = new CGPoint[4];
+    boolean newBlend = false;
     @Override
     public void draw(GL10 gl) {
         if( textureAtlas_.getTotalQuads() == 0 )
@@ -238,7 +242,7 @@ public class CCSpriteSheet extends CCNode implements CCTextureProtocol {
 
         final int descendants_Num = descendants_.size();
         for (int i = 0; i < descendants_Num; i++) {
-        	CCSprite child = descendants_.get(i);
+        	child = descendants_.get(i);
             // fast dispatch
             // if( dirtyMethod(child, selDirty) )
             //    updateMethod(child, selUpdate);
@@ -247,13 +251,13 @@ public class CCSpriteSheet extends CCNode implements CCTextureProtocol {
             }
 
             if(ccConfig.CC_SPRITESHEET_DEBUG_DRAW) {
-                CGRect rect = child.getBoundingBox();
-                CGPoint vertices[]={
-                    CGPoint.ccp(rect.origin.x,rect.origin.y),
-                    CGPoint.ccp(rect.origin.x+rect.size.width,rect.origin.y),
-                    CGPoint.ccp(rect.origin.x+rect.size.width,rect.origin.y+rect.size.height),
-                    CGPoint.ccp(rect.origin.x,rect.origin.y+rect.size.height),
-                };
+                rect = child.getBoundingBox();
+                
+                vertices[0] =    CGPoint.ccp(rect.origin.x,rect.origin.y);
+                vertices[1] =    CGPoint.ccp(rect.origin.x+rect.size.width,rect.origin.y);
+                vertices[2] =    CGPoint.ccp(rect.origin.x+rect.size.width,rect.origin.y+rect.size.height);
+                vertices[3] =    CGPoint.ccp(rect.origin.x,rect.origin.y+rect.size.height);
+
                 CCDrawingPrimitives.ccDrawPoly(gl, vertices, 4, true);
             } // CC_SPRITESHEET_DEBUG_DRAW
         }
@@ -262,7 +266,7 @@ public class CCSpriteSheet extends CCNode implements CCTextureProtocol {
         // Needed states: GL_TEXTURE_2D, GL_VERTEX_ARRAY, GL_COLOR_ARRAY, GL_TEXTURE_COORD_ARRAY
         // Unneeded states: -
 
-        boolean newBlend = false;
+        newBlend = false;
         if( blendFunc_.src != ccConfig.CC_BLEND_SRC || blendFunc_.dst != ccConfig.CC_BLEND_DST ) {
             newBlend = true;
             gl.glBlendFunc( blendFunc_.src, blendFunc_.dst );
@@ -476,8 +480,8 @@ public class CCSpriteSheet extends CCNode implements CCTextureProtocol {
 		sprite.useSpriteSheetRender(this);
 		sprite.atlasIndex	= index;
 
-		FastFloatBuffer texCordBuffer = sprite.getTexCoords();
-		FastFloatBuffer vertexBuffer  = sprite.getVertices();
+		FloatBuffer texCordBuffer = sprite.getTexCoords();
+		FloatBuffer vertexBuffer  = sprite.getVertices();
 		textureAtlas_.insertQuad(texCordBuffer, vertexBuffer, index);
 
 		// XXX: updateTransform will update the textureAtlas too using updateQuad.

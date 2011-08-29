@@ -1,5 +1,6 @@
 package org.cocos2d.particlesystem;
 
+import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
 
 import javax.microedition.khronos.opengles.GL10;
@@ -15,8 +16,8 @@ import org.cocos2d.opengl.GLResourceHelper.Resource;
 import org.cocos2d.types.CGPoint;
 import org.cocos2d.types.CGRect;
 import org.cocos2d.types.ccBlendFunc;
-import org.cocos2d.utils.BufferProvider;
-import org.cocos2d.utils.FastFloatBuffer;
+
+import com.badlogic.gdx.utils.BufferUtils;
 
 /** CCQuadParticleSystem is a subclass of CCParticleSystem
 
@@ -35,10 +36,16 @@ import org.cocos2d.utils.FastFloatBuffer;
 public class CCQuadParticleSystem extends CCParticleSystem implements Resource {
 	// ccV2F_C4F_T2F_Quad	quads;		// quads to be rendered
 
-	FastFloatBuffer         texCoords;
-	FastFloatBuffer         vertices;
-	FastFloatBuffer         colors;
+//	FastFloatBuffer         texCoords;
+//	FastFloatBuffer         vertices;
+//	FastFloatBuffer         colors;
+	FloatBuffer			texCoords;
+	FloatBuffer			vertices;
+	FloatBuffer			colors;
 
+	final float[] color;
+	final float[] floats;
+	
 	ShortBuffer			indices;	// indices
 	int					quadsIDs[];	// VBO id
 	public static final int QuadSize = 3;
@@ -51,11 +58,17 @@ public class CCQuadParticleSystem extends CCParticleSystem implements Resource {
 
 		// allocating data space
 		// quads = malloc( sizeof(quads[0]) * totalParticles );
-		texCoords	= new FastFloatBuffer(4 * 2 * totalParticles);
-		vertices 	= new FastFloatBuffer(4 * 2 * totalParticles);
-		colors  	= new FastFloatBuffer(4 * 4 * totalParticles);
+//		texCoords	= new FastFloatBuffer(4 * 2 * totalParticles);
+//		vertices 	= new FastFloatBuffer(4 * 2 * totalParticles);
+//		colors  	= new FastFloatBuffer(4 * 4 * totalParticles);
+		texCoords	= BufferUtils.newFloatBuffer(4 * 2 * totalParticles);
+		vertices	= BufferUtils.newFloatBuffer(4 * 2 * totalParticles);
+		colors		= BufferUtils.newFloatBuffer(4 * 4 * totalParticles);
+		color 		= new float[colors.limit()];
+		floats		= new float[vertices.limit()];
 		
-		indices = BufferProvider.createShortBuffer(totalParticles * 6 );
+		//indices = BufferProvider.createShortBuffer(totalParticles * 6 );
+		indices 	= BufferUtils.newShortBuffer(totalParticles * 6);
 
 		if( texCoords == null || vertices == null || colors == null || indices == null) {
 			ccMacros.CCLOG("cocos2d", "Particle system: not enough memory");
@@ -77,15 +90,15 @@ public class CCQuadParticleSystem extends CCParticleSystem implements Resource {
 				// initial binding
 				// for texCoords
 				gl.glBindBuffer(GL11.GL_ARRAY_BUFFER, quadsIDs[0]);
-				gl.glBufferData(GL11.GL_ARRAY_BUFFER, texCoords.capacity() * 4, texCoords.bytes, GL11.GL_DYNAMIC_DRAW);	
+				gl.glBufferData(GL11.GL_ARRAY_BUFFER, texCoords.capacity() * 4, texCoords, GL11.GL_DYNAMIC_DRAW);	
 				
 				// for vertices
 				gl.glBindBuffer(GL11.GL_ARRAY_BUFFER, quadsIDs[1]);
-				gl.glBufferData(GL11.GL_ARRAY_BUFFER, vertices.capacity() * 4, vertices.bytes, GL11.GL_DYNAMIC_DRAW);	
+				gl.glBufferData(GL11.GL_ARRAY_BUFFER, vertices.capacity() * 4, vertices, GL11.GL_DYNAMIC_DRAW);	
 				
 				// for colors
 				gl.glBindBuffer(GL11.GL_ARRAY_BUFFER, quadsIDs[2]);
-				gl.glBufferData(GL11.GL_ARRAY_BUFFER, colors.capacity() * 4, colors.bytes, GL11.GL_DYNAMIC_DRAW);	
+				gl.glBufferData(GL11.GL_ARRAY_BUFFER, colors.capacity() * 4, colors, GL11.GL_DYNAMIC_DRAW);	
 				
 				// restore the elements, arrays
 				gl.glBindBuffer(GL11.GL_ARRAY_BUFFER, 0);
@@ -141,20 +154,26 @@ public class CCQuadParticleSystem extends CCParticleSystem implements Resource {
 		for(int i=0; i<totalParticles; i++) {
 			final int base = i * 8;
 			// bottom-left vertex:
-			texCoords.put(base + 0, bottomLeftX);
-			texCoords.put(base + 1, bottomLeftY);
+//			texCoords.put(base + 0, bottomLeftX);
+//			texCoords.put(base + 1, bottomLeftY);
+//			
+//			// bottom-right vertex:
+//			texCoords.put(base + 2, bottomRightX);
+//			texCoords.put(base + 3, bottomRightY);
+//			
+//			// top-left vertex:
+//			texCoords.put(base + 4, topLeftX);
+//			texCoords.put(base + 5, topLeftY);
+//			
+//			// top-right vertex:
+//			texCoords.put(base + 6, topRightX);
+//			texCoords.put(base + 7, topRightY);
 			
-			// bottom-right vertex:
-			texCoords.put(base + 2, bottomRightX);
-			texCoords.put(base + 3, bottomRightY);
-			
-			// top-left vertex:
-			texCoords.put(base + 4, topLeftX);
-			texCoords.put(base + 5, topLeftY);
-			
-			// top-right vertex:
-			texCoords.put(base + 6, topRightX);
-			texCoords.put(base + 7, topRightY);
+			final float[] positions = {bottomLeftX, bottomLeftY,
+									   bottomRightX, bottomRightY,
+									   topLeftX, topLeftY,
+									   topRightX, topRightY};
+			BufferUtils.copy(positions, texCoords, base);
 		}
 	}
 
@@ -209,103 +228,83 @@ public class CCQuadParticleSystem extends CCParticleSystem implements Resource {
 		}
 	}
 
+	//final float[] color = new float[4]
+	int base;
+	float size_2, x, y, r, cr, sr; 
 	@Override
-	public void updateQuad(CCParticle p, CGPoint newPos) {
+	public void updateQuad(final CCParticle p, final CGPoint newPos) {
 		// colors
-		for (int i=0; i<4; ++i) {
-			colors.put(particleIdx * 16 + i*4 + 0, p.color.r);
-			colors.put(particleIdx * 16 + i*4 + 1, p.color.g);
-			colors.put(particleIdx * 16 + i*4 + 2, p.color.b);
-			colors.put(particleIdx * 16 + i*4 + 3, p.color.a);
-		}
+		base = particleIdx * 16;
+		/** there's no need to make these assignments every time,
+		 *  so I just pulled them out of the loop;
+		 */
+		color[base + 0] = color[base + 4] = color[base + 8] = color[base + 12] = p.color.r;
+		color[base + 1] = color[base + 5] = color[base + 9] = color[base + 13] = p.color.g;
+		color[base + 2] = color[base + 6] = color[base + 10] = color[base + 14]= p.color.b;
+		color[base + 3] = color[base + 7] = color[base + 11] = color[base + 15]= p.color.a;
 
 		// vertices
-		float size_2 = p.size/2;
+		size_2 = p.size/2;
+		base /= 2;
+		x = newPos.x;
+		y = newPos.y;
 		if( p.rotation != 0) {
-			float x1 = -size_2;
-			float y1 = -size_2;
-
-			float x2 = size_2;
-			float y2 = size_2;
-			float x = newPos.x;
-			float y = newPos.y;
-
-			float r = (float)- ccMacros.CC_DEGREES_TO_RADIANS(p.rotation);
-			float cr = (float) Math.cos(r);
-			float sr = (float) Math.sin(r);
-			float ax = x1 * cr - y1 * sr + x;
-			float ay = x1 * sr + y1 * cr + y;
-			float bx = x2 * cr - y1 * sr + x;
-			float by = x2 * sr + y1 * cr + y;
-			float cx = x2 * cr - y2 * sr + x;
-			float cy = x2 * sr + y2 * cr + y;
-			float dx = x1 * cr - y2 * sr + x;
-			float dy = x1 * sr + y2 * cr + y;
-			
-			final int base = particleIdx * 8;
-			// bottom-left vertex:
-			vertices.put(base + 0, ax);
-			vertices.put(base + 1, ay);
-			
-			// bottom-right vertex:
-			vertices.put(base + 2, bx);
-			vertices.put(base + 3, by);
-			
-			// top-left vertex:
-			vertices.put(base + 4, dx);
-			vertices.put(base + 5, dy);
-			
-			// top-right vertex:
-			vertices.put(base + 6, cx);
-			vertices.put(base + 7, cy);
+			r = (float)- ccMacros.CC_DEGREES_TO_RADIANS(p.rotation);
+			cr = (float) Math.cos(r) * size_2;
+			sr = (float) Math.sin(r) * size_2;
+			floats[base + 0] =  (-cr) - (-sr) + x;
+			floats[base + 1] =  (-sr) + (-cr) + y;
+			floats[base + 2] =	cr - (-sr) + x;
+			floats[base + 3] =	sr + (-cr) + y;
+			floats[base + 4] =	cr - sr + x;
+			floats[base + 5] =	sr + cr + y;
+			floats[base + 6] =	(-cr) - sr + x;
+			floats[base + 7] =	(-sr) + cr + y;
 		} else {
-			final int base = particleIdx * 8;
-			// bottom-left vertex:
-			vertices.put(base + 0, newPos.x - size_2);
-			vertices.put(base + 1, newPos.y - size_2);
-			
-			// bottom-right vertex:
-			vertices.put(base + 2, newPos.x + size_2);
-			vertices.put(base + 3, newPos.y - size_2);
-			
-			// top-left vertex:
-			vertices.put(base + 4, newPos.x - size_2);
-			vertices.put(base + 5, newPos.y + size_2);
-			
-			// top-right vertex:
-			vertices.put(base + 6, newPos.x + size_2);
-			vertices.put(base + 7, newPos.y + size_2);
+			floats[base + 0] = x - size_2;
+			floats[base + 1] =	y - size_2;
+			floats[base + 2] =	x + size_2;
+			floats[base + 3] =	y - size_2;
+			floats[base + 4] =	x - size_2;
+			floats[base + 5] =	y + size_2;
+			floats[base + 6] = x + size_2;
+			floats[base + 7] =	y + size_2;			
 		}
 	}
 
 	@Override
 	public void postStep(){
+		BufferUtils.copy(floats, vertices, 0);
+		BufferUtils.copy(color, colors, 0);
+		
 		GL11 gl = (GL11)CCDirector.gl;
 
 		// for texCoords
 		gl.glBindBuffer(GL11.GL_ARRAY_BUFFER, quadsIDs[0]);
-		gl.glBufferSubData(GL11.GL_ARRAY_BUFFER, 0, texCoords.capacity() * 4, texCoords.bytes);	
+		gl.glBufferSubData(GL11.GL_ARRAY_BUFFER, 0, texCoords.capacity() * 4, texCoords);	
 		
 		// for vertices
 		gl.glBindBuffer(GL11.GL_ARRAY_BUFFER, quadsIDs[1]);
-		gl.glBufferSubData(GL11.GL_ARRAY_BUFFER, 0, vertices.capacity() * 4, vertices.bytes);	
+		gl.glBufferSubData(GL11.GL_ARRAY_BUFFER, 0, vertices.capacity() * 4, vertices);	
 		
 		// for colors
 		gl.glBindBuffer(GL11.GL_ARRAY_BUFFER, quadsIDs[2]);
-		gl.glBufferSubData(GL11.GL_ARRAY_BUFFER, 0, colors.capacity() * 4, colors.bytes);	
+		gl.glBufferSubData(GL11.GL_ARRAY_BUFFER, 0, colors.capacity() * 4, colors);	
 		
 		// restore the elements, arrays
 		gl.glBindBuffer(GL11.GL_ARRAY_BUFFER, 0);
 	}
 
 	// overriding draw method
+	GL11 gl;
+	boolean newBlend = false;
 	@Override
 	public void draw(GL10 gle)
 	{
 		// Default GL states: GL_TEXTURE_2D, GL_VERTEX_ARRAY, GL_COLOR_ARRAY, GL_TEXTURE_COORD_ARRAY
 		// Needed states: GL_TEXTURE_2D, GL_VERTEX_ARRAY, GL_COLOR_ARRAY, GL_TEXTURE_COORD_ARRAY
 		// Unneeded states: -
-		GL11 gl = (GL11)gle;
+		gl = (GL11)gle;
 
 		gl.glBindTexture(GL11.GL_TEXTURE_2D, texture.name());
 		// for texCoords
@@ -323,7 +322,7 @@ public class CCQuadParticleSystem extends CCParticleSystem implements Resource {
 		gl.glColorPointer(4, GL11.GL_FLOAT, 0, 0);
 		// gl.glColorPointer(4, GL11.GL_FLOAT, 0, colors);
 		
-		boolean newBlend = false;
+		newBlend = false;
 		if( blendFunc.src != ccConfig.CC_BLEND_SRC || blendFunc.dst != ccConfig.CC_BLEND_DST ) {
 			newBlend = true;
 			gl.glBlendFunc( blendFunc.src, blendFunc.dst );

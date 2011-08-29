@@ -54,6 +54,10 @@ public class ParticleTest extends Activity {
     // private static final String LOG_TAG = AtlasSpriteTest.class.getSimpleName();
     private CCGLSurfaceView mGLSurfaceView;
 
+    static {
+    	System.loadLibrary("gdx");
+    }
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

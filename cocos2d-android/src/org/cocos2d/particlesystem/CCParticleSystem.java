@@ -716,10 +716,27 @@ public abstract class CCParticleSystem extends CCNode implements CCTextureProtoc
 		this.scheduleUpdate(1);
 	}
 
+	
+	/** Believe it or not, Math.max() and Math.min() have some unnecessary overhead that is
+	 *  useful in scientific applications, but is unnecessary for what we're doing.  So I
+	 *  just implemented float max/min methods that are exactly the same as the others in
+	 *  java.lang.Math 
+	 */
+	
+	private static float max(float a, float b) {
+		return a > b ? a : b;
+	}
+	
+	private static float min(float a, float b) {
+		return a < b ? a : b;
+	}
+	
+	/** more of the same, sacrifice a little memory to save cpu time and GC time later */
+	float start_r, start_g, start_b, start_a, startS, startA, a = 0;
 	private void initParticle(CCParticle particle) {
         // timeToLive
         // no negative life. prevent division by 0
-        particle.timeToLive = Math.max(0, life + lifeVar * ccMacros.CCRANDOM_MINUS1_1() );
+        particle.timeToLive = max(0, life + lifeVar * ccMacros.CCRANDOM_MINUS1_1() );
 
         // position
         particle.pos.set(centerOfGravity.x + posVar.x * ccMacros.CCRANDOM_MINUS1_1(),
@@ -727,53 +744,58 @@ public abstract class CCParticleSystem extends CCNode implements CCTextureProtoc
 
         // Color
 //        ccColor4F start = new ccColor4F();
-        float start_r = Math.min(1, Math.max(0, startColor.r + startColorVar.r * ccMacros.CCRANDOM_MINUS1_1() ) );
-        float start_g = Math.min(1, Math.max(0, startColor.g + startColorVar.g * ccMacros.CCRANDOM_MINUS1_1() ) );
-        float start_b = Math.min(1, Math.max(0, startColor.b + startColorVar.b * ccMacros.CCRANDOM_MINUS1_1() ) );
-        float start_a = Math.min(1, Math.max(0, startColor.a + startColorVar.a * ccMacros.CCRANDOM_MINUS1_1() ) );
+        start_r = min(1, max(0, startColor.r + startColorVar.r * ccMacros.CCRANDOM_MINUS1_1() ) );
+        start_g = min(1, max(0, startColor.g + startColorVar.g * ccMacros.CCRANDOM_MINUS1_1() ) );
+        start_b = min(1, max(0, startColor.b + startColorVar.b * ccMacros.CCRANDOM_MINUS1_1() ) );
+        start_a = min(1, max(0, startColor.a + startColorVar.a * ccMacros.CCRANDOM_MINUS1_1() ) );
 
 //        ccColor4F end = new ccColor4F();
-        float end_r = Math.min(1, Math.max(0, endColor.r + endColorVar.r * ccMacros.CCRANDOM_MINUS1_1() ) );
-        float end_g = Math.min(1, Math.max(0, endColor.g + endColorVar.g * ccMacros.CCRANDOM_MINUS1_1() ) );
-        float end_b = Math.min(1, Math.max(0, endColor.b + endColorVar.b * ccMacros.CCRANDOM_MINUS1_1() ) );
-        float end_a = Math.min(1, Math.max(0, endColor.a + endColorVar.a * ccMacros.CCRANDOM_MINUS1_1() ) );
+//        float end_r = Math.min(1, Math.max(0, endColor.r + endColorVar.r * ccMacros.CCRANDOM_MINUS1_1() ) );
+//        float end_g = Math.min(1, Math.max(0, endColor.g + endColorVar.g * ccMacros.CCRANDOM_MINUS1_1() ) );
+//        float end_b = Math.min(1, Math.max(0, endColor.b + endColorVar.b * ccMacros.CCRANDOM_MINUS1_1() ) );
+//        float end_a = Math.min(1, Math.max(0, endColor.a + endColorVar.a * ccMacros.CCRANDOM_MINUS1_1() ) );
 
         ccColor4FUtil.set(particle.color, start_r, start_g, start_b, start_a);
         
+//        ccColor4FUtil.set(particle.deltaColor,
+//        		(end_r - start_r) / particle.timeToLive,
+//        		(end_g - start_g) / particle.timeToLive,
+//        		(end_b - start_b) / particle.timeToLive,
+//        		(end_a - start_a) / particle.timeToLive);
+        
         ccColor4FUtil.set(particle.deltaColor,
-        		(end_r - start_r) / particle.timeToLive,
-        		(end_g - start_g) / particle.timeToLive,
-        		(end_b - start_b) / particle.timeToLive,
-        		(end_a - start_a) / particle.timeToLive);
+        		(min(1, max(0, endColor.r + endColorVar.r * ccMacros.CCRANDOM_MINUS1_1() ) ) - start_r) / particle.timeToLive,
+        		(min(1, max(0, endColor.g + endColorVar.g * ccMacros.CCRANDOM_MINUS1_1() ) ) - start_g) / particle.timeToLive,
+        		(min(1, max(0, endColor.b + endColorVar.b * ccMacros.CCRANDOM_MINUS1_1() ) ) - start_b) / particle.timeToLive,
+        		(min(1, max(0, endColor.a + endColorVar.a * ccMacros.CCRANDOM_MINUS1_1() ) ) - start_a) / particle.timeToLive);
 
         // size
-        float startS = Math.max(0, startSize + startSizeVar * ccMacros.CCRANDOM_MINUS1_1() ); // no negative size
+        startS = max(0, startSize + startSizeVar * ccMacros.CCRANDOM_MINUS1_1() ); // no negative size
 
         particle.size = startS;
         if( endSize == kCCParticleStartSizeEqualToEndSize )
             particle.deltaSize = 0;
         else {
-            float endS = endSize + endSizeVar * ccMacros.CCRANDOM_MINUS1_1();
-            endS = Math.max(0, endS);
-            particle.deltaSize = (endS - startS) / particle.timeToLive;
+            particle.deltaSize = (max(0,endSize + endSizeVar * ccMacros.CCRANDOM_MINUS1_1()) - startS) / particle.timeToLive;
         }
 
         // rotation
-        float startA = startSpin + startSpinVar * ccMacros.CCRANDOM_MINUS1_1();
-        float endA = endSpin + endSpinVar * ccMacros.CCRANDOM_MINUS1_1();
+        startA = startSpin + startSpinVar * ccMacros.CCRANDOM_MINUS1_1();
+//        float endA = endSpin + endSpinVar * ccMacros.CCRANDOM_MINUS1_1();
         particle.rotation = startA;
-        particle.deltaRotation = (endA - startA) / particle.timeToLive;
+//        particle.deltaRotation = (endA - startA) / particle.timeToLive;
+        particle.deltaRotation = ((endSpin + endSpinVar * ccMacros.CCRANDOM_MINUS1_1()) - startA) / particle.timeToLive;
 
         // position
         if( positionType == kCCPositionTypeFree )
         	this.convertToWorldSpace(0, 0, particle.startPos);
 
         // direction
-        float a = ccMacros.CC_DEGREES_TO_RADIANS( angle + angleVar * ccMacros.CCRANDOM_MINUS1_1() );	
+        a = ccMacros.CC_DEGREES_TO_RADIANS( angle + angleVar * ccMacros.CCRANDOM_MINUS1_1() );	
 
         // Mode Gravity: A
         if (emitterMode == kCCParticleModeGravity) {
-            float s = modeA.speed + modeA.speedVar * ccMacros.CCRANDOM_MINUS1_1();
+            //float s = modeA.speed + modeA.speedVar * ccMacros.CCRANDOM_MINUS1_1();
 
             if (particle.modeA == null) {
             	particle.modeA = new CCParticle.ParticleModeA();
@@ -781,7 +803,7 @@ public abstract class CCParticleSystem extends CCNode implements CCTextureProtoc
             
             // direction
             particle.modeA.dir.set((float)Math.cos(a), (float)Math.sin(a));
-            CGPointUtil.mult(particle.modeA.dir, s);
+            CGPointUtil.mult(particle.modeA.dir, modeA.speed + modeA.speedVar * ccMacros.CCRANDOM_MINUS1_1());
 
             // radial accel
             particle.modeA.radialAccel = modeA.radialAccel + modeA.radialAccelVar * ccMacros.CCRANDOM_MINUS1_1();
@@ -794,7 +816,7 @@ public abstract class CCParticleSystem extends CCNode implements CCTextureProtoc
         else {
             // Set the default diameter of the particle from the source position
             float startRadius = modeB.startRadius + modeB.startRadiusVar * ccMacros.CCRANDOM_MINUS1_1();
-            float endRadius = modeB.endRadius + modeB.endRadiusVar * ccMacros.CCRANDOM_MINUS1_1();
+            //float endRadius = modeB.endRadius + modeB.endRadiusVar * ccMacros.CCRANDOM_MINUS1_1();
 
             if (particle.modeB == null) {
             	particle.modeB = new CCParticle.ParticleModeB();
@@ -805,7 +827,8 @@ public abstract class CCParticleSystem extends CCNode implements CCTextureProtoc
             if( modeB.endRadius == kCCParticleStartRadiusEqualToEndRadius )
                 particle.modeB.deltaRadius = 0;
             else
-                particle.modeB.deltaRadius = (endRadius - startRadius) / particle.timeToLive;
+                //particle.modeB.deltaRadius = (endRadius - startRadius) / particle.timeToLive;
+            	particle.modeB.deltaRadius = ((modeB.endRadius + modeB.endRadiusVar * ccMacros.CCRANDOM_MINUS1_1()) - startRadius) / particle.timeToLive;
 
             particle.modeB.angle = a;
             particle.modeB.degreesPerSecond = ccMacros.CC_DEGREES_TO_RADIANS(modeB.rotatePerSecond + modeB.rotatePerSecondVar * ccMacros.CCRANDOM_MINUS1_1());
@@ -1018,19 +1041,30 @@ public abstract class CCParticleSystem extends CCNode implements CCTextureProtoc
 	public boolean addParticle() {
 		if (isFull())
 			return false;
-		CCParticle particle = particles[particleCount];
-		initParticle(particle);
+		//CCParticle particle = particles[particleCount];
+		//initParticle(particle);
+		initParticle(particles[particleCount]);
 		particleCount++;
 		return true;
 	}
 
+	/** These are only used in update, but we're sacrificing memory for cpu time */
+	final static OneClassPool<CGPoint> pointPool = PoolHolder.getInstance().getCGPointPool();
+	CGPoint currentPosition = CGPoint.zero();
+    CGPoint tmp = CGPoint.zero();
+    CGPoint radial = CGPoint.zero();
+    CGPoint tangential = CGPoint.zero();
+    CCParticle p;
+    CGPoint	newPos = CGPoint.zero();
+    CCParticle tmpPart;
+    float ftmp;
     public void update(float dt) {
         if( active && emissionRate != 0 ) {
-            float rate = 1.0f / emissionRate;
+            ftmp = 1.0f / emissionRate;
             emitCounter += dt;
-            while( particleCount < totalParticles && emitCounter > rate ) {
+            while( particleCount < totalParticles && emitCounter > ftmp ) {
                 addParticle();
-                emitCounter -= rate;
+                emitCounter -= ftmp;
             }
 
             elapsed += dt;
@@ -1040,17 +1074,16 @@ public abstract class CCParticleSystem extends CCNode implements CCTextureProtoc
 
         particleIdx = 0;
 
-        OneClassPool<CGPoint> pointPool = PoolHolder.getInstance().getCGPointPool();
-        CGPoint currentPosition = pointPool.get();
-        CGPoint tmp = pointPool.get();
-        CGPoint radial = pointPool.get();
-        CGPoint tangential = pointPool.get();
+//        currentPosition = pointPool.get();
+//        tmp = pointPool.get();
+//        radial = pointPool.get();
+//        tangential = pointPool.get();
         
         if( positionType_ == kCCPositionTypeFree )
             convertToWorldSpace(0, 0, currentPosition);
 
         while( particleIdx < particleCount ) {
-            CCParticle p = particles[particleIdx];
+            p = particles[particleIdx];
             // life
             p.timeToLive -= dt;
             if( p.timeToLive > 0 ) {
@@ -1066,9 +1099,9 @@ public abstract class CCParticleSystem extends CCNode implements CCTextureProtoc
                     CGPointUtil.mult(radial, p.modeA.radialAccel);
 
                     // tangential acceleration
-                    float newy = tangential.x;
+                    ftmp = tangential.x;
                     tangential.x = -tangential.y;
-                    tangential.y = newy;
+                    tangential.y = ftmp;
                     CGPointUtil.mult(tangential, p.modeA.tangentialAccel);
 
                     // (gravity + radial + tangential) * dt
@@ -1096,18 +1129,18 @@ public abstract class CCParticleSystem extends CCNode implements CCTextureProtoc
                 p.color.a += (p.deltaColor.a * dt);
 
                 // size
-                p.size += (p.deltaSize * dt);
-                p.size = Math.max( 0, p.size );
+                //p.size += (p.deltaSize * dt);
+                //p.size = max( 0, p.size );
+                p.size = max( 0, p.size + (p.deltaSize * dt));
 
                 // angle
                 p.rotation += (p.deltaRotation * dt);
-                CGPoint	newPos;
 
                 if( positionType_ == kCCPositionTypeFree ) {
-                    CGPoint diff = tmp;
-                    CGPointUtil.sub(currentPosition, p.startPos, diff);
-                    CGPointUtil.sub(p.pos, diff, diff);
-                    newPos = diff;
+                    //CGPoint diff = tmp;
+                    CGPointUtil.sub(currentPosition, p.startPos, tmp);
+                    CGPointUtil.sub(p.pos, tmp, tmp);
+                    newPos = tmp;
                 } else {
                     newPos = p.pos;
                 }
@@ -1132,7 +1165,7 @@ public abstract class CCParticleSystem extends CCNode implements CCTextureProtoc
             } else {
                 // life < 0
                 if( particleIdx != particleCount-1 ) {
-                	CCParticle tmpPart = particles[particleIdx]; 
+                	tmpPart = particles[particleIdx]; 
                     particles[particleIdx] = particles[particleCount-1];
                     particles[particleCount-1] = tmpPart;
                 }
@@ -1146,10 +1179,10 @@ public abstract class CCParticleSystem extends CCNode implements CCTextureProtoc
             }
         }
         
-        pointPool.free(currentPosition);
-        pointPool.free(tmp);
-        pointPool.free(radial);
-        pointPool.free(tangential);
+//        pointPool.free(currentPosition);
+//        pointPool.free(tmp);
+//        pointPool.free(radial);
+//        pointPool.free(tangential);
 
         postStep();
     }

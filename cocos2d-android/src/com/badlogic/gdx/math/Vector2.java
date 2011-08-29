@@ -1,23 +1,31 @@
-/*
- * Copyright 2010 Mario Zechner (contact@badlogicgames.com), Nathan Sweet (admin@esotericsoftware.com)
+/*******************************************************************************
+ * Copyright 2011 See AUTHORS file.
  * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the
- * License. You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  * 
- * http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  * 
- * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS"
- * BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language
- * governing permissions and limitations under the License.
- */
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ******************************************************************************/
 package com.badlogic.gdx.math;
+
+import java.io.Serializable;
+
 
 /**
  * Encapsulates a 2D vector. Allows chaining methods by returning a reference to itself
  * @author badlogicgames@gmail.com
  * 
  */
-public final class Vector2 {
+public class Vector2 implements Serializable {	
+	private static final long serialVersionUID = 913902788239530931L;
+
 	/** static temporary vector **/
 	private final static Vector2 tmp = new Vector2();
 
@@ -227,5 +235,69 @@ public final class Vector2 {
 		this.x = x;
 		this.y = y;
 		return this;
+	}
+	
+	/**
+	 * Calculates the 2D cross product between this
+	 * and the given vector.
+	 * @param v the other vector
+	 * @return the cross product
+	 */
+	public float crs(Vector2 v) {		
+		return this.x * v.y - this.y * v.x;
+	}
+	
+	/**
+	 * Calculates the 2D cross product between this
+	 * and the given vector.
+	 * @param x the x-coordinate of the other vector
+	 * @param y the y-coordinate of the other vector
+	 * @return the cross product
+	 */
+	public float crs(float x, float y) {
+		 return this.x * y - this.y * x;
+	}
+	
+	/**
+	 * @return the angle in degrees of this vector (point) relative to the x-axis. Angles are counter-clockwise and between 0 and 360.
+	 */
+	public float angle() {
+      float angle = (float)Math.atan2(y, x) * MathUtils.radiansToDegrees;
+      if(angle < 0)
+          angle += 360;
+      return angle;
+  }
+	
+	/**
+	 * Rotates the Vector2 by the given angle, counter-clockwise.
+	 * @param angle the angle in degrees
+	 * @return the 
+	 */
+   public Vector2 rotate(float angle) {
+      float rad = angle * MathUtils.degreesToRadians;
+      float cos = (float)Math.cos(rad);
+      float sin = (float)Math.sin(rad);
+      
+      float newX = this.x * cos - this.y * sin;
+      float newY = this.x * sin + this.y * cos;
+      
+      this.x = newX;
+      this.y = newY;
+      
+      return this;
+  }
+   
+	/**
+	 * Linearly interpolates between this vector and the target vector by alpha which is in the range [0,1]. The result is stored
+	 * in this vector.
+	 * 
+	 * @param target The target vector
+	 * @param alpha The interpolation coefficient
+	 * @return This vector for chaining.
+	 */
+	public Vector2 lerp (Vector2 target, float alpha) {
+		Vector2 r = this.mul(1.0f - alpha);
+		r.add(target.tmp().mul(alpha));
+		return r;
 	}
 }

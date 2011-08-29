@@ -19,6 +19,9 @@ public abstract class CCCameraAction extends CCIntervalAction {
     protected float upYOrig;
     protected float upZOrig;
 
+    protected float x[] = new float[1];
+    protected float y[] = new float[1];
+    protected float z[] = new float[1];
     protected CCCameraAction(float t) {
         super(t);
     }
@@ -26,10 +29,6 @@ public abstract class CCCameraAction extends CCIntervalAction {
     @Override
     public void start(CCNode aTarget) {
         super.start(aTarget);
-
-        float x[] = new float[1];
-        float y[] = new float[1];
-        float z[] = new float[1];
 
         target.getCamera().getCenter(x, y, z);
         centerXOrig = x[0];

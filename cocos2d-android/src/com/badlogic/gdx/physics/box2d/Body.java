@@ -1,15 +1,18 @@
-/*
- * Copyright 2010 Mario Zechner (contact@badlogicgames.com), Nathan Sweet (admin@esotericsoftware.com)
+/*******************************************************************************
+ * Copyright 2011 See AUTHORS file.
  * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the
- * License. You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  * 
- * http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  * 
- * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS"
- * BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language
- * governing permissions and limitations under the License.
- */
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ******************************************************************************/
 package com.badlogic.gdx.physics.box2d;
 
 import java.util.ArrayList;
@@ -126,6 +129,7 @@ public class Body {
 	private native void jniGetTransform (long addr, float[] vals);
 
 	private final Vector2 position = new Vector2();
+
 	/**
 	 * Get the world body origin position.
 	 * @return the world position of the body's origin.
@@ -284,6 +288,7 @@ public class Body {
 	private native float jniGetInertia (long addr);
 
 	private final MassData massData = new MassData();
+
 	/**
 	 * Get the mass data of the body.
 	 * @return a struct containing the mass, inertia and center of the body.
@@ -321,6 +326,7 @@ public class Body {
 	private native void jniResetMassData (long addr);
 
 	private final Vector2 localPoint = new Vector2();
+
 	/**
 	 * Get the world coordinates of a point given the local coordinates.
 	 * @param localPoint a point on the body measured relative the the body's origin.
@@ -336,6 +342,7 @@ public class Body {
 	private native void jniGetWorldPoint (long addr, float localPointX, float localPointY, float[] worldPoint);
 
 	private final Vector2 worldVector = new Vector2();
+
 	/**
 	 * Get the world coordinates of a vector given the local coordinates.
 	 * @param localVector a vector fixed in the body.
@@ -351,6 +358,7 @@ public class Body {
 	private native void jniGetWorldVector (long addr, float localVectorX, float localVectorY, float[] worldVector);
 
 	public final Vector2 localPoint2 = new Vector2();
+
 	/**
 	 * Gets a local point relative to the body's origin given a world point.
 	 * @param worldPoint a point in world coordinates.
@@ -366,6 +374,7 @@ public class Body {
 	private native void jniGetLocalPoint (long addr, float worldPointX, float worldPointY, float[] localPoint);
 
 	public final Vector2 localVector = new Vector2();
+
 	/**
 	 * Gets a local vector given a world vector.
 	 * @param worldVector a vector in world coordinates.
@@ -381,6 +390,7 @@ public class Body {
 	private native void jniGetLocalVector (long addr, float worldVectorX, float worldVectorY, float[] worldVector);
 
 	public final Vector2 linVelWorld = new Vector2();
+
 	/**
 	 * Get the world linear velocity of a world point attached to this body.
 	 * @param worldPoint a point in world coordinates.
@@ -396,6 +406,7 @@ public class Body {
 	private native void jniGetLinearVelocityFromWorldPoint (long addr, float worldPointX, float worldPointY, float[] linVelWorld);
 
 	public final Vector2 linVelLoc = new Vector2();
+
 	/**
 	 * Get the world velocity of a local point.
 	 * @param localPoint a point in local coordinates.

@@ -1,16 +1,21 @@
-/*
- * Copyright 2010 Mario Zechner (contact@badlogicgames.com), Nathan Sweet (admin@esotericsoftware.com)
+/*******************************************************************************
+ * Copyright 2011 See AUTHORS file.
  * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the
- * License. You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  * 
- * http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  * 
- * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS"
- * BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language
- * governing permissions and limitations under the License.
- */
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ******************************************************************************/
 package com.badlogic.gdx.math;
+
+import java.io.Serializable;
 
 import com.badlogic.gdx.utils.GdxRuntimeException;
 
@@ -20,9 +25,10 @@ import com.badlogic.gdx.utils.GdxRuntimeException;
  * @author mzechner
  * 
  */
-public class Matrix3 {
+public class Matrix3 implements Serializable {	
+	private static final long serialVersionUID = 7907569533774959788L;
 	private final static float DEGREE_TO_RAD = (float)Math.PI / 180;
-	float[] vals = new float[9];
+	public float[] vals = new float[9];
 
 	public Matrix3 () {
 		idt();
@@ -173,36 +179,36 @@ public class Matrix3 {
 		throw new GdxRuntimeException("Not implemented yet");
 	}
 
-	public static void main (String[] argv) {
-		float refX = 50, refY = -50;
-		float scaleX = 2, scaleY = 1;
-		float rotation = 45;
-		float x = -232, y = 123;
-
-		Matrix3 transform = new Matrix3();
-		Matrix3 tmp = new Matrix3();
-
-		tmp.vals = new float[] {-2, -1, 2, 2, 1, 0, -3, 3, -1};
-		System.out.println(tmp.det());
-
-		transform.idt();
-		transform.setToTranslation(-refX, -refY);
-		transform.mul(tmp.setToScaling(scaleX, scaleY));
-		transform.mul(tmp.setToRotation(rotation));
-		transform.mul(tmp.setToTranslation(refX, refY));
-		transform.mul(tmp.setToTranslation(x, y));
-		System.out.println(new Vector2().mul(transform));
-
-		Matrix4 transform4 = new Matrix4();
-		Matrix4 tmp4 = new Matrix4();
-		transform4.idt();
-		transform4.setToTranslation(-refX, -refY, 0);
-		transform4.mul(tmp4.setToScaling(scaleX, scaleY, 1));
-		transform4.mul(tmp4.setToRotation(new Vector3(0, 0, 1), rotation));
-		transform4.mul(tmp4.setToTranslation(refX, refY, 0));
-		transform4.mul(tmp4.setToTranslation(x, y, 0));
-		System.out.println(new Vector3().mul(transform4));
-	}
+//	public static void main (String[] argv) {
+//		float refX = 50, refY = -50;
+//		float scaleX = 2, scaleY = 1;
+//		float rotation = 45;
+//		float x = -232, y = 123;
+//
+//		Matrix3 transform = new Matrix3();
+//		Matrix3 tmp = new Matrix3();
+//
+//		tmp.vals = new float[] {-2, -1, 2, 2, 1, 0, -3, 3, -1};
+//		System.out.println(tmp.det());
+//
+//		transform.idt();
+//		transform.setToTranslation(-refX, -refY);
+//		transform.mul(tmp.setToScaling(scaleX, scaleY));
+//		transform.mul(tmp.setToRotation(rotation));
+//		transform.mul(tmp.setToTranslation(refX, refY));
+//		transform.mul(tmp.setToTranslation(x, y));
+//		System.out.println(new Vector2().mul(transform));
+//
+//		Matrix4 transform4 = new Matrix4();
+//		Matrix4 tmp4 = new Matrix4();
+//		transform4.idt();
+//		transform4.setToTranslation(-refX, -refY, 0);
+//		transform4.mul(tmp4.setToScaling(scaleX, scaleY, 1));
+//		transform4.mul(tmp4.setToRotation(new Vector3(0, 0, 1), rotation));
+//		transform4.mul(tmp4.setToTranslation(refX, refY, 0));
+//		transform4.mul(tmp4.setToTranslation(x, y, 0));
+//		System.out.println(new Vector3().mul(transform4));
+//	}
 
 	public Matrix3 set (Matrix3 mat) {
 		vals[0] = mat.vals[0];

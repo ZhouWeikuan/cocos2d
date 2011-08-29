@@ -2,6 +2,7 @@ package org.cocos2d.actions.grid;
 
 import org.cocos2d.types.CCVertex3D;
 import org.cocos2d.types.ccGridSize;
+import org.cocos2d.utils.GameRand;
 
 ////////////////////////////////////////////////////////////
 
@@ -29,20 +30,25 @@ public class CCShaky3D extends CCGrid3DAction {
 		return copy;
 	}
 
+	GameRand rand = new GameRand();
+	CCVertex3D	v;
+	ccGridSize gs = ccGridSize.ccg(0, 0);
+	int i, j;
+	float r;
 	@Override
 	public void update(float time) {
-		int i, j;
-		
 		for( i = 0; i < (gridSize.x+1); i++ ) {
+			gs.x = i;
 			for( j = 0; j < (gridSize.y+1); j++ ) {
-				CCVertex3D	v = originalVertex(ccGridSize.ccg(i,j));
-				float r = (float)Math.random() * (randrange*2);
+				gs.y = j;
+				v = originalVertex(gs);
+				r = rand.nextFloat() * (randrange*2);
 				v.x += r - randrange;
 				v.y += r - randrange;
 				if( shakeZ )
 					v.z += r - randrange;
 				
-				setVertex(ccGridSize.ccg(i,j), v);
+				setVertex(gs, v);
 			}
 		}
 	}

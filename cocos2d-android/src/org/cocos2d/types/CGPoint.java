@@ -186,7 +186,7 @@ public class CGPoint {
      @since v0.7.2
      */
     public static float ccpLength(final CGPoint v) {
-        return (float)Math.sqrt(ccpLengthSQ(v));
+        return (float)Math.sqrt(v.x * v.x + v.y * v.y);
     }
 
     /**

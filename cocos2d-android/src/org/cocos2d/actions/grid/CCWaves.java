@@ -31,13 +31,16 @@ public class CCWaves extends CCGrid3DAction {
 		vertical = v;
 	}
 
+	CCVertex3D	v;
+	ccGridSize gs = ccGridSize.ccg(0, 0);
+	int i, j;
 	@Override
-	public void update(float time) {
-		int i, j;
-		
+	public void update(float time) {		
 		for( i = 0; i < (gridSize.x+1); i++ ) {
+			gs.x = i;
 			for( j = 0; j < (gridSize.y+1); j++ ) {
-				CCVertex3D	v = originalVertex(ccGridSize.ccg(i,j));
+				gs.y = j;
+				v = originalVertex(gs);
 				
 				if ( vertical )
 					v.x = (float)(v.x + (Math.sin(time*Math.PI*waves*2 + v.y * .01f) * amplitude * amplitudeRate));
@@ -45,7 +48,7 @@ public class CCWaves extends CCGrid3DAction {
 				if ( horizontal )
 					v.y = (float)(v.y + (Math.sin(time*Math.PI*waves*2 + v.x * .01f) * amplitude * amplitudeRate));
 						
-				setVertex(ccGridSize.ccg(i,j), v);
+				setVertex(gs, v);
 			}
 		}
 	}

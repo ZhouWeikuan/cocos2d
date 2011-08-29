@@ -197,9 +197,7 @@ public class CCTexture2D implements Resource {
 //        		GLResourceHelper.sharedHelper().removeLoader(mLoader);
 //        	}
     		
-    		/** maybe this is causing a threading issue?  I think we should use true.. */
-        	//GLResourceHelper.sharedHelper().addLoader(this, loader, false);
-    		GLResourceHelper.sharedHelper().addLoader(this, loader, true);
+    		GLResourceHelper.sharedHelper().addLoader(this, loader, false);
     	}
 //    	mLoader = loader;
     }
@@ -491,7 +489,7 @@ public class CCTexture2D implements Resource {
             _name = textures[0];
 
             applyTexParameters(gl);
-
+            
             // this shouldn't be so never, but if so, needs to be found where
             // texture reloading is in progress 
         	if(mBitmap == null)

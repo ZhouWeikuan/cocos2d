@@ -158,8 +158,9 @@ public class CCScheduler {
         // updates with priority < 0
         synchronized (updatesNeg) {
         	int len = updatesNeg.size();
+        	tListEntry e;
 	        for (int i = 0; i < len; i++) {
-	        	tListEntry e = updatesNeg.get(i);
+	        	e = updatesNeg.get(i);
 	        	currentEntry = e;
 	            if( ! e.paused ) {
 	            	if(e.callback !=null) {
@@ -185,8 +186,9 @@ public class CCScheduler {
         // updates with priority == 0
         synchronized (updates0) {
         	int len = updates0.size();
+        	tListEntry e;
 	        for(int i=0; i < len; ++i) {
-	        	tListEntry e = updates0.get(i);
+	        	e = updates0.get(i);
 	        	currentEntry = e;
 	            if( ! e.paused ) {
 	            	if(e.callback !=null) {
@@ -213,8 +215,9 @@ public class CCScheduler {
         // updates with priority > 0
         synchronized (updatesPos) {
         	int len = updatesPos.size();
+        	tListEntry e;
 	        for (int i=0; i < len; i++) {
-	        	tListEntry e = updatesPos.get(i);
+	        	e = updatesPos.get(i);
 	        	currentEntry = e;
 	            if( ! e.paused ) {
 	            	if(e.callback !=null) {
@@ -237,9 +240,10 @@ public class CCScheduler {
 	        currentEntry = null;
         }
         
+        tHashSelectorEntry elt;
         for(ConcurrentArrayHashMap<Object, tHashSelectorEntry>.Entry e = hashForSelectors.firstValue();
         	e != null; e = hashForSelectors.nextValue(e)) {
-        	tHashSelectorEntry elt = e.getValue();
+        	elt = e.getValue();
 
         	currentTarget = elt;
             currentTargetSalvaged = false;

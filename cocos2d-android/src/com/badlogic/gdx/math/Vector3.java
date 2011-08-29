@@ -1,16 +1,21 @@
-/*
- * Copyright 2010 Mario Zechner (contact@badlogicgames.com), Nathan Sweet (admin@esotericsoftware.com)
+/*******************************************************************************
+ * Copyright 2011 See AUTHORS file.
  * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the
- * License. You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  * 
- * http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  * 
- * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS"
- * BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language
- * governing permissions and limitations under the License.
- */
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ******************************************************************************/
 package com.badlogic.gdx.math;
+
+import java.io.Serializable;
 
 /**
  * Encapsulates a 3D vector. Allows chaining operations by returning a reference to it self in all modification methods.
@@ -18,7 +23,7 @@ package com.badlogic.gdx.math;
  * @author badlogicgames@gmail.com
  * 
  */
-public final class Vector3 {
+public class Vector3 implements Serializable {
 	private static final long serialVersionUID = 3840054589595372522L;
 	/** the x-component of this vector **/
 	public float x;
@@ -257,17 +262,6 @@ public final class Vector3 {
 	}
 
 	/**
-	 * @param vector The other vector
-	 * @return The squared euclidian distance between this and the other vector
-	 */
-	public float dist2 (Vector3 vector) {
-		float a = vector.x - x;
-		float b = vector.y - y;
-		float c = vector.z - z;
-		return a * a + b * b + c * c;
-	}
-
-	/**
 	 * Normalizes this vector to unit length
 	 * 
 	 * @return This vector for chaining
@@ -304,7 +298,7 @@ public final class Vector3 {
 	 * @return This vector for chaining
 	 */
 	public Vector3 crs (float x, float y, float z) {
-		return this.set(y * z - z * y, z * x - x * z, x * y - y * x);
+		return this.set(this.y * z - this.z * y, this.z * x - this.x * z, this.x * y - this.y * x);
 	}
 
 	/**
@@ -500,5 +494,5 @@ public final class Vector3 {
 		y *= scalarY;
 		z *= scalarZ;
 		return this;
-	}
+	}	
 }

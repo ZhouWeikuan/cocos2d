@@ -1,5 +1,6 @@
 package org.cocos2d.nodes;
 
+import java.nio.FloatBuffer;
 import java.util.Arrays;
 import java.util.HashMap;
 
@@ -19,6 +20,8 @@ import org.cocos2d.types.ccBlendFunc;
 import org.cocos2d.types.ccColor3B;
 import org.cocos2d.types.ccColor4B;
 import org.cocos2d.utils.FastFloatBuffer;
+
+import com.badlogic.gdx.utils.BufferUtils;
 
 import android.graphics.Bitmap;
 
@@ -191,31 +194,31 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
 	// vertex coords, texture coords and color info
     /** buffers that are going to be rendered */
     /** the quad (tex coords, vertex coords and color) information */
-    private FastFloatBuffer texCoords;
+    private FloatBuffer texCoords;
     public float[] getTexCoordsArray() {
     	float ret[] = new float[texCoords.limit()];
     	texCoords.get(ret, 0, texCoords.limit());
     	return ret;
     }
     
-    private FastFloatBuffer vertexes;
+    private FloatBuffer vertexes;
     public float[] getVertexArray() {
     	float ret[] = new float[vertexes.limit()];
     	vertexes.get(ret, 0, vertexes.limit());
     	return ret;
     }
     
-    public FastFloatBuffer getTexCoords() {
+    public FloatBuffer getTexCoords() {
     	texCoords.position(0);
     	return texCoords;
     }
     
-    public FastFloatBuffer getVertices() {
+    public FloatBuffer getVertices() {
     	vertexes.position(0);
     	return vertexes;
     }
     
-    private FastFloatBuffer colors;
+    private FloatBuffer colors;
 
 	// whether or not it's parent is a CCSpriteSheet
     /** whether or not the Sprite is rendered using a CCSpriteSheet */
@@ -488,9 +491,9 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
     }
 
     protected void init() {
-        texCoords = new FastFloatBuffer(4 * 2);
-        vertexes  = new FastFloatBuffer(4 * 3);
-        colors    = new FastFloatBuffer(4 * 4);
+        texCoords = BufferUtils.newFloatBuffer(4 * 2);
+        vertexes  = BufferUtils.newFloatBuffer(4 * 3);
+        colors    = BufferUtils.newFloatBuffer(4 * 4);
     	
 		dirty_ = false;
         recursiveDirty_ = false;
@@ -902,15 +905,15 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
 
         // vertex
         // int diff = offsetof( ccV3F_C4B_T2F, vertices);
-        gl.glVertexPointer(3, GL10.GL_FLOAT, 0 , vertexes.bytes);
+        gl.glVertexPointer(3, GL10.GL_FLOAT, 0 , vertexes);
 
         // color
         // diff = offsetof( ccV3F_C4B_T2F, colors);
-        gl.glColorPointer(4, GL10.GL_FLOAT, 0, colors.bytes);
+        gl.glColorPointer(4, GL10.GL_FLOAT, 0, colors);
 
         // tex coords
         // diff = offsetof( ccV3F_C4B_T2F, texCoords);
-        gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, texCoords.bytes);
+        gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, texCoords);
 
         gl.glDrawArrays(GL10.GL_TRIANGLE_STRIP, 0, 4);
 
@@ -1006,6 +1009,9 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
         	0, 0, 0 , 	0, 0, 0,
         	0, 0, 0,  	0, 0, 0
         };  
+    private static float x1, y1, x2, y2, x, y, cr, sr, cr2, sr2,
+    			  ax, ay, bx, by, cx, cy, dx, dy = 0;
+    private static CCSprite sprP;
     /** updates the quad according the the rotation, position, scale values.
     */
     public void updateTransform() {
@@ -1022,12 +1028,12 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
         // Optimization: If parent is spritesheet, or parent is nil
         // build Affine transform manually
         if( parent_==null || parent_ == spriteSheet_ ) {
-            float radians = -ccMacros.CC_DEGREES_TO_RADIANS(rotation_);
-            float c = (float)Math.cos(radians);
-            float s = (float)Math.sin(radians);
+            cr = -ccMacros.CC_DEGREES_TO_RADIANS(rotation_);
+            cr2 = (float)Math.cos(cr);
+            sr = (float)Math.sin(cr);
             
-            tmpMatrix.set(c * scaleX_,  s * scaleX_,
-                    -s * scaleY_, c * scaleY_,
+            tmpMatrix.set(cr2 * scaleX_,  sr * scaleX_,
+                    -sr * scaleY_, cr2 * scaleY_,
                     position_.x, position_.y);
 
             tmpMatrix.translate(-anchorPointInPixels_.x, -anchorPointInPixels_.y);
@@ -1039,7 +1045,7 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
             int prevHonor = CC_HONOR_PARENT_TRANSFORM_ALL;
 
             for (CCNode p = this; p != null && p != spriteSheet_; p = p.getParent()) {
-            	CCSprite sprP = (CCSprite)p;
+            	sprP = (CCSprite)p;
                 
                 tmpNewMatrix.setToIdentity();
                 // 2nd: Translate, Rotate, Scale
@@ -1063,32 +1069,32 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
         // calculate the Quad based on the Affine Matrix
         //	
 
-        CGSize size = rect_.size;
+        //CGSize size = rect_.size;
 
-        float x1 = offsetPosition_.x;
-        float y1 = offsetPosition_.y;
+        x1 = offsetPosition_.x;
+        y1 = offsetPosition_.y;
 
-        float x2 = x1 + size.width;
-        float y2 = y1 + size.height;
-        float x = (float) tmpMatrix.m02;
-        float y = (float) tmpMatrix.m12;
+        x2 = x1 + rect_.size.width;
+        y2 = y1 + rect_.size.height;
+        x = (float) tmpMatrix.m02;
+        y = (float) tmpMatrix.m12;
 
-        float cr = (float) tmpMatrix.m00;
-        float sr = (float) tmpMatrix.m10;
-        float cr2 = (float) tmpMatrix.m11;
-        float sr2 = (float) -tmpMatrix.m01;
+        cr = (float) tmpMatrix.m00;
+        sr = (float) tmpMatrix.m10;
+        cr2 = (float) tmpMatrix.m11;
+        sr2 = (float) -tmpMatrix.m01;
 
-        float ax = x1 * cr - y1 * sr2 + x;
-        float ay = x1 * sr + y1 * cr2 + y;
+        ax = x1 * cr - y1 * sr2 + x;
+        ay = x1 * sr + y1 * cr2 + y;
 
-        float bx = x2 * cr - y1 * sr2 + x;
-        float by = x2 * sr + y1 * cr2 + y;
+        bx = x2 * cr - y1 * sr2 + x;
+        by = x2 * sr + y1 * cr2 + y;
 
-        float cx = x2 * cr - y2 * sr2 + x;
-        float cy = x2 * sr + y2 * cr2 + y;
+        cx = x2 * cr - y2 * sr2 + x;
+        cy = x2 * sr + y2 * cr2 + y;
 
-        float dx = x1 * cr - y2 * sr2 + x;
-        float dy = x1 * sr + y2 * cr2 + y;
+        dx = x1 * cr - y2 * sr2 + x;
+        dy = x1 * sr + y2 * cr2 + y;
 
         tmpV[0] = dx; tmpV[1] = dy; tmpV[2] = vertexZ_;   
         tmpV[3] = ax; tmpV[4] = ay; tmpV[5] = vertexZ_;   

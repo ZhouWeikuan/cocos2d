@@ -706,7 +706,8 @@ public class CCDirector implements GLSurfaceView.Renderer {
         
         gl.glPushMatrix();
 
-        applyOrientation(gl);
+        /** I COMMENTED OUT THE FOLLOWING LINE BECAUSE applyOrientation(GL10 gl) CURRENTLY DOES NOTHING */
+        //applyOrientation(gl);
         
         // By default enable VertexArray, ColorArray, TextureCoordArray and Texture2D
         ccMacros.CC_ENABLE_DEFAULT_GL_STATES(gl);
@@ -764,6 +765,10 @@ public class CCDirector implements GLSurfaceView.Renderer {
     /** returns the display size of the OpenGL view in pixels */
     public CGSize displaySize() {
         return CGSize.make(surfaceSize_.width, surfaceSize_.height);
+    }
+    
+    public CGSize displaySizeRef() {
+    	return surfaceSize_;
     }
     
     public boolean getLandscape() {

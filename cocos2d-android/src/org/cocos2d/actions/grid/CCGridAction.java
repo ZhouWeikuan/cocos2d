@@ -2,6 +2,7 @@ package org.cocos2d.actions.grid;
 
 import org.cocos2d.actions.interval.CCIntervalAction;
 import org.cocos2d.actions.interval.CCReverseTime;
+import org.cocos2d.grid.CCGrid3D;
 import org.cocos2d.grid.CCGridBase;
 import org.cocos2d.nodes.CCDirector;
 import org.cocos2d.nodes.CCNode;
@@ -27,19 +28,26 @@ public abstract class CCGridAction extends CCIntervalAction {
         gridSize = new ccGridSize(gSize);
     }
     
+    CCGridBase targetGrid;
+    Class<? extends CCGridBase> lastclass = null;
     @Override
     public void start(CCNode aTarget) {
         super.start(aTarget);
 
-        CCGridBase newgrid = grid();
-        CCGridBase targetGrid = target.getGrid();
+        
+        //CCGridBase newgrid = grid();
+        targetGrid = target.getGrid();
+
 
         // Class<?> clazz = newgrid.getClass();
         if (targetGrid != null && targetGrid.reuseGrid() > 0) {
+        	if (lastclass == null)
+        		lastclass = targetGrid.getClass();
+        	
             if (targetGrid.isActive() &&
             		targetGrid.getGridWidth() == gridSize.x &&
             		targetGrid.getGridHeight() == gridSize.y &&
-            		targetGrid.getClass() == newgrid.getClass()) {
+            		targetGrid.getClass() == lastclass) {
             	targetGrid.reuse(CCDirector.gl);
             } else {
                 throw new RuntimeException("Cannot reuse grid_");
@@ -48,7 +56,9 @@ public abstract class CCGridAction extends CCIntervalAction {
             if (targetGrid != null && targetGrid.isActive())
                 targetGrid.setActive(false);
             
-            target.setGrid(newgrid);
+            targetGrid = grid();
+            target.setGrid(targetGrid);
+            lastclass = targetGrid.getClass();
             
             if (targetGrid != null)
             	target.getGrid().setActive(true);
@@ -57,6 +67,8 @@ public abstract class CCGridAction extends CCIntervalAction {
     
     /** returns the grid */
     public abstract CCGridBase grid();
+    
+    public abstract Class gridClass();
 
     @Override
     public abstract CCGridAction copy();

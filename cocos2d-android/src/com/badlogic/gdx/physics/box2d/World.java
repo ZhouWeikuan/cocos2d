@@ -1,15 +1,18 @@
-/*
- * Copyright 2010 Mario Zechner (contact@badlogicgames.com), Nathan Sweet (admin@esotericsoftware.com)
+/*******************************************************************************
+ * Copyright 2011 See AUTHORS file.
  * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the
- * License. You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  * 
- * http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  * 
- * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS"
- * BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language
- * governing permissions and limitations under the License.
- */
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ******************************************************************************/
 package com.badlogic.gdx.physics.box2d;
 
 import java.util.ArrayList;
@@ -36,25 +39,26 @@ import com.badlogic.gdx.physics.box2d.joints.RevoluteJoint;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
 import com.badlogic.gdx.physics.box2d.joints.WeldJoint;
 import com.badlogic.gdx.physics.box2d.joints.WeldJointDef;
-import com.badlogic.gdx.utils.LongHashMap;
+import com.badlogic.gdx.utils.Disposable;
+import com.badlogic.gdx.utils.LongMap;
 
 /**
  * The world class manages all physics entities, dynamic simulation, and asynchronous queries. The world also contains efficient
  * memory management facilities.
  * @author mzechner
  */
-public class World {
+public class World implements Disposable {
 	/** the address of the world instance **/
 	private final long addr;
 
 	/** all known bodies **/
-	protected final LongHashMap<Body> bodies = new LongHashMap<Body>(100);
+	protected final LongMap<Body> bodies = new LongMap<Body>(100);
 
 	/** all known fixtures **/
-	protected final LongHashMap<Fixture> fixtures = new LongHashMap<Fixture>(100);
+	protected final LongMap<Fixture> fixtures = new LongMap<Fixture>(100);
 
 	/** all known joints **/
-	protected final LongHashMap<Joint> joints = new LongHashMap<Joint>(100);
+	protected final LongMap<Joint> joints = new LongMap<Joint>(100);
 
 	/** Contact filter **/
 	protected ContactFilter contactFilter = null;
@@ -62,6 +66,33 @@ public class World {
 	/** Contact listener **/
 	protected ContactListener contactListener = null;
 
+	/**
+	 * Ray-cast the world for all fixtures in the path of the ray.
+	 * The ray-cast ignores shapes that contain the starting point.
+	 * @param callback a user implemented callback class.
+	 * @param point1 the ray starting point
+	 * @param point2 the ray ending point
+	 */
+	public void rayCast(RayCastCallback callback, Vector2 point1, Vector2 point2)
+	{
+		rayCastCallback = callback;
+		jniRayCast(addr, point1.x, point1.y, point2.x, point2.y);
+	}
+	
+	private RayCastCallback rayCastCallback = null;
+	
+	private native void jniRayCast (long addr, float aX, float aY, float bX, float bY);
+
+	private Vector2 rayPoint = new Vector2();
+	private Vector2 rayNormal = new Vector2();
+	
+	private float reportRayFixture (long addr, float pX, float pY, float nX, float nY, float fraction) {
+			if (rayCastCallback != null)
+				return rayCastCallback.reportRayFixture(fixtures.get(addr), rayPoint.set(pX, pY), rayNormal.set(nX, nY), fraction);
+			else
+				return 0.0f;
+	}
+	
 	/**
 	 * Construct a world object.
 	 * @param gravity the world gravity vector.
@@ -272,8 +303,8 @@ public class World {
 
 	/**
 	 * Call this after you are done with time steps to clear the forces. You normally call this after each call to Step, unless you
-	 * are performing sub-steps. By default, forces will be automatically cleared, so you don't need to call this function.
-	 * See {@link #setAutoClearForces(boolean)}
+	 * are performing sub-steps. By default, forces will be automatically cleared, so you don't need to call this function. See
+	 * {@link #setAutoClearForces(boolean)}
 	 */
 	public void clearForces () {
 		jniClearForces(addr);
@@ -495,7 +526,7 @@ public class World {
 
 	private void endContact (long contactAddr) {
 		contact.addr = contactAddr;
-		contact.GetWorldManifold();
+		contact.getWorldManifold();
 		if (contactListener != null) contactListener.endContact(contact);
 	}
 

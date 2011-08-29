@@ -48,13 +48,19 @@ public final class CGAffineTransformUtil {
 	 * @param t1 in/out
 	 * @param t2 in
 	 */
+	private static double m00;
+	private static double m01;
+	private static double m10;
+	private static double m11;
+	private static double m02;
+	private static double m12;
 	public static void preConcate(CGAffineTransform t1, CGAffineTransform t2) {
-		double m00 = t1.m00 * t2.m00 + t1.m10 * t2.m01;
-		double m01 = t1.m00 * t2.m10 + t1.m10 * t2.m11;
-		double m10 = t1.m01 * t2.m00 + t1.m11 * t2.m01;
-		double m11 = t1.m01 * t2.m10 + t1.m11 * t2.m11;
-		double m02 = t1.m02 * t2.m00 + t1.m12 * t2.m01 + t2.m02;
-		double m12 = t1.m02 * t2.m10 + t1.m12 * t2.m11 + t2.m12;
+		m00 = t1.m00 * t2.m00 + t1.m10 * t2.m01;
+		m01 = t1.m00 * t2.m10 + t1.m10 * t2.m11;
+		m10 = t1.m01 * t2.m00 + t1.m11 * t2.m01;
+		m11 = t1.m01 * t2.m10 + t1.m11 * t2.m11;
+		m02 = t1.m02 * t2.m00 + t1.m12 * t2.m01 + t2.m02;
+		m12 = t1.m02 * t2.m10 + t1.m12 * t2.m11 + t2.m12;
 		
 		t1.m00 = m00;
 		t1.m10 = m10;

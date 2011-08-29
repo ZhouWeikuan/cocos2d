@@ -1,16 +1,21 @@
-/*
- * Copyright 2010 Mario Zechner (contact@badlogicgames.com), Nathan Sweet (admin@esotericsoftware.com)
+/*******************************************************************************
+ * Copyright 2011 See AUTHORS file.
  * 
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the
- * License. You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  * 
- * http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  * 
- * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS"
- * BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language
- * governing permissions and limitations under the License.
- */
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ******************************************************************************/
 package com.badlogic.gdx.math;
+
+import java.io.Serializable;
 
 /**
  * Encapsulates a column major 4 by 4 matrix. You can access the linear array for use with OpenGL via the public
@@ -19,7 +24,7 @@ package com.badlogic.gdx.math;
  * @author badlogicgames@gmail.com
  * 
  */
-public final class Matrix4 {
+public class Matrix4 implements Serializable {
 	private static final long serialVersionUID = -2717655254359579617L;
 	public static final int M00 = 0;// 0;
 	public static final int M01 = 4;// 1;
@@ -118,7 +123,7 @@ public final class Matrix4 {
 	 * @param quaternion The quaternion
 	 * @return This matrix for chaining
 	 */
-	public Matrix4 set (Quaternion quaternion) {
+	public Matrix4 set (Quaternion quaternion) {		
 		// Compute quaternion factors
 		float l_xx = quaternion.x * quaternion.x;
 		float l_xy = quaternion.x * quaternion.y;
@@ -133,12 +138,18 @@ public final class Matrix4 {
 		val[M00] = 1 - 2 * (l_yy + l_zz);
 		val[M01] = 2 * (l_xy - l_zw);
 		val[M02] = 2 * (l_xz + l_yw);
+		val[M03] = 0;
 		val[M10] = 2 * (l_xy + l_zw);
 		val[M11] = 1 - 2 * (l_xx + l_zz);
 		val[M12] = 2 * (l_yz - l_xw);
+		val[M13] = 0;
 		val[M20] = 2 * (l_xz - l_yw);
 		val[M21] = 2 * (l_yz + l_xw);
 		val[M22] = 1 - 2 * (l_xx + l_yy);
+		val[M23] = 0;
+		val[M30] = 0;
+		val[M31] = 0;
+		val[M32] = 0;
 		val[M33] = 1;
 		return this;
 	}
@@ -178,38 +189,34 @@ public final class Matrix4 {
 		return new Matrix4(this);
 	}
 
-    /**
-     * Adds a translational component to the matrix in the 4th column. 
-     * The other columns are untouched.
-     * 
-     * @param vector The translation vector
-     * @return This matrix for chaining
-     */
-    public  Matrix4 trn(Vector3 vector)
-    {
-        val[M03]+=vector.x;
-        val[M13]+=vector.y;
-        val[M23]+=vector.z;
-        return this;
-    }
-    
-    /**
-     * Adds a translational component to the matrix in the 4th column.
-     * The other columns are untouched.
-     * 
-     * @param x The x-component of the translation vector
-     * @param y The y-component of the translation vector
-     * @param z The z-component of the translation vector
-     * @return This matrix for chaining
-     */
-    public Matrix4 trn(float x, float y, float z)
-    {
-        val[M03]+=x;
-        val[M13]+=y;
-        val[M23]+=z;
-        return this;
-    }
-	
+	/**
+	 * Adds a translational component to the matrix in the 4th column. The other columns are untouched.
+	 * 
+	 * @param vector The translation vector
+	 * @return This matrix for chaining
+	 */
+	public Matrix4 trn (Vector3 vector) {
+		val[M03] += vector.x;
+		val[M13] += vector.y;
+		val[M23] += vector.z;
+		return this;
+	}
+
+	/**
+	 * Adds a translational component to the matrix in the 4th column. The other columns are untouched.
+	 * 
+	 * @param x The x-component of the translation vector
+	 * @param y The y-component of the translation vector
+	 * @param z The z-component of the translation vector
+	 * @return This matrix for chaining
+	 */
+	public Matrix4 trn (float x, float y, float z) {
+		val[M03] += x;
+		val[M13] += y;
+		val[M23] += z;
+		return this;
+	}
+
 	/**
 	 * @return the backing float array
 	 */
@@ -257,7 +264,7 @@ public final class Matrix4 {
 		tmp[M33] = val[M30] * matrix.val[M03] + val[M31] * matrix.val[M13] + val[M32] * matrix.val[M23] + val[M33]
 			* matrix.val[M33];
 		return this.set(tmp);
-	}
+	}	
 
 	/**
 	 * Transposes the matrix
@@ -315,8 +322,17 @@ public final class Matrix4 {
 	 * @return This matrix for chaining
 	 */
 	public Matrix4 inv () {
-		float l_det = this.det();
+		float l_det = val[M30] * val[M21] * val[M12] * val[M03] - val[M20] * val[M31] * val[M12] * val[M03] - val[M30] * val[M11]
+		               * val[M22] * val[M03] + val[M10] * val[M31] * val[M22] * val[M03] + val[M20] * val[M11] * val[M32] * val[M03] - val[M10]
+              			* val[M21] * val[M32] * val[M03] - val[M30] * val[M21] * val[M02] * val[M13] + val[M20] * val[M31] * val[M02] * val[M13]
+              			+ val[M30] * val[M01] * val[M22] * val[M13] - val[M00] * val[M31] * val[M22] * val[M13] - val[M20] * val[M01] * val[M32]
+              			* val[M13] + val[M00] * val[M21] * val[M32] * val[M13] + val[M30] * val[M11] * val[M02] * val[M23] - val[M10] * val[M31]
+              			* val[M02] * val[M23] - val[M30] * val[M01] * val[M12] * val[M23] + val[M00] * val[M31] * val[M12] * val[M23] + val[M10]
+              			* val[M01] * val[M32] * val[M23] - val[M00] * val[M11] * val[M32] * val[M23] - val[M20] * val[M11] * val[M02] * val[M33]
+              			+ val[M10] * val[M21] * val[M02] * val[M33] + val[M20] * val[M01] * val[M12] * val[M33] - val[M00] * val[M21] * val[M12]
+              			* val[M33] - val[M10] * val[M01] * val[M22] * val[M33] + val[M00] * val[M11] * val[M22] * val[M33];
 		if (l_det == 0f) throw new RuntimeException("non-invertible matrix");
+		float inv_det = 1.0f / l_det;
 		tmp[M00] = val[M12] * val[M23] * val[M31] - val[M13] * val[M22] * val[M31] + val[M13] * val[M21] * val[M32] - val[M11]
 			* val[M23] * val[M32] - val[M12] * val[M21] * val[M33] + val[M11] * val[M22] * val[M33];
 		tmp[M01] = val[M03] * val[M22] * val[M31] - val[M02] * val[M23] * val[M31] - val[M03] * val[M21] * val[M32] + val[M01]
@@ -348,26 +364,25 @@ public final class Matrix4 {
 		tmp[M32] = val[M02] * val[M11] * val[M30] - val[M01] * val[M12] * val[M30] - val[M02] * val[M10] * val[M31] + val[M00]
 			* val[M12] * val[M31] + val[M01] * val[M10] * val[M32] - val[M00] * val[M11] * val[M32];
 		tmp[M33] = val[M01] * val[M12] * val[M20] - val[M02] * val[M11] * val[M20] + val[M02] * val[M10] * val[M21] - val[M00]
-			* val[M12] * val[M21] - val[M01] * val[M10] * val[M22] + val[M00] * val[M11] * val[M22];
-		this.set(tmp);
-		val[M00] /= l_det;
-		val[M01] /= l_det;
-		val[M02] /= l_det;
-		val[M03] /= l_det;
-		val[M10] /= l_det;
-		val[M11] /= l_det;
-		val[M12] /= l_det;
-		val[M13] /= l_det;
-		val[M20] /= l_det;
-		val[M21] /= l_det;
-		val[M22] /= l_det;
-		val[M23] /= l_det;
-		val[M30] /= l_det;
-		val[M31] /= l_det;
-		val[M32] /= l_det;
-		val[M33] /= l_det;
+			* val[M12] * val[M21] - val[M01] * val[M10] * val[M22] + val[M00] * val[M11] * val[M22];		
+		val[M00] = tmp[M00] * inv_det;
+		val[M01] = tmp[M01] * inv_det;
+		val[M02] = tmp[M02] * inv_det;
+		val[M03] = tmp[M03] * inv_det;
+		val[M10] = tmp[M10] * inv_det;
+		val[M11] = tmp[M11] * inv_det;
+		val[M12] = tmp[M12] * inv_det;
+		val[M13] = tmp[M13] * inv_det;
+		val[M20] = tmp[M20] * inv_det;
+		val[M21] = tmp[M21] * inv_det;
+		val[M22] = tmp[M22] * inv_det;
+		val[M23] = tmp[M23] * inv_det;
+		val[M30] = tmp[M30] * inv_det;
+		val[M31] = tmp[M31] * inv_det;
+		val[M32] = tmp[M32] * inv_det;
+		val[M33] = tmp[M33] * inv_det;
 		return this;
-	}
+	}		
 
 	/**
 	 * @return The determinant of this matrix
@@ -393,11 +408,11 @@ public final class Matrix4 {
 	 * @param aspectRatio The aspect ratio
 	 * @return This matrix for chaining
 	 */
-	public Matrix4 setToProjection (float near, float far, float fov, float aspectRatio) {
+	public Matrix4 setToProjection (float near, float far, float fov, float aspectRatio) {				
 		this.idt();
 		float l_fd = (float)(1.0 / Math.tan((fov * (Math.PI / 180)) / 2.0));
-		float l_a1 = -(far + near) / (far - near);
-		float l_a2 = -(2 * far * near) / (far - near);
+		float l_a1 = (far + near) / (near - far);
+		float l_a2 = (2 * far * near) / (near - far);
 		val[M00] = l_fd / aspectRatio;
 		val[M10] = 0;
 		val[M20] = 0;
@@ -414,6 +429,7 @@ public final class Matrix4 {
 		val[M13] = 0;
 		val[M23] = l_a2;
 		val[M33] = 0;
+		
 		return this;
 	}
 
@@ -428,7 +444,7 @@ public final class Matrix4 {
 	 * @return This matrix for chaining
 	 */
 	public Matrix4 setToOrtho2D (float x, float y, float width, float height) {
-		setToOrtho(0, width, 0, height, 0, 1);
+		setToOrtho(x, x + width, y, y + height, 0, 1);
 		return this;
 	}
 
@@ -445,7 +461,7 @@ public final class Matrix4 {
 	 * @return This matrix for chaining
 	 */
 	public Matrix4 setToOrtho2D (float x, float y, float width, float height, float near, float far) {
-		setToOrtho(0, width, 0, height, near, far);
+		setToOrtho(x, x + width, y, y + height, near, far);
 		return this;
 	}
 
@@ -470,7 +486,7 @@ public final class Matrix4 {
 
 		float tx = -(right + left) / (right - left);
 		float ty = -(top + bottom) / (top - bottom);
-		float tz = (far + near) / (far - near);
+		float tz = -(far + near) / (far - near);
 
 		val[M00] = x_orth;
 		val[M10] = 0;
@@ -581,6 +597,22 @@ public final class Matrix4 {
 		if (angle == 0) return this;
 		return this.set(quat.set(axis, angle));
 	}
+	
+	/**
+	 * Sets the matrix to a rotation matrix around the given axis.
+	 * 
+	 * @param axisX The x-component of the axis
+	 * @param axisY The y-component of the axis
+	 * @param axisZ The z-component of the axis
+	 * @param angle The angle in degrees
+	 * @return This matrix for chaining
+	 */	
+	public Matrix4 setToRotation (float axisX, float axisY, float axisZ, float angle) {
+		idt();
+		if (angle == 0) return this;
+		return this.set(quat.set(tmpV.set(axisX, axisY, axisZ), angle));
+	}
+	static final Vector3 tmpV = new Vector3();
 
 	/**
 	 * Sets this matrix to a rotation matrix from the given euler angles.
@@ -730,4 +762,130 @@ public final class Matrix4 {
 		val[15] = mat.vals[8];
 		return this;
 	}
+
+	public void scl (Vector3 scale) {
+		val[M00] *= scale.x;
+		val[M11] *= scale.y;
+		val[M22] *= scale.z;
+	}
+
+	public void getTranslation (Vector3 position) {
+		position.x = val[M03];
+		position.y = val[M13];
+		position.z = val[M23];
+	}
+
+	public void getRotation (Quaternion rotation) {
+		rotation.setFromMatrix(this);
+	}
+	
+	/**
+	 * Multiplies the matrix mata with matrix matb, storing the result in mata. The 
+	 * arrays are assumed to hold 4x4 column major matrices as you can get from {@link Matrix4#val}.
+	 * This is the same as {@link Matrix4#mul(Matrix4)}.
+	 * 
+	 * @param mata the first matrix.
+	 * @param matb the second matrix.
+	 */
+	public static native void mul(float[] mata, float[] matb);
+	
+	/**
+	 * Multiplies the vector with the given matrix. The matrix array is assumed to hold a 
+	 * 4x4 column major matrix as you can get from {@link Matrix4#val}. The vector array is
+	 * assumed to hold a 3-component vector, with x being the first element, y being the second
+	 * and z being the last component. The result is stored in the vector array. This is the
+	 * same as {@link Vector3#mul(Matrix4)}.
+	 * @param mat the matrix
+	 * @param vec the vector.
+	 */
+	public static native void mulVec(float[] mat, float[] vec);
+	
+	/**
+	 * Multiplies the vectors with the given matrix. The matrix array is assumed to hold a 4x4
+	 * column major matrix as you can get from {@link Matrix4#val}. The vectors array is assumed
+	 * to hold 3-component vectors. Offset specifies the offset into the array where the x-component
+	 * of the first vector is located. The numVecs parameter specifies the number of vectors stored
+	 * in the vectors array. The stride parameter specifies the number of floats between subsequent
+	 * vectors and must be >= 3. This is the same as {@link Vector3#mul(Matrix4)} applied to multiple
+	 * vectors. 
+	 *  
+	 * @param mat the matrix
+	 * @param vecs the vectors
+	 * @param offset the offset into the vectors array
+	 * @param numVecs the number of vectors
+	 * @param stride the stride between vectors in floats
+	 */	
+	public static native void mulVec(float[] mat, float[] vecs, int offset, int numVecs, int stride);
+	
+	/**
+	 * Multiplies the vector with the given matrix, performing a division by w. The matrix array is assumed to hold a 
+	 * 4x4 column major matrix as you can get from {@link Matrix4#val}. The vector array is
+	 * assumed to hold a 3-component vector, with x being the first element, y being the second
+	 * and z being the last component. The result is stored in the vector array. This is the same as 
+	 * {@link Vector3#prj(Matrix4)}. 
+	 * @param mat the matrix
+	 * @param vec the vector.
+	 */	
+	public static native void prj(float[] mat, float[] vec);
+	
+	/**
+	 * Multiplies the vectors with the given matrix, , performing a division by w. The matrix array is assumed to hold a 4x4
+	 * column major matrix as you can get from {@link Matrix4#val}. The vectors array is assumed
+	 * to hold 3-component vectors. Offset specifies the offset into the array where the x-component
+	 * of the first vector is located. The numVecs parameter specifies the number of vectors stored
+	 * in the vectors array. The stride parameter specifies the number of floats between subsequent
+	 * vectors and must be >= 3. This is the same as {@link Vector3#prj(Matrix4)} applied to multiple
+	 * vectors. 
+	 *  
+	 * @param mat the matrix
+	 * @param vecs the vectors
+	 * @param offset the offset into the vectors array
+	 * @param numVecs the number of vectors
+	 * @param stride the stride between vectors in floats
+	 */	
+	public static native void prj(float[] mat, float[] vecs, int offset, int numVecs, int stride);
+	
+	/**
+	 * Multiplies the vector with the top most 3x3 sub-matrix of the given matrix. The matrix array is assumed to hold a 
+	 * 4x4 column major matrix as you can get from {@link Matrix4#val}. The vector array is
+	 * assumed to hold a 3-component vector, with x being the first element, y being the second
+	 * and z being the last component. The result is stored in the vector array. This is the same as 
+	 * {@link Vector3#rot(Matrix4)}. 
+	 * @param mat the matrix
+	 * @param vec the vector.
+	 */	
+	public static native void rot(float[] mat, float[] vec);
+	
+	/**
+	 * Multiplies the vectors with the top most 3x3 sub-matrix of the given matrix. The matrix array is assumed to hold a 4x4
+	 * column major matrix as you can get from {@link Matrix4#val}. The vectors array is assumed
+	 * to hold 3-component vectors. Offset specifies the offset into the array where the x-component
+	 * of the first vector is located. The numVecs parameter specifies the number of vectors stored
+	 * in the vectors array. The stride parameter specifies the number of floats between subsequent
+	 * vectors and must be >= 3. This is the same as {@link Vector3#rot(Matrix4)} applied to multiple
+	 * vectors. 
+	 *  
+	 * @param mat the matrix
+	 * @param vecs the vectors
+	 * @param offset the offset into the vectors array
+	 * @param numVecs the number of vectors
+	 * @param stride the stride between vectors in floats
+	 */
+	public static native void rot(float[] mat, float[] vecs, int offset, int numVecs, int stride);
+	
+	/**
+	 * Computes the inverse of the given matrix. The matrix array is assumed to hold a 4x4
+	 * column major matrix as you can get from {@link Matrix4#val}. 
+	 * @param values the matrix values.
+	 * @return false in case the inverse could not be calculated, true otherwise.
+	 */
+	public static native boolean inv(float[] values);
+	
+	/**
+	 * Computes the determinante of the given matrix. The matrix array is assumed to hold a 4x4
+	 * column major matrix as you can get from {@link Matrix4#val}. 
+	 * @param values the matrix values.
+	 * @return the determinante.
+	 */
+	public static native float det(float[] values);
 }

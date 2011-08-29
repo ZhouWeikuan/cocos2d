@@ -44,4 +44,9 @@ public class CCTiledGrid3DAction extends CCGridAction {
 	public CCTiledGrid3DAction copy() {		
 		return new CCTiledGrid3DAction(getGridSize(), getDuration());
 	}
+
+	@Override
+	public Class<CCTiledGrid3D> gridClass() {
+		return CCTiledGrid3D.class;
+	}
 }

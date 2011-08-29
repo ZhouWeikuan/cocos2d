@@ -5,6 +5,7 @@ import javax.microedition.khronos.opengles.GL10;
 import org.cocos2d.nodes.CCDirector;
 import org.cocos2d.opengl.CCGLSurfaceView;
 import org.cocos2d.opengl.GLSurfaceView;
+import org.cocos2d.utils.GameRand;
 
 import android.app.Activity;
 import android.util.Log;
@@ -30,6 +31,9 @@ public class ccMacros {
      *		CCLOGERROR() will be enabled
      *		CCLOGINFO()	will be enabled 
      */
+	//private static final XORShiftRNG rand = new XORShiftRNG();
+	private static final GameRand rand = new GameRand();
+	
     public static final void CCLOG(final String logName, final String logStr) {
         if (ccConfig.COCOS2D_DEBUG >= 1) {
             Log.d(logName, logStr);
@@ -59,34 +63,36 @@ public class ccMacros {
       returns a random float between -1 and 1
     */
     public static final float CCRANDOM_MINUS1_1() {
-        return (float) Math.random() * 2.0f - 1.0f;
+        //return (float) Math.random() * 2.0f - 1.0f;
+    	return rand.nextFloat() * 2.0f - 1.0f;
     }
 
     /** @def CCRANDOM_0_1
       returns a random float between 0 and 1
     */
     public static final float CCRANDOM_0_1() {
-        return (float) Math.random();
+        //return (float) Math.random();
+    	return rand.nextFloat();
     }
 
     /** @def M_PI_2
             Math.PI divided by 2
     */
     public static final float M_PI_2 = (float)(Math.PI / 2);
-    
+    public static final float M_PI = (float)Math.PI;
 
     /** @def CC_DEGREES_TO_RADIANS
         converts degrees to radians
     */
-    public static final float CC_DEGREES_TO_RADIANS(float angle) {
-        return (angle / 180.0f * (float) Math.PI);
+    public static final float CC_DEGREES_TO_RADIANS(final float angle) {
+        return (angle / 180.0f * M_PI);
     }
 
     /** @def CC_RADIANS_TO_DEGREES
         converts radians to degrees
     */
-    public static final float CC_RADIANS_TO_DEGREES(float angle) {
-        return (angle / (float) Math.PI * 180.0f);
+    public static final float CC_RADIANS_TO_DEGREES(final float angle) {
+        return (angle / M_PI * 180.0f);
     }
 
     /** @def CC_ENABLE_DEFAULT_GL_STATES

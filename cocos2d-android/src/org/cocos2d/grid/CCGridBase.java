@@ -144,10 +144,10 @@ public abstract class CCGridBase {
     }
 
     // This routine can be merged with Director
+    CGSize winSize;
     public void applyLandscape(GL10 gl) {
-    	CCDirector director = CCDirector.sharedDirector();
-        boolean landscape = director.getLandscape();
-        CGSize winSize = director.winSize();
+        boolean landscape = CCDirector.sharedDirector().getLandscape();
+        winSize = CCDirector.sharedDirector().winSizeRef();
         float w = winSize.width / 2;
      	float h = winSize.height / 2;
      	
@@ -159,7 +159,7 @@ public abstract class CCGridBase {
     }
 
     public void set2DProjection(GL10 gl) {
-        CGSize winSize = CCDirector.sharedDirector().winSize();
+        winSize = CCDirector.sharedDirector().winSizeRef();
 
         gl.glLoadIdentity();
         gl.glViewport(0, 0, (int) winSize.width, (int) winSize.height);
@@ -171,7 +171,7 @@ public abstract class CCGridBase {
 
     // This routine can be merged with Director
     public void set3DProjection(GL10 gl) {
-        CGSize winSize = CCDirector.sharedDirector().displaySize();
+        winSize = CCDirector.sharedDirector().displaySizeRef();
 
         gl.glViewport(0, 0, (int) winSize.width, (int) winSize.height);
         gl.glMatrixMode(GL10.GL_PROJECTION);
@@ -191,13 +191,14 @@ public abstract class CCGridBase {
         grabber_.beforeRender(texture_);
     }
 
+    CGPoint offset;
     public void afterDraw(GL10 gl, CCNode target) {
     	grabber_.afterRender(texture_);
         set3DProjection(gl);
         applyLandscape(gl);
 
         if (target.getCamera().getDirty()) {
-    		CGPoint offset = target.getAnchorPointInPixels();
+    		offset = target.getAnchorPointInPixelsRef();
 
     		//
     		// XXX: Camera should be applied in the AnchorPoint

@@ -144,7 +144,7 @@ public class CCActionManager implements UpdateCallback {
         assert action != null : "Argument action must be non-null";
         assert target != null : "Argument target must be non-null";
 
-        HashElement element = targets.get(target);
+        element = targets.get(target);
         if (element == null) {
     		element = pool.get();
     		
@@ -172,7 +172,7 @@ public class CCActionManager implements UpdateCallback {
 
         for(ConcurrentArrayHashMap<CCNode, HashElement>.Entry e = targets.firstValue();
 				e != null; e = targets.nextValue(e)) {
-        	HashElement element = e.getValue();
+        	element = e.getValue();
 
         	if(element != null)
         		removeAllActions(element.target);
@@ -188,7 +188,7 @@ public class CCActionManager implements UpdateCallback {
         if (target == null)
             return;
 
-        HashElement element = targets.get(target);
+        element = targets.get(target);
         if (element != null) {
 //            if( element.actions.contains(element.currentAction) && !element.currentActionSalvaged ) {
 //                element.currentActionSalvaged = true;
@@ -211,7 +211,7 @@ public class CCActionManager implements UpdateCallback {
     public void removeAction(CCAction action) {
     	if (action == null)
     		return;
-        HashElement element = targets.get(action.getOriginalTarget());
+        element = targets.get(action.getOriginalTarget());
         if (element != null) {
         	int i;
         	synchronized (element.actions) {
@@ -232,7 +232,7 @@ public class CCActionManager implements UpdateCallback {
     public void removeAction(int tag, CCNode target) {
         assert tag != CCAction.kCCActionTagInvalid : "Invalid tag";
 
-        HashElement element = targets.get(target);
+        element = targets.get(target);
         if (element != null) {
         	synchronized (element.actions) {
                 int limit = element.actions.size();
@@ -255,7 +255,7 @@ public class CCActionManager implements UpdateCallback {
     public CCAction getAction(int tag, CCNode target) {
         assert tag != CCAction.kCCActionTagInvalid : "Invalid tag";
 
-        HashElement element = targets.get(target);
+        element = targets.get(target);
         if (element != null) {
         	synchronized (element.actions) {
                 int limit = element.actions.size();
@@ -279,7 +279,7 @@ public class CCActionManager implements UpdateCallback {
      * If you are running 7 Sequences of 2 actions, it will return 7.
      */
     public int numberOfRunningActions(CCNode target) {
-        HashElement element = targets.get(target);
+        element = targets.get(target);
         if (element != null) {
         	synchronized (element.actions) {
         		return element.actions.size();
@@ -289,11 +289,15 @@ public class CCActionManager implements UpdateCallback {
         return 0;
     }
 
+    HashElement currentTarget;
+    HashElement element;
+    CCAction currentAction;
     public void update(float dt) {
-
+    	currentTarget = element = null;
+    	
         for(ConcurrentArrayHashMap<CCNode, HashElement>.Entry e = targets.firstValue();
 				e != null; e = targets.nextValue(e)) {
-        	HashElement currentTarget = e.getValue();
+        	currentTarget = e.getValue();
         	if(currentTarget == null)
         		continue;
         	
@@ -304,14 +308,14 @@ public class CCActionManager implements UpdateCallback {
 			        	currentTarget.actionIndex < currentTarget.actions.size();
 			        	currentTarget.actionIndex++) {
 			            
-			        	CCAction currentAction = currentTarget.actions.get(currentTarget.actionIndex);
+			        	currentAction = currentTarget.actions.get(currentTarget.actionIndex);
 			        	
 			            currentAction.step(dt);
 			            if (currentAction.isDone()) {
 			                currentAction.stop();
 			
 //			                removeAction(currentAction);
-			                HashElement element = targets.get(currentTarget.target);
+			                element = targets.get(currentTarget.target);
 		                	if (element != null && currentTarget.actionIndex >= 0) {
 		                		removeAction(currentTarget.actionIndex, currentTarget);
 		                	}
@@ -329,13 +333,13 @@ public class CCActionManager implements UpdateCallback {
     }
 
 	public void resume(CCNode target) {
-		HashElement element = targets.get(target);
+		element = targets.get(target);
 		if (element != null)
 			element.paused = false;
 	}
 
 	public void pause(CCNode target) {
-		HashElement element = targets.get(target);
+		element = targets.get(target);
     	if( element != null )
 	    	element.paused = true;
 	}

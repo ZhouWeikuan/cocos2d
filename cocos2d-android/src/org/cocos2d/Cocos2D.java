@@ -34,6 +34,11 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
 public class Cocos2D extends ListActivity {
+	
+	static {
+        System.loadLibrary("gdx");
+	}
+	
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

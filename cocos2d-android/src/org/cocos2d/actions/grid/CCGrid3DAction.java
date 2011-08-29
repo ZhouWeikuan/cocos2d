@@ -25,26 +25,28 @@ public class CCGrid3DAction extends CCGridAction {
     /** returns the vertex than belongs to certain position
      * 	 in the grid */
     public CCVertex3D vertex(ccGridSize pos) {
-        CCGrid3D g = (CCGrid3D) target.getGrid();
-        return g.vertex(pos);
+        return ((CCGrid3D) target.getGrid()).vertex(pos);
     }
 
     /** returns the non-transformed vertex than belongs to 
      * certain position in the grid */
     public CCVertex3D originalVertex(ccGridSize pos) {
-        CCGrid3D g = (CCGrid3D) target.getGrid();
-        return g.originalVertex(pos);
+        return ((CCGrid3D) target.getGrid()).originalVertex(pos);
     }
 
     /** sets a new vertex to a certain position of the grid */
     public void setVertex(ccGridSize pos, CCVertex3D vertex) {
-        CCGrid3D g = (CCGrid3D) target.getGrid();
-        g.setVertex(pos, vertex);
+        ((CCGrid3D) target.getGrid()).setVertex(pos, vertex);
     }
 
     @Override
     public CCGrid3DAction copy() {
     	return new CCGrid3DAction(getGridSize(), getDuration());
     }
+
+	@Override
+	public Class<CCGrid3D> gridClass() {
+		return CCGrid3D.class;
+	}
 
 }

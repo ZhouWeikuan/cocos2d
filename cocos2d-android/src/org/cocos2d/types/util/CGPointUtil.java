@@ -36,8 +36,7 @@ public final class CGPointUtil {
 	}
 	
 	public static void zero(CGPoint p) {
-		p.x = 0;
-		p.y = 0;
+		p.x = p.y = 0;
 	}
 
 	public static void normalize(CGPoint src, CGPoint dst) {
