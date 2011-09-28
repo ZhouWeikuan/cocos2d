@@ -104,15 +104,17 @@ public class CCQuadParticleSystem extends CCParticleSystem implements Resource {
 //    		GLResourceHelper.sharedHelper().removeLoader(mLoader);
 //    	}
     	
-		GLResourceHelper.sharedHelper().perform(new GLResourceHelper.GLResorceTask() {
-			
-			@Override
-			public void perform(GL10 gl) {
-				GL11 gl11 = (GL11)gl;
-				gl11.glDeleteBuffers(QuadSize, quadsIDs, 0);
-			}
-			
-		});
+		if(quadsIDs != null) {
+			GLResourceHelper.sharedHelper().perform(new GLResourceHelper.GLResorceTask() {
+				
+				@Override
+				public void perform(GL10 gl) {
+					GL11 gl11 = (GL11)gl;
+					gl11.glDeleteBuffers(QuadSize, quadsIDs, 0);
+				}
+				
+			});
+		}
     	
 		super.finalize();
 	}
@@ -283,6 +285,9 @@ public class CCQuadParticleSystem extends CCParticleSystem implements Resource {
 
 	@Override
 	public void postStep(){
+		if(quadsIDs == null)
+			return;
+		
 		GL11 gl = (GL11)CCDirector.gl;
 
 		// for texCoords
@@ -305,6 +310,9 @@ public class CCQuadParticleSystem extends CCParticleSystem implements Resource {
 	@Override
 	public void draw(GL10 gle)
 	{
+		if(quadsIDs == null)
+			return;
+		
 		// Default GL states: GL_TEXTURE_2D, GL_VERTEX_ARRAY, GL_COLOR_ARRAY, GL_TEXTURE_COORD_ARRAY
 		// Needed states: GL_TEXTURE_2D, GL_VERTEX_ARRAY, GL_COLOR_ARRAY, GL_TEXTURE_COORD_ARRAY
 		// Unneeded states: -
