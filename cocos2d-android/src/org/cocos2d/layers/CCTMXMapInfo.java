@@ -257,8 +257,11 @@ public class CCTMXMapInfo {
 				CCTMXObjectGroup objectGroup = new CCTMXObjectGroup();
 				objectGroup.groupName = attributes.getValue("name");
 				CGPoint positionOffset = CGPoint.zero();
-				positionOffset.x = Integer.parseInt(attributes.getValue("x")) * tileSize.width;
-				positionOffset.y = Integer.parseInt(attributes.getValue("y")) * tileSize.height;
+				try {
+					positionOffset.x = Integer.parseInt(attributes.getValue("x")) * tileSize.width;
+					positionOffset.y = Integer.parseInt(attributes.getValue("y")) * tileSize.height;
+				} catch (Exception e) {
+				}
 				objectGroup.positionOffset = positionOffset;
 
 				objectGroups.add(objectGroup);

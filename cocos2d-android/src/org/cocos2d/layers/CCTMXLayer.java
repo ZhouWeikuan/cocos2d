@@ -173,7 +173,6 @@ public class CCTMXLayer extends CCSpriteSheet {
 
 				int indexForZ = atlasIndexForExistantZ(z);
 				addSpriteWithoutQuad(tile, indexForZ, z);
-				tile = null;
 			}
 		}
 		return tile;
