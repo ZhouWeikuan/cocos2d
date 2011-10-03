@@ -1,5 +1,6 @@
 package org.cocos2d.particlesystem;
 
+import java.lang.ref.WeakReference;
 import java.nio.ShortBuffer;
 
 import javax.microedition.khronos.opengles.GL10;
@@ -45,6 +46,47 @@ public class CCQuadParticleSystem extends CCParticleSystem implements Resource {
 	
 //	private GLResourceHelper.GLResourceLoader  mLoader;
 
+	private static class QuadParticleLoader implements GLResourceHelper.GLResourceLoader {
+
+		private WeakReference<CCQuadParticleSystem> weakRef;
+    	
+    	public QuadParticleLoader(CCQuadParticleSystem holder) {
+    		weakRef = new WeakReference<CCQuadParticleSystem>(holder);
+		}
+		
+		@Override
+		public void load(Resource res) {
+			CCQuadParticleSystem thisp = weakRef.get();
+    		if(thisp == null)
+    			return;
+			
+			GL11 gl = (GL11)CCDirector.gl;
+			// create the VBO buffer
+			thisp.quadsIDs = new int[QuadSize];
+			gl.glGenBuffers(QuadSize, thisp.quadsIDs, 0);
+			
+			// initial binding
+			// for texCoords
+			gl.glBindBuffer(GL11.GL_ARRAY_BUFFER, thisp.quadsIDs[0]);
+			thisp.texCoords.position(0);
+			gl.glBufferData(GL11.GL_ARRAY_BUFFER, thisp.texCoords.capacity() * 4, thisp.texCoords.bytes, GL11.GL_DYNAMIC_DRAW);	
+			
+			// for vertices
+			gl.glBindBuffer(GL11.GL_ARRAY_BUFFER, thisp.quadsIDs[1]);
+			thisp.vertices.position(0);
+			gl.glBufferData(GL11.GL_ARRAY_BUFFER, thisp.vertices.capacity() * 4, thisp.vertices.bytes, GL11.GL_DYNAMIC_DRAW);	
+			
+			// for colors
+			gl.glBindBuffer(GL11.GL_ARRAY_BUFFER, thisp.quadsIDs[2]);
+			thisp.colors.position(0);
+			gl.glBufferData(GL11.GL_ARRAY_BUFFER, thisp.colors.capacity() * 4, thisp.colors.bytes, GL11.GL_DYNAMIC_DRAW);	
+			
+			// restore the elements, arrays
+			gl.glBindBuffer(GL11.GL_ARRAY_BUFFER, 0);
+		}
+		
+	}
+	
 	// overriding the init method
 	public CCQuadParticleSystem(int numberOfParticles) {
 		super(numberOfParticles);
@@ -66,50 +108,20 @@ public class CCQuadParticleSystem extends CCParticleSystem implements Resource {
 		initTexCoordsWithRect(CGRect.make(0, 0, 10, 10));
 		initIndices();
 
-		GLResourceHelper.GLResourceLoader mLoader = new GLResourceHelper.GLResourceLoader() {
-			@Override
-			public void load(Resource res) {
-				GL11 gl = (GL11)CCDirector.gl;
-				// create the VBO buffer
-				quadsIDs = new int[QuadSize];
-				gl.glGenBuffers(QuadSize, quadsIDs, 0);
-				
-				// initial binding
-				// for texCoords
-				gl.glBindBuffer(GL11.GL_ARRAY_BUFFER, quadsIDs[0]);
-				texCoords.position(0);
-				gl.glBufferData(GL11.GL_ARRAY_BUFFER, texCoords.capacity() * 4, texCoords.bytes, GL11.GL_DYNAMIC_DRAW);	
-				
-				// for vertices
-				gl.glBindBuffer(GL11.GL_ARRAY_BUFFER, quadsIDs[1]);
-				vertices.position(0);
-				gl.glBufferData(GL11.GL_ARRAY_BUFFER, vertices.capacity() * 4, vertices.bytes, GL11.GL_DYNAMIC_DRAW);	
-				
-				// for colors
-				gl.glBindBuffer(GL11.GL_ARRAY_BUFFER, quadsIDs[2]);
-				colors.position(0);
-				gl.glBufferData(GL11.GL_ARRAY_BUFFER, colors.capacity() * 4, colors.bytes, GL11.GL_DYNAMIC_DRAW);	
-				
-				// restore the elements, arrays
-				gl.glBindBuffer(GL11.GL_ARRAY_BUFFER, 0);
-			}
-		};
+		GLResourceHelper.GLResourceLoader mLoader = new QuadParticleLoader(this);
+
 		GLResourceHelper.sharedHelper().addLoader(this, mLoader, true);
 	}
 
 	@Override
 	public void finalize() throws Throwable {
-
-//    	if(mLoader != null) {
-//    		GLResourceHelper.sharedHelper().removeLoader(mLoader);
-//    	}
-    	
 		if(quadsIDs != null) {
 			GLResourceHelper.sharedHelper().perform(new GLResourceHelper.GLResorceTask() {
 				
 				@Override
 				public void perform(GL10 gl) {
 					GL11 gl11 = (GL11)gl;
+					
 					gl11.glDeleteBuffers(QuadSize, quadsIDs, 0);
 				}
 				
