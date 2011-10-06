@@ -160,9 +160,6 @@ public class CCTexture2D implements Resource {
     
     @Override
     protected void finalize() throws Throwable {
-//    	if(mLoader != null) {
-//    		GLResourceHelper.sharedHelper().removeLoader(mLoader);
-//    	}
     	if (_name != 0) {
     		GLResourceHelper.sharedHelper().perform(new GLResourceHelper.GLResorceTask() {
     			
@@ -193,13 +190,8 @@ public class CCTexture2D implements Resource {
     	if(loader != null) {
     		loader.load(this);
     		
-//        	if(mLoader != null) {
-//        		GLResourceHelper.sharedHelper().removeLoader(mLoader);
-//        	}
-    		
-    		/** maybe this is causing a threading issue?  I think we should use true.. */
-        	//GLResourceHelper.sharedHelper().addLoader(this, loader, false);
-    		GLResourceHelper.sharedHelper().addLoader(this, loader, true);
+        	// we called load and should not add task
+    		GLResourceHelper.sharedHelper().addLoader(this, loader, false);
     	}
 //    	mLoader = loader;
     }
@@ -489,7 +481,7 @@ public class CCTexture2D implements Resource {
             gl.glGenTextures(1, textures, 0);
 
             _name = textures[0];
-
+            
             applyTexParameters(gl);
 
             // this shouldn't be so never, but if so, needs to be found where
