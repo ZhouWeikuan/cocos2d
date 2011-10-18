@@ -149,7 +149,12 @@ public class SoundEngine {
 		synchronized(soundsMap) {
 			mp = soundsMap.get(resId);
 			if (mp == null) {
-				mp = MediaPlayer.create(ctxt, resId);				
+				mp = MediaPlayer.create(ctxt, resId);
+				
+				// failed to create
+				if(mp == null)
+					return;
+				
 				soundsMap.put(resId, mp);
 				try {
 					mp.prepare();

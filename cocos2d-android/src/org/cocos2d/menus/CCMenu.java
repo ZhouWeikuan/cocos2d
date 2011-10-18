@@ -363,6 +363,9 @@ public class CCMenu extends CCLayer {
     }
 
     private CCMenuItem itemForTouch(MotionEvent event) {
+    	if(children_ == null)
+    		return null;
+    	
     	PoolHolder holder = PoolHolder.getInstance();
     	OneClassPool<CGPoint> pointPool = holder.getCGPointPool();
     	OneClassPool<CGRect>  rectPool  = holder.getCGRectPool();

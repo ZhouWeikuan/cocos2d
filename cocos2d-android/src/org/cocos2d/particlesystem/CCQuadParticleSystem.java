@@ -105,7 +105,7 @@ public class CCQuadParticleSystem extends CCParticleSystem implements Resource {
 		}
 
 		// initialize only once the texCoords and the indices
-		initTexCoordsWithRect(CGRect.make(0, 0, 10, 10));
+		initTexCoordsWithRect(0, 0, 10, 10);
 		initIndices();
 
 		GLResourceHelper.GLResourceLoader mLoader = new QuadParticleLoader(this);
@@ -134,14 +134,18 @@ public class CCQuadParticleSystem extends CCParticleSystem implements Resource {
 	// initilizes the text coords
 	// rect should be in Texture coordinates, not pixel coordinates
 	public void initTexCoordsWithRect(CGRect rect) {
-		float bottomLeftX = rect.origin.x;
-		float bottomLeftY = rect.origin.y;
+		initTexCoordsWithRect(rect.origin.x, rect.origin.y, rect.size.width, rect.size.height);
+	}
+	
+	public void initTexCoordsWithRect(float rectX, float rectY, float rectW, float rectH) {
+		float bottomLeftX = rectX;
+		float bottomLeftY = rectY;
 
-		float bottomRightX = bottomLeftX + rect.size.width;
+		float bottomRightX = bottomLeftX + rectW;
 		float bottomRightY = bottomLeftY;
 
 		float topLeftX = bottomLeftX;
-		float topLeftY = bottomLeftY + rect.size.height;
+		float topLeftY = bottomLeftY + rectH;
 
 		float topRightX = bottomRightX;
 		float topRightY = topLeftY;
@@ -187,11 +191,12 @@ public class CCQuadParticleSystem extends CCParticleSystem implements Resource {
 		// convert to Tex coords
 		float wide = tex.pixelsWide();
 		float high = tex.pixelsHigh();
-		rect.origin.x = rect.origin.x / wide;
-		rect.origin.y = rect.origin.y / high;
-		rect.size.width = rect.size.width / wide;
-		rect.size.height = rect.size.height / high;
-		initTexCoordsWithRect(rect);
+		
+		float rectX = rect.origin.x / wide;
+		float rectY = rect.origin.y / high;
+		float rectW = rect.size.width / wide;
+		float rectH = rect.size.height / high;
+		initTexCoordsWithRect(rectX, rectY, rectW, rectH);
 	}
 	
 	public void setTexture(CCTexture2D tex) {
