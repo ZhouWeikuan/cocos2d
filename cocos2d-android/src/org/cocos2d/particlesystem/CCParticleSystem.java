@@ -91,8 +91,14 @@ public abstract class CCParticleSystem extends CCNode implements CCTextureProtoc
 	 */
 	/** If the emitter is repositioned, the living particles won't be repositioned */
 	public static final int	kCCPositionTypeFree = 0;
+	
+	/** Living particles are attached to the world but will follow the emitter repositioning.
+	 Use case: Attach an emitter to an sprite, and you want that the emitter follows the sprite.
+	 */
+	public static final int	kCCPositionTypeRelative = 1;
+	
 	/** If the emitter is repositioned, the living particles will be repositioned too */
-	public static final int	kCCPositionTypeGrouped = 1;
+	public static final int	kCCPositionTypeGrouped = 2;
 
 	/** @struct tCCParticle
     Structure that contains the values of each particle
@@ -766,9 +772,12 @@ public abstract class CCParticleSystem extends CCNode implements CCTextureProtoc
         particle.deltaRotation = (endA - startA) / particle.timeToLive;
 
         // position
-        if( positionType_ == kCCPositionTypeFree )
+        if( positionType_ == kCCPositionTypeFree ) {
         	this.convertToWorldSpace(0, 0, particle.startPos);
-
+        } else if( positionType_ == kCCPositionTypeRelative ) {
+        	particle.startPos.set(position_);
+        }
+		
         // direction
         float a = ccMacros.CC_DEGREES_TO_RADIANS( angle + angleVar * ccMacros.CCRANDOM_MINUS1_1() );	
 
@@ -1047,8 +1056,11 @@ public abstract class CCParticleSystem extends CCNode implements CCTextureProtoc
         CGPoint radial = pointPool.get();
         CGPoint tangential = pointPool.get();
         
-        if( positionType_ == kCCPositionTypeFree )
+        if( positionType_ == kCCPositionTypeFree ) {
             convertToWorldSpace(0, 0, currentPosition);
+        } else if( positionType_ == kCCPositionTypeRelative ) {
+    		currentPosition.set(position_);
+    	}
 
         while( particleIdx < particleCount ) {
             CCParticle p = particles[particleIdx];
@@ -1104,7 +1116,7 @@ public abstract class CCParticleSystem extends CCNode implements CCTextureProtoc
                 p.rotation += (p.deltaRotation * dt);
                 CGPoint	newPos;
 
-                if( positionType_ == kCCPositionTypeFree ) {
+                if( positionType_ == kCCPositionTypeFree || positionType_ == kCCPositionTypeRelative ) {
                     CGPoint diff = tmp;
                     CGPointUtil.sub(currentPosition, p.startPos, diff);
                     CGPointUtil.sub(p.pos, diff, diff);
