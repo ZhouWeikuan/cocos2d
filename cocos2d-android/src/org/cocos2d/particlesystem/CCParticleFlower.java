@@ -33,16 +33,16 @@ public class CCParticleFlower extends CCQuadParticleSystem {
 		this.setGravity(CGPoint.ccp(0,0));
 		
 		// Gravity Mode: speed of particles
-		speed = 80;
-		speedVar = 10;
+		setSpeed( 80 );
+		setSpeedVar( 10 );
 		
 		// Gravity Mode: radial
-		radialAccel = -60;
-		radialAccelVar = 0;
+		setRadialAccel( -60 );
+		setRadialAccelVar( 0 );
 		
 		// Gravity Mode: tagential
-		tangentialAccel = 15;
-		tangentialAccelVar = 0;
+		setTangentialAccel( 15 );
+		setTangentialAccelVar( 0 );
 
 		// angle
 		angle = 90;
@@ -86,7 +86,7 @@ public class CCParticleFlower extends CCQuadParticleSystem {
 		texture = CCTextureCache.sharedTextureCache().addImage("fire.png");
 
         // additive
-        blendAdditive = true;
+		setBlendAdditive(true);
     }
 
 	@Override

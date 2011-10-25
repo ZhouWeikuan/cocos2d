@@ -30,12 +30,12 @@ public class CCParticleFire extends CCQuadParticleSystem {
 		this.setGravity(CGPoint.ccp(0,0));
 		
 		// Gravity Mode: radial acceleration
-		radialAccel = 0;
-		radialAccelVar = 0;
+		setRadialAccel( 0 );
+		setRadialAccelVar( 0 );
 		
 		// Gravity Mode: speed of particles
-		speed = 60;
-		speedVar = 20;		
+		setSpeed(60);
+		setSpeedVar(20);		
 		
 		// starting angle
 		angle = 90;
@@ -80,7 +80,7 @@ public class CCParticleFire extends CCQuadParticleSystem {
         texture = CCTextureCache.sharedTextureCache().addImage("fire.png");
 
         // additive
-        blendAdditive = true;
+        setBlendAdditive(true);
     }
 
 	@Override

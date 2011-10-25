@@ -30,16 +30,16 @@ public class CCParticleSnow extends CCQuadParticleSystem {
 		this.setGravity(CGPoint.ccp(0,-1));
 		
 		// Gravity Mode: speed of particles
-		speed = 5;
-		speedVar = 1;
+		setSpeed( 5 );
+		setSpeedVar( 1 );
 		
 		// Gravity Mode: radial
-		radialAccel = 0;
-		radialAccelVar = 1;
+		setRadialAccel( 0 );
+		setRadialAccelVar( 1 );
 		
 		// Gravity mode: tagential
-		tangentialAccel = 0;
-		tangentialAccelVar = 1;
+		setTangentialAccel( 0 );
+		setTangentialAccelVar( 1 );
 		
 		// emitter position
 		CGSize winSize = CCDirector.sharedDirector().winSize();
@@ -84,7 +84,7 @@ public class CCParticleSnow extends CCQuadParticleSystem {
         texture = CCTextureCache.sharedTextureCache().addImage("fire.png");
 
         // additive
-        blendAdditive = false;
+        setBlendAdditive(false);
     }
 
 	@Override

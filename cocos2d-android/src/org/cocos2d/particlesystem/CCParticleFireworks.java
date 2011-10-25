@@ -29,12 +29,12 @@ public class CCParticleFireworks extends CCQuadParticleSystem {
 		this.setGravity(CGPoint.ccp(0,-90));
 		
 		// Gravity Mode:  radial
-		radialAccel = 0;
-		radialAccelVar = 0;
+		setRadialAccel( 0 );
+		setRadialAccelVar( 0 );
 
 		//  Gravity Mode: speed of particles
-		speed = 180;
-		speedVar = 50;
+		setSpeed( 180 );
+		setSpeedVar( 50 );
 		
 		// emitter position
 		CGSize winSize = CCDirector.sharedDirector().winSize();
@@ -77,7 +77,7 @@ public class CCParticleFireworks extends CCQuadParticleSystem {
         texture = CCTextureCache.sharedTextureCache().addImage("blocks.png");
 
         // additive
-        blendAdditive = false;
+        setBlendAdditive(false);
     }
 
 	@Override

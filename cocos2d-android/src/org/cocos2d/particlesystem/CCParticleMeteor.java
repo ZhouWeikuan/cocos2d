@@ -30,16 +30,16 @@ public class CCParticleMeteor extends CCQuadParticleSystem {
 		this.setGravity(CGPoint.ccp(-200,200));
 
 		// Gravity Mode: speed of particles
-		speed = 15;
-		speedVar = 5;
+		setSpeed( 15 );
+		setSpeedVar( 5 );
 		
 		// Gravity Mode: radial
-		radialAccel = 0;
-		radialAccelVar = 0;
+		setRadialAccel( 0 );
+		setRadialAccelVar( 0 );
 		
 		// Gravity Mode: tagential
-		tangentialAccel = 0;
-		tangentialAccelVar = 0;
+		setTangentialAccel( 0 );
+		setTangentialAccelVar( 0 );
 		
 		// angle
 		angle = 90;
@@ -83,7 +83,7 @@ public class CCParticleMeteor extends CCQuadParticleSystem {
         texture = CCTextureCache.sharedTextureCache().addImage("fire.png");
 
         // additive
-        blendAdditive = true;
+        setBlendAdditive(true);
     }
 
 	@Override

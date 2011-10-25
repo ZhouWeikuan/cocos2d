@@ -287,10 +287,10 @@ public class ParticleTest extends Activity {
         }
 
         public void toggleCallback(Object sender) {
-            if( emitter.getPositionType() == CCParticleSystem.kPositionTypeGrouped )
-                emitter.setPositionType(CCParticleSystem.kPositionTypeFree);
+            if( emitter.getPositionType() == CCParticleSystem.kCCPositionTypeGrouped )
+                emitter.setPositionType(CCParticleSystem.kCCPositionTypeFree);
             else
-                emitter.setPositionType(CCParticleSystem.kPositionTypeGrouped);
+                emitter.setPositionType(CCParticleSystem.kCCPositionTypeGrouped);
         }
 
         public void restartCallback(Object sender) {

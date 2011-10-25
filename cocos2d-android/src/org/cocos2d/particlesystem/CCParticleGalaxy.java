@@ -29,16 +29,16 @@ public class CCParticleGalaxy extends CCQuadParticleSystem {
 		this.setGravity(CGPoint.ccp(0,0));
 		
 		// Gravity Mode: speed of particles
-		speed = 60;
-		speedVar = 10;
+		setSpeed( 60 );
+		setSpeedVar( 10 );
 			
 		// Gravity Mode: radial
-		radialAccel = -80;
-		radialAccelVar = 0;
+		setRadialAccel( -80 );
+		setRadialAccelVar( 0 );
 		
 		// Gravity Mode: tagential
-		tangentialAccel = 80;
-		tangentialAccelVar = 0;
+		setTangentialAccel( 80 );
+		setTangentialAccelVar( 0 );
 		
 		// angle
 		angle = 90;
@@ -82,7 +82,7 @@ public class CCParticleGalaxy extends CCQuadParticleSystem {
 		texture = CCTextureCache.sharedTextureCache().addImage("fire.png");
 
         // additive
-        blendAdditive = true;
+		setBlendAdditive(true);
     }
 
 	@Override

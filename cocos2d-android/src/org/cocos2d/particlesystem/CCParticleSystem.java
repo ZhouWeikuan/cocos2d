@@ -264,22 +264,22 @@ public abstract class CCParticleSystem extends CCNode implements CCTextureProtoc
 		angleVar = av;
 	}
 
-	// The speed the particles will have.
-	protected float speed;
-	// The speed variance
-	protected float speedVar;
-
-	// Tangential acceleration
-	protected float tangentialAccel;
-
-	// Tangential acceleration variance
-	protected float tangentialAccelVar;
-
-	// Radial acceleration
-	protected float radialAccel;
-
-	// Radial acceleration variance
-	protected float radialAccelVar;
+//	// The speed the particles will have.
+//	protected float speed;
+//	// The speed variance
+//	protected float speedVar;
+//
+//	// Tangential acceleration
+//	protected float tangentialAccel;
+//
+//	// Tangential acceleration variance
+//	protected float tangentialAccelVar;
+//
+//	// Radial acceleration
+//	protected float radialAccel;
+//
+//	// Radial acceleration variance
+//	protected float radialAccelVar;
 
 	// Size of the particles
 	protected float size;
@@ -329,7 +329,7 @@ public abstract class CCParticleSystem extends CCNode implements CCTextureProtoc
 	ccBlendFunc	blendFunc = new ccBlendFunc(ccConfig.CC_BLEND_SRC, ccConfig.CC_BLEND_DST);
 
 	// movment type: free or grouped
-	protected int	positionType;
+//	protected int	positionType;
 
 	// Whether or not the node will be auto-removed when there are not particles
 	protected boolean autoRemoveOnFinish_;
@@ -346,8 +346,9 @@ public abstract class CCParticleSystem extends CCNode implements CCTextureProtoc
 	// Count of active particles
 	protected int particleCount;
 
-	// additive color or blend
-	protected boolean blendAdditive;
+//	// additive color or blend
+//	protected boolean blendAdditive;
+
 	// color modulate
 	protected boolean colorModulate;
 
@@ -637,8 +638,8 @@ public abstract class CCParticleSystem extends CCNode implements CCTextureProtoc
 	//    /** maximum particles of the system */
 	//    protected int totalParticles;
 
-	public static final int kPositionTypeFree = 1;
-	public static final int kPositionTypeGrouped = 2;
+//	public static final int kPositionTypeFree = 1;
+//	public static final int kPositionTypeGrouped = 2;
 
 	// movement type: free or grouped
 	private	int positionType_;
@@ -686,7 +687,7 @@ public abstract class CCParticleSystem extends CCNode implements CCTextureProtoc
 		active = true;
 
         // default movement type;
-		positionType_ = kPositionTypeFree;
+		positionType_ = kCCPositionTypeFree;
 
 		// by default be in mode A:
 		this.setEmitterMode(kCCParticleModeGravity);
@@ -765,7 +766,7 @@ public abstract class CCParticleSystem extends CCNode implements CCTextureProtoc
         particle.deltaRotation = (endA - startA) / particle.timeToLive;
 
         // position
-        if( positionType == kCCPositionTypeFree )
+        if( positionType_ == kCCPositionTypeFree )
         	this.convertToWorldSpace(0, 0, particle.startPos);
 
         // direction
@@ -1082,7 +1083,7 @@ public abstract class CCParticleSystem extends CCNode implements CCTextureProtoc
                 // Mode B: radius movement
                 else {				
                     // Update the angle and radius of the particle.
-                    p.modeB.angle += p.modeB.degreesPerSecond * dt;
+                    p.modeB.angle  += p.modeB.degreesPerSecond * dt;
                     p.modeB.radius += p.modeB.deltaRadius * dt;
 
                     p.pos.x = - (float)Math.cos(p.modeB.angle) * p.modeB.radius;

@@ -29,16 +29,16 @@ public class CCParticleSpiral extends CCQuadParticleSystem {
 		this.setGravity(CGPoint.zero());
 		
 		// Gravity Mode: speed of particles
-		speed = 150;
-		speedVar = 0;
+		setSpeed( 150 );
+		setSpeedVar( 0 );
 		
 		// Gravity Mode: radial
-		radialAccel = -380;
-		radialAccelVar = 0;
+		setRadialAccel( -380 );
+		setRadialAccelVar( 0 );
 		
 		// Gravity Mode: tagential
-		tangentialAccel = 45;
-		tangentialAccelVar = 0;
+		setTangentialAccel( 45 );
+		setTangentialAccelVar( 0 );
 		
 		// angle
 		angle = 90;
@@ -82,7 +82,7 @@ public class CCParticleSpiral extends CCQuadParticleSystem {
         texture = CCTextureCache.sharedTextureCache().addImage("fire.png");
 
         // additive
-        blendAdditive = false;
+        setBlendAdditive(false);
     }
 
 	@Override

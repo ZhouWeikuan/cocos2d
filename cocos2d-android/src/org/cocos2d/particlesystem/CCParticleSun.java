@@ -23,7 +23,7 @@ public class CCParticleSun extends CCQuadParticleSystem {
 	protected CCParticleSun(int p) {
 		super(p);
 		// additive
-		blendAdditive = true;
+		setBlendAdditive(true);
 
 		// duration
 		duration = kCCParticleDurationInfinity;
@@ -35,12 +35,12 @@ public class CCParticleSun extends CCQuadParticleSystem {
 		this.setGravity(CGPoint.ccp(0,0));
 
 		// Gravity mode: radial acceleration
-		radialAccel = 0;
-		radialAccelVar = 0;
+		setRadialAccel( 0 );
+		setRadialAccelVar( 0 );
 
 		// Gravity mode: speed of particles
-		speed = 20;
-		speedVar = 5;
+		setSpeed( 20 );
+		setSpeedVar( 5 );
 
 		// angle
 		angle = 90;

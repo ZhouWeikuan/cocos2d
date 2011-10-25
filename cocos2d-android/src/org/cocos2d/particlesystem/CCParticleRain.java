@@ -27,16 +27,16 @@ public class CCParticleRain extends CCQuadParticleSystem {
 		setGravity(CGPoint.ccp(10,-10));
 		
 		// Gravity Mode: radial
-		radialAccel = 0;
-		radialAccelVar = 1;
+		setRadialAccel( 0 );
+		setRadialAccelVar( 1 );
 		
 		// Gravity Mode: tagential
-		tangentialAccel = 0;
-		tangentialAccelVar = 1;
+		setTangentialAccel( 0 );
+		setTangentialAccelVar( 1 );
 
 		// Gravity Mode: speed of particles
-		speed = 130;
-		speedVar = 30;
+		setSpeed( 130 );
+		setSpeedVar( 30 );
 		
 		// angle
 		angle = -90;
@@ -85,7 +85,7 @@ public class CCParticleRain extends CCQuadParticleSystem {
         texture = CCTextureCache.sharedTextureCache().addImage("fire.png");
 
         // additive
-        blendAdditive = false;
+        setBlendAdditive(false);
     }
 
 	@Override
