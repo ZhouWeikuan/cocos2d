@@ -74,7 +74,7 @@ public class CCParticleFireworks extends CCQuadParticleSystem {
 		startSizeVar = 2.0f;
 		endSize = kCCParticleStartSizeEqualToEndSize;
 
-        texture = CCTextureCache.sharedTextureCache().addImage("blocks.png");
+		setTexture(CCTextureCache.sharedTextureCache().addImage("blocks.png"));
 
         // additive
         setBlendAdditive(false);

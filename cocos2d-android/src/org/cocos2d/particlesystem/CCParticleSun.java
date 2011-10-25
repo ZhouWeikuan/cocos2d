@@ -81,7 +81,7 @@ public class CCParticleSun extends CCQuadParticleSystem {
 		endColorVar.b = 0.0f;
 		endColorVar.a = 0.0f;
 
-		texture = CCTextureCache.sharedTextureCache().addImage("fire.png");
+		setTexture(CCTextureCache.sharedTextureCache().addImage("fire.png"));
 	}
 
 	@Override

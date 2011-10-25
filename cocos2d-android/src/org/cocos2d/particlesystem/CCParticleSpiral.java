@@ -79,7 +79,7 @@ public class CCParticleSpiral extends CCQuadParticleSystem {
 		endColorVar.b = 0.5f;
 		endColorVar.a = 0.0f;
 		
-        texture = CCTextureCache.sharedTextureCache().addImage("fire.png");
+		setTexture(CCTextureCache.sharedTextureCache().addImage("fire.png"));
 
         // additive
         setBlendAdditive(false);
