@@ -64,22 +64,7 @@ public class CCTouchDispatcher {
 
     public static final boolean kEventHandled = true;
     public static final boolean kEventIgnored = false;
- /*
-@interface CCTouchDispatcher : NSObject <EAGLTouchDelegate>
-{
-	NSMutableArray	*targetedHandlers;
-	NSMutableArray	*standardHandlers;
-
-	BOOL			locked;
-	BOOL			toAdd;
-	BOOL			toRemove;
-	NSMutableArray	*handlersToAdd;
-	NSMutableArray	*handlersToRemove;
-	BOOL			toQuit;
-
-	// 4, 1 for each type of event
-	struct ccTouchHandlerHelperData handlerHelperData[ccTouchMax];
-}*/
+ 
     /** Listeners for raw MotionEvents */
     private ArrayList<CCMotionEventProtocol> motionListeners;
    
@@ -284,7 +269,7 @@ public class CCTouchDispatcher {
 	    		
 	    		int action = event.getAction();
 	    		int actionCode = action;
-	    		int pid = action;     
+	    		int pid = event.getDeviceId();     
 				
 				boolean swallowed = false;
 				        
