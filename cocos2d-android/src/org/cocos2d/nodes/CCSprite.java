@@ -153,7 +153,7 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
 	protected ccBlendFunc blendFunc_ = new ccBlendFunc(ccConfig.CC_BLEND_SRC, ccConfig.CC_BLEND_DST);
 	
 	// texture pixels
-	CGRect rect_;
+	CGRect rect_ = CGRect.zero();
 	Boolean rectRotated_ = false;
 	
     /** offset position of the sprite. Calculated automatically by editors like Zwoptex.

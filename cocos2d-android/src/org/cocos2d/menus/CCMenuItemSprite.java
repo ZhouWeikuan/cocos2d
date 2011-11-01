@@ -20,31 +20,58 @@ import org.cocos2d.types.ccColor3B;
 public class CCMenuItemSprite extends CCMenuItem implements CCRGBAProtocol {
     /** the image used when the item is not selected */
     protected CCNode normalImage_;
-    public void setNormalImage(CCNode normalImage) {
-    	normalImage_ = normalImage;
+    public void setNormalImage(CCNode image) {
+        if (image != normalImage_ ) {
+            image.setAnchorPoint(0,0);
+            image.setVisible(true);
+
+            this.removeChild(normalImage_,  true);
+            this.addChild(image);
+
+            normalImage_ = image;
+        }
+
     }
     public CCNode getNormalImage() {
-    	return normalImage_;
+        return normalImage_;
     }
-    
+
     /** the image used when the item is selected */
     protected CCNode selectedImage_;
-    public void setSelectedImage(CCNode selImage) {
-    	selectedImage_ = selImage;
+    public void setSelectedImage(CCNode image) {
+        if( image != selectedImage_ ) {
+            image.setAnchorPoint(0,0);
+            image.setVisible(false);
+
+            removeChild(selectedImage_, true);
+            addChild(image);
+
+            selectedImage_ = image;
+        }
+
     }
     public CCNode getSelectedImage() {
-    	return selectedImage_;
+        return selectedImage_;
     }
-    
+
     /** the image used when the item is disabled */
     protected CCNode disabledImage_;
-    public void setDisabledImage(CCNode disabled) {
-    	disabledImage_ = disabled;
+    public void setDisabledImage(CCNode image) {
+        if( image != disabledImage_ ) {
+            image.setAnchorPoint(0,0);
+            image.setVisible(false);
+
+            removeChild(disabledImage_, true);
+            addChild(image);
+
+            disabledImage_ = image;
+        }
+
     }
     public CCNode getDisabledImage(){
-    	return disabledImage_;
+        return disabledImage_;
     }
-    
+
     /** creates a menu item with a normal and selected image*/
     public static CCMenuItemSprite item(CCNode normalSprite, CCNode selectedSprite) {
         return new CCMenuItemSprite(normalSprite, selectedSprite, null, null, null);
@@ -63,30 +90,30 @@ public class CCMenuItemSprite extends CCMenuItem implements CCRGBAProtocol {
     /** initializes a menu item with a normal, selected  and disabled image with target/selector */
     protected CCMenuItemSprite(CCNode normalSprite, CCNode selectedSprite, CCNode disabledSprite, CCNode target, String selector) {
         super(target, selector);
-        normalImage_ = normalSprite;
-        selectedImage_ = selectedSprite;
-        disabledImage_ = disabledSprite;
+        setNormalImage(normalSprite);
+        setSelectedImage(selectedSprite);
+        setDisabledImage(disabledSprite);
         CGSize size = normalImage_.getContentSize();
         setContentSize(size);
     }
 
     @Override
-    public void draw(GL10 gl) {
-        if (isEnabled_) {
-            if (isSelected_)
-                selectedImage_.draw(gl);
-            else
-                normalImage_.draw(gl);
+        public void draw(GL10 gl) {
+            if (isEnabled_) {
+                if (isSelected_)
+                    selectedImage_.draw(gl);
+                else
+                    normalImage_.draw(gl);
 
-        } else {
-            if (disabledImage_ != null)
-                disabledImage_.draw(gl);
+            } else {
+                if (disabledImage_ != null)
+                    disabledImage_.draw(gl);
 
                 // disabled image was not provided
-            else
-                normalImage_.draw(gl);
+                else
+                    normalImage_.draw(gl);
+            }
         }
-    }
 
     // CocosNodeRGBA protocol
     public void setOpacity(int opacity) {
@@ -111,16 +138,16 @@ public class CCMenuItemSprite extends CCMenuItem implements CCRGBAProtocol {
         return ((CCRGBAProtocol) normalImage_).getOpacity();
     }
 
-	@Override
-	public boolean doesOpacityModifyRGB() {
-		// TODO Auto-generated method stub
-		return false;
-	}
+    @Override
+        public boolean doesOpacityModifyRGB() {
+            // TODO Auto-generated method stub
+            return false;
+        }
 
-	@Override
-	public void setOpacityModifyRGB(boolean b) {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+        public void setOpacityModifyRGB(boolean b) {
+            // TODO Auto-generated method stub
+
+        }
 }
 
