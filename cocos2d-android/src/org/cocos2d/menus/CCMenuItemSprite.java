@@ -188,7 +188,9 @@ public class CCMenuItemSprite extends CCMenuItem implements CCRGBAProtocol {
         if (enabled) {
             normalImage_.setVisible(true);
             selectedImage_.setVisible(false);
-            disabledImage_.setVisible(false);
+            if( disabledImage_ != null ) {
+            	disabledImage_.setVisible(false);
+            }
         } else {
             if( disabledImage_ != null) {
                 normalImage_.setVisible(false);
@@ -197,8 +199,8 @@ public class CCMenuItemSprite extends CCMenuItem implements CCRGBAProtocol {
             } else {
                 normalImage_.setVisible(true);
                 selectedImage_.setVisible(false);
-                if (disabledImage_ != null)
-                    disabledImage_.setVisible(false);
+//                if (disabledImage_ != null)
+//                    disabledImage_.setVisible(false);
             }
         }
     }
