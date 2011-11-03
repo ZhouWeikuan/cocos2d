@@ -21,6 +21,7 @@ public class CCMenuItemSprite extends CCMenuItem implements CCRGBAProtocol {
     /** the image used when the item is not selected */
     protected CCNode normalImage_;
     public void setNormalImage(CCNode image) {
+        assert(image!=null):"Cann't set normalImage_ to be null!";
         if (image != normalImage_ ) {
             image.setAnchorPoint(0,0);
             image.setVisible(true);
@@ -39,6 +40,7 @@ public class CCMenuItemSprite extends CCMenuItem implements CCRGBAProtocol {
     /** the image used when the item is selected */
     protected CCNode selectedImage_;
     public void setSelectedImage(CCNode image) {
+        assert(image!=null):"Cann't set selectedImage_ to be null!";
         if( image != selectedImage_ ) {
             image.setAnchorPoint(0,0);
             image.setVisible(false);
@@ -58,12 +60,14 @@ public class CCMenuItemSprite extends CCMenuItem implements CCRGBAProtocol {
     protected CCNode disabledImage_;
     public void setDisabledImage(CCNode image) {
         if( image != disabledImage_ ) {
-            image.setAnchorPoint(0,0);
-            image.setVisible(false);
-
-            removeChild(disabledImage_, true);
-            addChild(image);
-
+            if (disabledImage_ != null) {
+                removeChild(disabledImage_, true);
+            }
+            if (image != null) {
+                image.setAnchorPoint(0,0);
+                image.setVisible(false);
+                addChild(image);
+            }
             disabledImage_ = image;
         }
 
@@ -98,22 +102,23 @@ public class CCMenuItemSprite extends CCMenuItem implements CCRGBAProtocol {
     }
 
     @Override
-        public void draw(GL10 gl) {
-            if (isEnabled_) {
-                if (isSelected_)
-                    selectedImage_.draw(gl);
-                else
-                    normalImage_.draw(gl);
-
+    public void draw(GL10 gl) {
+        if (isEnabled_) {
+            if (isSelected_) {
+                selectedImage_.draw(gl);
             } else {
-                if (disabledImage_ != null)
-                    disabledImage_.draw(gl);
-
-                // disabled image was not provided
-                else
-                    normalImage_.draw(gl);
+                normalImage_.draw(gl);
             }
+
+        } else {
+            if (disabledImage_ != null)
+                disabledImage_.draw(gl);
+
+            // disabled image was not provided
+            else
+                normalImage_.draw(gl);
         }
+    }
 
     // CocosNodeRGBA protocol
     public void setOpacity(int opacity) {
@@ -139,15 +144,64 @@ public class CCMenuItemSprite extends CCMenuItem implements CCRGBAProtocol {
     }
 
     @Override
-        public boolean doesOpacityModifyRGB() {
-            // TODO Auto-generated method stub
-            return false;
-        }
+    public boolean doesOpacityModifyRGB() {
+        // TODO Auto-generated method stub
+        return false;
+    }
 
     @Override
-        public void setOpacityModifyRGB(boolean b) {
-            // TODO Auto-generated method stub
+    public void setOpacityModifyRGB(boolean b) {
+        // TODO Auto-generated method stub
 
+    }
+    
+    @Override
+    public void selected() {
+        super.selected();
+
+        if (selectedImage_ != null) {
+            normalImage_.setVisible(false);
+            selectedImage_.setVisible(true);
+            if (disabledImage_ != null)
+                disabledImage_.setVisible(false);
+        } else { // there is not selected image
+            normalImage_.setVisible(true);
+            selectedImage_.setVisible(false);
+            if (disabledImage_ != null)
+                disabledImage_.setVisible(false);
         }
+    }
+
+    @Override
+    public void unselected() {
+        super.unselected();
+        normalImage_.setVisible(true);
+        selectedImage_.setVisible(false);
+        if (disabledImage_ != null)
+            disabledImage_.setVisible(false);
+    }
+
+    @Override
+    public void setIsEnabled(boolean enabled) {
+        super.setIsEnabled(enabled);
+
+        if (enabled) {
+            normalImage_.setVisible(true);
+            selectedImage_.setVisible(false);
+            disabledImage_.setVisible(false);
+        } else {
+            if( disabledImage_ != null) {
+                normalImage_.setVisible(false);
+                selectedImage_.setVisible(false);
+                disabledImage_.setVisible(true);
+            } else {
+                normalImage_.setVisible(true);
+                selectedImage_.setVisible(false);
+                if (disabledImage_ != null)
+                    disabledImage_.setVisible(false);
+            }
+        }
+    }
+
 }
 
