@@ -70,4 +70,15 @@ public final class CGPointUtil {
 		float dy = p2.y - p1.y;
 		return (float)Math.sqrt(dx * dx + dy * dy);
 	}
+	
+	public static void rotateByAngle(CGPoint v, CGPoint pivot, float angle, CGPoint ret) 
+	{
+		CGPointUtil.sub(v, pivot,ret);
+		float t = ret.x;
+		float cosa = (float)Math.cos(angle);
+		float sina = (float)Math.sin(angle);
+		ret.x = t*cosa - ret.y*sina;
+		ret.y = t*sina + ret.y*cosa;
+		CGPointUtil.add(ret, pivot);
+	}
 }
