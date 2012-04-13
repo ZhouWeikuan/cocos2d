@@ -35,6 +35,7 @@ public class CCScrollView extends CCLayer{
     public static final int CCScrollViewDirectionVertical = 2;
     public static final int CCScrollViewDirectionBoth = 3;
 
+    boolean isScrollLock;
     boolean touchMoved_;
     boolean isDragging_;
     public boolean bounces;
@@ -120,6 +121,10 @@ public class CCScrollView extends CCLayer{
 	        touchMoved_ = false;
 	        touches_.clear();
 	    }
+	}
+	
+	public void setIsScrollLock(boolean e){
+		isScrollLock = e;
 	}
 	
 	public void setContentOffset(CGPoint offset) {
@@ -302,15 +307,23 @@ public class CCScrollView extends CCLayer{
 	 */
 	public void beforeDraw(GL10 gl) {
 	    if (clipsToBounds) {
-
-            gl.glEnable(GL10.GL_SCISSOR_TEST);
-	        float s = CCDirector.sharedDirector().getContentScaleFactor();
-	        
-	        CGRect scissorRect = CGRect.make(getPosition().x, getPosition().y, viewSize.width
-	, viewSize.height);
-	        
-	        gl.glScissor((int)(scissorRect.origin.x*s), (int)(scissorRect.origin.y*s),
-	        		(int) (scissorRect.size.width*s), (int)(scissorRect.size.height*s));
+	    	CGSize size = CCDirector.sharedDirector().winSize();
+	    	gl.glEnable(GL10.GL_SCISSOR_TEST);            
+	        CGPoint pos = getPosition();
+			pos = getParent().convertToWorldSpace(pos.x, pos.y);
+			pos.y = size.height - pos.y;
+			pos = CCDirector.sharedDirector().convertToUI(pos);
+			
+	        CGPoint pos2 = getPosition();
+			pos2 = CGPoint.ccpAdd(pos2, CGPoint.ccp(viewSize.width, viewSize.height));
+			pos2 = getParent().convertToWorldSpace(pos2.x, pos2.y);
+			pos2.y = size.height - pos2.y;
+			pos2 = CCDirector.sharedDirector().convertToUI(pos2);
+			float x1 = Math.min(pos.x, pos2.x);
+			float y1 = Math.min(pos.y, pos2.y);
+			float x2 = Math.max(pos.x, pos2.x);
+			float y2 = Math.max(pos.y, pos2.y);
+			gl.glScissor((int)x1, (int)y1, (int)(x2 - x1), (int)(y2 - y1));
 	    }
 	}
 	
@@ -378,7 +391,7 @@ public class CCScrollView extends CCLayer{
 
 	@Override
 	public boolean ccTouchesMoved(MotionEvent event) {
-	    if (!getVisible()) {
+	    if (!getVisible() || isScrollLock) {
 	        return false;
 	    }
 	    if (touches_.contains(event)) {
@@ -460,4 +473,5 @@ public class CCScrollView extends CCLayer{
 	    
 	    return true;
     }
+
 }
