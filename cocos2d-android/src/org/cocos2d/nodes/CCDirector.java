@@ -643,6 +643,9 @@ public class CCDirector implements GLSurfaceView.Renderer {
 
         setGLDefaultValues(gl); 
 
+        // save thread id
+        GLResourceHelper.sharedHelper().setGlThreadID( Thread.currentThread().getId() );
+        
     	// reload all GL resources here
     	GLResourceHelper.sharedHelper().reloadResources();    	
     }

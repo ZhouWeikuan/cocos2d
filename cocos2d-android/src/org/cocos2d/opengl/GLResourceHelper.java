@@ -51,7 +51,12 @@ public class GLResourceHelper {
 
 	private ConcurrentLinkedQueue<GLResorceTask> taskQueue;
 	private Map<Resource, GLResourceLoader> reloadMap;
+	
+	private volatile long glThreadID;
 
+	public void setGlThreadID(long glThreadID) {
+		this.glThreadID = glThreadID;
+	}
 	
 	public GLResourceHelper() {
 		taskQueue = new ConcurrentLinkedQueue<GLResorceTask>();
@@ -103,7 +108,7 @@ public class GLResourceHelper {
 	 * @param res GL task
 	 */
 	public void perform(GLResorceTask res) {
-		if(inUpdate) {
+		if( inUpdate && Thread.currentThread().getId() == glThreadID ) {
 			res.perform(CCDirector.gl);
 		} else {
 			taskQueue.add(res);
