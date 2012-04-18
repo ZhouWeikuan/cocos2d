@@ -21,6 +21,7 @@ import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import javax.microedition.khronos.opengles.GL;
 import javax.microedition.khronos.opengles.GL10;
 import javax.microedition.khronos.opengles.GL11ExtensionPack;
 
@@ -144,6 +145,8 @@ public class CCTexture2D implements Resource {
 
     private CCTexParams _texParams;
     
+    private GL mCreator;
+    
 //    /** this object is responsible for loading Bitmap for texture */
 //    private GLResourceHelper.GLResourceLoader mLoader;
 
@@ -165,9 +168,11 @@ public class CCTexture2D implements Resource {
     			
 				@Override
 				public void perform(GL10 gl) {
-					IntBuffer intBuffer = IntBuffer.allocate(1);
-					intBuffer.put(0, _name);
-					gl.glDeleteTextures(1, intBuffer);
+					if(mCreator == gl) {
+						IntBuffer intBuffer = IntBuffer.allocate(1);
+						intBuffer.put(0, _name);
+						gl.glDeleteTextures(1, intBuffer);
+					}
 				}
 				
 			});
@@ -477,6 +482,8 @@ public class CCTexture2D implements Resource {
 
     public void loadTexture(GL10 gl) {
         if (_name == 0) {
+        	mCreator = gl;
+        	
             int[] textures = new int[1];
             gl.glGenTextures(1, textures, 0);
 

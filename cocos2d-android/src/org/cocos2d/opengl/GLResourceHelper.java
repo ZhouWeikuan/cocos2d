@@ -78,7 +78,7 @@ public class GLResourceHelper {
     	}
     }
     
-    private boolean reloadTaskIsInQueue;
+    private volatile boolean reloadTaskIsInQueue;
     /**
      * This should be called only when recreating GL context
      */
