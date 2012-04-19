@@ -8,6 +8,8 @@ import org.cocos2d.protocols.CCLabelProtocol;
 import org.cocos2d.types.CGRect;
 import org.cocos2d.types.CGSize;
 
+import android.graphics.Typeface;
+
 /** CCLabel is a subclass of CCTextureNode that knows how to render text labels
  *
  * All features from CCTextureNode are valid in CCLabel
@@ -27,7 +29,9 @@ public class CCLabel extends CCSprite implements CCLabelProtocol {
     private TextAlignment _alignment;
     private String _fontName;
     private float _fontSize;
-    private String _string; 
+    private String _string;
+    // style for standart fonts
+    private int _fontStyle = Typeface.NORMAL;
 
     /** creates a CCLabel from a fontname, alignment, dimension and font size */
     public static CCLabel makeLabel(String string, final CGSize dimensions, TextAlignment alignment, 
@@ -35,14 +39,29 @@ public class CCLabel extends CCSprite implements CCLabelProtocol {
         return new CCLabel(string, dimensions, alignment, fontname, fontsize);
     }
 
+    /** creates a CCLabel from a fontname, alignment, dimension, font size and font style */
+    public static CCLabel makeLabel(String string, final CGSize dimensions, TextAlignment alignment, 
+                                    String fontname, float fontsize, int fontStyle) {
+        return new CCLabel(string, dimensions, alignment, fontname, fontsize, fontStyle);
+    }
+
     /** creates a CCLabel from a fontname and font size */
     public static CCLabel makeLabel(String string, String fontname, float fontsize) {
         return new CCLabel(string, CGSize.make(0, 0), TextAlignment.CENTER, fontname, fontsize);
     }
+    /** creates a CCLabel from a fontname and font size and font style */
+    public static CCLabel makeLabel(String string, String fontname, float fontsize, int fontStyle) {
+    	return new CCLabel(string, CGSize.make(0, 0), TextAlignment.CENTER, fontname, fontsize, fontStyle);
+    }
+    
+    /** initializes the CCLabel with a font name and font size and style */
+    protected CCLabel(CharSequence string, String fontname, float fontsize) {
+    	this(string, CGSize.make(0,0), TextAlignment.CENTER, fontname, fontsize);
+    }
 
     /** initializes the CCLabel with a font name and font size */
-    protected CCLabel(CharSequence string, String fontname, float fontsize) {
-        this(string, CGSize.make(0,0), TextAlignment.CENTER, fontname, fontsize);
+    protected CCLabel(CharSequence string, String fontname, float fontsize, int fontStyle) {
+        this(string, CGSize.make(0,0), TextAlignment.CENTER, fontname, fontsize, fontStyle);
     }
 
     /** initializes the CCLabel with a font name, alignment, dimension and font size */
@@ -55,6 +74,12 @@ public class CCLabel extends CCSprite implements CCLabelProtocol {
         _fontSize = size;
 
         setString(string);
+    }
+    
+    protected CCLabel(CharSequence string, final CGSize dimensions, TextAlignment alignment,
+            String name, float size, int fontStyle) {
+    	this(string, dimensions, alignment, name, size);
+    	_fontStyle = fontStyle;
     }
 
     private static class StringReloader implements GLResourceHelper.GLResourceLoader {
@@ -72,9 +97,9 @@ public class CCLabel extends CCSprite implements CCLabelProtocol {
     			return;
     		
 	    	if (CGSize.equalToSize(thisp._dimensions, CGSize.zero())) {
-	    		((CCTexture2D)res).initWithText(thisp._string, thisp._fontName, thisp._fontSize);
+	    		((CCTexture2D)res).initWithText(thisp._string, thisp._fontName, thisp._fontSize, thisp._fontStyle);
 	    	} else {
-	    		((CCTexture2D)res).initWithText(thisp._string, thisp._dimensions, thisp._alignment, thisp._fontName, thisp._fontSize);
+	    		((CCTexture2D)res).initWithText(thisp._string, thisp._dimensions, thisp._alignment, thisp._fontName, thisp._fontSize, thisp._fontStyle);
 	    	}
 	        
 		    CGSize size = thisp.texture_.getContentSize();
@@ -95,21 +120,6 @@ public class CCLabel extends CCSprite implements CCLabelProtocol {
     	CCTexture2D texture = new CCTexture2D();
     	setTexture(texture);
     	texture.setLoader(new StringReloader(this));
-//    	texture.setLoader(new GLResourceHelper.GLResourceLoader() {
-//    		@Override
-//    		public void load(GLResourceHelper.Resource res) {
-//    	    	if (CGSize.equalToSize(_dimensions, CGSize.zero())) {
-//    	    		((CCTexture2D)res).initWithText(string, _fontName, _fontSize);
-//    	    	} else {
-//    	    		((CCTexture2D)res).initWithText(string, _dimensions, _alignment, _fontName, _fontSize);
-//    	    	}
-//    	        
-////    	        setTexture(((CCTexture2D)res));
-//
-//    		    CGSize size = texture_.getContentSize();
-//    		    setTextureRect(CGRect.make(0, 0, size.width, size.height));
-//    		}
-//    	});
     }
     
     public String toString() {

@@ -321,6 +321,12 @@ public class CCTexture2D implements Resource {
     	initWithText(text, calculateTextSize(text, fontname, fontSize),
                 CCLabel.TextAlignment.CENTER, fontname, fontSize);
     }
+    
+    // for styled text
+    public void initWithText(String text, String fontname, float fontSize, int fontStyle) {
+    	initWithText(text, calculateTextSize(text, fontname, fontSize),
+                CCLabel.TextAlignment.CENTER, fontname, fontSize, fontStyle);
+    }
 
     private static CGSize calculateTextSize(String text, String fontname, float fontSize) {
 //        Typeface typeface = Typeface.create(fontname, Typeface.NORMAL);
@@ -336,7 +342,7 @@ public class CCTexture2D implements Resource {
     	} else {
     		typeface = typefaces.get(fontname);
     	}
-//        
+    	
 //        typeface = Typeface.
 //    	try{
 //    		typeface = Typeface.createFromAsset(CCDirector.theApp.getAssets(), fontname);
@@ -373,13 +379,17 @@ public class CCTexture2D implements Resource {
     private static HashMap<String, Typeface> typefaces = new HashMap<String, Typeface>();
     /** Initializes a texture from a string with dimensions, alignment, font name and font size */
     public void initWithText(String text, CGSize dimensions, CCLabel.TextAlignment alignment, String fontname, float fontSize) {
+    	initWithText(text, dimensions, alignment, fontname, fontSize, Typeface.NORMAL);
+    }
+    
+    public void initWithText(String text, CGSize dimensions, CCLabel.TextAlignment alignment, String fontname, float fontSize, int fontStyle) {
     	Typeface typeface;
     	if(!typefaces.containsKey(fontname)) {
 	        try {
 	        	CCDirector.theApp.getAssets().open(fontname);
 	        	typeface = Typeface.createFromAsset(CCDirector.theApp.getAssets(), fontname);
 	        } catch(IOException e) {
-	        	typeface = Typeface.create(fontname, Typeface.NORMAL);
+	        	typeface = Typeface.create(fontname, fontStyle);
 	        }
 	        typefaces.put(fontname, typeface);
     	} else {
