@@ -11,6 +11,7 @@ import org.cocos2d.config.ccMacros;
 import org.cocos2d.opengl.CCTexture2D;
 import org.cocos2d.opengl.GLResourceHelper;
 import org.cocos2d.opengl.GLResourceHelper.Resource;
+import org.cocos2d.utils.ContentHelper;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -211,7 +212,7 @@ public class CCTextureCache {
 			@Override
 			public void load(Resource res) {
 	            try {
-		        	InputStream is = CCDirector.sharedDirector().getActivity().getAssets().open(path);
+		        	InputStream is = ContentHelper.sharedHelper().openInputStream(path);
 		        	
 		        	BitmapFactory.Options opts = new BitmapFactory.Options();
 		        	opts.inPreferredConfig = ((CCTexture2D)res).pixelFormat();

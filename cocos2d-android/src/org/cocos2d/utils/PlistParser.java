@@ -12,7 +12,6 @@ import java.util.HashMap;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
-import org.cocos2d.nodes.CCDirector;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -35,7 +34,7 @@ public class PlistParser extends DefaultHandler {
 
 	public static HashMap<String, Object> parse(String filename) {
         try {
-			InputStream in = CCDirector.theApp.getAssets().open(filename);
+			InputStream in = ContentHelper.sharedHelper().openInputStream(filename);
 			return parse(in);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -52,7 +51,7 @@ public class PlistParser extends DefaultHandler {
 	
 	public static ArrayList<Object> parseArray(String filename) {
         try {
-			InputStream in = CCDirector.theApp.getAssets().open(filename);
+			InputStream in = ContentHelper.sharedHelper().openInputStream(filename);
 			return parseArray(in);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
