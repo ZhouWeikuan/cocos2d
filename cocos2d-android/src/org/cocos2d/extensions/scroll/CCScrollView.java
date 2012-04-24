@@ -5,8 +5,6 @@
 
 package org.cocos2d.extensions.scroll;
 
-import java.util.ArrayList;
-
 import javax.microedition.khronos.opengles.GL10;
 
 import org.cocos2d.actions.base.CCFiniteTimeAction;
@@ -39,8 +37,8 @@ public class CCScrollView extends CCLayer{
     boolean touchMoved_;
     boolean isDragging_;
     public boolean bounces;
-    public boolean clipsToBounds;
-    CCNode container_;
+    private boolean clipsToBounds;
+    CCClipNode container_;
     CGPoint maxInset_;
     CGPoint minInset_;
     CGPoint scrollDistance_;
@@ -48,7 +46,7 @@ public class CCScrollView extends CCLayer{
     public CGSize viewSize;
     //float minScale_, maxScale_;
     float touchLength_;
-    ArrayList<MotionEvent> touches_;
+//    ArrayList<MotionEvent> touches_;
     public int direction;
     public CCScrollViewDelegate delegate;
     public bool isDragging;
@@ -59,47 +57,46 @@ public class CCScrollView extends CCLayer{
 //@property (nonatomic, assign) CGFloat maxZoomScale;
 
     //public CGPoint contentOffset;
-	
+
+
 	public CCScrollView(CGSize size)
 	{
-		this(size, null);
-	}
-
-	public CCScrollView(CGSize size, CCNode container)
-	{
-        container_ = container;
         viewSize   = size;
         
-        if (container_ == null) {
-            container_ = CCLayer.node();
-        }
-        setIsTouchEnabled(true);
-        touches_               = new ArrayList<MotionEvent>();
+        container_ = new CCClipNode();        
+ //       touches_               = new ArrayList<MotionEvent>();
         delegate              = null;
         bounces               = true;
-        clipsToBounds          = true;
         container_.setContentSize(CGSize.zero());
         direction             = CCScrollViewDirectionBoth;
         container_.setPosition(CGPoint.ccp(0.0f, 0.0f));
         touchLength_           = 0.0f;
         
+        setIsTouchEnabled(true);
+        setClipToBounds(true);
         addChild(container_);
-        //minScale_ = maxScale_ = 1.0f;
-		
+        //minScale_ = maxScale_ = 1.0f;		
 	}
 	public static CCScrollView view(CGSize size)
 	{
 		return new CCScrollView(size);
 	}
-	
-	public static CCScrollView view(CGSize size, CCNode container)
-	{
-		return new CCScrollView(size, container);
-	}
 
 	@Override
 	public void registerWithTouchDispatcher() {
 	    CCTouchDispatcher.sharedDispatcher().addTargetedDelegate(this, 0, false);
+	}
+	
+	public void setClipToBounds(boolean bClip){
+		if (bClip != clipsToBounds) {
+			CGRect clipRect;
+			if (bClip)
+				clipRect = CGRect.make(0, 0, viewSize.width, viewSize.height);
+			else
+				clipRect = CGRect.make(CCClipNode.RECT_ORIGIN_INVALID, 0, 0, 0);
+			clipsToBounds = bClip;
+			container_.setClipRect(clipRect);
+		}
 	}
 
 	public boolean isNodeVisible(CCNode node) {
@@ -119,7 +116,7 @@ public class CCScrollView extends CCLayer{
 	    if (!e) {
 	        isDragging_ = false;
 	        touchMoved_ = false;
-	        touches_.clear();
+//	        touches_.clear();
 	    }
 	}
 	
@@ -169,6 +166,12 @@ public class CCScrollView extends CCLayer{
 	    if (!CGSize.equalToSize(viewSize, size)) {
 	        viewSize = size;
 			computeInsets();
+			
+			CGRect clipRect;
+			if(clipsToBounds){
+				clipRect = CGRect.make(0, 0, viewSize.width, viewSize.height);
+				container_.setClipRect(clipRect);
+			}
 	    }
 	}
 
@@ -305,47 +308,47 @@ public class CCScrollView extends CCLayer{
 	/**
 	 * clip this view so that outside of the visible bounds can be hidden.
 	 */
-	public void beforeDraw(GL10 gl) {
-	    if (clipsToBounds) {
-	    	CGSize size = CCDirector.sharedDirector().winSize();
-	    	gl.glEnable(GL10.GL_SCISSOR_TEST);            
-	        CGPoint pos = getPosition();
-			pos = getParent().convertToWorldSpace(pos.x, pos.y);
-			pos.y = size.height - pos.y;
-			pos = CCDirector.sharedDirector().convertToUI(pos);
-			
-	        CGPoint pos2 = getPosition();
-			pos2 = CGPoint.ccpAdd(pos2, CGPoint.ccp(viewSize.width, viewSize.height));
-			pos2 = getParent().convertToWorldSpace(pos2.x, pos2.y);
-			pos2.y = size.height - pos2.y;
-			pos2 = CCDirector.sharedDirector().convertToUI(pos2);
-			float x1 = Math.min(pos.x, pos2.x);
-			float y1 = Math.min(pos.y, pos2.y);
-			float x2 = Math.max(pos.x, pos2.x);
-			float y2 = Math.max(pos.y, pos2.y);
-			gl.glScissor((int)x1, (int)y1, (int)(x2 - x1), (int)(y2 - y1));
-	    }
-	}
+//	public void beforeDraw(GL10 gl) {
+//	    if (clipsToBounds) {
+//	    	CGSize size = CCDirector.sharedDirector().winSize();
+//	    	gl.glEnable(GL10.GL_SCISSOR_TEST);            
+//	        CGPoint pos = getPosition();
+//			pos = getParent().convertToWorldSpace(pos.x, pos.y);
+//			pos.y = size.height - pos.y;
+//			pos = CCDirector.sharedDirector().convertToUI(pos);
+//			
+//	        CGPoint pos2 = getPosition();
+//			pos2 = CGPoint.ccpAdd(pos2, CGPoint.ccp(viewSize.width, viewSize.height));
+//			pos2 = getParent().convertToWorldSpace(pos2.x, pos2.y);
+//			pos2.y = size.height - pos2.y;
+//			pos2 = CCDirector.sharedDirector().convertToUI(pos2);
+//			float x1 = Math.min(pos.x, pos2.x);
+//			float y1 = Math.min(pos.y, pos2.y);
+//			float x2 = Math.max(pos.x, pos2.x);
+//			float y2 = Math.max(pos.y, pos2.y);
+//			gl.glScissor((int)x1, (int)y1, (int)(x2 - x1), (int)(y2 - y1));
+//	    }
+//	}
 	
 	/**
 	 * retract what's done in beforeDraw so that there's no side effect to
 	 * other nodes.
 	 */
-	public void afterDraw(GL10 gl) {
-	    if (clipsToBounds) {
-	        gl.glDisable(GL10.GL_SCISSOR_TEST);
-	    }
-	}
+//	public void afterDraw(GL10 gl) {
+//	    if (clipsToBounds) {
+//	        gl.glDisable(GL10.GL_SCISSOR_TEST);
+//	    }
+//	}
 
-	@Override
-    public void visit(GL10 gl) {
-        if (!visible_)
-            return;
-        
-        beforeDraw(gl);
-        super.visit(gl);
-        afterDraw(gl);
-    }
+//	@Override
+//    public void visit(GL10 gl) {
+//        if (!visible_)
+//            return;
+//        
+//        beforeDraw(gl);
+//        super.visit(gl);
+//        afterDraw(gl);
+//    }
 
     
     //
@@ -358,33 +361,37 @@ public class CCScrollView extends CCLayer{
         }
         CGRect frame;
         
-        frame = CGRect.make(getPosition().x, getPosition().y, viewSize.width, viewSize.height);
+        frame = CGRect.make(0, 0, viewSize.width, viewSize.height);
         //dispatcher does not know about clipping. reject touches outside visible bounds.
-        CGPoint touch = container_.convertTouchToNodeSpace(event);
-        if (touches_.size() > 2 ||
-            touchMoved_          ||
-            !CGRect.containsPoint(frame, container_.convertToWorldSpace(touch.x, touch.y))) {
+        CGPoint touch = convertTouchToNodeSpace(event);
+//        if (touches_.size() > 2 ||
+//            touchMoved_          ||
+//            !CGRect.containsPoint(frame, container_.convertToWorldSpace(touch.x, touch.y))) {
+        if(!CGRect.containsPoint(frame, touch)) {
+            touchPoint_ = CGPoint.ccp(-1.0f, -1.0f); 
+            isDragging_ = false;
             return false;
         }
     	
-        if (!touches_.contains(event)) {
-            touches_.add(event);
-        }
-        if (touches_.size() == 1) { // scrolling
-            touchPoint_     = convertTouchToNodeSpace(event);
+//        if (!touches_.contains(event)) {
+//            touches_.add(event);
+//        }
+//        if (touches_.size() == 1) { // scrolling
+            touchPoint_     = touch;// convertTouchToNodeSpace(event);
             touchMoved_     = false;
             isDragging_     = true; //dragging started
             scrollDistance_ = CGPoint.ccp(0.0f, 0.0f);
             touchLength_    = 0.0f;
-        } else if (touches_.size() == 2) {
-            /*
-        	touchPoint_  = CGPoint.ccpMidpoint(convertTouchToNodeSpace(touches_.get(0)),
-                                       convertTouchToNodeSpace(touches_.get(1));
-        	touchLength_  = CGPoint.ccpDistance(convertTouchToNodeSpace(touches_.get(0)),
-                                       convertTouchToNodeSpace(touches_.get(1));
-            */
-            isDragging_  = false;
-        } 
+            
+//        } else if (touches_.size() == 2) {
+//            /*
+//        	touchPoint_  = CGPoint.ccpMidpoint(convertTouchToNodeSpace(touches_.get(0)),
+//                                       convertTouchToNodeSpace(touches_.get(1));
+//        	touchLength_  = CGPoint.ccpDistance(convertTouchToNodeSpace(touches_.get(0)),
+//                                       convertTouchToNodeSpace(touches_.get(1));
+//            */
+//            isDragging_  = false;
+//        } 
         
         return true;
     }
@@ -394,19 +401,20 @@ public class CCScrollView extends CCLayer{
 	    if (!getVisible() || isScrollLock) {
 	        return false;
 	    }
-	    if (touches_.contains(event)) {
-	        if (touches_.size() == 1 && isDragging_) { // scrolling
+        touchMoved_  = true;
+//	    if (touches_.contains(event)) {
+	     //   if (touches_.size() == 1 && isDragging_) { // scrolling
+	    	 if (isDragging_) { // scrolling
 	            CGPoint moveDistance, newPoint;
 	            CGRect  frame;
 	            float newX, newY;
 	            
-	            touchMoved_  = true;
-	            frame        = CGRect.make(getPosition().x, getPosition().y, viewSize.width, viewSize.height);
-	            newPoint     = convertTouchToNodeSpace(touches_.get(0));
+	            frame        = CGRect.make(0, 0, viewSize.width, viewSize.height);
+	            newPoint     = convertTouchToNodeSpace(event);
 	            moveDistance = CGPoint.ccpSub(newPoint, touchPoint_);
 	            touchPoint_  = newPoint;
 	            
-	            if (CGRect.containsPoint(frame, convertToWorldSpace(newPoint.x, newPoint.y))) {
+	            if (CGRect.containsPoint(frame, newPoint)) {
 	                switch (direction) {
 	                    case CCScrollViewDirectionVertical:
 	                        moveDistance = CGPoint.ccp(0.0f, moveDistance.y);
@@ -430,13 +438,14 @@ public class CCScrollView extends CCLayer{
 	            }
 	            
 	            return false;
-	        } else if (touches_.size() == 2 && !isDragging_) {
+	        } 
+	    	 //else if (touches_.size() == 2 && !isDragging_) {
 				//touchMoved_ = true;
 	            //const CGFloat len = ccpDistance([container_ convertTouchToNodeSpace:[touches_ objectAtIndex:0]],
 	            //                                [container_ convertTouchToNodeSpace:[touches_ objectAtIndex:1]]);
 	            //[self setZoomScale:self.zoomScale*len/touchLength_];
-	        }
-	    }
+	    //    }
+//	    }
 	    
 	    return true;
     }
@@ -447,15 +456,16 @@ public class CCScrollView extends CCLayer{
             return false;
         }
         //if (touches_.contains(event)) {
-            if (touches_.size() == 1 && touchMoved_) {
+   //         if (touches_.size() == 1 && touchMoved_) {
+        	if (touchMoved_) {
                 schedule("deaccelerateScrolling");
             }
-            touches_.clear();
+//            touches_.clear();
         //} 
-        if (touches_.size() == 0) {
+//        if (touches_.size() == 0) {
             isDragging_ = false;    
             touchMoved_ = false;
-        }
+//        }
         
         return true;
     }
@@ -465,11 +475,11 @@ public class CCScrollView extends CCLayer{
 	    if (!getVisible()) {
 	        return false;
 	    }
-	    touches_.remove(event); 
-	    if (touches_.size() == 0) {
-	        isDragging_ = false;    
-	        touchMoved_ = false;
-	    }
+//	    touches_.remove(event); 
+	 //   if (touches_.size() == 0) {
+	     isDragging_ = false;    
+	     touchMoved_ = false;
+	 //   }
 	    
 	    return true;
     }

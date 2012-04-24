@@ -75,7 +75,7 @@ public class CCTableView extends CCScrollView implements CCScrollViewDelegate{
     
     public CCTableView(CGSize size, CCNode container)
     {
-    	super(size, container);
+    	super(size);
     	
         m_cellsUsed         = new ArrayList<CCTableViewCell>();
         m_cellsFreed        = new ArrayList<CCTableViewCell>();
@@ -455,7 +455,8 @@ public class CCTableView extends CCScrollView implements CCScrollViewDelegate{
             return false;
         }
         
-        if (touches_.size() == 1 && !touchMoved_) {
+      //  if (touches_.size() == 1 && !touchMoved_) {
+        if (!touchMoved_) {
             int		          index;
             CCTableViewCell   cell;
             CGPoint           point;
