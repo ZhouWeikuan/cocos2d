@@ -19,6 +19,7 @@ import org.cocos2d.types.CGPoint;
 import org.cocos2d.types.CGRect;
 import org.cocos2d.types.CGSize;
 import org.cocos2d.types.ccColor3B;
+import org.cocos2d.utils.ContentHelper;
 import org.cocos2d.utils.collections.IntMap;
 import org.cocos2d.utils.javolution.TextBuilder;
 
@@ -154,7 +155,7 @@ public class CCBitmapFontAtlas extends CCSpriteSheet implements CCLabelProtocol,
         public void parseConfigFile(String fntFile) {	
         	InputStream in = null;
 			try {
-				in = CCDirector.theApp.getAssets().open(fntFile);
+				in = ContentHelper.sharedHelper().openInputStream(fntFile);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
