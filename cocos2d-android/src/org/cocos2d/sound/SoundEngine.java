@@ -61,7 +61,10 @@ public class SoundEngine {
     	soundsVolume = volume;
     	for (Entry<MediaPlayer> each : soundsMap)
     	{
-    		each.getValue().setVolume(soundsVolume, soundsVolume);
+    		MediaPlayer mp = each.getValue();
+    		if(mp != null) {
+    			mp.setVolume(soundsVolume, soundsVolume);
+    		}
     	}
     }
     
