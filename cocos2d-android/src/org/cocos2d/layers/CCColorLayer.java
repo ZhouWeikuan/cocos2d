@@ -2,6 +2,7 @@ package org.cocos2d.layers;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.nio.FloatBuffer;
 
 import javax.microedition.khronos.opengles.GL10;
 
@@ -13,7 +14,6 @@ import org.cocos2d.types.CGSize;
 import org.cocos2d.types.ccBlendFunc;
 import org.cocos2d.types.ccColor3B;
 import org.cocos2d.types.ccColor4B;
-import org.cocos2d.utils.FastFloatBuffer;
 
 //
 // CCColorLayer
@@ -33,8 +33,8 @@ public class CCColorLayer extends CCLayer
     /** BlendFunction. Conforms to CCBlendProtocol protocol */
 	protected ccBlendFunc	blendFunc_;
 
-    private FastFloatBuffer squareVertices_;
-    private FastFloatBuffer squareColors_;
+    private FloatBuffer squareVertices_;
+    private FloatBuffer squareColors_;
 
     /** creates a CCLayer with color. Width and height are the window size. */
     public static CCColorLayer node(ccColor4B color) {
@@ -61,11 +61,11 @@ public class CCColorLayer extends CCLayer
     protected void init(ccColor4B color, float w, float h) {
         ByteBuffer vbb = ByteBuffer.allocateDirect(4 * 2 * 4);
         vbb.order(ByteOrder.nativeOrder());
-        squareVertices_ = FastFloatBuffer.createBuffer(vbb);
+        squareVertices_ = vbb.asFloatBuffer();
 
         ByteBuffer sbb = ByteBuffer.allocateDirect(4 * 4 * 4);
         sbb.order(ByteOrder.nativeOrder());
-        squareColors_ = FastFloatBuffer.createBuffer(sbb);
+        squareColors_ = sbb.asFloatBuffer();
 
         color_ = new ccColor3B(color.r, color.g, color.b);
         opacity_ = color.a;
@@ -107,8 +107,8 @@ public class CCColorLayer extends CCLayer
         gl.glDisableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
         gl.glDisable(GL10.GL_TEXTURE_2D);
 
-        gl.glVertexPointer(2, GL10.GL_FLOAT, 0, squareVertices_.bytes);
-        gl.glColorPointer(4, GL10.GL_FLOAT, 0, squareColors_.bytes);
+        gl.glVertexPointer(2, GL10.GL_FLOAT, 0, squareVertices_);
+        gl.glColorPointer(4, GL10.GL_FLOAT, 0, squareColors_);
 
         boolean newBlend = false;
         if (blendFunc_.src != ccConfig.CC_BLEND_SRC || blendFunc_.dst != ccConfig.CC_BLEND_DST) {

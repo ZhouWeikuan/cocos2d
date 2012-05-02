@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
 
 import javax.microedition.khronos.opengles.GL10;
@@ -37,39 +38,39 @@ public class BufferProvider {
 		}
 	}
 	
-    public static void drawQuads(GL10 gl, FastFloatBuffer fbVert, FastFloatBuffer fbCoord) {
+    public static void drawQuads(GL10 gl, FloatBuffer fbVert, FloatBuffer fbCoord) {
         fbVert.position(0);
         fbCoord.position(0);
 
         gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
         gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
-        gl.glVertexPointer(3, GL10.GL_FLOAT, 0, fbVert.bytes);
-        gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, fbCoord.bytes);
+        gl.glVertexPointer(3, GL10.GL_FLOAT, 0, fbVert);
+        gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, fbCoord);
         gl.glDrawArrays(GL10.GL_TRIANGLE_STRIP, 0, 4);
         gl.glDisableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
         gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
 
     }
 
-    public static void fillFloatBuffer(FastFloatBuffer fb, float[] arr) {
+    public static void fillFloatBuffer(FloatBuffer fb, float[] arr) {
         fb.position(0);
         fb.put(arr);
     }
 
-    public static FastFloatBuffer makeFloatBuffer(float[] arr) {
+    public static FloatBuffer makeFloatBuffer(float[] arr) {
         ByteBuffer bb = BufferProvider.allocateDirect(arr.length * 4);
         bb.order(ByteOrder.nativeOrder());
-        FastFloatBuffer fb = FastFloatBuffer.createBuffer(bb);
+        FloatBuffer fb = bb.asFloatBuffer();
         fb.put(arr);
         fb.position(0);
         return fb;
     }
 
-    public static FastFloatBuffer createFloatBuffer(int arrayElementCount) {
+    public static FloatBuffer createFloatBuffer(int arrayElementCount) {
         ByteBuffer temp = BufferProvider.allocateDirect(4 * arrayElementCount);
         temp.order(ByteOrder.nativeOrder());
         
-        return FastFloatBuffer.createBuffer(temp);
+        return temp.asFloatBuffer();
     }
     
     public static ByteBuffer createByteBuffer(int arrayElementCount) {

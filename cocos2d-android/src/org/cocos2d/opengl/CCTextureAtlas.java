@@ -7,6 +7,7 @@ import static javax.microedition.khronos.opengles.GL10.GL_TEXTURE_WRAP_T;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
 
 import javax.microedition.khronos.opengles.GL10;
@@ -17,7 +18,8 @@ import org.cocos2d.types.ccColor4B;
 import org.cocos2d.types.ccQuad2;
 import org.cocos2d.types.ccQuad3;
 import org.cocos2d.utils.CCFormatter;
-import org.cocos2d.utils.FastFloatBuffer;
+
+import com.badlogic.gdx.utils.BufferUtils;
 
 /** A class that implements a Texture Atlas.
  Supported features:
@@ -40,17 +42,17 @@ public class CCTextureAtlas {
     private CCTexture2D texture_;
 
     /** buffers that are going to be rendered */
-    private FastFloatBuffer textureCoordinates;
-    public FastFloatBuffer getTexCoordsBuffer() {
+    private FloatBuffer textureCoordinates;
+    public FloatBuffer getTexCoordsBuffer() {
     	return textureCoordinates;
     }
     
-    private FastFloatBuffer vertexCoordinates;
-    public FastFloatBuffer getVertexBuffer() {
+    private FloatBuffer vertexCoordinates;
+    public FloatBuffer getVertexBuffer() {
     	return vertexCoordinates;
     }
     
-    private FastFloatBuffer colors;
+    private FloatBuffer colors;
     private ShortBuffer indices;
 
     private boolean withColorArray_;
@@ -113,11 +115,11 @@ public class CCTextureAtlas {
 
         ByteBuffer tbb = ByteBuffer.allocateDirect(ccQuad2.size * capacity_ * 4);
         tbb.order(ByteOrder.nativeOrder());
-        textureCoordinates = FastFloatBuffer.createBuffer(tbb);
+        textureCoordinates = tbb.asFloatBuffer();
 
         ByteBuffer vbb = ByteBuffer.allocateDirect(ccQuad3.size * capacity_ * 4);
         vbb.order(ByteOrder.nativeOrder());
-        vertexCoordinates = FastFloatBuffer.createBuffer(vbb);
+        vertexCoordinates = vbb.asFloatBuffer();
 
         ByteBuffer isb = ByteBuffer.allocateDirect(6 * capacity_ * 2);
         isb.order(ByteOrder.nativeOrder());
@@ -136,7 +138,7 @@ public class CCTextureAtlas {
         	// modify by zt: A Texture in TextureAtlas need four colors for four vertices
             ByteBuffer cbb = ByteBuffer.allocateDirect(4 * capacity_ *ccColor4B.size * 4);
             cbb.order(ByteOrder.nativeOrder());
-            colors = FastFloatBuffer.createBuffer(cbb);
+            colors = cbb.asFloatBuffer();
             for (int i = 0; i < 4 * ccColor4B.size * capacity_ * 1; i++) {
                 colors.put(i, 1.0f);
             }
@@ -173,7 +175,7 @@ public class CCTextureAtlas {
      * index must be between 0 and the atlas capacity - 1
      @since v0.8
      */
-    public void updateQuad(FastFloatBuffer texCordBuffer, FastFloatBuffer vertexBuffer, int index) {
+    public void updateQuad(FloatBuffer texCordBuffer, FloatBuffer vertexBuffer, int index) {
         assert (index >= 0 && index < capacity_) : "update quad with texture_: Invalid index";
 
         totalQuads_ = Math.max(index + 1, totalQuads_);
@@ -182,7 +184,7 @@ public class CCTextureAtlas {
         putVertex(vertexBuffer, index);
     }
     
-    public void updateQuad(FastFloatBuffer texCordBuffer, float[] vertexData, int index) {
+    public void updateQuad(FloatBuffer texCordBuffer, float[] vertexData, int index) {
         assert (index >= 0 && index < capacity_) : "update quad with texture_: Invalid index";
 
         totalQuads_ = Math.max(index + 1, totalQuads_);
@@ -217,7 +219,7 @@ public class CCTextureAtlas {
     index must be between 0 and the atlas capacity - 1
     @since v0.8
     */
-    public void insertQuad(FastFloatBuffer texCordBuffer, FastFloatBuffer vertexBuffer, int index) {
+    public void insertQuad(FloatBuffer texCordBuffer, FloatBuffer vertexBuffer, int index) {
         assert (index >= 0 && index < capacity_) : "insert quad with texture_: Invalid index";
 
         totalQuads_++;
@@ -332,14 +334,14 @@ public class CCTextureAtlas {
 
         ByteBuffer tbb = ByteBuffer.allocateDirect(ccQuad2.size * newCapacity * 4);
         tbb.order(ByteOrder.nativeOrder());
-        FastFloatBuffer tmpTexCoords = FastFloatBuffer.createBuffer(tbb);
+        FloatBuffer tmpTexCoords = tbb.asFloatBuffer();
         tmpTexCoords.put(textureCoordinates);
         textureCoordinates = tmpTexCoords;
         textureCoordinates.position(0);
 
         ByteBuffer vbb = ByteBuffer.allocateDirect(ccQuad3.size * newCapacity * 4);
         vbb.order(ByteOrder.nativeOrder());
-        FastFloatBuffer tmpVertexCoords = FastFloatBuffer.createBuffer(vbb);
+        FloatBuffer tmpVertexCoords = vbb.asFloatBuffer();
         tmpVertexCoords.put(vertexCoordinates);
         vertexCoordinates = tmpVertexCoords;
         vertexCoordinates.position(0);
@@ -356,7 +358,7 @@ public class CCTextureAtlas {
         if (withColorArray_) {
             ByteBuffer cbb = ByteBuffer.allocateDirect(4*ccColor4B.size * newCapacity * 4);
             cbb.order(ByteOrder.nativeOrder());
-            FastFloatBuffer tmpColors = FastFloatBuffer.createBuffer(cbb);
+            FloatBuffer tmpColors = cbb.asFloatBuffer();
             tmpColors.put(colors);
             colors = tmpColors;
             colors.position(0);
@@ -383,11 +385,11 @@ public class CCTextureAtlas {
         gl.glTexParameterx(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
         gl.glTexParameterx(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-        gl.glVertexPointer(3, GL10.GL_FLOAT, 0, vertexCoordinates.bytes);
-        gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, textureCoordinates.bytes);
+        gl.glVertexPointer(3, GL10.GL_FLOAT, 0, vertexCoordinates);
+        gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, textureCoordinates);
 
         if (withColorArray_)
-            gl.glColorPointer(4, GL10.GL_FLOAT, 0, colors.bytes);
+            gl.glColorPointer(4, GL10.GL_FLOAT, 0, colors);
 
         if (ccConfig.CC_TEXTURE_ATLAS_USE_TRIANGLE_STRIP) {
         	gl.glDrawElements(GL10.GL_TRIANGLE_STRIP, n * 6, GL10.GL_UNSIGNED_SHORT, indices);
@@ -397,7 +399,7 @@ public class CCTextureAtlas {
 
     }
     
-    private float[] getTexCoords(FastFloatBuffer src, int index) {
+    private float[] getTexCoords(FloatBuffer src, int index) {
         float[] quadT = new float[ccQuad2.size];
         final int base = index * ccQuad2.size;
         for (int i = 0; i < ccQuad2.size; i++) {
@@ -406,44 +408,55 @@ public class CCTextureAtlas {
         return quadT;
     }
 
-    protected void putTexCoords(FastFloatBuffer dst, ccQuad2 quadT, int index) {
+    protected void putTexCoords(FloatBuffer dst, ccQuad2 quadT, int index) {
     	final int base = index * ccQuad2.size;
     	dst.position(base);
     	
-    	dst.put(quadT.tl_x);
-    	dst.put(quadT.tl_y);
-    	dst.put(quadT.tr_x);
-    	dst.put(quadT.tr_y);
-    	dst.put(quadT.bl_x);
-    	dst.put(quadT.bl_y);
-    	dst.put(quadT.br_x);
-    	dst.put(quadT.br_y);
+    	tmpFloatArray[0] = quadT.tl_x; 
+    	tmpFloatArray[1] = quadT.tl_y;
+    	tmpFloatArray[2] = quadT.tr_x;
+    	tmpFloatArray[3] = quadT.tr_y;
+    	tmpFloatArray[4] = quadT.bl_x;
+    	tmpFloatArray[5] = quadT.bl_y;
+    	tmpFloatArray[6] = quadT.br_x;
+    	tmpFloatArray[7] = quadT.br_y;
+    	org.cocos2d.utils.BufferUtils.copyFloats(tmpFloatArray, 0, dst, 8);
+//    	dst.put(quadT.tl_x);
+//    	dst.put(quadT.tl_y);
+//    	dst.put(quadT.tr_x);
+//    	dst.put(quadT.tr_y);
+//    	dst.put(quadT.bl_x);
+//    	dst.put(quadT.bl_y);
+//    	dst.put(quadT.br_x);
+//    	dst.put(quadT.br_y);
     	
         dst.position(0);
     }
     
-    protected void putTexCoords(FastFloatBuffer dst, float[] quadT, int index) {
+    protected void putTexCoords(FloatBuffer dst, float[] quadT, int index) {
     	final int base = index * ccQuad2.size;
     	dst.position(base);
-    	dst.put(quadT);
+    	org.cocos2d.utils.BufferUtils.copyFloats(quadT, 0, dst, quadT.length);
+//    	dst.put(quadT);
         dst.position(0);
     }
     
-    public void putTexCoords(FastFloatBuffer src, int index) {
+    public void putTexCoords(FloatBuffer src, int index) {
     	final int base = index * ccQuad2.size;
     	textureCoordinates.position(base);
     	
+    	BufferUtils.copy(src, textureCoordinates, src.capacity());
     	// if textureCoordinates.put(src) then allocation is performed
     	// this solution not efficient may be, need to find best way for copy Buffers
-    	int num = src.capacity();
-    	for(int i = 0; i < num; i++)
-    		textureCoordinates.put(src.get());
+//    	int num = src.capacity();
+//    	for(int i = 0; i < num; i++)
+//    		textureCoordinates.put(src.get());
     	
     	src.position(0);
     	textureCoordinates.position(0);
     }
 
-    protected void putVertex(FastFloatBuffer src, int index) {
+    protected void putVertex(FloatBuffer src, int index) {
     	final int base = index * ccQuad3.size;
     	vertexCoordinates.position(base);
     	vertexCoordinates.put(src);
@@ -452,7 +465,7 @@ public class CCTextureAtlas {
         vertexCoordinates.position(0);
     }
     
-    private float[] getVertex(FastFloatBuffer src, int index) {
+    private float[] getVertex(FloatBuffer src, int index) {
         float[] quadV = new float[ccQuad3.size];
         final int base = index * ccQuad3.size;
         for (int i = 0; i < ccQuad3.size; i++) {
@@ -461,36 +474,39 @@ public class CCTextureAtlas {
         return quadV;
     }
     
-    public void putVertex(FastFloatBuffer dst, ccQuad3 quadV, int index) {
+    private static float[] tmpFloatArray = new float[12];
+    
+    public void putVertex(FloatBuffer dst, ccQuad3 quadV, int index) {
+    	
+    	tmpFloatArray[0] = quadV.bl_x; 
+    	tmpFloatArray[1] = quadV.bl_y;
+    	tmpFloatArray[2] = quadV.bl_z;
+    	tmpFloatArray[3] = quadV.br_x;
+    	tmpFloatArray[4] = quadV.br_y;
+    	tmpFloatArray[5] = quadV.br_z;
+    	tmpFloatArray[6] = quadV.tl_x;
+    	tmpFloatArray[7] = quadV.tl_y;
+    	tmpFloatArray[8] = quadV.tl_z;
+    	tmpFloatArray[9] = quadV.tr_x;
+    	tmpFloatArray[10] = quadV.tr_y;
+    	tmpFloatArray[11] = quadV.tr_z;
+    			
     	final int base = index * ccQuad3.size;
-    	
     	dst.position(base);
-
-    	dst.put(quadV.bl_x);
-    	dst.put(quadV.bl_y);
-    	dst.put(quadV.bl_z);
-    	dst.put(quadV.br_x);
-    	dst.put(quadV.br_y);
-    	dst.put(quadV.br_z);
-    	dst.put(quadV.tl_x);
-    	dst.put(quadV.tl_y);
-    	dst.put(quadV.tl_z);
-    	dst.put(quadV.tr_x);
-    	dst.put(quadV.tr_y);
-    	dst.put(quadV.tr_z);
-    	
+    	org.cocos2d.utils.BufferUtils.copyFloats(tmpFloatArray, 0, dst, 12);
         dst.position(0);
     }
     
-    public void putVertex(FastFloatBuffer dst, float[] quadV, int index) {
+    public void putVertex(FloatBuffer dst, float[] quadV, int index) {
     	final int base = index * ccQuad3.size;
     	
     	dst.position(base);
-    	dst.put(quadV);
+    	org.cocos2d.utils.BufferUtils.copyFloats(quadV, 0, dst, quadV.length);
+//    	dst.put(quadV);
         dst.position(0);
     }
 
-    private ccColor4B [] getColor(FastFloatBuffer src, int index) {
+    private ccColor4B [] getColor(FloatBuffer src, int index) {
     	ccColor4B [] color = new ccColor4B[4];
         
         for(int j=0; j<4; ++j) {
@@ -503,7 +519,7 @@ public class CCTextureAtlas {
         return color;
     }
 
-    private void putColor(FastFloatBuffer dst, ccColor4B color[], int index) {
+    private void putColor(FloatBuffer dst, ccColor4B color[], int index) {
     	for(int j=0; j<4; ++j) {
     		dst.put(index * ccColor4B.size * 4 + 4*j + 0, color[j].r/255.f);
     		dst.put(index * ccColor4B.size * 4 + 4*j + 1, color[j].g/255.f);
@@ -513,7 +529,7 @@ public class CCTextureAtlas {
     	dst.position(0);
     }
 
-    private void arraycopyTexture(FastFloatBuffer src, int srcPos, FastFloatBuffer dst, int dstPos, int length) {
+    private void arraycopyTexture(FloatBuffer src, int srcPos, FloatBuffer dst, int dstPos, int length) {
         if (src == dst) {
             memmoveFloat(src, srcPos * ccQuad2.size, dst, dstPos * ccQuad2.size, length * ccQuad2.size);
         } else {
@@ -521,7 +537,7 @@ public class CCTextureAtlas {
         }
     }
 
-    private void arraycopyVertex(FastFloatBuffer src, int srcPos, FastFloatBuffer dst, int dstPos, int length) {
+    private void arraycopyVertex(FloatBuffer src, int srcPos, FloatBuffer dst, int dstPos, int length) {
         if (src == dst) {
             memmoveFloat(src, srcPos * ccQuad3.size, dst, dstPos * ccQuad3.size, length * ccQuad3.size);
         } else {
@@ -529,7 +545,7 @@ public class CCTextureAtlas {
         }
     }
 
-    private void arraycopyColor(FastFloatBuffer src, int srcPos, FastFloatBuffer dst, int dstPos, int length) {
+    private void arraycopyColor(FloatBuffer src, int srcPos, FloatBuffer dst, int dstPos, int length) {
         if (src == dst) {
             memmoveFloat(src, srcPos * ccColor4B.size * 4, dst, dstPos * ccColor4B.size*4, length * ccColor4B.size * 4);
         } else {
@@ -537,7 +553,7 @@ public class CCTextureAtlas {
         }
     }
 
-    private void memmoveFloat(FastFloatBuffer src, int from, FastFloatBuffer dst, int to, int size) {
+    private void memmoveFloat(FloatBuffer src, int from, FloatBuffer dst, int to, int size) {
         if (to < from) {
             memcopyFloat(src, from, dst, to, size);
         } else {
@@ -547,10 +563,13 @@ public class CCTextureAtlas {
         }
     }
 
-    private void memcopyFloat(FastFloatBuffer src, int from, FastFloatBuffer dst, int to, int size) {
-        for (int i = 0; i < size; i++) {
-            dst.put(i + to, src.get(i + from));
-        }
+    private void memcopyFloat(FloatBuffer src, int from, FloatBuffer dst, int to, int size) {
+    	src.position(from);
+    	dst.position(to);
+    	BufferUtils.copy(src, dst, size);
+//        for (int i = 0; i < size; i++) {
+//            dst.put(i + to, src.get(i + from));
+//        }
     }
 
     public static void memmoveByte(ByteBuffer src, int from, ByteBuffer dst, int to, int size) {
@@ -564,9 +583,12 @@ public class CCTextureAtlas {
     }
 
     public static void memcopyByte(ByteBuffer src, int from, ByteBuffer dst, int to, int size) {
-        for (int i = 0; i < size; i++) {
-            dst.put(i + to, src.get(i + from));
-        }
+    	src.position(from);
+    	dst.position(to);
+    	BufferUtils.copy(src, dst, size);
+//        for (int i = 0; i < size; i++) {
+//            dst.put(i + to, src.get(i + from));
+//        }
     }
 
 }

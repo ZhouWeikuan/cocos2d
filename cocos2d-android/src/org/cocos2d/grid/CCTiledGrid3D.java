@@ -2,6 +2,7 @@ package org.cocos2d.grid;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
 
 import javax.microedition.khronos.opengles.GL10;
@@ -9,7 +10,6 @@ import javax.microedition.khronos.opengles.GL10;
 import org.cocos2d.types.ccGridSize;
 import org.cocos2d.types.ccQuad2;
 import org.cocos2d.types.ccQuad3;
-import org.cocos2d.utils.FastFloatBuffer;
 
 
 /**
@@ -18,9 +18,9 @@ import org.cocos2d.utils.FastFloatBuffer;
 */
 
 public class CCTiledGrid3D extends CCGridBase {
-    FastFloatBuffer texCoordinates;
-    FastFloatBuffer vertices;
-    FastFloatBuffer originalVertices;
+    FloatBuffer texCoordinates;
+    FloatBuffer vertices;
+    FloatBuffer originalVertices;
     ShortBuffer indices;
 
     public static CCTiledGrid3D make(ccGridSize gSize) {
@@ -40,8 +40,8 @@ public class CCTiledGrid3D extends CCGridBase {
     	// Unneeded states: GL_COLOR_ARRAY
         gl.glDisableClientState(GL10.GL_COLOR_ARRAY);
 
-        gl.glVertexPointer(3, GL10.GL_FLOAT, 0, vertices.bytes);
-        gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, texCoordinates.bytes);
+        gl.glVertexPointer(3, GL10.GL_FLOAT, 0, vertices);
+        gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, texCoordinates);
         gl.glDrawElements(GL10.GL_TRIANGLES, n * 6, GL10.GL_UNSIGNED_SHORT, indices);
 
         gl.glEnableClientState(GL10.GL_COLOR_ARRAY);
@@ -130,15 +130,15 @@ public class CCTiledGrid3D extends CCGridBase {
 
         ByteBuffer vfb = ByteBuffer.allocateDirect(ccQuad3.size * numQuads * 4);
         vfb.order(ByteOrder.nativeOrder());
-        vertices = FastFloatBuffer.createBuffer(vfb);
+        vertices = vfb.asFloatBuffer();
 
         ByteBuffer ofb = ByteBuffer.allocateDirect(ccQuad3.size * numQuads * 4);
         ofb.order(ByteOrder.nativeOrder());
-        originalVertices = FastFloatBuffer.createBuffer(ofb);
+        originalVertices = ofb.asFloatBuffer();
 
         ByteBuffer tfb = ByteBuffer.allocateDirect(ccQuad2.size * numQuads * 4);
         tfb.order(ByteOrder.nativeOrder());
-        texCoordinates = FastFloatBuffer.createBuffer(tfb);
+        texCoordinates = tfb.asFloatBuffer();
 
         ByteBuffer isb = ByteBuffer.allocateDirect(6 * numQuads * 2);
         isb.order(ByteOrder.nativeOrder());
