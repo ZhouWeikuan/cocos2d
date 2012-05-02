@@ -1,5 +1,6 @@
 package org.cocos2d.nodes;
 
+import java.nio.FloatBuffer;
 import java.util.Arrays;
 import java.util.HashMap;
 
@@ -18,7 +19,8 @@ import org.cocos2d.types.CGSize;
 import org.cocos2d.types.ccBlendFunc;
 import org.cocos2d.types.ccColor3B;
 import org.cocos2d.types.ccColor4B;
-import org.cocos2d.utils.FastFloatBuffer;
+import org.cocos2d.utils.BufferProvider;
+import org.cocos2d.utils.BufferUtils;
 
 import android.graphics.Bitmap;
 
@@ -191,31 +193,31 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
 	// vertex coords, texture coords and color info
     /** buffers that are going to be rendered */
     /** the quad (tex coords, vertex coords and color) information */
-    private FastFloatBuffer texCoords;
+    private FloatBuffer texCoords;
     public float[] getTexCoordsArray() {
     	float ret[] = new float[texCoords.limit()];
     	texCoords.get(ret, 0, texCoords.limit());
     	return ret;
     }
     
-    private FastFloatBuffer vertexes;
+    private FloatBuffer vertexes;
     public float[] getVertexArray() {
     	float ret[] = new float[vertexes.limit()];
     	vertexes.get(ret, 0, vertexes.limit());
     	return ret;
     }
     
-    public FastFloatBuffer getTexCoords() {
+    public FloatBuffer getTexCoords() {
     	texCoords.position(0);
     	return texCoords;
     }
     
-    public FastFloatBuffer getVertices() {
+    public FloatBuffer getVertices() {
     	vertexes.position(0);
     	return vertexes;
     }
     
-    private FastFloatBuffer colors;
+    private FloatBuffer colors;
 
 	// whether or not it's parent is a CCSpriteSheet
     /** whether or not the Sprite is rendered using a CCSpriteSheet */
@@ -463,18 +465,31 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
         float y2 = y1 + rect_.size.height;
 
         vertexes.position(0);
-        vertexes.put(x1);
-        vertexes.put(y2);
-        vertexes.put(0);
-        vertexes.put(x1);
-        vertexes.put(y1);
-        vertexes.put(0);
-        vertexes.put(x2);
-        vertexes.put(y2);
-        vertexes.put(0);
-        vertexes.put(x2);
-        vertexes.put(y1);
-        vertexes.put(0);
+        tmpV[0] = x1;
+        tmpV[1] = y2;
+        tmpV[2] = 0;
+        tmpV[3] = x1;
+        tmpV[4] = y1;
+        tmpV[5] = 0;
+        tmpV[6] = x2;
+        tmpV[7] = y2;
+        tmpV[8] = 0;
+        tmpV[9] = x2;
+        tmpV[10] = y1;
+        tmpV[11] = 0;
+        BufferUtils.copyFloats(tmpV, 0, vertexes, 12);
+//        vertexes.put(x1);
+//        vertexes.put(y2);
+//        vertexes.put(0);
+//        vertexes.put(x1);
+//        vertexes.put(y1);
+//        vertexes.put(0);
+//        vertexes.put(x2);
+//        vertexes.put(y2);
+//        vertexes.put(0);
+//        vertexes.put(x2);
+//        vertexes.put(y1);
+//        vertexes.put(0);
         vertexes.position(0);
     }
 
@@ -488,9 +503,9 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
     }
 
     protected void init() {
-        texCoords = new FastFloatBuffer(4 * 2);
-        vertexes  = new FastFloatBuffer(4 * 3);
-        colors    = new FastFloatBuffer(4 * 4);
+        texCoords = BufferProvider.createFloatBuffer(4 * 2);
+        vertexes  = BufferProvider.createFloatBuffer(4 * 3);
+        colors    = BufferProvider.createFloatBuffer(4 * 4);
     	
 		dirty_ = false;
         recursiveDirty_ = false;
@@ -610,7 +625,7 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
         if( usesSpriteSheet_ ) {
             if( atlasIndex != CCSpriteIndexNotInitialized) {
             	tmpColor4B.r = color_.r; tmpColor4B.g = color_.g; tmpColor4B.b = color_.b; tmpColor4B.a = opacity_;
-		textureAtlas_.updateColor(tmpColors, atlasIndex);
+            	textureAtlas_.updateColor(tmpColors, atlasIndex);
             	
             } else {
                 // no need to set it recursively
@@ -736,18 +751,31 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
 
             // Don't update Z.
             vertexes.position(0);
-            vertexes.put(x1);
-            vertexes.put(y2);
-            vertexes.put(0);
-            vertexes.put(x1);
-            vertexes.put(y1);
-            vertexes.put(0);
-            vertexes.put(x2);
-            vertexes.put(y2);
-            vertexes.put(0);
-            vertexes.put(x2);
-            vertexes.put(y1);
-            vertexes.put(0);
+            tmpV[0] = x1;
+            tmpV[1] = y2;
+            tmpV[2] = 0;
+            tmpV[3] = x1;
+            tmpV[4] = y1;
+            tmpV[5] = 0;
+            tmpV[6] = x2;
+            tmpV[7] = y2;
+            tmpV[8] = 0;
+            tmpV[9] = x2;
+            tmpV[10] = y1;
+            tmpV[11] = 0;
+            BufferUtils.copyFloats(tmpV, 0, vertexes, 12);
+//            vertexes.put(x1);
+//            vertexes.put(y2);
+//            vertexes.put(0);
+//            vertexes.put(x1);
+//            vertexes.put(y1);
+//            vertexes.put(0);
+//            vertexes.put(x2);
+//            vertexes.put(y2);
+//            vertexes.put(0);
+//            vertexes.put(x2);
+//            vertexes.put(y1);
+//            vertexes.put(0);
             vertexes.position(0);
         }
     }
@@ -902,15 +930,15 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
 
         // vertex
         // int diff = offsetof( ccV3F_C4B_T2F, vertices);
-        gl.glVertexPointer(3, GL10.GL_FLOAT, 0 , vertexes.bytes);
+        gl.glVertexPointer(3, GL10.GL_FLOAT, 0 , vertexes);
 
         // color
         // diff = offsetof( ccV3F_C4B_T2F, colors);
-        gl.glColorPointer(4, GL10.GL_FLOAT, 0, colors.bytes);
+        gl.glColorPointer(4, GL10.GL_FLOAT, 0, colors);
 
         // tex coords
         // diff = offsetof( ccV3F_C4B_T2F, texCoords);
-        gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, texCoords.bytes);
+        gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, texCoords);
 
         gl.glDrawArrays(GL10.GL_TRIANGLE_STRIP, 0, 4);
 
@@ -957,14 +985,25 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
 	            right = tmp;
 	        }
 	
-	        texCoords.put(0, right); // tl u
-	        texCoords.put(1, top); // tl v
-	        texCoords.put(2, left); // bl u
-	        texCoords.put(3, top); // bl v   
-	        texCoords.put(4, right); // tr u
-	        texCoords.put(5, bottom); // tr v
-	        texCoords.put(6, left); // br u
-	        texCoords.put(7, bottom); // br v
+	        tmpV[0] = right;
+	        tmpV[1] = top; // tl v
+	        tmpV[2] = left; // bl u
+	        tmpV[3] = top; // bl v   
+	        tmpV[4] = right; // tr u
+	        tmpV[5] = bottom; // tr v
+	        tmpV[6] = left; // br u
+	        tmpV[7] = bottom; // br v
+	        
+	        BufferUtils.copyFloats(tmpV, 0, texCoords, 8);
+	        
+//	        texCoords.put(0, right); // tl u
+//	        texCoords.put(1, top); // tl v
+//	        texCoords.put(2, left); // bl u
+//	        texCoords.put(3, top); // bl v   
+//	        texCoords.put(4, right); // tr u
+//	        texCoords.put(5, bottom); // tr v
+//	        texCoords.put(6, left); // br u
+//	        texCoords.put(7, bottom); // br v
         }else
         {
         	float left	= (2*rect.origin.x+1)/(2*atlasWidth);
@@ -984,20 +1023,30 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
 	            bottom = tmp;
 	        }
 	
-	        texCoords.put(0, left); // tl u
-	        texCoords.put(1, top); // tl v
-	        texCoords.put(2, left); // bl u
-	        texCoords.put(3, bottom); // bl v   
-	        texCoords.put(4, right); // tr u
-	        texCoords.put(5, top); // tr v
-	        texCoords.put(6, right); // br u
-	        texCoords.put(7, bottom); // br v
+	        tmpV[0] = left; // tl u
+	        tmpV[1] = top; // tl v
+	        tmpV[2] = left; // bl u
+	        tmpV[3] = bottom; // bl v   
+	        tmpV[4] = right; // tr u
+	        tmpV[5] = top; // tr v
+	        tmpV[6] = right; // br u
+	        tmpV[7] = bottom; // br v
+	        BufferUtils.copyFloats(tmpV, 0, texCoords, 8);
+	        
+//	        texCoords.put(0, left); // tl u
+//	        texCoords.put(1, top); // tl v
+//	        texCoords.put(2, left); // bl u
+//	        texCoords.put(3, bottom); // bl v   
+//	        texCoords.put(4, right); // tr u
+//	        texCoords.put(5, top); // tr v
+//	        texCoords.put(6, right); // br u
+//	        texCoords.put(7, bottom); // br v
         }
         
         texCoords.position(0);
         
         if(usesSpriteSheet_)
-		textureAtlas_.putTexCoords( texCoords, atlasIndex);
+        	textureAtlas_.putTexCoords( texCoords, atlasIndex);
     }
 
     private final static CGAffineTransform tmpMatrix = CGAffineTransform.identity();
@@ -1014,7 +1063,7 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
         // Optimization: if it is not visible, then do nothing
         if( ! visible_ ) {
         	Arrays.fill(tmpV, 0);
-		textureAtlas_.putVertex(textureAtlas_.getVertexBuffer(), tmpV, atlasIndex);
+        	textureAtlas_.putVertex(textureAtlas_.getVertexBuffer(), tmpV, atlasIndex);
             dirty_ = recursiveDirty_ = false;
             return ;
         }

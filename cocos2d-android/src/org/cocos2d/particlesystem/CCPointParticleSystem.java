@@ -1,5 +1,7 @@
 package org.cocos2d.particlesystem;
 
+import java.nio.FloatBuffer;
+
 import javax.microedition.khronos.opengles.GL11;
 
 import org.cocos2d.config.ccConfig;
@@ -8,7 +10,7 @@ import org.cocos2d.nodes.CCDirector;
 import org.cocos2d.types.CGPoint;
 import org.cocos2d.types.ccBlendFunc;
 import org.cocos2d.types.ccPointSprite;
-import org.cocos2d.utils.FastFloatBuffer;
+import org.cocos2d.utils.BufferProvider;
 
 /** CCPointParticleSystem is a subclass of CCParticleSystem
  Attributes of a Particle System:
@@ -24,9 +26,9 @@ import org.cocos2d.utils.FastFloatBuffer;
  */
 public class CCPointParticleSystem extends CCParticleSystem {
 	// Array of (x,y, ccColor4F) 
-	FastFloatBuffer vertices;
+	FloatBuffer vertices;
 	// Array of (size)
-	FastFloatBuffer sizeBuffer;
+	FloatBuffer sizeBuffer;
 
 	// vertices buffer id
 	int	verticesID[];    
@@ -36,18 +38,18 @@ public class CCPointParticleSystem extends CCParticleSystem {
 
         GL11 gl = (GL11) CCDirector.gl;
 
-        vertices = new FastFloatBuffer(numberOfParticles * ccPointSprite.spriteSize);
-        sizeBuffer = new FastFloatBuffer(numberOfParticles);
+        vertices = BufferProvider.createFloatBuffer(numberOfParticles * ccPointSprite.spriteSize);
+        sizeBuffer = BufferProvider.createFloatBuffer(numberOfParticles);
         
         verticesID = new int[2];
         gl.glGenBuffers(2, verticesID, 0);
 
         // initial binding
         gl.glBindBuffer(GL11.GL_ARRAY_BUFFER, verticesID[0]);
-        gl.glBufferData(GL11.GL_ARRAY_BUFFER, ccPointSprite.spriteSize*4*totalParticles, vertices.bytes, GL11.GL_DYNAMIC_DRAW);
+        gl.glBufferData(GL11.GL_ARRAY_BUFFER, ccPointSprite.spriteSize*4*totalParticles, vertices, GL11.GL_DYNAMIC_DRAW);
         
         gl.glBindBuffer(GL11.GL_ARRAY_BUFFER, verticesID[1]);
-        gl.glBufferData(GL11.GL_ARRAY_BUFFER, 4*totalParticles, sizeBuffer.bytes, GL11.GL_DYNAMIC_DRAW);
+        gl.glBufferData(GL11.GL_ARRAY_BUFFER, 4*totalParticles, sizeBuffer, GL11.GL_DYNAMIC_DRAW);
         
         gl.glBindBuffer(GL11.GL_ARRAY_BUFFER, 0);
     }
@@ -78,10 +80,10 @@ public class CCPointParticleSystem extends CCParticleSystem {
     public void postStep() {
     	GL11 gl = (GL11) CCDirector.gl;
         gl.glBindBuffer(GL11.GL_ARRAY_BUFFER, verticesID[0]);
-        gl.glBufferSubData(GL11.GL_ARRAY_BUFFER, 0, ccPointSprite.spriteSize*4*particleCount, vertices.bytes);
+        gl.glBufferSubData(GL11.GL_ARRAY_BUFFER, 0, ccPointSprite.spriteSize*4*particleCount, vertices);
         
         gl.glBindBuffer(GL11.GL_ARRAY_BUFFER, verticesID[1]);
-        gl.glBufferSubData(GL11.GL_ARRAY_BUFFER, 0, 4*particleCount, sizeBuffer.bytes);
+        gl.glBufferSubData(GL11.GL_ARRAY_BUFFER, 0, 4*particleCount, sizeBuffer);
         
         gl.glBindBuffer(GL11.GL_ARRAY_BUFFER, 0);
     }
@@ -109,7 +111,7 @@ public class CCPointParticleSystem extends CCParticleSystem {
 
         gl.glBindBuffer(GL11.GL_ARRAY_BUFFER, verticesID[1]);
         gl.glEnableClientState(GL11.GL_POINT_SIZE_ARRAY_OES);
-        gl.glPointSizePointerOES(GL11.GL_FLOAT, 0, sizeBuffer.bytes); // ccPointSprite.size
+        gl.glPointSizePointerOES(GL11.GL_FLOAT, 0, sizeBuffer); // ccPointSprite.size
 
 
         boolean newBlend = false;

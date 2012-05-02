@@ -27,6 +27,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.badlogic.gdx.physics.box2d.EdgeShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
@@ -167,7 +168,7 @@ public class Box2dTest extends Activity {
             Body groundBody = bxWorld.createBody(bxGroundBodyDef);
 
          // Define the ground box shape.
-            PolygonShape groundBox = new PolygonShape();
+            EdgeShape groundBox = new EdgeShape();
 
             Vector2 bottomLeft = new Vector2(0f,0f);
             Vector2 topLeft = new Vector2(0f,scaledHeight);
@@ -175,19 +176,19 @@ public class Box2dTest extends Activity {
             Vector2 bottomRight = new Vector2(scaledWidth,0f);
             
     		// bottom
-    		groundBox.setAsEdge(bottomLeft, bottomRight);
+    		groundBox.set( bottomLeft, bottomRight );
     		groundBody.createFixture(groundBox,0);
     		
     		// top
-    		groundBox.setAsEdge(topLeft, topRight);
+    		groundBox.set( topLeft, topRight );
     		groundBody.createFixture(groundBox,0);
     		
     		// left
-    		groundBox.setAsEdge(topLeft, bottomLeft);
+    		groundBox.set( topLeft, bottomLeft );
     		groundBody.createFixture(groundBox,0);
     		
     		// right
-    		groundBox.setAsEdge(topRight, bottomRight);
+    		groundBox.set( topRight, bottomRight );
     		groundBody.createFixture(groundBox,0);
                                     
             //Set up sprite

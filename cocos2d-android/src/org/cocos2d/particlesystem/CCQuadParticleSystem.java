@@ -1,6 +1,7 @@
 package org.cocos2d.particlesystem;
 
 import java.lang.ref.WeakReference;
+import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
 
 import javax.microedition.khronos.opengles.GL10;
@@ -17,7 +18,7 @@ import org.cocos2d.types.CGPoint;
 import org.cocos2d.types.CGRect;
 import org.cocos2d.types.ccBlendFunc;
 import org.cocos2d.utils.BufferProvider;
-import org.cocos2d.utils.FastFloatBuffer;
+import org.cocos2d.utils.BufferUtils;
 
 /** CCQuadParticleSystem is a subclass of CCParticleSystem
 
@@ -36,9 +37,9 @@ import org.cocos2d.utils.FastFloatBuffer;
 public class CCQuadParticleSystem extends CCParticleSystem implements Resource {
 	// ccV2F_C4F_T2F_Quad	quads;		// quads to be rendered
 
-	FastFloatBuffer         texCoords;
-	FastFloatBuffer         vertices;
-	FastFloatBuffer         colors;
+	FloatBuffer         texCoords;
+	FloatBuffer         vertices;
+	FloatBuffer         colors;
 
 	ShortBuffer			indices;	// indices
 	int					quadsIDs[];	// VBO id
@@ -69,17 +70,17 @@ public class CCQuadParticleSystem extends CCParticleSystem implements Resource {
 			// for texCoords
 			gl.glBindBuffer(GL11.GL_ARRAY_BUFFER, thisp.quadsIDs[0]);
 			thisp.texCoords.position(0);
-			gl.glBufferData(GL11.GL_ARRAY_BUFFER, thisp.texCoords.capacity() * 4, thisp.texCoords.bytes, GL11.GL_DYNAMIC_DRAW);	
+			gl.glBufferData(GL11.GL_ARRAY_BUFFER, thisp.texCoords.capacity() * 4, thisp.texCoords, GL11.GL_DYNAMIC_DRAW);	
 			
 			// for vertices
 			gl.glBindBuffer(GL11.GL_ARRAY_BUFFER, thisp.quadsIDs[1]);
 			thisp.vertices.position(0);
-			gl.glBufferData(GL11.GL_ARRAY_BUFFER, thisp.vertices.capacity() * 4, thisp.vertices.bytes, GL11.GL_DYNAMIC_DRAW);	
+			gl.glBufferData(GL11.GL_ARRAY_BUFFER, thisp.vertices.capacity() * 4, thisp.vertices, GL11.GL_DYNAMIC_DRAW);	
 			
 			// for colors
 			gl.glBindBuffer(GL11.GL_ARRAY_BUFFER, thisp.quadsIDs[2]);
 			thisp.colors.position(0);
-			gl.glBufferData(GL11.GL_ARRAY_BUFFER, thisp.colors.capacity() * 4, thisp.colors.bytes, GL11.GL_DYNAMIC_DRAW);	
+			gl.glBufferData(GL11.GL_ARRAY_BUFFER, thisp.colors.capacity() * 4, thisp.colors, GL11.GL_DYNAMIC_DRAW);	
 			
 			// restore the elements, arrays
 			gl.glBindBuffer(GL11.GL_ARRAY_BUFFER, 0);
@@ -93,9 +94,9 @@ public class CCQuadParticleSystem extends CCParticleSystem implements Resource {
 
 		// allocating data space
 		// quads = malloc( sizeof(quads[0]) * totalParticles );
-		texCoords	= new FastFloatBuffer(4 * 2 * totalParticles);
-		vertices 	= new FastFloatBuffer(4 * 2 * totalParticles);
-		colors  	= new FastFloatBuffer(4 * 4 * totalParticles);
+		texCoords	= BufferProvider.createFloatBuffer(4 * 2 * totalParticles);
+		vertices 	= BufferProvider.createFloatBuffer(4 * 2 * totalParticles);
+		colors  	= BufferProvider.createFloatBuffer(4 * 4 * totalParticles);
 		
 		indices = BufferProvider.createShortBuffer(totalParticles * 6 );
 
@@ -162,20 +163,31 @@ public class CCQuadParticleSystem extends CCParticleSystem implements Resource {
 		for(int i=0; i<totalParticles; i++) {
 			final int base = i * 8;
 			// bottom-left vertex:
-			texCoords.put(base + 0, bottomLeftX);
-			texCoords.put(base + 1, bottomLeftY);
+			tmpArray[0] = bottomLeftX;
+			tmpArray[1] = bottomLeftY;
+//			texCoords.put(base + 0, bottomLeftX);
+//			texCoords.put(base + 1, bottomLeftY);
 			
 			// bottom-right vertex:
-			texCoords.put(base + 2, bottomRightX);
-			texCoords.put(base + 3, bottomRightY);
+			tmpArray[2] = bottomRightX;
+			tmpArray[3] = bottomRightY;
+//			texCoords.put(base + 2, bottomRightX);
+//			texCoords.put(base + 3, bottomRightY);
 			
 			// top-left vertex:
-			texCoords.put(base + 4, topLeftX);
-			texCoords.put(base + 5, topLeftY);
+			tmpArray[4] = topLeftX;
+			tmpArray[5] = topLeftY;
+//			texCoords.put(base + 4, topLeftX);
+//			texCoords.put(base + 5, topLeftY);
 			
 			// top-right vertex:
-			texCoords.put(base + 6, topRightX);
-			texCoords.put(base + 7, topRightY);
+			tmpArray[6] = topRightX;
+			tmpArray[7] = topRightY;
+//			texCoords.put(base + 6, topRightX);
+//			texCoords.put(base + 7, topRightY);
+			
+			texCoords.position(base);
+			BufferUtils.copyFloats(tmpArray, 0, texCoords, 8);
 		}
 	}
 
@@ -231,15 +243,21 @@ public class CCQuadParticleSystem extends CCParticleSystem implements Resource {
 		}
 	}
 
+	private static float[] tmpArray = new float[16];
+	
 	@Override
 	public void updateQuad(CCParticle p, CGPoint newPos) {
 		// colors
-		for (int i=0; i<4; ++i) {
-			colors.put(particleIdx * 16 + i*4 + 0, p.color.r);
-			colors.put(particleIdx * 16 + i*4 + 1, p.color.g);
-			colors.put(particleIdx * 16 + i*4 + 2, p.color.b);
-			colors.put(particleIdx * 16 + i*4 + 3, p.color.a);
+		for (int i = 0; i < 4; ++i) {
+			int baseIndex = i*4;
+			tmpArray[baseIndex + 0] = p.color.r;
+			tmpArray[baseIndex + 1] = p.color.g;
+			tmpArray[baseIndex + 2] = p.color.b;
+			tmpArray[baseIndex + 3] = p.color.a;
 		}
+		
+		colors.position(particleIdx * 16);
+		BufferUtils.copyFloats(tmpArray, 0, colors, 16);
 
 		// vertices
 		float size_2 = p.size/2;
@@ -264,39 +282,59 @@ public class CCQuadParticleSystem extends CCParticleSystem implements Resource {
 			float dx = x1 * cr - y2 * sr + x;
 			float dy = x1 * sr + y2 * cr + y;
 			
-			final int base = particleIdx * 8;
 			// bottom-left vertex:
-			vertices.put(base + 0, ax);
-			vertices.put(base + 1, ay);
+			tmpArray[0] = ax;
+			tmpArray[1] = ay;
+//			vertices.put(base + 0, ax);
+//			vertices.put(base + 1, ay);
 			
 			// bottom-right vertex:
-			vertices.put(base + 2, bx);
-			vertices.put(base + 3, by);
+			tmpArray[2] = bx;
+			tmpArray[3] = by;
+//			vertices.put(base + 2, bx);
+//			vertices.put(base + 3, by);
 			
 			// top-left vertex:
-			vertices.put(base + 4, dx);
-			vertices.put(base + 5, dy);
+			tmpArray[4] = dx;
+			tmpArray[5] = dy;
+//			vertices.put(base + 4, dx);
+//			vertices.put(base + 5, dy);
 			
 			// top-right vertex:
-			vertices.put(base + 6, cx);
-			vertices.put(base + 7, cy);
+			tmpArray[6] = cx;
+			tmpArray[7] = cy;
+//			vertices.put(base + 6, cx);
+//			vertices.put(base + 7, cy);
+			
+			vertices.position(particleIdx * 8);
+			BufferUtils.copyFloats(tmpArray, 0, vertices, 8);
 		} else {
-			final int base = particleIdx * 8;
 			// bottom-left vertex:
-			vertices.put(base + 0, newPos.x - size_2);
-			vertices.put(base + 1, newPos.y - size_2);
+			tmpArray[0] = newPos.x - size_2;
+			tmpArray[1] = newPos.y - size_2;
+//			vertices.put(base + 0, newPos.x - size_2);
+//			vertices.put(base + 1, newPos.y - size_2);
 			
 			// bottom-right vertex:
-			vertices.put(base + 2, newPos.x + size_2);
-			vertices.put(base + 3, newPos.y - size_2);
+			tmpArray[2] = newPos.x + size_2;
+			tmpArray[3] = newPos.y - size_2;
+//			vertices.put(base + 2, newPos.x + size_2);
+//			vertices.put(base + 3, newPos.y - size_2);
 			
 			// top-left vertex:
-			vertices.put(base + 4, newPos.x - size_2);
-			vertices.put(base + 5, newPos.y + size_2);
+			tmpArray[4] = newPos.x - size_2;
+			tmpArray[5] = newPos.y + size_2;
+//			vertices.put(base + 4, newPos.x - size_2);
+//			vertices.put(base + 5, newPos.y + size_2);
 			
 			// top-right vertex:
-			vertices.put(base + 6, newPos.x + size_2);
-			vertices.put(base + 7, newPos.y + size_2);
+			tmpArray[6] = newPos.x + size_2;
+			tmpArray[7] = newPos.y + size_2;
+//			vertices.put(base + 6, newPos.x + size_2);
+//			vertices.put(base + 7, newPos.y + size_2);
+			
+			vertices.position(particleIdx * 8);
+			BufferUtils.copyFloats(tmpArray, 0, vertices, 8);
 		}
 	}
 
@@ -309,15 +347,18 @@ public class CCQuadParticleSystem extends CCParticleSystem implements Resource {
 
 		// for texCoords
 		gl.glBindBuffer(GL11.GL_ARRAY_BUFFER, quadsIDs[0]);
-		gl.glBufferSubData(GL11.GL_ARRAY_BUFFER, 0, texCoords.capacity() * 4, texCoords.bytes);	
+		texCoords.position(0);
+		gl.glBufferSubData(GL11.GL_ARRAY_BUFFER, 0, texCoords.capacity() * 4, texCoords);	
 		
 		// for vertices
 		gl.glBindBuffer(GL11.GL_ARRAY_BUFFER, quadsIDs[1]);
-		gl.glBufferSubData(GL11.GL_ARRAY_BUFFER, 0, vertices.capacity() * 4, vertices.bytes);	
+		vertices.position(0);
+		gl.glBufferSubData(GL11.GL_ARRAY_BUFFER, 0, vertices.capacity() * 4, vertices);	
 		
 		// for colors
 		gl.glBindBuffer(GL11.GL_ARRAY_BUFFER, quadsIDs[2]);
-		gl.glBufferSubData(GL11.GL_ARRAY_BUFFER, 0, colors.capacity() * 4, colors.bytes);	
+		colors.position(0);
+		gl.glBufferSubData(GL11.GL_ARRAY_BUFFER, 0, colors.capacity() * 4, colors);	
 		
 		// restore the elements, arrays
 		gl.glBindBuffer(GL11.GL_ARRAY_BUFFER, 0);
