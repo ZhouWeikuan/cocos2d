@@ -554,8 +554,11 @@ public class CCTextureAtlas {
     }
 
     private void memmoveFloat(FloatBuffer src, int from, FloatBuffer dst, int to, int size) {
-        if (to < from) {
-            memcopyFloat(src, from, dst, to, size);
+        if ( to < from ) {
+			for (int i = 0; i < size; i++) {
+				dst.put(i + to, src.get(i + from));
+			}
+//            memcopyFloat(src, from, dst, to, size);
         } else {
             for (int i = size - 1; i >= 0; i--) {
                 dst.put(i + to, src.get(i + from));
@@ -573,8 +576,11 @@ public class CCTextureAtlas {
     }
 
     public static void memmoveByte(ByteBuffer src, int from, ByteBuffer dst, int to, int size) {
-        if (to < from) {
-            memcopyByte(src, from, dst, to, size);
+        if ( to < from ) {
+        	for (int i = 0; i < size; i++) {
+				dst.put(i + to, src.get(i + from));
+			}
+//            memcopyByte(src, from, dst, to, size);
         } else {
             for (int i = size - 1; i >= 0; i--) {
                 dst.put(i + to, src.get(i + from));
