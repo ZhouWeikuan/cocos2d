@@ -304,31 +304,43 @@ public abstract class CCParticleSystem extends CCNode implements CCTextureProtoc
 	// Start color of the particles
 	protected ccColor4F startColor = new ccColor4F();
 	public void setStartColor(ccColor4F sc) {
-		startColor = new ccColor4F(sc);
+		ccColor4FUtil.copy(sc, startColor);
 	}
 	public ccColor4F getStartColor() {
 		return new ccColor4F(startColor);
+	}
+	public ccColor4F getStartColorRef() {
+		return startColor;
 	}
 
 	// Start color variance
 	protected ccColor4F startColorVar = new ccColor4F();
 	public void setStartColorVar(ccColor4F scv) {
-		startColorVar = new ccColor4F(scv);
+		ccColor4FUtil.copy(scv, startColorVar);
 	}
 	public ccColor4F getStartColorVar() {
 		return new ccColor4F(startColorVar);
+	}
+	public ccColor4F getStartColorVarRef() {
+		return startColorVar;
 	}
 
 	// End color of the particles
 	protected ccColor4F endColor = new ccColor4F();
 	public void setEndColor(ccColor4F ec) {
-		endColor = new ccColor4F(ec);
+		ccColor4FUtil.copy(ec, endColor);
+	}
+	public ccColor4F getEndColorRef() {
+		return endColor;
 	}
 
 	// End color variance
 	protected ccColor4F endColorVar = new ccColor4F();
 	public void setEndColorVar(ccColor4F ecv) {
-		endColorVar = new ccColor4F(ecv);
+		ccColor4FUtil.copy(ecv, endColorVar);
+	}
+	public ccColor4F getEndColorVarRef() {
+		return endColorVar;
 	}
 
 	// blend function
