@@ -1,6 +1,9 @@
 package org.cocos2d.particlesystem;
 
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.zip.DataFormatException;
+import java.util.zip.Inflater;
 
 import javax.microedition.khronos.opengles.GL10;
 
@@ -8,6 +11,7 @@ import org.cocos2d.actions.UpdateCallback;
 import org.cocos2d.config.ccConfig;
 import org.cocos2d.config.ccMacros;
 import org.cocos2d.nodes.CCNode;
+import org.cocos2d.nodes.CCTextureCache;
 import org.cocos2d.opengl.CCTexture2D;
 import org.cocos2d.protocols.CCTextureProtocol;
 import org.cocos2d.types.CGPoint;
@@ -17,7 +21,11 @@ import org.cocos2d.types.ccPointSprite;
 import org.cocos2d.types.util.CGPointUtil;
 import org.cocos2d.types.util.PoolHolder;
 import org.cocos2d.types.util.ccColor4FUtil;
+import org.cocos2d.utils.Base64;
 import org.cocos2d.utils.pool.OneClassPool;
+
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 
 // typedef void (*CC_UPDATE_PARTICLE_IMP)(id, SEL, tCCParticle*, CGPoint);
 
@@ -693,6 +701,14 @@ public abstract class CCParticleSystem extends CCNode implements CCTextureProtoc
 
 	//! Initializes a system with a fixed number of particles
 	protected CCParticleSystem(int numberOfParticles) {
+		initWithNumberOfParticles(numberOfParticles);
+	}
+	
+	protected CCParticleSystem() {
+		
+	}
+
+	protected void initWithNumberOfParticles(int numberOfParticles) {
 		totalParticles = numberOfParticles;
 
 		particles = new CCParticle[totalParticles];
@@ -879,161 +895,157 @@ public abstract class CCParticleSystem extends CCNode implements CCTextureProtoc
     }
 
 
-    /** initializes a CCParticleSystem from a plist file.
-      This plist files can be creted manually or with Particle Designer:
-        http://particledesigner.71squared.com/
-      @since v0.99.3
-    */
-    protected CCParticleSystem(String plistFile) {
-        /*
-    	String *path = [CCFileUtils fullPathFromRelativePath:plistFile];
-        NSDictionary *dict = [NSDictionary dictionaryWithContentsOfFile:path];
+//    /** initializes a CCParticleSystem from a plist file.
+//      This plist files can be creted manually or with Particle Designer:
+//        http://particledesigner.71squared.com/
+//      @since v0.99.3
+//    */
+//    protected CCParticleSystem(String plistFile) {
+//    	HashMap<String,Object> dictionary = PlistParser.parse(plistFile);
+//    	int numParticles = ((Number)dictionary.get("maxParticles")).intValue();
+//    	initWithNumberOfParticles(numParticles);
+//    	loadParticleFile(dictionary);
+//    }
 
-        NSAssert( dict != nil, @"Particles: file not found");
-        */
-    }
+    protected void loadParticleFile(HashMap<String, Object> dictionary) {
+    	assert (dictionary != null) : "A dictionary object is expected.";
+    	
+    	// angle
+    	setAngle(((Number)dictionary.get("angle")).floatValue());
+    	setAngleVar(((Number)dictionary.get("angleVariance")).floatValue());
 
+    	// duration
+    	setDuration(((Number)dictionary.get("duration")).floatValue());
 
-    /** initializes a CCQuadParticleSystem from a NSDictionary.
-     @since v0.99.3
-     */
-    public CCParticleSystem(HashMap<?,?> dictionary) {
-    	/*
-        int maxParticles = [[dictionary valueForKey:@"maxParticles"] intValue];
-        // self, not super
-        if ((self=[self initWithTotalParticles:maxParticles] ) ) {
+    	// blend function 
+    	setBlendFunc(new ccBlendFunc(((Number)dictionary.get("blendFuncSource")).intValue(), 
+    			                     ((Number)dictionary.get("blendFuncDestination")).intValue()));
 
-            // angle
-            angle = [[dictionary valueForKey:@"angle"] floatValue];
-            angleVar = [[dictionary valueForKey:@"angleVariance"] floatValue];
+    	// color
+    	float r,g,b,a;
 
-            // duration
-            duration = [[dictionary valueForKey:@"duration"] floatValue];
+    	r = ((Number)dictionary.get("startColorRed")).floatValue();
+    	g = ((Number)dictionary.get("startColorGreen")).floatValue();
+    	b = ((Number)dictionary.get("startColorBlue")).floatValue();
+    	a = ((Number)dictionary.get("startColorAlpha")).floatValue();
+    	setStartColor(new ccColor4F(r,g,b,a));
 
-            // blend function 
-            blendFunc_.src = [[dictionary valueForKey:@"blendFuncSource"] intValue];
-            blendFunc_.dst = [[dictionary valueForKey:@"blendFuncDestination"] intValue];
+    	r = ((Number)dictionary.get("startColorVarianceRed")).floatValue();
+    	g = ((Number)dictionary.get("startColorVarianceGreen")).floatValue();
+    	b = ((Number)dictionary.get("startColorVarianceBlue")).floatValue();
+    	a = ((Number)dictionary.get("startColorVarianceAlpha")).floatValue();
+    	setStartColorVar(new ccColor4F(r,g,b,a));
 
-            // color
-            float r,g,b,a;
+    	r = ((Number)dictionary.get("finishColorRed")).floatValue();
+    	g = ((Number)dictionary.get("finishColorGreen")).floatValue();
+    	b = ((Number)dictionary.get("finishColorBlue")).floatValue();
+    	a = ((Number)dictionary.get("finishColorAlpha")).floatValue();
+    	setEndColor(new ccColor4F(r,g,b,a));
 
-            r = [[dictionary valueForKey:@"startColorRed"] floatValue];
-            g = [[dictionary valueForKey:@"startColorGreen"] floatValue];
-            b = [[dictionary valueForKey:@"startColorBlue"] floatValue];
-            a = [[dictionary valueForKey:@"startColorAlpha"] floatValue];
-            startColor = (ccColor4F) {r,g,b,a};
+    	r = ((Number)dictionary.get("finishColorVarianceRed")).floatValue();
+    	g = ((Number)dictionary.get("finishColorVarianceGreen")).floatValue();
+    	b = ((Number)dictionary.get("finishColorVarianceBlue")).floatValue();
+    	a = ((Number)dictionary.get("finishColorVarianceAlpha")).floatValue();
+    	setEndColorVar(new ccColor4F(r,g,b,a));
 
-            r = [[dictionary valueForKey:@"startColorVarianceRed"] floatValue];
-            g = [[dictionary valueForKey:@"startColorVarianceGreen"] floatValue];
-            b = [[dictionary valueForKey:@"startColorVarianceBlue"] floatValue];
-            a = [[dictionary valueForKey:@"startColorVarianceAlpha"] floatValue];
-            startColorVar = (ccColor4F) {r,g,b,a};
+    	// particle size
+    	setStartSize(((Number)dictionary.get("startParticleSize")).floatValue());
+    	setStartSizeVar(((Number)dictionary.get("startParticleSizeVariance")).floatValue());
+    	setEndSize(((Number)dictionary.get("finishParticleSize")).floatValue());
+    	setEndSizeVar(((Number)dictionary.get("finishParticleSizeVariance")).floatValue());
 
-            r = [[dictionary valueForKey:@"finishColorRed"] floatValue];
-            g = [[dictionary valueForKey:@"finishColorGreen"] floatValue];
-            b = [[dictionary valueForKey:@"finishColorBlue"] floatValue];
-            a = [[dictionary valueForKey:@"finishColorAlpha"] floatValue];
-            endColor = (ccColor4F) {r,g,b,a};
+    	// position
+    	float x = ((Number)dictionary.get("sourcePositionx")).floatValue();
+    	float y = ((Number)dictionary.get("sourcePositiony")).floatValue();
+    	setPosition(CGPoint.ccp(x,y));
+    	setPosVar(CGPoint.ccp(((Number)dictionary.get("sourcePositionVariancex")).floatValue(),
+    	 		              ((Number)dictionary.get("sourcePositionVariancey")).floatValue()));
 
-            r = [[dictionary valueForKey:@"finishColorVarianceRed"] floatValue];
-            g = [[dictionary valueForKey:@"finishColorVarianceGreen"] floatValue];
-            b = [[dictionary valueForKey:@"finishColorVarianceBlue"] floatValue];
-            a = [[dictionary valueForKey:@"finishColorVarianceAlpha"] floatValue];
-            endColorVar = (ccColor4F) {r,g,b,a};
+    	setEmitterMode(((Number)dictionary.get("emitterType")).intValue());
 
-            // particle size
-            startSize = [[dictionary valueForKey:@"startParticleSize"] floatValue];
-            startSizeVar = [[dictionary valueForKey:@"startParticleSizeVariance"] floatValue];
-            endSize = [[dictionary valueForKey:@"finishParticleSize"] floatValue];
-            endSizeVar = [[dictionary valueForKey:@"finishParticleSizeVariance"] floatValue];
+    	if(emitterMode == kCCParticleModeGravity) {
+    		// Mode A: Gravity + tangential accel + radial accel
+    		// gravity
+    		setGravity(CGPoint.ccp(((Number)dictionary.get("gravityx")).floatValue(),
+    				               ((Number)dictionary.get("gravityy")).floatValue()));
 
+    		//
+    		// speed
+    		setSpeed(((Number)dictionary.get("speed")).floatValue());
+    		setSpeedVar(((Number)dictionary.get("speedVariance")).floatValue());
 
-            // position
-            float x = [[dictionary valueForKey:@"sourcePositionx"] floatValue];
-            float y = [[dictionary valueForKey:@"sourcePositiony"] floatValue];
-            position_ = ccp(x,y);
-            posVar.x = [[dictionary valueForKey:@"sourcePositionVariancex"] floatValue];
-            posVar.y = [[dictionary valueForKey:@"sourcePositionVariancey"] floatValue];
+    		// radial acceleration
+    		setRadialAccel(((Number)dictionary.get("radialAcceleration")).floatValue());
+    		setRadialAccelVar(((Number)dictionary.get("radialAccelVariance")).floatValue());
 
+    		// tangential acceleration
+    		setTangentialAccel(((Number)dictionary.get("tangentialAcceleration")).floatValue());
+    		setTangentialAccelVar(((Number)dictionary.get("tangentialAccelVariance")).floatValue());
+    	}
+    	else {
+    		float maxRadius    = ((Number)dictionary.get("maxRadius")).floatValue();
+    		float maxRadiusVar = ((Number)dictionary.get("maxRadiusVariance")).floatValue();
+    		float minRadius    = ((Number)dictionary.get("minRadius")).floatValue();
 
-            emitterMode_ = [[dictionary valueForKey:@"emitterType"] intValue];
+    		setStartRadius(maxRadius);
+    		setStartRadiusVar(maxRadiusVar);
+    		setEndRadius(minRadius);
+    		setEndRadiusVar(0);
+    		setRotatePerSecond(((Number)dictionary.get("rotatePerSecond")).floatValue());
+    		setRotatePerSecondVar(((Number)dictionary.get("rotatePerSecondVariance")).floatValue());
+    	}
+    	
+    	// life span
+    	setLife(((Number)dictionary.get("particleLifespan")).floatValue());
+    	setLifeVar(((Number)dictionary.get("particleLifespanVariance")).floatValue());				
 
-            // Mode A: Gravity + tangential accel + radial accel
-            if( emitterMode_ == kCCParticleModeGravity ) {
-                // gravity
-                mode.A.gravity.x = [[dictionary valueForKey:@"gravityx"] floatValue];
-                mode.A.gravity.y = [[dictionary valueForKey:@"gravityy"] floatValue];
+    	// emission Rate
+    	setEmissionRate(getTotalParticles()/getLife());
 
-                //
-                // speed
-                mode.A.speed = [[dictionary valueForKey:@"speed"] floatValue];
-                mode.A.speedVar = [[dictionary valueForKey:@"speedVariance"] floatValue];
+    	// texture		
+    	// Try to get the texture from the cache
+    	String textureName = (String)dictionary.get("textureFileName");
+    	String textureData = (String)dictionary.get("textureImageData");
 
-                // radial acceleration
-                mode.A.radialAccel = [[dictionary valueForKey:@"radialAcceleration"] floatValue];
-                mode.A.radialAccelVar = [[dictionary valueForKey:@"radialAccelVariance"] floatValue];
+    	boolean loaded = false;
+		try {
+			CCTexture2D tex = CCTextureCache.sharedTextureCache().addImage(textureName);
+			setTexture(tex);
+			loaded = true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		// !!! bad for memory: Bitmap instance is staying in memory while system exists !!!
+    	if ( !loaded && textureData != null) {
+    		// if it fails, try to get it from the base64-gzipped data			
+    		byte[] buffer = null;
 
-                // tangential acceleration
-                mode.A.tangentialAccel = [[dictionary valueForKey:@"tangentialAcceleration"] floatValue];
-                mode.A.tangentialAccelVar = [[dictionary valueForKey:@"tangentialAccelVariance"] floatValue];
-            }
+    		try {
+    			buffer = Base64.decode(textureData);
+    		} catch (IOException e) {
+    			// TODO Auto-generated catch block
+    			e.printStackTrace();
+    		}
 
+    		byte[] deflated = new byte[buffer.length];
+    		Inflater decompresser = new Inflater(false);
 
-            // or Mode B: radius movement
-            else if( emitterMode_ == kCCParticleModeRadius ) {
-                float maxRadius = [[dictionary valueForKey:@"maxRadius"] floatValue];
-                float maxRadiusVar = [[dictionary valueForKey:@"maxRadiusVariance"] floatValue];
-                float minRadius = [[dictionary valueForKey:@"minRadius"] floatValue];
+    		int deflatedLen = 0;
 
-                mode.B.startRadius = maxRadius;
-                mode.B.startRadiusVar = maxRadiusVar;
-                mode.B.endRadius = minRadius;
-                mode.B.endRadiusVar = 0;
-                mode.B.rotatePerSecond = [[dictionary valueForKey:@"rotatePerSecond"] floatValue];
-                mode.B.rotatePerSecondVar = [[dictionary valueForKey:@"rotatePerSecondVariance"] floatValue];
+    		try {
+    			deflatedLen = decompresser.inflate(deflated);
+    		} catch (DataFormatException e) {
+    			// TODO Auto-generated catch block
+    			e.printStackTrace();
+    		}
 
-            } else {
-                NSAssert( NO, @"Invalid emitterType in config file");
-            }
+    		Bitmap bmp = BitmapFactory.decodeByteArray(deflated, 0, deflatedLen);
 
-            // life span
-            life = [[dictionary valueForKey:@"particleLifespan"] floatValue];
-            lifeVar = [[dictionary valueForKey:@"particleLifespanVariance"] floatValue];				
-
-            // emission Rate
-            emissionRate = totalParticles/life;
-
-            // texture		
-            // Try to get the texture from the cache
-            NSString *textureName = [dictionary valueForKey:@"textureFileName"];
-            NSString *textureData = [dictionary valueForKey:@"textureImageData"];
-
-            self.texture = [[CCTextureCache sharedTextureCache] addImage:textureName];
-
-            if ( ! texture_ && textureData) {
-                // if it fails, try to get it from the base64-gzipped data			
-                unsigned char *buffer = NULL;
-                int len = base64Decode((unsigned char*)[textureData UTF8String], [textureData length], &buffer);
-                NSAssert( buffer != NULL, @"CCParticleSystem: error decoding textureImageData");
-
-                unsigned char *deflated = NULL;
-                int deflatedLen = inflateMemory(buffer, len, &deflated);
-                free( buffer );
-
-                NSAssert( deflated != NULL, @"CCParticleSystem: error ungzipping textureImageData");
-                NSData *data = [[NSData alloc] initWithBytes:deflated length:deflatedLen];
-                UIImage *image = [[UIImage alloc] initWithData:data];
-
-                self.texture = [[CCTextureCache sharedTextureCache] addCGImage:[image CGImage] forKey:textureName];
-                [data release];
-                [image release];
-            }
-
-            NSAssert( [self texture] != NULL, @"CCParticleSystem: error loading the texture");
-        }
-
-        return self;
-        */
+    		if(bmp != null) {
+    			setTexture(CCTextureCache.sharedTextureCache().addImage(bmp, textureName));
+    		}
+    	}
     }
 
 	//! Add a particle to the emitter

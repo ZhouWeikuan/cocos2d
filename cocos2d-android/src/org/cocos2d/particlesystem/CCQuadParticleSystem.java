@@ -2,6 +2,7 @@ package org.cocos2d.particlesystem;
 
 import java.lang.ref.WeakReference;
 import java.nio.ByteBuffer;
+import java.util.HashMap;
 
 import javax.microedition.khronos.opengles.GL10;
 import javax.microedition.khronos.opengles.GL11;
@@ -16,6 +17,7 @@ import org.cocos2d.opengl.GLResourceHelper.Resource;
 import org.cocos2d.types.CGPoint;
 import org.cocos2d.types.CGRect;
 import org.cocos2d.types.ccBlendFunc;
+import org.cocos2d.utils.PlistParser;
 
 import com.badlogic.gdx.utils.BufferUtils;
 
@@ -96,7 +98,20 @@ public class CCQuadParticleSystem extends CCParticleSystem implements Resource {
 	// overriding the init method
 	public CCQuadParticleSystem(int numberOfParticles) {
 		super(numberOfParticles);
+		init();
+	}
+	
+	public CCQuadParticleSystem(String plistFile) {
+		HashMap<String,Object> dictionary = PlistParser.parse(plistFile);
+    	int numParticles = ((Number)dictionary.get("maxParticles")).intValue();
+    	initWithNumberOfParticles(numParticles);
+    	
+		init();
+		
+		loadParticleFile(dictionary);
+	}
 
+	protected void init() {
 		// allocating data space
 		texCoords = BufferUtils.newUnsafeByteBuffer(4 * 2 * totalParticles * 4); 
 		vertices = BufferUtils.newUnsafeByteBuffer(4 * 2 * totalParticles * 4);
@@ -107,11 +122,7 @@ public class CCQuadParticleSystem extends CCParticleSystem implements Resource {
 			return ;
 		}
 
-		// initialize only once the texCoords and the indices
-		initTexCoordsWithRect(0, 0, 10, 10);
-
 		GLResourceHelper.GLResourceLoader mLoader = new QuadParticleLoader(this);
-
 		GLResourceHelper.sharedHelper().addLoader(this, mLoader, true);
 	}
 
