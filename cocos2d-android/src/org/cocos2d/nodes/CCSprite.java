@@ -555,15 +555,18 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
 
     /** sets a new display frame to the CCSprite. */
     public void setDisplayFrame(CCSpriteFrame frame) {
-        unflippedOffsetPositionFromCenter_.set(frame.offset_);
+    	// BRIGOSX 11AUG2012 - Just make sure you have a valid frame -
+    	if(frame != null) {
+    		unflippedOffsetPositionFromCenter_.set(frame.offset_);
 
-        CCTexture2D newTexture = frame.getTexture();
-        // update texture before updating texture rect
-        if ( texture_ == null || newTexture.name() != texture_.name())
-            setTexture(newTexture);
+    		CCTexture2D newTexture = frame.getTexture();
+    		// update texture before updating texture rect
+    		if ( texture_ == null || newTexture.name() != texture_.name())
+    			setTexture(newTexture);
 
-        // update rect
-        setTextureRect(frame.rect_, frame.originalSize_, frame.rotated_);
+    		// update rect
+    		setTextureRect(frame.rect_, frame.originalSize_, frame.rotated_);
+    	}
     }
 
 
@@ -675,6 +678,9 @@ public class CCSprite extends CCNode implements CCRGBAProtocol, CCTextureProtoco
 
     /** returns whether or not a CCSpriteFrame is being displayed */
     public boolean isFrameDisplayed(CCSpriteFrame frame) {
+    	// BRIGOSX 10AUG2012 - Make sure you have a valid frame
+    	if(frame == null) return false;
+    	
         CGRect r = frame.rect_;
         CGPoint p = frame.offset_;
         return (CGRect.equalToRect(r, rect_) &&

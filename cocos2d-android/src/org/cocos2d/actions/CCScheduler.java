@@ -158,82 +158,100 @@ public class CCScheduler {
         // updates with priority < 0
         synchronized (updatesNeg) {
         	int len = updatesNeg.size();
-	        for (int i = 0; i < len; i++) {
-	        	tListEntry e = updatesNeg.get(i);
-	        	currentEntry = e;
-	            if( ! e.paused ) {
-	            	if(e.callback !=null) {
-	            		e.callback.update(dt);
-	            	} else {
-		            	try {
-							e.impMethod.invoke(e.target, dt);
-						} catch (Exception e1) {
-							e1.printStackTrace();
-						}
-	            	}
-	            	if(currentTargetSalvaged) {
-	            		updatesNeg.remove(i);
-	            		i--;
-	            		len--;
-	            		currentTargetSalvaged = false;
-	            	}
-	            }
-	        }
+        	
+        	try {  // BRIGOSX 24JUL2012 protect execution flaw
+        		for (int i = 0; i < len; i++) {
+        			tListEntry e = updatesNeg.get(i);
+        			currentEntry = e;
+        			if( ! e.paused ) {
+        				if(e.callback !=null) {
+        					e.callback.update(dt);
+        				} else {
+        					try {
+        						e.impMethod.invoke(e.target, dt);
+        					} catch (Exception e1) {
+        						e1.printStackTrace();
+        					}
+        				}
+        				if(currentTargetSalvaged) {
+        					updatesNeg.remove(i);
+        					i--;
+        					len--;
+        					currentTargetSalvaged = false;
+        				}
+        			}
+        		}
+        	} catch(IndexOutOfBoundsException e) {
+        		e.printStackTrace();
+        	}
+        	
 	        currentEntry = null;
         }
 
         // updates with priority == 0
         synchronized (updates0) {
         	int len = updates0.size();
-	        for(int i=0; i < len; ++i) {
-	        	tListEntry e = updates0.get(i);
-	        	currentEntry = e;
-	            if( ! e.paused ) {
-	            	if(e.callback !=null) {
-	            		e.callback.update(dt);
-	            	} else {
-		                try {
-							e.impMethod.invoke(e.target, dt);
-						} catch (Exception e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
-						}
-	            	}
-	            	if(currentTargetSalvaged) {
-	            		updates0.remove(i);
-	            		i--;
-	            		len--;
-	            		currentTargetSalvaged = false;
-	            	}
-	            }
-	        }
+        	
+        	try { // BRIGOSX 24JUL2012 protect execution flaw
+        		for(int i=0; i < len; i++) {
+        			tListEntry e = updates0.get(i);
+        			currentEntry = e;
+        			if( ! e.paused ) {
+        				if(e.callback !=null) {
+        					e.callback.update(dt);
+        				} else {
+        					try {
+        						e.impMethod.invoke(e.target, dt);
+        					} catch (Exception e1) {
+        						// TODO Auto-generated catch block
+        						e1.printStackTrace();
+        					}
+        				}
+        				if(currentTargetSalvaged) {
+        					updates0.remove(i);
+        					i--;
+        					len--;
+        					currentTargetSalvaged = false;
+        				}
+        			}
+        		}
+        	} catch(IndexOutOfBoundsException e) {
+        		e.printStackTrace();
+        	}
+        	
 	        currentEntry = null;
         }
         
         // updates with priority > 0
         synchronized (updatesPos) {
         	int len = updatesPos.size();
-	        for (int i=0; i < len; i++) {
-	        	tListEntry e = updatesPos.get(i);
-	        	currentEntry = e;
-	            if( ! e.paused ) {
-	            	if(e.callback !=null) {
-	            		e.callback.update(dt);
-	            	} else {
-		                try {
-							e.impMethod.invoke(e.target, dt);
-						} catch (Exception e1) {
-							e1.printStackTrace();
-						}
-	            	}
-	            	if(currentTargetSalvaged) {
-	            		updatesPos.remove(i);
-	            		i--;
-	            		len--;
-	            		currentTargetSalvaged = false;
-	            	}
-	            }
-	        }
+        	
+        	try { // BRIGOSX 24JUL2012 protect execution flaw
+        		for (int i=0; i < len; i++) {
+        			tListEntry e = updatesPos.get(i);
+        			currentEntry = e;
+        			if( ! e.paused ) {
+        				if(e.callback !=null) {
+        					e.callback.update(dt);
+        				} else {
+        					try {
+        						e.impMethod.invoke(e.target, dt);
+        					} catch (Exception e1) {
+        						e1.printStackTrace();
+        					}
+        				}
+        				if(currentTargetSalvaged) {
+        					updatesPos.remove(i);
+        					i--;
+        					len--;
+        					currentTargetSalvaged = false;
+        				}
+        			}
+        		}
+        	} catch(IndexOutOfBoundsException e) {
+        		e.printStackTrace();
+        	}
+        	
 	        currentEntry = null;
         }
         

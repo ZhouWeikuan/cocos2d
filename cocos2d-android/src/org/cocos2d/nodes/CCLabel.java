@@ -122,6 +122,10 @@ public class CCLabel extends CCSprite implements CCLabelProtocol {
     	texture.setLoader(new StringReloader(this));
     }
     
+    public String getString() {
+    	return _string;
+    }
+    
     public String toString() {
         return "CCLabel <" + CCLabel.class.getSimpleName() + " = " + this.hashCode()
                 + " | FontName = " + _fontName + ", FontSize = " + _fontSize + ">";
