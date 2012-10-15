@@ -72,14 +72,14 @@ public class CCMenuItem extends CCNode {
         		try {
         			invocation.invoke(targetCallback, this);
         		} catch (IllegalArgumentException e) {
-        			// TODO Auto-generated catch block
         			e.printStackTrace();
         		} catch (IllegalAccessException e) {
-        			// TODO Auto-generated catch block
         			e.printStackTrace();
         		} catch (InvocationTargetException e) {
-        			// TODO Auto-generated catch block
-        			e.printStackTrace();
+        			if(e.getTargetException() instanceof RuntimeException)
+        				throw (RuntimeException)e.getTargetException();
+        			else
+        				e.printStackTrace();
         		}
         	}
         }
