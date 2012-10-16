@@ -324,6 +324,10 @@ public class CCTextureAtlas {
      * If it fails to resize the capacity it will return NO with a new capacity of 0.
      */
     public void resizeCapacity(int newCapacity) {
+    	
+    	final int MAX_POSSIBLE_QUADS_COUNT = Short.MAX_VALUE / 6; // 6 short indices per quad 
+    	newCapacity = Math.min(newCapacity, MAX_POSSIBLE_QUADS_COUNT);
+    	
         if (newCapacity == capacity_)
             return;
 
