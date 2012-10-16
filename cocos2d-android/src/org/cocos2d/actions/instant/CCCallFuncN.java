@@ -1,5 +1,7 @@
 package org.cocos2d.actions.instant;
 
+import java.lang.reflect.InvocationTargetException;
+
 /**
  * Calls a 'callback' with the node as the first argument
  * N means Node
@@ -23,8 +25,16 @@ public class CCCallFuncN extends CCCallFunc {
      */
     public void execute() {
         try {
-            invocation.invoke(targetCallback, new Object[]{target});
-        } catch (Exception e) {
-        }
+			invocation.invoke(targetCallback, new Object[]{target});
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			if(e.getTargetException() instanceof RuntimeException)
+				throw (RuntimeException)e.getTargetException();
+			else
+				e.printStackTrace();
+		}
     }
 }

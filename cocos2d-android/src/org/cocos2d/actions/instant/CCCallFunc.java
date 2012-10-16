@@ -1,5 +1,6 @@
 package org.cocos2d.actions.instant;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import org.cocos2d.nodes.CCNode;
@@ -66,8 +67,16 @@ public class CCCallFunc extends CCInstantAction {
      */
     public void execute() {
         try {
-            invocation.invoke(targetCallback);
-        } catch (Exception e) {
-        }
+			invocation.invoke(targetCallback);
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			if(e.getTargetException() instanceof RuntimeException)
+				throw (RuntimeException)e.getTargetException();
+			else
+				e.printStackTrace();
+		}
     }
 }

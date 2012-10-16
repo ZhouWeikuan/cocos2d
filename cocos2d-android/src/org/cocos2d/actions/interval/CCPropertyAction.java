@@ -75,7 +75,10 @@ public class CCPropertyAction extends CCIntervalAction {
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
 		} catch (InvocationTargetException e) {
-			e.printStackTrace();
+			if(e.getTargetException() instanceof RuntimeException)
+				throw (RuntimeException)e.getTargetException();
+			else
+				e.printStackTrace();
 		}
     }
 

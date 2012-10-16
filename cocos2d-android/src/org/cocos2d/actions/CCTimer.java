@@ -1,5 +1,6 @@
 package org.cocos2d.actions;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 public class CCTimer {
@@ -80,7 +81,12 @@ public class CCTimer {
         	} else {
                 try {
                     invocation.invoke(target, elapsed);
-                } catch (Exception e) {
+                } catch (InvocationTargetException e) {
+                	if(e.getTargetException() instanceof RuntimeException)
+        				throw (RuntimeException)e.getTargetException();
+        			else
+        				e.printStackTrace();
+				} catch (Exception e) {
                     e.printStackTrace();
                 }        		
         	}

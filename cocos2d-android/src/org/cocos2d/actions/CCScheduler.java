@@ -1,5 +1,6 @@
 package org.cocos2d.actions;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
@@ -169,6 +170,11 @@ public class CCScheduler {
         				} else {
         					try {
         						e.impMethod.invoke(e.target, dt);
+        					} catch (InvocationTargetException e1) {
+        						if(e1.getTargetException() instanceof RuntimeException)
+        	        				throw (RuntimeException)e1.getTargetException();
+        	        			else
+        	        				e1.printStackTrace();
         					} catch (Exception e1) {
         						e1.printStackTrace();
         					}
