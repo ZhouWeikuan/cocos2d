@@ -152,6 +152,8 @@ public class SoundEngine {
 		synchronized(soundsMap) {
 			mp = soundsMap.get(resId);
 			if (mp == null) {
+				
+				// create MediaPlayer and prepare sound
 				mp = MediaPlayer.create(ctxt, resId);
 				
 				// failed to create
@@ -159,15 +161,6 @@ public class SoundEngine {
 					return;
 				
 				soundsMap.put(resId, mp);
-				try {
-					mp.prepare();
-				} catch (IllegalStateException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
 			}
 		}
 		lastSndId = resId;
