@@ -28,6 +28,7 @@ import android.util.Log;
  This class is deprecated. It is maintained for compatibility reasons only.
  You SHOULD not use this class.
  Instead, use the newer TMX file format: CCTMXTiledMap
+ @deprecated
  */
 public class CCTileMapAtlas extends CCAtlasNode {
     /** TileMap info */
