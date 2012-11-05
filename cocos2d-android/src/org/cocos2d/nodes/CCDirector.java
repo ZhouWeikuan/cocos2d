@@ -54,15 +54,15 @@ import android.view.WindowManager;
 /**Class that creates and handle the main Window and manages how
 and when to execute the Scenes.
  
- The CCDirector is also resposible for:
+ The CCDirector is also responsible for:
   - initializing the OpenGL ES context
   - setting the OpenGL ES pixel format (default on is RGB565)
   - setting the OpenGL ES buffer depth (default one is 0-bit)
   - setting the projection (default one is 2D)
-  - setting the orientation (default one is Protrait)
+  - setting the orientation (default one is Portrait)
  
  Since the CCDirector is a singleton, the standard way to use it is by calling:
-  - [[CCDirector sharedDirector] xxxx];
+  - CCDirector.sharedDirector()
  
  The CCDirector also sets the default OpenGL ES context:
   - GL_TEXTURE_2D is enabled

@@ -1,2 +1,4 @@
-cocos2d-android/bin
+cocos2d-android/bin/classes
+cocos2d-android/bin/res
+cocos2d-android/bin/AndroidManifest.xml
 cocos2d-android/gen

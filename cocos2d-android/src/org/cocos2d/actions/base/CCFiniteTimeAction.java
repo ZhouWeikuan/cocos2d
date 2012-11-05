@@ -6,7 +6,7 @@ import org.cocos2d.config.ccMacros;
  Possible actions:
    - An action with a duration of 0 seconds
    - An action with a duration of 35.5 seconds
- Infitite time actions are valid
+ Infinite time actions are valid
  */
 public class CCFiniteTimeAction extends CCAction {
     private static final String LOG_TAG = CCFiniteTimeAction.class.getSimpleName();

@@ -22,7 +22,7 @@ import android.view.MotionEvent;
  * 
  * Features and Limitation:
  *  - You can add MenuItem objects in runtime using addChild:
- *  - But the only accecpted children are MenuItem objects
+ *  - But the only accepted children are MenuItem objects
  */
 public class CCMenu extends CCLayer {
     enum MenuState {

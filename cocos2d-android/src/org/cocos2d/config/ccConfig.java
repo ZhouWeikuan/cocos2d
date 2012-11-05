@@ -15,7 +15,7 @@ public class ccConfig {
       if 1, error logs output
       if 2, all logs output
      */
-    public static final int COCOS2D_DEBUG = 2;
+    public static int COCOS2D_DEBUG = 2;
 
     /** @def CC_FONT_LABEL_SUPPORT
       If enabled, FontLabel will be used to render .ttf files.
