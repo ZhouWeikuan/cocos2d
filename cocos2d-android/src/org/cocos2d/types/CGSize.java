@@ -21,6 +21,26 @@ public class CGSize {
         return new CGSize(0, 0);
     }
     
+    public CGSize divide(CGSize otherSize)
+    {
+    	return make(this.width / otherSize.width, this.height / otherSize.height);
+    }
+    
+    public CGSize divide(float divider)
+    {
+    	return make(this.width / divider, this.height / divider);
+    }
+    
+    public CGSize half()
+    {
+    	return divide(2);
+    }
+    
+    public CGSize multiply(float factor)
+    {
+    	return make(this.width * factor, this.height * factor);
+    }
+    
 	public void set(CGSize s) {  	
 		width = s.width; 
 		height = s.height;
