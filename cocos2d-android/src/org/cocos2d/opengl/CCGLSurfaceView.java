@@ -6,6 +6,7 @@ import org.cocos2d.types.CGSize;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.AttributeSet;
 import android.view.MotionEvent;
 
 public class CCGLSurfaceView extends GLSurfaceView {
@@ -17,40 +18,48 @@ public class CCGLSurfaceView extends GLSurfaceView {
 
     public CCGLSurfaceView(Context context) {
         super(context);
+        init(context);
+    }
+    
+    public CCGLSurfaceView(Context context, AttributeSet attrs){
+      super(context, attrs);
+      init(context);
+    }
 
-        CCDirector.theApp = (Activity) context;
+    private void init(Context context) {
+      CCDirector.theApp = (Activity) context;
 
-        mDispatcher = CCTouchDispatcher.sharedDispatcher();
+      mDispatcher = CCTouchDispatcher.sharedDispatcher();
 
-        setFocusable(true);
-        setFocusableInTouchMode(true);
-        this.setId(VIEWID);
+      setFocusable(true);
+      setFocusableInTouchMode(true);
+      this.setId(VIEWID);
 
-        // add this to resolve Samsung's Galaxy opengl problem
-        //  here for reference.
-        // http://www.anddev.org/samsung_galaxy_odd_ogl_es_hardware_acceleration_resolved-t8511.html
-        /* need a real machine to test
-        this.setEGLConfigChooser(
-        		new GLSurfaceView.EGLConfigChooser() {
-        			public EGLConfig chooseConfig(EGL10 egl,EGLDisplay display) {
-        				int[] attributes=new int[]{
-        						//EGL10.EGL_RED_SIZE,
-        						//5,
-        						//EGL10.EGL_BLUE_SIZE,
-        						//5,
-        						//EGL10.EGL_GREEN_SIZE,
-        						//6,
-        						EGL10.EGL_DEPTH_SIZE,
-        						16,
-        						EGL10.EGL_NONE
-        				};
-        				EGLConfig[] configs=new EGLConfig[1];
-        				int[] result=new int[1];
-        				egl.eglChooseConfig(display,attributes,configs,1,result);
-        				return configs[0];
-        			}
-        		}
-        );*/
+      // add this to resolve Samsung's Galaxy opengl problem
+      //  here for reference.
+      // http://www.anddev.org/samsung_galaxy_odd_ogl_es_hardware_acceleration_resolved-t8511.html
+      /* need a real machine to test
+      this.setEGLConfigChooser(
+      		new GLSurfaceView.EGLConfigChooser() {
+      			public EGLConfig chooseConfig(EGL10 egl,EGLDisplay display) {
+      				int[] attributes=new int[]{
+      						//EGL10.EGL_RED_SIZE,
+      						//5,
+      						//EGL10.EGL_BLUE_SIZE,
+      						//5,
+      						//EGL10.EGL_GREEN_SIZE,
+      						//6,
+      						EGL10.EGL_DEPTH_SIZE,
+      						16,
+      						EGL10.EGL_NONE
+      				};
+      				EGLConfig[] configs=new EGLConfig[1];
+      				int[] result=new int[1];
+      				egl.eglChooseConfig(display,attributes,configs,1,result);
+      				return configs[0];
+      			}
+      		}
+      );*/
     }
     
     @Override
